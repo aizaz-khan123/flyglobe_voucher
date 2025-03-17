@@ -19,7 +19,7 @@ import Divider from '@mui/material/Divider'
 import Alert from '@mui/material/Alert'
 
 // Third-party Imports
-import { signIn } from 'next-auth/react'
+// import { signIn } from 'next-auth/react'
 import { Controller, useForm } from 'react-hook-form'
 import { valibotResolver } from '@hookform/resolvers/valibot'
 import { object, minLength, string, email, pipe, nonEmpty } from 'valibot'
@@ -92,24 +92,24 @@ const Login = ({ mode }) => {
   const handleClickShowPassword = () => setIsPasswordShown(show => !show)
 
   const onSubmit = async data => {
-    const res = await signIn('credentials', {
-      email: data.email,
-      password: data.password,
-      redirect: false
-    })
+    // const res = await signIn('credentials', {
+    //   email: data.email,
+    //   password: data.password,
+    //   redirect: false
+    // })
 
-    if (res && res.ok && res.error === null) {
-      // Vars
-      const redirectURL = searchParams.get('redirectTo') ?? '/'
+    // if (res && res.ok && res.error === null) {
+    //   // Vars
+    //   const redirectURL = searchParams.get('redirectTo') ?? '/'
 
-      router.replace(getLocalizedUrl(redirectURL, locale))
-    } else {
-      if (res?.error) {
-        const error = JSON.parse(res.error)
+    //   router.replace(getLocalizedUrl(redirectURL, locale))
+    // } else {
+    //   if (res?.error) {
+    //     const error = JSON.parse(res.error)
 
-        setErrorState(error)
-      }
-    }
+    //     setErrorState(error)
+    //   }
+    // }
   }
 
   return (
@@ -153,7 +153,7 @@ const Login = ({ mode }) => {
 
           <form
             noValidate
-            action={() => {}}
+            action={() => { }}
             autoComplete='off'
             onSubmit={handleSubmit(onSubmit)}
             className='flex flex-col gap-5'
@@ -238,7 +238,7 @@ const Login = ({ mode }) => {
             className='self-center text-textPrimary'
             startIcon={<img src='/images/logos/google.png' alt='Google' width={22} />}
             sx={{ '& .MuiButton-startIcon': { marginInlineEnd: 3 } }}
-            onClick={() => signIn('google')}
+          // onClick={() => signIn('google')}
           >
             Sign in with Google
           </Button>

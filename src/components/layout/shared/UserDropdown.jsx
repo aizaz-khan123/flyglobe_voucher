@@ -21,7 +21,6 @@ import MenuItem from '@mui/material/MenuItem'
 import Button from '@mui/material/Button'
 
 // Third-party Imports
-import { signOut, useSession } from 'next-auth/react'
 
 // Hook Imports
 import { useSettings } from '@core/hooks/useSettings'
@@ -48,7 +47,6 @@ const UserDropdown = () => {
 
   // Hooks
   const router = useRouter()
-  const { data: session } = useSession()
   const { settings } = useSettings()
   const { lang: locale } = useParams()
 
@@ -91,8 +89,8 @@ const UserDropdown = () => {
       >
         <Avatar
           ref={anchorRef}
-          alt={session?.user?.name || ''}
-          src={session?.user?.image || ''}
+          // alt={session?.user?.name || ''}
+          // src={session?.user?.image || ''}
           onClick={handleDropdownOpen}
           className='cursor-pointer bs-[38px] is-[38px]'
         />
@@ -116,12 +114,12 @@ const UserDropdown = () => {
               <ClickAwayListener onClickAway={e => handleDropdownClose(e)}>
                 <MenuList>
                   <div className='flex items-center plb-2 pli-4 gap-2' tabIndex={-1}>
-                    <Avatar alt={session?.user?.name || ''} src={session?.user?.image || ''} />
+                    {/* <Avatar alt={session?.user?.name || ''} src={session?.user?.image || ''} /> */}
                     <div className='flex items-start flex-col'>
                       <Typography className='font-medium' color='text.primary'>
-                        {session?.user?.name || ''}
+                        {/* {session?.user?.name || ''} */}
                       </Typography>
-                      <Typography variant='caption'>{session?.user?.email || ''}</Typography>
+                      {/* <Typography variant='caption'>{session?.user?.email || ''}</Typography> */}
                     </div>
                   </div>
                   <Divider className='mlb-1' />
