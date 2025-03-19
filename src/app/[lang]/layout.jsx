@@ -1,5 +1,6 @@
 // Next Imports
 import { headers } from 'next/headers'
+import NextTopLoader from 'nextjs-toploader'
 
 // MUI Imports
 import InitColorSchemeScript from '@mui/material/InitColorSchemeScript'
@@ -43,6 +44,7 @@ const RootLayout = async props => {
     <TranslationWrapper headersList={headersList} lang={params.lang}>
       <html id='__next' lang={params.lang} dir={direction} suppressHydrationWarning>
         <body className='flex is-full min-bs-full flex-auto flex-col'>
+          <NextTopLoader height={3} showSpinner={false} color={'#3e5eff'} />
           <InitColorSchemeScript attribute='data' defaultMode={systemMode} />
           {children}
         </body>
