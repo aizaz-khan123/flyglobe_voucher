@@ -4,7 +4,7 @@
   "license": "Commercial",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
+    "dev": "next dev -p 4000 --turbo",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
@@ -72,6 +72,7 @@
     "react-toastify": "10.0.6",
     "react-use": "17.6.0",
     "recharts": "2.15.0",
+    "redux-persist": "^6.0.0",
     "server-only": "0.0.1",
     "valibot": "0.42.1"
   },

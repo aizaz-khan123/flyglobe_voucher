@@ -1,18 +1,38 @@
-// Third-party Imports
-import { configureStore } from '@reduxjs/toolkit'
+import { configureStore } from "@reduxjs/toolkit";
+import { persistStore, persistReducer } from "redux-persist";
+import storage from "redux-persist/lib/storage";
+import {
+  FLUSH,
+  REHYDRATE,
+  PAUSE,
+  PERSIST,
+  PURGE,
+  REGISTER,
+} from "redux-persist/es/constants";
+import authReducer from "./Features/authslice";  
+import commonReducer from "./Features/commonSlice";  
+import { EndPointsApis } from "./services/EndPointsApis";
 
-// Slice Imports
-import chatReducer from '@/redux-store/slices/chat'
-import calendarReducer from '@/redux-store/slices/calendar'
-import kanbanReducer from '@/redux-store/slices/kanban'
-import emailReducer from '@/redux-store/slices/email'
+const persistConfig = {
+  key: "root",
+  storage,
+  whitelist: ["auth", "common"],
+};
+
+const persistedAuthReducer = persistReducer(persistConfig, authReducer);
 
 export const store = configureStore({
   reducer: {
-    chatReducer,
-    calendarReducer,
-    kanbanReducer,
-    emailReducer
+    auth: persistedAuthReducer,
+    common: commonReducer,
+    [EndPointsApis.reducerPath]: EndPointsApis.reducer,
   },
-  middleware: getDefaultMiddleware => getDefaultMiddleware({ serializableCheck: false })
-})
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+      },
+    }).concat(EndPointsApis.middleware),
+});
+
+export const persistor = persistStore(store);
