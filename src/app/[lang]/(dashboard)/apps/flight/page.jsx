@@ -1,8 +1,12 @@
+'use client'
+
+
+import FlightComponent from '@/views/apps/Flight/FlightComponent/FlightComponent'
 import React from 'react'
 
 const page = () => {
   return (
-    <div>page</div>
+    <div><FlightComponent/></div>
   )
 }
 
