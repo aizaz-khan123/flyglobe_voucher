@@ -1,49 +1,32 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { persistReducer } from 'redux-persist';
-import storage from 'redux-persist/lib/storage';
-import { EndPointsApis } from '../services/EndPointsApis';
-
-
+import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   isLoggedIn: false,
-  status: 'idle',
-  lastApiCall: undefined,
-  token:""
+  token: null,
+  userDetail: null,
+  connectors: [],
 };
 
-const authSlice = createSlice({
-  name: 'auth',
+export const authSlice = createSlice({
+  name: "auth",
   initialState,
   reducers: {
-    setUser: (state, action) => {
+    loggedIn: (state, action) => {
       state.isLoggedIn = true;
-      state.token = action.payload.token;
-      state.expiresAt = action.payload.expiresAt;
-      state.userDetail = action.payload;
+      state.token = action.payload.userDetail.token;
+      state.userDetail = action.payload.userDetail.user;
     },
-    setPermissionsState:(state,action)=>{
-      state.permissions=action.payload;
-    },
-    setTheme:(state,action)=>{
-      state.theme=action.payload;
-    },
-    logout: () => initialState,
-    setApiData: (state, action) => {
-      state.apiData = action.payload;      
-    },
-    setStatus: (state, action) => {
-      state.status = action.payload;
+    connectors: (state, action) => {
+      state.connectors = action.payload?.connectors || [];
+    },       
+    userLogout: (state) => {
+      state.isLoggedIn = false;
+      state.userDetail = null;
+      state.connectors = null;
+      state.token = null;
     },
   },
 });
 
-const persistConfig = {
-  key: 'authSlice',
-  storage,
-};
-
-const persistedReducer = persistReducer(persistConfig, authSlice.reducer);
-
-export const { setUser, setApiData,setPermissionsState, setStatus,logout,setTheme } = authSlice.actions;
-export default persistedReducer;
+export const { loggedIn, connectors, userLogout } = authSlice.actions;
+export default authSlice.reducer;

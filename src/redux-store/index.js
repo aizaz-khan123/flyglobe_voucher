@@ -1,38 +1,46 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { persistStore, persistReducer } from "redux-persist";
-import storage from "redux-persist/lib/storage";
 import {
+  persistStore,
   FLUSH,
   REHYDRATE,
   PAUSE,
   PERSIST,
   PURGE,
   REGISTER,
-} from "redux-persist/es/constants";
-import authReducer from "./Features/authslice";  
-import commonReducer from "./Features/commonSlice";  
-import { EndPointsApis } from "./services/EndPointsApis";
+} from "redux-persist";
+import storage from "redux-persist/lib/storage";
+import { persistReducer } from "redux-persist";
+import { combineReducers } from "redux";
+import { api } from "./services/api";
+import authReducer from "./Features/authslice"; // ✅ Import the reducer, not the slice
 
+// Persist Config
 const persistConfig = {
   key: "root",
+  version: 1,
   storage,
-  whitelist: ["auth", "common"],
 };
 
-const persistedAuthReducer = persistReducer(persistConfig, authReducer);
+// Combine Reducers
+const rootReducer = combineReducers({
+  auth: authReducer, // ✅ Ensure correct key and reducer
+  [api.reducerPath]: api.reducer, // ✅ Include API reducer here
+});
 
+// Persisted Reducer
+const persistedReducer = persistReducer(persistConfig, rootReducer);
+
+// Store Configuration
 export const store = configureStore({
-  reducer: {
-    auth: persistedAuthReducer,
-    common: commonReducer,
-    [EndPointsApis.reducerPath]: EndPointsApis.reducer,
-  },
+  reducer: persistedReducer, // ✅ Use persistedReducer directly
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
-    }).concat(EndPointsApis.middleware),
+    }).concat(api.middleware),
+  devTools: process.env.NODE_ENV !== "production",
 });
 
+// Persistor
 export const persistor = persistStore(store);
