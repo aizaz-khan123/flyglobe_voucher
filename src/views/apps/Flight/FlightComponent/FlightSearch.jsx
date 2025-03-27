@@ -235,15 +235,9 @@ const FlightSearch = ({ initialValues, flightSearchOpen }) => {
   }, [watch('route_type')]);
 
   const validateFlightData = (data, route_type) => {
-    console.log('Validation Data:', data);
-    console.log('Cabin Class:', `"${data.cabin_class}"`, 'Type:', typeof data.cabin_class);
-
-    if (!route_type) return "The route type field is required.";
-    if (!data.cabin_class) {
-      return "The cabin class field is required.";
-    }
-    if (!data.cabin_class) return "The cabin class field is required.";
-    if (!data.traveler_count?.adult_count) return "The Adult count field must be at least 1.";
+    // if (!route_type) return "The route type field is required.";
+    // if (!data.cabin_class) return "The cabin class field is required.";
+    // if (!data.traveler_count?.adult_count) return "The Adult count field must be at least 1.";
 
     if (route_type === "MULTICITY") {
       if (!Array.isArray(data.legs) || data.legs.length < 2) {
@@ -748,9 +742,9 @@ const FlightSearch = ({ initialValues, flightSearchOpen }) => {
                 />
               </div>
               <div className="col-span-12 md:col-span-6 lg:col-span-2">
-                <button type='submit' className="px-5 py-4 rounded" onClick={onSubmit}>
+                <Button type='submit' variant='contained' className="px-5 py-4 rounded" onClick={onSubmit}>
                   Search Flights
-                </button>
+                </Button>
               </div>
             </div>
           </form>

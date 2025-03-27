@@ -3,6 +3,48 @@ import { emptySplitApi } from './emptySplitApi';
 
 export const api = emptySplitApi.injectEndpoints({
   endpoints: (builder) => ({
+    login: builder.mutation({
+      query: (body) => ({
+        url: API_END_POINTS.login,
+        method: 'POST',
+        body,
+      }),
+    }),
+    resetPassword: builder.mutation({
+      query: (body) => ({
+        url: API_END_POINTS.resetPassword,
+        method: 'POST',
+        body,
+      }),
+    }),
+    forgotPassword: builder.mutation({
+      query: (body) => ({
+        url: API_END_POINTS.forgotPassword,
+        method: 'POST',
+        body,
+      }),
+    }),
+
+    resend: builder.mutation({
+      query: (body) => ({
+        url: API_END_POINTS.resend,
+        method: 'POST',
+        body,
+      }),
+    }),
+    verify: builder.mutation({
+      query: (body) => ({
+        url: API_END_POINTS.verify,
+        method: 'POST',
+        body,
+      }),
+    }),
+    logout: builder.mutation({
+      query: (body) => ({
+        url: API_END_POINTS.logout,
+        method: 'POST',
+      }),
+    }),
     locationsLookup: builder.query({
       query: (params) => ({
         url: API_END_POINTS.locations,
@@ -29,7 +71,12 @@ export const api = emptySplitApi.injectEndpoints({
 });
 
 export const {
-
+  useLoginMutation,
+  useResendMutation,
+  useResetPasswordMutation,
+  useForgotPasswordMutation,
+  useVerifyMutation,
+  useLogoutMutation,
   useLazyLocationsLookupQuery,
   useFlightSearchMutation,
   useInitiatingMutation,

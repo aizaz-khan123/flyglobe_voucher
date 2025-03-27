@@ -51,7 +51,7 @@ const DateSelector = ({ departure_date, return_date, route_type }) => {
             params.set("return_date", retDate.format("YYYY-MM-DD"));
         }
 
-        router.push(`/flights/search/result?${params.toString()}`);
+        router.push(`result/?${params.toString()}`);
     };
 
     useEffect(() => {
@@ -81,7 +81,7 @@ const DateSelector = ({ departure_date, return_date, route_type }) => {
                     {generateDates(departureDate).map((date, index) => (
                         <div
                             key={index}
-                            className={`px-6 py-3 rounded-md text-center text-sm font-medium 
+                            className={`px-6 py-3 rounded-md text-center text-sm font-medium text-black
                                 ${date.isBefore(dayjs(), "day") ? "bg-gray-300 text-gray-500 cursor-not-allowed" :
                                     date.isSame(departureDate, "day") ? "bg-blue-200 text-black font-semibold cursor-pointer" : "bg-white cursor-pointer"}`}
                             onClick={() => !date.isBefore(dayjs(), "day") && handleDateSelection(date)} // Prevent click on past dates
@@ -98,7 +98,7 @@ const DateSelector = ({ departure_date, return_date, route_type }) => {
                     {generateDatePairs(departureDate).map((pair, index) => (
                         <div
                             key={index}
-                            className={`px-5 py-3 rounded-md text-center text-sm font-medium h-max
+                            className={`px-5 py-3 rounded-md text-center text-sm font-medium h-max text-black
                                 ${pair.dep.isBefore(dayjs(), "day")
                                     ? "bg-gray-300 text-gray-500 cursor-not-allowed" // Disable past dates
                                     : pair.dep.isSame(departureDate, "day") && pair.ret.isSame(returnDate, "day")

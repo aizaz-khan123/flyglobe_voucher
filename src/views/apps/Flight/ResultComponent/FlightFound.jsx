@@ -1,6 +1,6 @@
 "use client";
 
-import { Card, CardContent, Dialog, DialogContent, DialogTitle } from "@mui/material";
+import { Box, Button, Card, CardContent, CircularProgress, Dialog, DialogContent, DialogTitle, Divider, Drawer, IconButton, Menu, Typography } from "@mui/material";
 import dayjs from "dayjs";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -15,6 +15,9 @@ import AddCommission from "./AddCommission";
 import FlightFilter from "./FlightFilter";
 import FlightRouteDisplay from "./FlightRouteDisplay";
 import { useFlightSearchMutation, useInitiatingMutation } from "@/redux-store/services/api";
+import FlightDetailDrawer from "./FlightDetailDrawer";
+import InfoIcon from "@mui/icons-material/Info";
+import { GoTypography } from "react-icons/go";
 
 const stopsOptions = ["Non Stop", "1 Stop", "1+ Stops"];
 const departureTimes = [
@@ -28,7 +31,7 @@ const FlightFound = () => {
     const [flightFearOptionsData, setFlightFearOptionsData] = useState({});
     const [visible, setVisible] = useState(null);
     const [filterVisible, setFilterVisible] = useState(null);
-    const connectors = useSelector(((user) => user?.persistedReducer?.authSlice?.connectors));
+    const connectors = useSelector((state) => state.auth.connectors);
 
     const toggleVisible = (index) =>
         setVisible(visible == index ? null : index);
@@ -139,13 +142,16 @@ const FlightFound = () => {
 
 
     // Debounced API call with stable dependencies
+    const stableConnectors = useMemo(() => connectors, []); // Memoize `connectors`
+
     useEffect(() => {
         const timeout = setTimeout(() => {
             searchApiPayload();
-        }, 500); // 500ms debounce
+        }, 500);
 
         return () => clearTimeout(timeout);
-    }, [queryParams, legs, connectors]);
+    }, [queryParams, legs, stableConnectors]); // Now `connectors` won't trigger re-renders
+
 
     const travelerCount =
         Number(queryParams?.adult_count || 0) +
@@ -411,8 +417,19 @@ const FlightFound = () => {
         }
     };
 
+    const [anchorEl, setAnchorEl] = useState(null);
+    const openFlightInfo = Boolean(anchorEl);
+
+    const handleClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleCloseFlightInfo = () => {
+        setAnchorEl(null);
+    };
+
     return (
-        <div className="p-4 bg-gray-100 min-h-screen">
+        <div className="p-4 min-h-screen">
             {/* Flight Filters & Results */}
             <h3 className="text-xl mb-5 font-bold space-x-2">
                 {flightSreachIsloading ? (
@@ -436,9 +453,9 @@ const FlightFound = () => {
             <div className="grid grid-cols-12 gap-6">
                 {/* Filters Section */}
                 <div className="col-span-12 hidden lg:block md:col-span-4 lg:col-span-3 md:sticky top-2">
-                    {/* <FlightFilter
+                    <FlightFilter
                         time={time}
-                        formatTime={formatTime}
+                        // formatTime={formatTime}
                         priceRange={priceRange}
                         handlePriceChange={handlePriceChange}
                         resetAllFilterHandler={resetAllFilterHandler}
@@ -455,13 +472,13 @@ const FlightFound = () => {
                         selectedDepartureTimes={selectedDepartureTimes}
                         handleSelectAllDepartureTimes={handleSelectAllDepartureTimes}
                         handleDepartureTimeChange={handleDepartureTimeChange}
-                    /> */}
+                    />
 
                 </div>
 
                 {/* Flight Results */}
                 <div className="col-span-12 md:col-span-12 lg:col-span-9">
-                    <div className="md:sticky top-0 bg-[#f3f4f6] sticky:pt-3 p-1 rounded z-10">
+                    <div className=" p-1 rounded z-10">
                         <Card className="bg-base-100/80 backdrop-blur-lg rounded-lg shadow-md mb-5">
                             <CardContent>
                                 <div className="lg:flex justify-between items-center">
@@ -482,14 +499,13 @@ const FlightFound = () => {
                                             </div>
                                         </div>
 
-                                        <button
-                                            color="primary"
-                                            size="md"
-                                            className="font-bold text-base"
+                                        <Button
+                                            variant='contained'
+                                            className='max-sm:is-full is-auto'
                                             onClick={handleOpen}
                                         >
                                             Change Search
-                                        </button>
+                                        </Button>
                                     </div>
                                 </div>
                             </CardContent>
@@ -502,14 +518,14 @@ const FlightFound = () => {
                     </div>
                     {flightSreachIsloading ? (
                         <div className="flex justify-center items-center h-[50%]">
-                            <Loading variant="bars" color={"primary"} size="lg" />
+                            <CircularProgress />
                         </div>
                     ) : (
                         <>
                             <div>
                                 {filteredFlights.map((data, index) => (
-                                    <Card key={index} className="bg-white mb-5 static">
-                                        <CardBody>
+                                    <Card key={index} className="mb-5 static">
+                                        <CardContent>
                                             <div className="flex flex-col lg:flex-row gap-4 lg:gap-0 justify-between items-center">
                                                 <div className="flex items-center gap-2 mb-2">
                                                     <img
@@ -768,98 +784,56 @@ const FlightFound = () => {
                                                                                 {faresGroupData?.price?.currency}{" "}
                                                                                 {faresGroupData?.price?.gross_amount}
                                                                             </span>
-                                                                            <Dropdown
-                                                                                horizontal={"left"}
-                                                                                vertical={"bottom"}
-                                                                            >
-                                                                                <DropdownToggle
-                                                                                    button={false}
-                                                                                    className="btn btn-circle btn-ghost btn-xs"
+                                                                            <div>
+                                                                                <IconButton size="small" onClick={handleClick}>
+                                                                                    <InfoIcon fontSize="small" className="text-gray" />
+                                                                                </IconButton>
+                                                                                <Menu
+                                                                                    anchorEl={anchorEl}
+                                                                                    open={openFlightInfo}
+                                                                                    onClose={handleCloseFlightInfo}
+                                                                                    anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+                                                                                    transformOrigin={{ vertical: "top", horizontal: "left" }}
                                                                                 >
-                                                                                    <Icon
-                                                                                        icon={info}
-                                                                                        className="text-gray"
-                                                                                        fontSize={22}
-                                                                                    />
-                                                                                </DropdownToggle>
-                                                                                <DropdownMenu className="card compact w-64 rounded-box bg-base-100 !p-0 shadow">
-                                                                                    <CardBody>
-                                                                                        <div className="text-sm text-gray-500">
-                                                                                            Price Detail
-                                                                                        </div>
-                                                                                        <div className="flex justify-between items-center">
-                                                                                            <p className="text-sm text-gray-500">
-                                                                                                Base Fare
-                                                                                            </p>
-                                                                                            <p className="text-sm text-gray-500 text-end">
-                                                                                                {
-                                                                                                    faresGroupData?.price
-                                                                                                        ?.currency
-                                                                                                }{" "}
-                                                                                                {
-                                                                                                    faresGroupData?.price
-                                                                                                        ?.base_fare
-                                                                                                }
-                                                                                            </p>
-                                                                                        </div>
-                                                                                        <div className="flex justify-between items-center">
-                                                                                            <p className="text-sm text-gray-500">
-                                                                                                Tax
-                                                                                            </p>
-                                                                                            <p className="text-sm text-gray-500 text-end">
-                                                                                                {
-                                                                                                    faresGroupData?.price
-                                                                                                        ?.currency
-                                                                                                }{" "}
-                                                                                                {faresGroupData?.price?.tax}
-                                                                                            </p>
-                                                                                        </div>
-                                                                                        <div className="flex justify-between items-center">
-                                                                                            <p className="text-sm text-gray-500">
-                                                                                                Gross Fare
-                                                                                            </p>
-                                                                                            <p className="text-sm text-gray-500 text-end">
-                                                                                                {
-                                                                                                    faresGroupData?.price
-                                                                                                        ?.currency
-                                                                                                }{" "}
-                                                                                                {
-                                                                                                    faresGroupData?.price
-                                                                                                        ?.gross_amount
-                                                                                                }
-                                                                                            </p>
-                                                                                        </div>
-                                                                                        {/* <div className="flex justify-between items-center">
-                                          <p className="text-sm text-gray-500">Fee</p>
-                                          <p className="text-sm text-gray-500 text-end">{faresGroupData?.price?.currency} {faresGroupData?.price?.base_fare}</p>
-                                        </div> */}
-                                                                                        <hr />
-                                                                                        <div className="flex justify-between items-center">
-                                                                                            <p className="text-sm text-gray-500">
-                                                                                                Total
-                                                                                            </p>
-                                                                                            <p className="text-sm text-gray-500 text-end">
-                                                                                                {
-                                                                                                    faresGroupData?.price
-                                                                                                        ?.currency
-                                                                                                }{" "}
-                                                                                                {formattedTotalFare}
-                                                                                            </p>
-                                                                                        </div>
-                                                                                    </CardBody>
-                                                                                </DropdownMenu>
-                                                                            </Dropdown>
+                                                                                    <Box p={2} minWidth={200}>
+                                                                                        <GoTypography variant="body2" color="textSecondary">Price Detail</GoTypography>
+                                                                                        <Box display="flex" justifyContent="space-between" my={1}>
+                                                                                            <Typography variant="body2" color="textSecondary">Base Fare</Typography>
+                                                                                            <Typography variant="body2" color="textSecondary">
+                                                                                                {faresGroupData?.price?.currency} {faresGroupData?.price?.base_fare}
+                                                                                            </Typography>
+                                                                                        </Box>
+                                                                                        <Box display="flex" justifyContent="space-between" my={1}>
+                                                                                            <Typography variant="body2" color="textSecondary">Tax</Typography>
+                                                                                            <Typography variant="body2" color="textSecondary">
+                                                                                                {faresGroupData?.price?.currency} {faresGroupData?.price?.tax}
+                                                                                            </Typography>
+                                                                                        </Box>
+                                                                                        <Box display="flex" justifyContent="space-between" my={1}>
+                                                                                            <Typography variant="body2" color="textSecondary">Gross Fare</Typography>
+                                                                                            <Typography variant="body2" color="textSecondary">
+                                                                                                {faresGroupData?.price?.currency} {faresGroupData?.price?.gross_amount}
+                                                                                            </Typography>
+                                                                                        </Box>
+                                                                                        <Divider />
+                                                                                        <Box display="flex" justifyContent="space-between" mt={1}>
+                                                                                            <Typography variant="body2" color="textSecondary">Total</Typography>
+                                                                                            <Typography variant="body2" color="textSecondary">
+                                                                                                {faresGroupData?.price?.currency} {formattedTotalFare}
+                                                                                            </Typography>
+                                                                                        </Box>
+                                                                                    </Box>
+                                                                                </Menu>
+                                                                            </div>
                                                                         </div>
                                                                         <Button
+                                                                            variant='contained'
+                                                                            className='max-sm:is-full is-auto'
                                                                             onClick={() => {
                                                                                 initiateBookFareHandler(
                                                                                     faresGroupData?.booking_id
                                                                                 );
                                                                             }}
-                                                                            color="primary"
-                                                                            variant="outline"
-                                                                            size="sm"
-                                                                            className="bg-[#F5F7FF]"
                                                                         >
                                                                             Book Fare
                                                                         </Button>
@@ -870,7 +844,7 @@ const FlightFound = () => {
                                                     );
                                                 }
                                             )}
-                                        </CardBody>
+                                        </CardContent>
                                     </Card>
                                 ))}
                             </div>
@@ -883,19 +857,21 @@ const FlightFound = () => {
                     )}
                 </div>
             </div>
-            {/* <Drawer
+            <Drawer
                 open={visible == 1}
-                onClickOverlay={() => toggleVisible(1)}
-                sideClassName="z-[50]"
-                end
-            side={
-                <FlightDetailDrawer
+                anchor='right'
+                variant='temporary'
+                onClose={handleClose}
+                ModalProps={{ keepMounted: true }}
+                sx={{ '& .MuiDrawer-paper': { width: { xs: 300, sm: 400 } } }}
+            >
+                {/* <FlightDetailDrawer
                     flightFearOptionsData={flightFearOptionsData}
                     flightSearchData={flightSearchData}
                     formatDuration={formatDuration}
-                />
-            }
-            ></Drawer> */}
+                /> */}
+            </Drawer>
+
 
             {/* <Drawer
                 open={filterVisible == 2}

@@ -1,55 +1,95 @@
-'use client'
+'use client';
 
 // React Imports
-import { useState } from 'react'
+import { useState } from 'react';
 
 // Next Imports
-import Link from 'next/link'
-import { useParams, useRouter, useSearchParams } from 'next/navigation'
+import Link from 'next/link';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
 
 // MUI Imports
-import Card from '@mui/material/Card'
-import CardContent from '@mui/material/CardContent'
-import Typography from '@mui/material/Typography'
-import TextField from '@mui/material/TextField'
-import IconButton from '@mui/material/IconButton'
-import InputAdornment from '@mui/material/InputAdornment'
-import Checkbox from '@mui/material/Checkbox'
-import Button from '@mui/material/Button'
-import FormControlLabel from '@mui/material/FormControlLabel'
-import Divider from '@mui/material/Divider'
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import Typography from '@mui/material/Typography';
+import TextField from '@mui/material/TextField';
+import IconButton from '@mui/material/IconButton';
+import InputAdornment from '@mui/material/InputAdornment';
+import Checkbox from '@mui/material/Checkbox';
+import Button from '@mui/material/Button';
+import FormControlLabel from '@mui/material/FormControlLabel';
 
 // Component Imports
-import Logo from '@components/layout/shared/Logo'
-import Illustrations from '@components/Illustrations'
+import Logo from '@components/layout/shared/Logo';
+import Illustrations from '@components/Illustrations';
 
 // Config Imports
-import themeConfig from '@configs/themeConfig'
+import themeConfig from '@configs/themeConfig';
 
 // Hook Imports
-import { useImageVariant } from '@core/hooks/useImageVariant'
+import { useImageVariant } from '@core/hooks/useImageVariant';
+import { getLocalizedUrl } from '@/utils/i18n';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { useLoginMutation } from '@/redux-store/services/api';
+import { toast } from 'react-toastify';
 
-// Util Imports
-import { getLocalizedUrl } from '@/utils/i18n'
+const loginSchema = z.object({
+  email: z.string().email('Please enter a valid email address'),
+  password: z.string().min(5, 'Password must be at least 5 characters').max(15, 'Password must not exceed 15 characters'),
+});
+
 
 const Login = ({ mode }) => {
   // States
-  const [isPasswordShown, setIsPasswordShown] = useState(false)
-  const searchParams = useSearchParams()
-  const router = useRouter()
-
-  // Vars
-  const darkImg = '/images/pages/auth-v1-mask-dark.png'
-  const lightImg = '/images/pages/auth-v1-mask-light.png'
+  const [isPasswordShown, setIsPasswordShown] = useState(false);
+  const [isDisable, setIsDisable] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Hooks
-  const { lang: locale } = useParams()
-  const authBackground = useImageVariant(mode, lightImg, darkImg)
-  const handleClickShowPassword = () => setIsPasswordShown(show => !show)
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const { lang: locale } = useParams();
+  const authBackground = useImageVariant(mode, '/images/pages/auth-v1-mask-light.png', '/images/pages/auth-v1-mask-dark.png');
 
-const handleSubmit=()=>{
-  router.push("/en/dashboards/crm");
-}
+  const { control, handleSubmit, setError, register, formState: { errors } } = useForm({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      email: '',
+      password: '',
+    },
+  });
+
+
+  const [loginUser, { isLoading: loginLoading }] = useLoginMutation();
+
+  const setErrors = (errors) => {
+    Object.entries(errors).forEach(([key, value]) => setError(key, { message: value }));
+  };
+
+  const onSubmit = async (data) => {
+    setIsDisable(true);
+    setIsLoading(true);
+
+    const response = await loginUser(data);
+    if ('error' in response) {
+      if (response.error.data?.code === 400) {
+        toast.error(response.error.data?.message);
+        setIsDisable(false);
+        setIsLoading(false);
+        return;
+      }
+      setErrors(response.error.data.errors);
+      setIsDisable(false);
+      setIsLoading(false);
+      return;
+    }
+
+    if (response.data.code === 200) {
+      toast.success(response?.data?.message);
+      router.push(`/pages/auth/two-steps-v1/${encodeURIComponent(response?.data?.data)}?q=${searchParams.get('redirectTo') || ''}`);
+    }
+  };
 
   return (
     <div className='flex flex-col justify-center items-center min-bs-[100dvh] relative p-6'>
@@ -63,76 +103,47 @@ const handleSubmit=()=>{
               <Typography variant='h4'>{`Welcome to ${themeConfig.templateName}!👋🏻`}</Typography>
               <Typography className='mbs-1'>Please sign-in to your account and start the adventure</Typography>
             </div>
-            <form noValidate autoComplete='off' onSubmit={e => e.preventDefault()} className='flex flex-col gap-5'>
-              <TextField autoFocus fullWidth label='Email' />
+            <form noValidate autoComplete='off' onSubmit={handleSubmit(onSubmit)} className='flex flex-col gap-5'>
+              <TextField autoFocus fullWidth label='Email' {...register('email')}
+                error={!!errors.email}
+                helperText={errors.email?.message} />
               <TextField
                 fullWidth
                 label='Password'
-                id='outlined-adornment-password'
                 type={isPasswordShown ? 'text' : 'password'}
-                slotProps={{
-                  input: {
-                    endAdornment: (
-                      <InputAdornment position='end'>
-                        <IconButton
-                          size='small'
-                          edge='end'
-                          onClick={handleClickShowPassword}
-                          onMouseDown={e => e.preventDefault()}
-                        >
-                          <i className={isPasswordShown ? 'ri-eye-off-line' : 'ri-eye-line'} />
-                        </IconButton>
-                      </InputAdornment>
-                    )
-                  }
+                {...register('password')}
+                error={!!errors.password}
+                helperText={errors.password?.message}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position='end'>
+                      <IconButton
+                        size='small'
+                        edge='end'
+                        onClick={() => setIsPasswordShown(!isPasswordShown)}
+                      >
+                        <i className={isPasswordShown ? 'ri-eye-off-line' : 'ri-eye-line'} />
+                      </IconButton>
+                    </InputAdornment>
+                  ),
                 }}
               />
               <div className='flex justify-between items-center gap-x-3 gap-y-1 flex-wrap'>
                 <FormControlLabel control={<Checkbox />} label='Remember me' />
-                <Typography
-                  className='text-end'
-                  color='primary.main'
-                  component={Link}
-                  href={getLocalizedUrl('/en/forgot-password', locale)}
-                >
+                <Typography className='text-end' color='primary.main' component={Link} href={getLocalizedUrl('/en/forgot-password', locale)}>
                   Forgot password?
                 </Typography>
               </div>
-              <Button fullWidth variant='contained' type='submit' onClick={handleSubmit}>
-                Log In
+              <Button fullWidth variant='contained' type='submit' disabled={isDisable || isLoading}>
+                {isLoading ? 'Logging in...' : 'Log In'}
               </Button>
-              <div className='flex justify-center items-center flex-wrap gap-2'>
-                <Typography>New on our platform?</Typography>
-                <Typography
-                  component={Link}
-                  href={getLocalizedUrl('/register', locale)}
-                  color='primary.main'
-                >
-                  Create an account
-                </Typography>
-              </div>
-              <Divider className='gap-3'>or</Divider>
-              <div className='flex justify-center items-center gap-2'>
-                <IconButton size='small' className='text-facebook'>
-                  <i className='ri-facebook-fill' />
-                </IconButton>
-                <IconButton size='small' className='text-twitter'>
-                  <i className='ri-twitter-fill' />
-                </IconButton>
-                <IconButton size='small' className='text-github'>
-                  <i className='ri-github-fill' />
-                </IconButton>
-                <IconButton size='small' className='text-googlePlus'>
-                  <i className='ri-google-fill' />
-                </IconButton>
-              </div>
             </form>
           </div>
         </CardContent>
       </Card>
       <Illustrations maskImg={{ src: authBackground }} />
     </div>
-  )
-}
+  );
+};
 
-export default Login
+export default Login;

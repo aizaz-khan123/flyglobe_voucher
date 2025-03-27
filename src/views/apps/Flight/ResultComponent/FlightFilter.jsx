@@ -1,11 +1,12 @@
 "use client";
 
+import { formatTime } from "@/utils/formatTime";
+import { Button, Card, CardContent, FormControlLabel, FormLabel, Switch } from "@mui/material";
 import "react-google-flight-datepicker/dist/main.css";
 import { GoClock } from "react-icons/go";
 
 const FlightFilter = ({
     time,
-    formatTime,
     priceRange,
     handlePriceChange,
     resetAllFilterHandler,
@@ -26,7 +27,7 @@ const FlightFilter = ({
     return (
         <div className="col-span-12 md:col-span-4 lg:col-span-3 md:sticky top-2 ">
             <div className="hidden lg:block">
-                <div className="bg-white p-4 rounded-md shadow-md mb-3 flex items-center justify-center gap-2">
+                <div className="p-4 rounded-md shadow-md mb-3 flex items-center justify-center gap-2">
                     <GoClock />
                     <span className="text-gray-700 font-medium text-center gap-2">
                         {formatTime(time)}
@@ -35,7 +36,7 @@ const FlightFilter = ({
                 <p className="text-sm text-center my-2">Book before the search expires!</p>
             </div>
 
-            <Card className="w-70 p-4 bg-white shadow-lg rounded-none lg:rounded-lg lg:mb-3 md:sticky md:top-2">
+            <Card className="w-70 p-4 shadow-lg rounded-none lg:rounded-lg lg:mb-3 md:sticky md:top-2">
                 <div className="block lg:hidden">
                     <div className="flex items-center justify-center gap-2">
                         <GoClock />
@@ -57,7 +58,7 @@ const FlightFilter = ({
                     </Button>
                 </div>
 
-                <CardBody className="p-3 border rounded-lg mb-3">
+                <CardContent className="p-3 border rounded-lg mb-3">
                     <FormLabel className="flex justify-start items-start p-0">Price Range</FormLabel>
                     <div className="flex gap-2">
                         <input
@@ -83,20 +84,23 @@ const FlightFilter = ({
                         onChange={(e) => handlePriceChange(e, "max")}
                         className="w-full mt-3 accent-blue-600"
                     />
-                </CardBody>
+                </CardContent>
 
-                <CardBody className="p-3 border rounded-lg mb-3">
+                <CardContent className="p-3 border rounded-lg mb-3">
                     <FormLabel className="flex justify-start items-start p-0">Stops</FormLabel>
-                    <label className="flex items-center justify-between gap-2 cursor-pointer flex-row-reverse">
-                        <input
-                            type="checkbox"
-                            className="sr-only peer"
-                            checked={selectAllStops}
-                            onChange={handleSelectAllToggle}
-                        />
-                        <div className="relative w-9 h-5 bg-gray-200 rounded-full peer-checked:bg-blue-600"></div>
-                        <span className="text-gray-500 font-medium text-sm">Select All Stops</span>
-                    </label>
+                    <FormControlLabel
+                        className="flex justify-between flex-row-reverse w-full"
+                        control={
+                            <Switch
+                                checked={selectAllStops}
+                                onChange={handleSelectAllToggle}
+                                color="primary"
+                                className="!m-0"
+                            />
+                        }
+                        label="Select All Stops"
+                        sx={{ color: "gray", fontSize: "0.875rem", fontWeight: 500 }}
+                    />
                     <div className="flex flex-col gap-2 mt-2">
                         {stopsOptions.map((stop, index) => (
                             <label key={index} className="flex items-center gap-2 cursor-pointer">
@@ -111,10 +115,10 @@ const FlightFilter = ({
                             </label>
                         ))}
                     </div>
-                </CardBody>
+                </CardContent>
 
                 {airlines && airlines.length > 0 && (
-                    <CardBody className="p-3 border rounded-lg mb-3">
+                    <CardContent className="p-3 border rounded-lg mb-3">
                         <FormLabel className="flex justify-start items-start p-0">Airlines</FormLabel>
                         <div className="flex flex-col gap-2 mt-2">
                             {airlines.map((airline, index) => (
@@ -130,7 +134,7 @@ const FlightFilter = ({
                                 </label>
                             ))}
                         </div>
-                    </CardBody>
+                    </CardContent>
                 )}
             </Card>
         </div>
