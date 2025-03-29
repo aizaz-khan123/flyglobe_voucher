@@ -13,9 +13,9 @@ const FlightDetailDrawer = ({ flightFearOptionsData, formatDuration }) => {
     };
 
     return (
-        <Box className="bg-white min-h-full w-1/3 p-5 shadow-lg rounded-lg border overflow-y-auto">
+        <Box className="min-h-full  p-5 shadow-lg rounded-lg border overflow-y-auto">
             <Typography variant="h6" gutterBottom>Flight Details</Typography>
-            
+
             <Tabs value={flightDrawerTabs} onChange={handleChange} variant="fullWidth" textColor="primary" indicatorColor="primary">
                 <Tab value="flightInfo" label="Flight Info" />
                 <Tab value="baggage" label="Baggage" />
@@ -27,14 +27,14 @@ const FlightDetailDrawer = ({ flightFearOptionsData, formatDuration }) => {
                     <Box>
                         {flightFearOptionsData?.legs?.flat().map((legsData, legIndex) => (
                             <Box key={legIndex} className="mb-5">
-                                <Typography variant="subtitle1" className="font-semibold text-gray-800 mb-3">
+                                <Typography variant="subtitle1" className="font-semibold  mb-3">
                                     Sector Detail: ({legsData?.sector[0]} - {legsData?.sector[1]})
                                 </Typography>
                                 {legsData?.segments?.map((segment, segmentIndex) => (
                                     <Box key={segmentIndex}>
                                         {segmentIndex !== 0 && (
-                                            <Box className="mt-1 text-xs text-gray-600 flex items-center justify-center gap-1 border-t border-b py-2 border-dashed">
-                                                ⏳ <span className="font-normal text-sm text-gray-800">{formatDuration(segment?.layover_waited_time)} layover - {segment?.origin?.name} ({segment?.origin?.iata_code})</span>
+                                            <Box className="mt-1 text-xs flex items-center justify-center gap-1 border-t border-b py-2 border-dashed">
+                                                ⏳ <span className="font-normal text-sm ">{formatDuration(segment?.layover_waited_time)} layover - {segment?.origin?.name} ({segment?.origin?.iata_code})</span>
                                             </Box>
                                         )}
                                         <Timeline position="right">
@@ -44,10 +44,10 @@ const FlightDetailDrawer = ({ flightFearOptionsData, formatDuration }) => {
                                                     <TimelineConnector />
                                                 </TimelineSeparator>
                                                 <TimelineContent>
-                                                    <Typography variant="body2" className="text-gray-800">
+                                                    <Typography variant="body2" className="">
                                                         {dayjs(segment?.departure_datetime).format("hh:mm A")} - {segment?.origin?.country} ({dayjs(segment?.departure_datetime).format("ddd, MMM D, YYYY")})
                                                     </Typography>
-                                                    <Typography variant="body2" className="text-gray-800">
+                                                    <Typography variant="body2" className="">
                                                         ({segment?.origin?.iata_code}) {segment?.origin?.name}
                                                     </Typography>
                                                 </TimelineContent>
@@ -58,7 +58,7 @@ const FlightDetailDrawer = ({ flightFearOptionsData, formatDuration }) => {
                                                     <TimelineConnector />
                                                 </TimelineSeparator>
                                                 <TimelineContent>
-                                                    <Typography variant="body2" className="text-gray-800">
+                                                    <Typography variant="body2" className="">
                                                         Duration: ({formatDuration(segment?.duration_minutes)}) | Flight: ({segment?.flight_number})
                                                     </Typography>
                                                 </TimelineContent>
@@ -69,10 +69,10 @@ const FlightDetailDrawer = ({ flightFearOptionsData, formatDuration }) => {
                                                     <TimelineDot color="primary" />
                                                 </TimelineSeparator>
                                                 <TimelineContent>
-                                                    <Typography variant="body2" className="text-gray-800">
+                                                    <Typography variant="body2" className="">
                                                         {dayjs(segment?.arrival_datetime).format("hh:mm A")} - {segment?.destination?.country} ({dayjs(segment?.arrival_datetime).format("ddd, MMM D, YYYY")})
                                                     </Typography>
-                                                    <Typography variant="body2" className="text-gray-800">
+                                                    <Typography variant="body2" className="">
                                                         ({segment?.destination?.iata_code}) {segment?.destination?.name}
                                                     </Typography>
                                                 </TimelineContent>

@@ -18,6 +18,7 @@ import { useFlightSearchMutation, useInitiatingMutation } from "@/redux-store/se
 import FlightDetailDrawer from "./FlightDetailDrawer";
 import InfoIcon from "@mui/icons-material/Info";
 import { GoTypography } from "react-icons/go";
+import SearchResultExpireModal from "./SearchResultExpireModal";
 
 const stopsOptions = ["Non Stop", "1 Stop", "1+ Stops"];
 const departureTimes = [
@@ -147,10 +148,10 @@ const FlightFound = () => {
     useEffect(() => {
         const timeout = setTimeout(() => {
             searchApiPayload();
-        }, 500);
+        }, 500); // 500ms debounce
 
         return () => clearTimeout(timeout);
-    }, [queryParams, legs, stableConnectors]); // Now `connectors` won't trigger re-renders
+    }, [queryParams, legs, connectors]);
 
 
     const travelerCount =
@@ -865,11 +866,11 @@ const FlightFound = () => {
                 ModalProps={{ keepMounted: true }}
                 sx={{ '& .MuiDrawer-paper': { width: { xs: 300, sm: 400 } } }}
             >
-                {/* <FlightDetailDrawer
+                <FlightDetailDrawer
                     flightFearOptionsData={flightFearOptionsData}
                     flightSearchData={flightSearchData}
                     formatDuration={formatDuration}
-                /> */}
+                />
             </Drawer>
 
 
@@ -938,13 +939,13 @@ const FlightFound = () => {
                 }}
             >
                 <DialogContent>
-                    {/* <SearchResultExpireModal
+                    <SearchResultExpireModal
                         searchApiPayload={searchApiPayload}
                         setTime={setTime}
                         handleCloseSearchResultExpireModal={
                             handleCloseSearchResultExpireModal
                         }
-                    /> */}
+                    />
                 </DialogContent>
             </Dialog>
             <Dialog
