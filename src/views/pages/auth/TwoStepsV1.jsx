@@ -24,6 +24,7 @@ import { useVerifyMutation, useResendMutation } from '@/redux-store/services/api
 import { toast, useToast } from 'react-toastify';
 import { useDispatch } from 'react-redux';
 import { connectors, loggedIn } from '@/redux-store/Features/authslice';
+import { updateAuthCookie } from '@/libs/cookie/auth';
 
 const TwoStepsV1 = ({ mode }) => {
   // States

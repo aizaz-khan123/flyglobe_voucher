@@ -19,6 +19,8 @@ import FlightDetailDrawer from "./FlightDetailDrawer";
 import InfoIcon from "@mui/icons-material/Info";
 import { GoTypography } from "react-icons/go";
 import SearchResultExpireModal from "./SearchResultExpireModal";
+import { formatTime } from "@/utils/formatTime";
+import FlightDetailModal from "./FlightDetailModal";
 
 const stopsOptions = ["Non Stop", "1 Stop", "1+ Stops"];
 const departureTimes = [
@@ -43,6 +45,7 @@ const FlightFound = () => {
     const router = useRouter();
 
     const searchParams = useSearchParams();
+    const handleCloseFlightDetails = () => setVisible(null);
 
     // Memoized state for search parameters
     const [queryParams, setQueryParams] = useState({
@@ -214,7 +217,7 @@ const FlightFound = () => {
             }).unwrap();
             setBookingFareModal(true);
             if (response?.status === true) {
-                router.push(`/flights/new-booking/${response?.data?.confirmation_id}`);
+                router.push(`/en/apps/flight/new-booking/${response?.data?.confirmation_id}`);
             }
         } catch (error) {
             console.error("Mutation failed:", error);
@@ -456,7 +459,7 @@ const FlightFound = () => {
                 <div className="col-span-12 hidden lg:block md:col-span-4 lg:col-span-3 md:sticky top-2">
                     <FlightFilter
                         time={time}
-                        // formatTime={formatTime}
+                        formatTime={formatTime}
                         priceRange={priceRange}
                         handlePriceChange={handlePriceChange}
                         resetAllFilterHandler={resetAllFilterHandler}
@@ -862,7 +865,7 @@ const FlightFound = () => {
                 open={visible == 1}
                 anchor='right'
                 variant='temporary'
-                onClose={handleClose}
+                onClose={handleCloseFlightDetails}
                 ModalProps={{ keepMounted: true }}
                 sx={{ '& .MuiDrawer-paper': { width: { xs: 300, sm: 400 } } }}
             >
@@ -873,15 +876,18 @@ const FlightFound = () => {
                 />
             </Drawer>
 
-
-            {/* <Drawer
+            <Drawer
                 open={filterVisible == 2}
                 onClickOverlay={() => toggleFilterVisible(2)}
-                sideClassName="z-[50]"
+                // sideClassName="z-[50]"
+                onClose={() => setFilterVisible(null)}
                 end
-                side={
-                    <>
-                        <div className="w-[80%] md:sticky top-2">
+                anchor='right'
+                variant='temporary'
+                ModalProps={{ keepMounted: true }}
+                sx={{ '& .MuiDrawer-paper': { width: { xs: 300, sm: 400 } } }}
+            >
+                <div className="w-full md:sticky top-2">
                             <FlightFilter
                                 time={time}
                                 formatTime={formatTime}
@@ -903,9 +909,9 @@ const FlightFound = () => {
                                 handleDepartureTimeChange={handleDepartureTimeChange}
                             />
                         </div>
-                    </>
-                }
-            ></Drawer> */}
+            </Drawer>
+
+
             <Dialog
                 open={open}
                 onClose={handleClose}
@@ -964,11 +970,11 @@ const FlightFound = () => {
                 </DialogContent>
             </Dialog>
 
-            {/* <FlightDetail
+            <FlightDetailModal
                 viewFlightDetailModal={viewFlightDetailModal}
                 handleCloseViewFlightDetail={handleCloseViewFlightDetail}
                 data={flightData}
-            /> */}
+            />
         </div>
     );
 };
