@@ -66,6 +66,21 @@ export const api = emptySplitApi.injectEndpoints({
         body
       }),
     }),
+
+    bookingAvailabilityConfirmation: builder.query({
+      query: (bookingId) => ({
+        url: `${API_END_POINTS.bookingAvailabilityConfirmation}?confirmation_id=${bookingId}`,
+        method: "GET",
+      }),
+      transformResponse: (response) => response.data,
+    }),
+    bookingConfirm: builder.mutation({
+      query: (body) => ({
+        url: `${API_END_POINTS.bookingConfirm}`,
+        method: "POST",
+        body
+      }),
+    }),
   }),
   overrideExisting: false,
 });
@@ -80,6 +95,7 @@ export const {
   useLazyLocationsLookupQuery,
   useFlightSearchMutation,
   useInitiatingMutation,
-
+useBookingConfirmMutation,
+useBookingAvailabilityConfirmationQuery,
 
 } = api;
