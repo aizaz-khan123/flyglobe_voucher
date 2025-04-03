@@ -888,27 +888,27 @@ const FlightFound = () => {
                 sx={{ '& .MuiDrawer-paper': { width: { xs: 300, sm: 400 } } }}
             >
                 <div className="w-full md:sticky top-2">
-                            <FlightFilter
-                                time={time}
-                                formatTime={formatTime}
-                                priceRange={priceRange}
-                                handlePriceChange={handlePriceChange}
-                                resetAllFilterHandler={resetAllFilterHandler}
-                                selectAllStops={selectAllStops}
-                                stopsOptions={stopsOptions}
-                                selectedStops={selectedStops}
-                                handleSelectAllToggle={handleSelectAllToggle}
-                                handleStopChange={handleStopChange}
-                                airlines={airlines}
-                                selectedAirlines={selectedAirlines}
-                                handleAirlineChange={handleAirlineChange}
-                                selectAllDepartureTimes={selectAllDepartureTimes}
-                                departureTimes={departureTimes}
-                                selectedDepartureTimes={selectedDepartureTimes}
-                                handleSelectAllDepartureTimes={handleSelectAllDepartureTimes}
-                                handleDepartureTimeChange={handleDepartureTimeChange}
-                            />
-                        </div>
+                    <FlightFilter
+                        time={time}
+                        formatTime={formatTime}
+                        priceRange={priceRange}
+                        handlePriceChange={handlePriceChange}
+                        resetAllFilterHandler={resetAllFilterHandler}
+                        selectAllStops={selectAllStops}
+                        stopsOptions={stopsOptions}
+                        selectedStops={selectedStops}
+                        handleSelectAllToggle={handleSelectAllToggle}
+                        handleStopChange={handleStopChange}
+                        airlines={airlines}
+                        selectedAirlines={selectedAirlines}
+                        handleAirlineChange={handleAirlineChange}
+                        selectAllDepartureTimes={selectAllDepartureTimes}
+                        departureTimes={departureTimes}
+                        selectedDepartureTimes={selectedDepartureTimes}
+                        handleSelectAllDepartureTimes={handleSelectAllDepartureTimes}
+                        handleDepartureTimeChange={handleDepartureTimeChange}
+                    />
+                </div>
             </Drawer>
 
 

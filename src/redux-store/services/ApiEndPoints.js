@@ -17,5 +17,7 @@ export const API_END_POINTS = {
   flightSearch: BASE_URL_V1 + '/flight/search',
   initiating: BASE_URL_V1 + '/booking/initiating',
   bookingAvailabilityConfirmation: BASE_URL_V1 + '/booking/confirm-availability',
-  bookingConfirm: BASE_URL_V1 + '/booking/booking-confirm'
+  bookingConfirm: BASE_URL_V1 + '/booking/booking-confirm',
+  bookingList: BASE_URL_V1 + '/booking/bookings-list',
+
 }

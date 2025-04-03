@@ -81,6 +81,19 @@ export const api = emptySplitApi.injectEndpoints({
         body
       }),
     }),
+    bookingList: builder.query({
+      query: ({ pageUrl, searchText, ...filters }) => ({
+        url: pageUrl || API_END_POINTS.bookingList,
+        method: "GET",
+        params: {
+          q: searchText,
+          ...filters
+
+        }
+      }),
+      providesTags: ["Agencies"],
+      transformResponse: (response) => response.data,
+    }),
   }),
   overrideExisting: false,
 });
@@ -95,7 +108,8 @@ export const {
   useLazyLocationsLookupQuery,
   useFlightSearchMutation,
   useInitiatingMutation,
-useBookingConfirmMutation,
-useBookingAvailabilityConfirmationQuery,
+  useBookingConfirmMutation,
+  useBookingAvailabilityConfirmationQuery,
+  useBookingListQuery,
 
 } = api;

@@ -40,6 +40,7 @@ import MuiDropdown from '@/components/mui-form-inputs/MuiDropdown'
 import MuiAutocomplete from '@/components/mui-form-inputs/MuiAutoComplete'
 import { formattedDate, formatDate } from '@/utils/formatDate'
 import { nationalities } from '@/data/dropdowns/nationalities'
+import { gender, genderTitle } from '@/data/dropdowns/DropdownValues'
 const passengerSchema = yup.object().shape({
   title: yup.string().required('Title is required'),
   first_name: yup.string().required('First name is required'),
@@ -214,20 +215,18 @@ const NewBooking = () => {
                     </div>
                   </CardContent>
                 </Card>
-                <div className='bg-white'>
-                  <div className='p-5 pb-0 bg-white pl-5'>
+                <div>
+                  <div className='pb-0'>
                     <div className='flex gap-2 items-center py-4'>
-                      <div className='bg-blue-600 rounded-lg p-1'>
+                      <div className='bg-primary rounded-lg p-3 flex items-center justify-center'>
                         <PhoneEnabledIcon className='text-white' />
                       </div>
                       <h2 className='text-2xl font-semibold'>Contact Details</h2>
                     </div>
                   </div>
 
-                  <Divider sx={{}} />
-
                   <Accordion
-                    className='mt-0 bg-white pl-6 pr-6'
+                    className='mt-0  pl-6 pr-6'
                     disableGutters
                     sx={{ boxShadow: 'none', '&:before': { display: 'none' } }}
                     defaultExpanded
@@ -238,30 +237,7 @@ const NewBooking = () => {
 
                     <AccordionDetails className='p-0'>
                       <div className='flex justify-between pb-10 pr-5'>
-                        {/* <div>
-                                                <div className="flex border border-gray-300 rounded-lg overflow-hidden w-full">
-                                                    <select className="px-3 py-3 bg-white text-sm outline-none">
-                                                        <option>Country Code</option>
-                                                        <option>+1</option>
-                                                        <option>+44</option>
-                                                        <option>+92</option>
-                                                        <option>+91</option>
-                                                    </select>
-                                                    <input
-                                                        type="text"
-                                                        placeholder="Phone number"
-                                                        className="w-full border-b-none focus:ring-0 focus:outline-none"
-                                                        {...register("contact_number")}
-                                                        name="contact_number"
-                                                    />
-                                                </div>
-                                                <p className="text-sm text-black mt-1">
-                                                    Please input the traveler's number here to receive
-                                                    flight updates
-                                                </p>
-                                            </div> */}
                         <div className='w-1/3'>
-                          {/* <FormLabel title={"Phone Number"} htmlFor="contact_number"></FormLabel> */}
                           <Controller
                             name='contact_number'
                             control={control}
@@ -272,7 +248,7 @@ const NewBooking = () => {
                                   country='pk'
                                   onChange={value => field.onChange(value)}
                                   containerClass='w-full'
-                                  inputClass='w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent'
+                                  inputClass='w-full px-3 py-2 border border-gray-300 text-black ps-12 from-control rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent'
                                 />
                                 {fieldState.error && (
                                   <div className='text-xs text-[#d32f2f] tracking-wide font-normal font-serif ms-2 mt-1'>
@@ -294,24 +270,23 @@ const NewBooking = () => {
                   </Accordion>
                 </div>
 
-                <div className='bg-white mt-5'>
-                  <div className=' pb-0 bg-white pl-5'>
+                <div className=' mt-5'>
+                  <div className='pb-0'>
                     <div className='flex gap-2 items-center py-4 '>
-                      <div className='bg-blue-600 rounded-lg p-1'>
+                      <div className='bg-primary rounded-lg p-3 flex justify-center items-center'>
                         <FaPersonWalkingLuggage className='text-white text-[1.5rem]' />
                       </div>
                       <h2 className='text-2xl font-semibold'> Traveler Details</h2>
                     </div>
                   </div>
 
-                  <Divider sx={{ marginTop: '0.5rem' }} />
 
                   {travelers?.map((traveler, index) => (
                     <Accordion
                       key={index}
                       expanded={expandedIndex.includes(index)} // Auto-expand on validation error
                       onChange={() => handleAccordionChange(index)}
-                      className=' bg-white pl-5 pr-5 shadow-none'
+                      className='pl-5 pr-5 shadow-none'
                       disableGutters
                       sx={{ boxShadow: 'none', '&:before': { display: 'none' } }}
                     >
@@ -340,30 +315,29 @@ const NewBooking = () => {
                               </div>
                             </div>
 
-                            <Button className='text-md font-semibold px-5 mt-8' variant='contained'>
+                            <Button className='text-md font-normal px-5 mt-8' variant='contained'>
                               Scan Passport
                             </Button>
                           </div>
-                          {/* <div className="col-span-12 mb-5">
-                                                        <MuiTextField
-                                                            control={control}
-                                                            name={`passengers.${index}.passenger_type`}
-                                                            label="Passenger Type"
+                          <div className="col-span-12 mb-5">
+                            <MuiTextField
+                              control={control}
+                              name={`passengers.${index}.passenger_type`}
+                              label="Passenger Type"
 
-                                                        />
-                                                    </div> */}
+                            />
+                          </div>
                           <div className='col-span-2 mb-5'>
-                            Gender title dropdown
-                            {/* <MuiDropdown
-                                                        control={control}
-                                                        name={`passengers.${index}.title`}
-                                                        label="Title"
-                                                        placeholder="Title"
-                                                        options={genderTitle.map((title) => ({
-                                                            value: title,
-                                                            label: `${title}`,
-                                                        }))}
-                                                    /> */}
+                            <MuiDropdown
+                              control={control}
+                              name={`passengers.${index}.title`}
+                              label="Title"
+                              placeholder="Title"
+                              options={genderTitle.map((title) => ({
+                                value: title,
+                                label: `${title}`,
+                              }))}
+                            />
                           </div>
                           <div className='col-span-5 mb-5'>
                             <MuiTextField
@@ -385,33 +359,16 @@ const NewBooking = () => {
                             />
                           </div>
                           <div className='col-span-6 mb-5'>
-                            {/* <MuiDropdown
-                                                        control={control}
-                                                        placeholder="Gender"
-                                                        name={`passengers.${index}.gender`}
-                                                        label="Gender"
-                                                        options={gender.map((gender) => ({
-                                                            value: gender.value,
-                                                            label: `${gender.label}`,
-                                                        }))}
-                                                    /> */}
-
-                            {/* <FormControl fullWidth>
-                                                        <InputLabel id={`gender-select-label-${index}`}>Gender</InputLabel>
-                                                        <Select
-                                                            labelId={`gender-select-label-${index}`}
-                                                            id={`gender-select-${index}`}
-                                                            // value={selectedGender} // This should be controlled via your form state
-                                                            // onChange={(e) => handleGenderChange(e, index)} // Handle the update
-                                                            label="Gender"
-                                                        >
-                                                            {gender.map((g: any) => (
-                                                                <MenuItem key={g.value} value={g.value}>
-                                                                    {g.label}
-                                                                </MenuItem>
-                                                            ))}
-                                                        </Select>
-                                                    </FormControl> */}
+                            <MuiDropdown
+                              control={control}
+                              placeholder="Gender"
+                              name={`passengers.${index}.gender`}
+                              label="Gender"
+                              options={gender.map((gender) => ({
+                                value: gender.value,
+                                label: `${gender.label}`,
+                              }))}
+                            />
                           </div>
                           <div className='col-span-6 mb-5'>
                             <MuiAutocomplete
@@ -462,25 +419,25 @@ const NewBooking = () => {
                 </div>
                 <Button
                   variant='contained'
-                  className='text-md font-semibold px-5 mt-6'
+                  className='text-md font-normal px-5 mt-6'
                   // size='md'
                   style={{ float: 'right' }}
                   onClick={handleSubmit(onSubmit)}
-                  // loading={bookingConfirmationLoading}
-                  // disabled={bookingConfirmationLoading}
+                  loading={bookingConfirmationLoading}
+                  disabled={bookingConfirmationLoading}
                 >
                   Booking Confirm
                 </Button>
                 {/* </div> */}
               </form>
               <div className='col-span-3'>
-                {/* <Card className='bg-base-100 mb-5'>
+                <Card className='bg-base-100 mb-5'>
                   <CardContent>
                     <div className='flex justify-center'>
-                      <img src='/media/images/study-abroad.svg' alt='img' />
+                      <img src='/images/figma/study-abroad.svg' alt='img' />
                     </div>
                   </CardContent>
-                </Card> */}
+                </Card>
                 <div>
                   {bookingAvailabilityConfirmationData?.fare_info_list?.length > 0 && (
                     <Card className='bg-base-100 mb-5'>
@@ -522,7 +479,7 @@ const NewBooking = () => {
                             </div>
                           )}
 
-                        <Accordion className='p-0 bg-white' sx={{ boxShadow: 'none', '&:before': { display: 'none' } }}>
+                        <Accordion className='p-0 ' sx={{ boxShadow: 'none', '&:before': { display: 'none' } }}>
                           <AccordionSummary
                             expandIcon={
                               <div className=' text-black rounded-full w-8 h-8 flex items-center justify-center'>
@@ -619,7 +576,7 @@ const NewBooking = () => {
                         </div>
                       </div>
                       <Accordion
-                        className='p-0 bg-white'
+                        className='p-0 '
                         disableGutters
                         sx={{ boxShadow: 'none', '&:before': { display: 'none' } }}
                       >
@@ -781,9 +738,9 @@ const NewBooking = () => {
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-      </div>
+          </div >
+        </div >
+      </div >
     </>
   )
 }

@@ -82,7 +82,7 @@ const FlightDetailDrawer = ({ flightFearOptionsData, formatDuration }) => {
                         </TimelineContent>
                       </TimelineItem>
 
-                      <TimelineItem>
+                      <TimelineItem className='ms-1'>
                         <TimelineSeparator>
                           <TimelineConnector />
                         </TimelineSeparator>

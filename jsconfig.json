@@ -50,7 +50,7 @@
     "tailwind.config.js",
     "**/*.js",
     "**/*.jsx"
-  ],
+, "src/components/searchInput/SearchInput.jsx"  ],
   "exclude": [
     "node_modules"
   ]
