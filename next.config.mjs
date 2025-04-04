@@ -22,7 +22,10 @@ const nextConfig = {
         locale: false
       }
     ]
-  }
+  },
+  images: {
+    domains: ["127.0.0.1", "api.bookairticket.pk"],
+  },
 }
 
 export default nextConfig

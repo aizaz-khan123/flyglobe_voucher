@@ -1,22 +1,24 @@
-import React, { useState, useCallback } from "react";
+'use client';
+import React, { useState, useMemo, useCallback } from "react";
+
 import debounce from "lodash.debounce";
 import TextField from "@mui/material/TextField";
 
 const SearchInput = ({ onSearch, label = "Search", debounceTime = 500, ...props }) => {
     const [searchText, setSearchText] = useState("");
 
-    const delayedSearch = useCallback(
-        debounce((searchValue) => {
-            onSearch(searchValue);
-        }, debounceTime),
-        [onSearch, debounceTime]
-    );
+    const debouncedSearch = useMemo(() => {
+        return debounce((value) => {
+            onSearch(value);
+        }, debounceTime);
+    }, [onSearch, debounceTime]);
 
-    const handleSearchChange = (e) => {
+    const handleSearchChange = useCallback((e) => {
         const { value } = e.target;
+
         setSearchText(value);
-        delayedSearch(value);
-    };
+        debouncedSearch(value);
+    }, [debouncedSearch]);
 
     return (
         <TextField

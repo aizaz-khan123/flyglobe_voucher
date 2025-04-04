@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { Dialog, DialogContent } from "@mui/material";
 import dayjs from "dayjs";
 import { IoMdClose } from 'react-icons/io';
@@ -118,5 +119,7 @@ export default FlightDetailModal;
 const formatDuration = (minutes) => {
   const hours = Math.floor(minutes / 60);
   const mins = minutes % 60;
-  return `${hours}h ${mins}m`;
+
+  
+return `${hours}h ${mins}m`;
 };

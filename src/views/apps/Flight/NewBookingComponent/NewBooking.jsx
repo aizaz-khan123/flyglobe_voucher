@@ -1,6 +1,9 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
+
+import { useParams, useRouter } from 'next/navigation'
+
 import {
   Accordion,
   AccordionSummary,
@@ -28,12 +31,13 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import { GrCloudUpload } from 'react-icons/gr'
 import dayjs from 'dayjs'
-import { useParams, useRouter } from 'next/navigation'
 import { FaPersonWalkingLuggage } from 'react-icons/fa6'
 import PhoneInput from 'react-phone-input-2'
+
 import 'react-phone-input-2/lib/style.css'
-import { useBookingAvailabilityConfirmationQuery, useBookingConfirmMutation } from '@/redux-store/services/api'
 import { toast } from 'react-toastify'
+
+import { useBookingAvailabilityConfirmationQuery, useBookingConfirmMutation } from '@/redux-store/services/api'
 import MuiTextField from '@/components/mui-form-inputs/MuiTextField'
 import MuiDatePicker from '@/components/mui-form-inputs/MuiDatePicker'
 import MuiDropdown from '@/components/mui-form-inputs/MuiDropdown'
@@ -41,6 +45,7 @@ import MuiAutocomplete from '@/components/mui-form-inputs/MuiAutoComplete'
 import { formattedDate, formatDate } from '@/utils/formatDate'
 import { nationalities } from '@/data/dropdowns/nationalities'
 import { gender, genderTitle } from '@/data/dropdowns/DropdownValues'
+
 const passengerSchema = yup.object().shape({
   title: yup.string().required('Title is required'),
   first_name: yup.string().required('First name is required'),
@@ -68,6 +73,7 @@ const NewBooking = () => {
   const [bookingConfirmTrigger, { isLoading: bookingConfirmationLoading }] = useBookingConfirmMutation()
   const toaster = toast()
   const router = useRouter()
+
   const {
     data: bookingAvailabilityConfirmationData,
     error,
@@ -97,6 +103,7 @@ const NewBooking = () => {
   useEffect(() => {
     if (bookingAvailabilityConfirmationData) {
       const travelerList = []
+
       const {
         adult_count = 0,
         child_count = 0,
@@ -140,14 +147,17 @@ const NewBooking = () => {
     await bookingConfirmTrigger(data).then(response => {
       if (response.error) {
         setError('contact_number', { message: 'An error occurred.' })
-        return
+        
+return
       }
+
       toaster.success('Booking has been Created Successfully.')
       setTimeout(() => {
         router.push(`/booking/${response?.data?.data?.booking_id || ''}`)
       }, 500)
     })
   }
+
   const travelerCount = bookingAvailabilityConfirmationData?.request?.traveler_count || {}
   const adult_count = travelerCount?.adult_count || 0
   const child_count = travelerCount?.child_count || 0
@@ -157,7 +167,8 @@ const NewBooking = () => {
 
   if (isLoading) return <Typography>Loading Booking Confirmation details...</Typography>
   if (error) return <Typography color='error'>Booking Time Expired. Please try again.</Typography>
-  return (
+  
+return (
     <>
       <div className='grid grid-cols-12 gap-3 p-4'>
         <div className='col-span-12'>
@@ -420,6 +431,7 @@ const NewBooking = () => {
                 <Button
                   variant='contained'
                   className='text-md font-normal px-5 mt-6'
+
                   // size='md'
                   style={{ float: 'right' }}
                   onClick={handleSubmit(onSubmit)}

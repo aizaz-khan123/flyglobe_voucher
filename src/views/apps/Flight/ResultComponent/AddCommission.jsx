@@ -13,7 +13,8 @@ const AddCommission = ({ filteredFlights, setFilteredFlights }) => {
         if (originalFlights.length === 0 && filteredFlights.length > 0) {
             setOriginalFlights(JSON.parse(JSON.stringify(filteredFlights))); // Deep copy to avoid reference issues
         }
-    }, [filteredFlights]);
+    }, [filteredFlights, originalFlights]);
+
 
     const handleAmountTypeChange = (e) => {
         setAmountType(e.target.id);

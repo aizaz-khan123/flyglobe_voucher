@@ -1,6 +1,9 @@
-import { Button } from '@mui/material';
-import Link from 'next/link';
 import React from 'react'
+
+import Link from 'next/link';
+
+import { Button } from '@mui/material';
+
 import { AiOutlineExclamationCircle } from "react-icons/ai";
 
 const SearchResultExpireModal = ({ searchApiPayload, handleCloseSearchResultExpireModal, setTime }) => {
@@ -9,7 +12,9 @@ const SearchResultExpireModal = ({ searchApiPayload, handleCloseSearchResultExpi
         searchApiPayload();
         handleCloseSearchResultExpireModal();
     }
-    return (
+
+    
+return (
         <div>
             <div className='flex justify-center items-center mt-5'>
                 <AiOutlineExclamationCircle className='text-5xl text-red-600 mb-5' />

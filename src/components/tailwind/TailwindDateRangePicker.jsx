@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+
 import { Controller } from "react-hook-form";
 import Datepicker from "react-tailwindcss-datepicker";
 import "./TailwindComponents.css";
@@ -26,6 +27,7 @@ const TailwindDateRangePicker = ({
             const formattedStart = newValue.startDate
                 ? new Date(newValue.startDate).toISOString().split("T")[0]
                 : null;
+
             const formattedEnd = newValue.endDate
                 ? new Date(newValue.endDate).toISOString().split("T")[0]
                 : null;

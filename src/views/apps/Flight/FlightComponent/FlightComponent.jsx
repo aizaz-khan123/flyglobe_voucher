@@ -1,4 +1,5 @@
 import { Typography } from '@mui/material'
+
 import FlightSearch from './FlightSearch'
 import { RecentSearch } from './RecentSearch'
 

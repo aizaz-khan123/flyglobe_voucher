@@ -1,13 +1,10 @@
 
-import BookingTable from '@/views/apps/bookings/BookingTable'
 import React from 'react'
 
+import BookingTable from '@/views/apps/bookings/BookingTable'
+
 const page = () => {
-  return (
-    <div>
-      {/* <BookingTable /> */}
-    </div>
-  )
+  return <BookingTable />
 }
 
 export default page

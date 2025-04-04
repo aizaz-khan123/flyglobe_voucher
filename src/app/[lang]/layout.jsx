@@ -1,5 +1,6 @@
 // Next Imports
 import { headers } from 'next/headers'
+
 import NextTopLoader from 'nextjs-toploader'
 
 // MUI Imports

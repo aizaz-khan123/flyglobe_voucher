@@ -7,10 +7,11 @@ import {
   PERSIST,
   PURGE,
   REGISTER,
-} from "redux-persist";
+ persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
-import { persistReducer } from "redux-persist";
+
 import { combineReducers } from "redux";
+
 import { api } from "./services/api";
 import authReducer from "./Features/authslice"; // ✅ Import the reducer, not the slice
 

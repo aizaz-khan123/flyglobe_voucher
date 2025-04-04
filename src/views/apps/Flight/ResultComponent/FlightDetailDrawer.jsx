@@ -1,8 +1,9 @@
-import dayjs from 'dayjs'
 import React, { useState } from 'react'
-import BaggageInformation from './BaggageInformation'
-import CancellationInformation from './CancellationInformation'
+
+import dayjs from 'dayjs'
+
 import { Tabs, Tab, Box, Typography } from '@mui/material'
+
 import {
   Timeline,
   TimelineItem,
@@ -12,6 +13,10 @@ import {
   TimelineDot,
   timelineItemClasses
 } from '@mui/lab'
+
+import BaggageInformation from './BaggageInformation'
+import CancellationInformation from './CancellationInformation'
+
 
 const FlightDetailDrawer = ({ flightFearOptionsData, formatDuration }) => {
   const [flightDrawerTabs, setFlightDrawerTabs] = useState('flightInfo')

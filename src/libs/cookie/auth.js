@@ -9,8 +9,11 @@ export const updateAuthCookie = async (user) => {
 
 export const getAuthCookie = async () => {
     const authCookie = cookies().get(cookieKey);
+
     if (authCookie) {
         return JSON.parse(authCookie.value);
     }
-    return undefined;
+
+    
+return undefined;
 };

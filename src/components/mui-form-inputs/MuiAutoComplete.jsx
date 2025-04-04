@@ -43,6 +43,7 @@ const MuiAutocomplete = ({
               setInputValue?.(newValue);
             } else {
               const selectedValue = newValue ? (selectLabelInsteadOfValue ? newValue.label : newValue.value) : "";
+
               field.onChange(selectedValue);
               onChange?.(selectedValue);
               setInputValue?.(newValue ? newValue.label : "");

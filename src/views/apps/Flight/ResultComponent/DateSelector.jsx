@@ -1,7 +1,9 @@
 "use client";
 
 import { useState, useEffect } from "react";
+
 import { useRouter, useSearchParams } from "next/navigation";
+
 import dayjs from "dayjs";
 
 const DateSelector = ({ departure_date, return_date, route_type }) => {
@@ -34,6 +36,7 @@ const DateSelector = ({ departure_date, return_date, route_type }) => {
         for (let i = -daysBefore; i <= daysAfter; i++) {
             const dep = selectedDate.add(i, "day");
             const ret = dep.add(initialGap, "day");
+
             datePairs.push({ dep, ret });
         }
 
@@ -70,6 +73,7 @@ const DateSelector = ({ departure_date, return_date, route_type }) => {
 
     const fetchData = async (date) => {
         console.log("Fetching API for departure date:", date);
+
         // Call your API here
     };
 

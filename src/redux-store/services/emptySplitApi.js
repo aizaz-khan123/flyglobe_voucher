@@ -1,6 +1,8 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { userLogout } from "../Features/authslice";
+
 import { toast } from 'react-toastify'
+
+import { userLogout } from "../Features/authslice";
 
 const baseQuery = fetchBaseQuery({
     prepareHeaders: async (headers, api) => {
@@ -10,6 +12,7 @@ const baseQuery = fetchBaseQuery({
         if (token) {
             headers.set("authorization", `Bearer ${token}`);
         }
+
         // headers.set("authorization", `Bearer 235|deTA7uKQ4x7WFalXsTHqnfy0myZyQDtu6fLhOpBJ4345aa58`);
 
         headers.set("Accept", "application/json");
@@ -29,6 +32,7 @@ const baseQueryWithReAuth = async (args, api, extraOptions) => {
         if (result?.error?.status === 401) {
             toast.error("Session out please login again...");
             api.dispatch(userLogout());
+
             // window.location.href = "/";
         }
     }

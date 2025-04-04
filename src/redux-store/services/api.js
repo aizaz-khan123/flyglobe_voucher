@@ -94,6 +94,77 @@ export const api = emptySplitApi.injectEndpoints({
       providesTags: ["Agencies"],
       transformResponse: (response) => response.data,
     }),
+    bookingCancel: builder.mutation({
+      query: ({ bookingPnr }) => ({
+        url: `${API_END_POINTS.bookingCancel}`,
+        method: "POST",
+        body: {
+          'reservation_id': bookingPnr,
+        }
+      }),
+    }),
+    downloadBooking: builder.mutation({
+      query: (body) => ({
+        url: API_END_POINTS.downloadBooking,
+        method: "POST",
+        body
+      }),
+      transformResponse: (response) => response.data,
+    }),
+    bookingById: builder.query({
+      query: (bookingId) => ({
+        url: `${API_END_POINTS.bookingById}/${bookingId}`,
+        method: 'GET',
+      }),
+      transformResponse: (response) => response.data,
+    }),
+    ticketOtpEmail: builder.mutation({
+      query: () => ({
+        url: API_END_POINTS.ticketOtpEmail,
+        method: "GET",
+      }),
+    }),
+    issueTicket: builder.mutation({
+      query: ({ bookingId, otpCode }) => ({
+        url: `${API_END_POINTS.issueTicket}`,
+        method: "POST",
+        body: {
+          'reservation_id': bookingId,
+          otp: otpCode,
+        }
+      }),
+    }),
+    bookingEmail: builder.mutation({
+      query: (body) => ({
+        url: API_END_POINTS.bookingEmail,
+        method: "POST",
+        body
+      }),
+    }),
+    branchDropDown: builder.query({
+      query: () => ({
+        url: API_END_POINTS.branchDropDown,
+        method: "GET",
+      }),
+      transformResponse: (response) => response.data,
+    }),
+    dropDownByType: builder.query({
+      query: ({ roleType }) => ({
+        url: API_END_POINTS.dropDownByType,
+        method: 'POST',
+        body: {
+          type: roleType
+        },
+      }),
+    }),
+    voidTicket: builder.mutation({
+      query: (body) => ({
+        url: `${API_END_POINTS.voidTicket}`,
+        method: "POST",
+        body
+      }),
+    }),
+
   }),
   overrideExisting: false,
 });
@@ -111,5 +182,16 @@ export const {
   useBookingConfirmMutation,
   useBookingAvailabilityConfirmationQuery,
   useBookingListQuery,
+  useBookingCancelMutation,
+  useDownloadBookingMutation,
+  useBookingByIdQuery,
+  useTicketOtpEmailMutation,
+  useIssueTicketMutation,
+  useBookingEmailMutation,
+  useBranchDropDownQuery,
+  useDropDownByTypeQuery,
+  useVoidTicketMutation,
+
+
 
 } = api;

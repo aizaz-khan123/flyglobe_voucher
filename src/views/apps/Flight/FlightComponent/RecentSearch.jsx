@@ -1,7 +1,9 @@
 'use client'
 
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+
+import { useRouter } from "next/navigation";
+
 import { FaArrowRight, FaArrowRightArrowLeft, FaCalendar } from "react-icons/fa6";
 import { Card, CardContent } from "@mui/material";
 import CryptoJS from "crypto-js";
@@ -9,31 +11,43 @@ import CryptoJS from "crypto-js";
 
 
 const SECRET_KEY = "my_random_secret_key_12345";
+
 export const RecentSearch = () => {
   const router = useRouter();
   const [recentSearches, setRecentSearches] = useState([]);
   const [payloadValues, setPayloadValues] = useState('');
+
+
   // Function to decrypt data
   const decryptData = (ciphertext) => {
     try {
       const bytes = CryptoJS.AES.decrypt(ciphertext, SECRET_KEY);
       const decryptedData = bytes.toString(CryptoJS.enc.Utf8);
-      return decryptedData ? JSON.parse(decryptedData) : [];
+
+      
+return decryptedData ? JSON.parse(decryptedData) : [];
     } catch (error) {
       console.error("Decryption error:", error);
-      return [];
+      
+return [];
     }
   };
+
   useEffect(() => {
     // Retrieve recent searches from local storage
     const storedSearches = localStorage.getItem('recentSearches');
+
     // const searches = storedSearches ? JSON.parse(storedSearches) : [];
     const searches = storedSearches ? decryptData(storedSearches) : [];
+
     setRecentSearches(searches);
   }, []);
+
   const formatDate = (dateString) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString("en-GB", {
+
+    
+return date.toLocaleDateString("en-GB", {
       weekday: "short",
       day: "2-digit",
       month: "short",
@@ -71,7 +85,8 @@ export const RecentSearch = () => {
         ...(legs ? { legs: serializedLegs } : {}),
       }).reduce((acc, [key, value]) => {
         acc[key] = String(value); // Convert all values to strings
-        return acc;
+        
+return acc;
       }, {})
     ).toString();
 
@@ -80,7 +95,9 @@ export const RecentSearch = () => {
     setPayloadValues(queryString);
     router.push(`/flights/search/result?${queryString}`);
   }
-  return (
+
+  
+return (
     <>
       <Card className="bg-base-100/80 backdrop-blur-lg rounded-lg shadow-md mb-5">
         <CardContent className="p-6">

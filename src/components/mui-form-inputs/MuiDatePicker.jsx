@@ -1,9 +1,9 @@
-import { Controller } from "react-hook-form";
-import { TextField } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import dayjs from "dayjs";
+import { Controller } from "react-hook-form";
+import './mui.css';
 
 const MuiDatePicker = ({
   control,
@@ -32,6 +32,7 @@ const MuiDatePicker = ({
             value={field.value ? dayjs(field.value) : null}
             onChange={(newValue) => {
               const formattedDate = newValue ? newValue.format("YYYY-MM-DD") : null;
+
               field.onChange(formattedDate);
               onChange?.(formattedDate);
             }}

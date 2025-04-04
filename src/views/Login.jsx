@@ -19,6 +19,14 @@ import Button from '@mui/material/Button';
 import FormControlLabel from '@mui/material/FormControlLabel';
 
 // Component Imports
+import { useForm } from 'react-hook-form';
+
+import { zodResolver } from '@hookform/resolvers/zod';
+
+import { z } from 'zod';
+
+import { toast } from 'react-toastify';
+
 import Logo from '@components/layout/shared/Logo';
 import Illustrations from '@components/Illustrations';
 
@@ -28,11 +36,9 @@ import themeConfig from '@configs/themeConfig';
 // Hook Imports
 import { useImageVariant } from '@core/hooks/useImageVariant';
 import { getLocalizedUrl } from '@/utils/i18n';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
+
 import { useLoginMutation } from '@/redux-store/services/api';
-import { toast } from 'react-toastify';
+
 
 const loginSchema = z.object({
   email: z.string().email('Please enter a valid email address'),
@@ -72,17 +78,21 @@ const Login = ({ mode }) => {
     setIsLoading(true);
 
     const response = await loginUser(data);
+
     if ('error' in response) {
       if (response.error.data?.code === 400) {
         toast.error(response.error.data?.message);
         setIsDisable(false);
         setIsLoading(false);
-        return;
+        
+return;
       }
+
       setErrors(response.error.data.errors);
       setIsDisable(false);
       setIsLoading(false);
-      return;
+      
+return;
     }
 
     if (response.data.code === 200) {

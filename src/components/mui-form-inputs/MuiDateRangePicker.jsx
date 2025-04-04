@@ -3,6 +3,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DateRangePicker } from "@mui/x-date-pickers-pro/DateRangePicker";
 import dayjs from "dayjs";
+import './mui.css';
 
 const MuiDateRangePicker = ({
   control,
@@ -30,6 +31,7 @@ const MuiDateRangePicker = ({
             className="mui-custom-daterange-picker"
             onChange={(newValue) => {
               const formattedDeparture = newValue[0] ? newValue[0].format("YYYY-MM-DD") : null;
+
               const formattedReturn =
                 disableEndDate || !newValue[1] ? null : newValue[1].format("YYYY-MM-DD");
 
