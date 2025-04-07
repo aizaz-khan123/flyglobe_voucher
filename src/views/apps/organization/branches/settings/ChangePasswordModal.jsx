@@ -1,11 +1,12 @@
-import MuiTextField from '@/components/mui-form-inputs/MuiTextField';
-import { useAdminChangePasswordMutation } from '@/redux-store/services/api';
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import { IoMdClose } from 'react-icons/io';
 import { toast } from 'react-toastify';
 import * as yup from "yup";
+
+import { useAdminChangePasswordMutation } from '@/redux-store/services/api';
+import MuiTextField from '@/components/mui-form-inputs/MuiTextField';
 
 const ChangePasswordModal = ({ isOpen, handleClose, userUUid }) => {
 
@@ -24,7 +25,9 @@ const ChangePasswordModal = ({ isOpen, handleClose, userUUid }) => {
             .required("Confirm New Password is required")
             .oneOf([yup.ref("new_password")], "Password and Confirm Password didn't match"),
     });
+
     const [adminChangePassword, { isLoading }] = useAdminChangePasswordMutation();
+
     const { control, handleSubmit, setError } = useForm({
         defaultValues: {
             new_password: '',
@@ -42,14 +45,18 @@ const ChangePasswordModal = ({ isOpen, handleClose, userUUid }) => {
     const onSubmit = async (data) => {
 
         const payload = { new_password: data.new_password, uuid: userUUid }; // Add uuid dynamically
+
         await adminChangePassword(payload).then((response) => {
             if ("error" in response) {
                 if (response.error.data?.code == 400) {
                     toast.error(response.error.data?.message);
-                    return;
+                    
+return;
                 }
+
                 setErrors(response.error.data.errors);
-                return;
+                
+return;
             }
 
             if (response.data.code == 200) {

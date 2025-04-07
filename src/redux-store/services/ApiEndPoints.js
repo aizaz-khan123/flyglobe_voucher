@@ -108,6 +108,7 @@ export const API_END_POINTS = {
 
   ///////// fight /////////
   flightSearch: BASE_URL_V1 + '/flight/search',
+
   ///////// booking /////////
   initiating: BASE_URL_V1 + '/booking/initiating',
   bookingAvailabilityConfirmation: BASE_URL_V1 + '/booking/confirm-availability',

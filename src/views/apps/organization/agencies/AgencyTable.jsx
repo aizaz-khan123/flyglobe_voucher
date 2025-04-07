@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useMemo, useEffect } from 'react'
+
 import { useForm } from 'react-hook-form'
 import { rankItem } from '@tanstack/match-sorter-utils'
 import {
@@ -41,6 +42,8 @@ import { z } from 'zod'
 import { IoMdClose } from 'react-icons/io'
 
 // Component Imports
+import { LoadingButton } from '@mui/lab'
+
 import MuiDropdown from "@/components/mui-form-inputs/MuiDropdown"
 import MuiTextField from "@/components/mui-form-inputs/MuiTextField"
 import PhoneNumberInput from "@/components/reactPhoneInput/PhoneNumberInput"
@@ -60,13 +63,14 @@ import ChangePasswordModal from "../branches/settings/ChangePasswordModal"
 import GeneralSettingModal from "./components/GeneralSettingModal"
 import TemporaryLimitModal from "./components/TemporaryLimitModal"
 import { cities } from '@/data/dropdowns/cities'
-import { LoadingButton } from '@mui/lab'
 import OptionMenu from '@/@core/components/option-menu'
 
 const fuzzyFilter = (row, columnId, value, addMeta) => {
     const itemRank = rankItem(row.getValue(columnId), value)
+
     addMeta({ itemRank })
-    return itemRank.passed
+    
+return itemRank.passed
 }
 
 const AgencyTable = () => {
@@ -90,12 +94,15 @@ const AgencyTable = () => {
     const [orgUUid, setOrgUUid] = useState()
     const [page, setPage] = useState(0)
     const [rowsPerPage, setRowsPerPage] = useState(10)
+
+
     // RTK Query
     const { data: detail_data, isFetching, refetch } = useGetAgenciesQuery({
         page: page + 1,
         pageSize: rowsPerPage,
         searchText: globalFilter,
     })
+
     const handlePageChange = (event, newPage) => {
         setPage(newPage)
     }
@@ -104,6 +111,7 @@ const AgencyTable = () => {
         setRowsPerPage(parseInt(event.target.value, 10))
         setPage(0)
     }
+
     const { data: branchesDropDown } = useBranchDropDownQuery()
     const agencies = detail_data?.data || []
     const totalCount = detail_data?.total || 0
@@ -293,6 +301,7 @@ const AgencyTable = () => {
         const body = {
             _method: 'patch',
         }
+
         updateStatus({ uuid, body }).then((response) => {
             toast.success('Status Changed!')
         })
@@ -332,12 +341,16 @@ const AgencyTable = () => {
     const showUpdatePermissionModal = async (uuid) => {
         setPermissionListByTypeLoading(uuid)
         const type = 'agency'
+
         await permissionListByType({ uuid, type }).then((response) => {
             setPermissionListByTypeLoading(null)
+
             if ("error" in response) {
                 toast.error("something went wrong.")
-                return false
+                
+return false
             }
+
             setPermissionList(response?.data?.permission_list)
             setSelectedPermissions(response?.data?.selected_permissions)
             setIsPermissionModal(true)
@@ -380,8 +393,10 @@ const AgencyTable = () => {
         await updatePermissions({ userUUid, selectedPermissionUUIDs }).then((response) => {
             if ("error" in response) {
                 setErrors(response?.error?.data?.errors)
-                return
+                
+return
             }
+
             toast.success(`Permissions has been Updated`)
             setPermissionList('')
             setSelectedPermissions('')
@@ -399,11 +414,14 @@ const AgencyTable = () => {
                 _method: 'put',
                 ...data
             }
+
             await updateAgency({ agencyId, updated_data }).then((response) => {
                 if ("error" in response) {
                     setErrors(response?.error?.data?.errors)
-                    return
+                    
+return
                 }
+
                 toast.success(`Agency has been Updated`)
                 reset({
                     name: "",
@@ -420,8 +438,10 @@ const AgencyTable = () => {
             await createAgency(data).then((response) => {
                 if ("error" in response) {
                     setErrors(response?.error?.data?.errors)
-                    return
+                    
+return
                 }
+
                 toast.success(`${data.name} has been created`)
                 reset({
                     name: "",

@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useMemo, useEffect } from 'react'
+
 import { useForm } from 'react-hook-form'
 import { rankItem } from '@tanstack/match-sorter-utils'
 import {
@@ -40,6 +41,8 @@ import { z } from 'zod'
 import { IoMdClose } from 'react-icons/io'
 
 // Component Imports
+import { LoadingButton } from '@mui/lab'
+
 import MuiTextField from "@/components/mui-form-inputs/MuiTextField"
 import PhoneNumberInput from "@/components/reactPhoneInput/PhoneNumberInput"
 import {
@@ -52,12 +55,13 @@ import {
     usePermissionUpdateMutation
 } from "@/redux-store/services/api"
 import PermissionModal from "../PermissionModal"
-import { LoadingButton } from '@mui/lab'
 
 const fuzzyFilter = (row, columnId, value, addMeta) => {
     const itemRank = rankItem(row.getValue(columnId), value)
+
     addMeta({ itemRank })
-    return itemRank.passed
+    
+return itemRank.passed
 }
 
 const EmployeeTable = () => {
@@ -225,6 +229,7 @@ const EmployeeTable = () => {
         const body = {
             _method: 'patch',
         }
+
         updateStatus({ uuid, body }).then((response) => {
             toast.success('Status Changed!')
         })
@@ -261,12 +266,16 @@ const EmployeeTable = () => {
     const showUpdatePermissionModal = async (uuid) => {
         setPermissionListByTypeLoading(uuid)
         const type = 'h-employee'
+
         await permissionListByType({ uuid, type }).then((response) => {
             setPermissionListByTypeLoading(null)
+
             if ("error" in response) {
                 toast.error("something went wrong.")
-                return false
+                
+return false
             }
+
             setPermissionList(response?.data?.permission_list)
             setSelectedPermissions(response?.data?.selected_permissions)
             setIsPermissionModal(true)
@@ -295,8 +304,10 @@ const EmployeeTable = () => {
         await updatePermissions({ userUUid, selectedPermissionUUIDs }).then((response) => {
             if ("error" in response) {
                 setErrors(response?.error?.data?.errors)
-                return
+                
+return
             }
+
             toast.success(`Permissions has been Updated`)
             setPermissionList('')
             setSelectedPermissions('')
@@ -314,11 +325,14 @@ const EmployeeTable = () => {
                 _method: 'put',
                 ...data
             }
+
             await updateEmployee({ employeeId, updated_data }).then((response) => {
                 if ("error" in response) {
                     setErrors(response?.error?.data?.errors)
-                    return
+                    
+return
                 }
+
                 toast.success(`Employee has been Updated`)
                 reset({
                     name: "",
@@ -333,8 +347,10 @@ const EmployeeTable = () => {
             await createEmployee(data).then((response) => {
                 if ("error" in response) {
                     setErrors(response?.error?.data?.errors)
-                    return
+                    
+return
                 }
+
                 toast.success(`${data.name} has been created`)
                 reset({
                     name: "",

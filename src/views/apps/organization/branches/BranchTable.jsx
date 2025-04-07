@@ -1,60 +1,66 @@
 'use client'
 
-import { useState, useMemo, useEffect } from 'react'
-import { useForm } from 'react-hook-form'
+import { useEffect, useMemo, useState } from 'react'
+
 import { rankItem } from '@tanstack/match-sorter-utils'
 import {
     createColumnHelper,
     flexRender,
     getCoreRowModel,
-    useReactTable,
-    getFilteredRowModel,
+    getFacetedMinMaxValues,
     getFacetedRowModel,
     getFacetedUniqueValues,
-    getFacetedMinMaxValues,
+    getFilteredRowModel,
     getPaginationRowModel,
-    getSortedRowModel
+    getSortedRowModel,
+    useReactTable
 } from '@tanstack/react-table'
+import { useForm } from 'react-hook-form'
+
 
 // MUI Imports
+import { zodResolver } from '@hookform/resolvers/zod'
 import {
     Button,
     Card,
     CardContent,
-    TablePagination,
-    TextField,
-    Tooltip,
+    CircularProgress,
     Dialog,
     DialogActions,
     DialogContent,
-    FormLabel,
-    ToggleButton,
     DialogTitle,
+    FormLabel,
+    IconButton,
     Switch,
-    CircularProgress,
-    IconButton
+    TablePagination,
+    TextField,
+    Tooltip
 } from '@mui/material'
 import { FaLock, FaPencil, FaPlus, FaTrash } from 'react-icons/fa6'
 import { toast } from 'react-toastify'
-import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 
 // Component Imports
+import { IoMdClose } from 'react-icons/io'
+
 import MuiDropdown from "@/components/mui-form-inputs/MuiDropdown"
+
+
+
+
 import MuiTextField from "@/components/mui-form-inputs/MuiTextField"
 import PhoneNumberInput from "@/components/reactPhoneInput/PhoneNumberInput"
-import SearchInput from "@/components/searchInput/SearchInput"
+import { cities } from '@/data/dropdowns/cities'
 import { useCreateBranchMutation, useDeleteBranchMutation, useGetBranchesQuery, usePermissionListByTypeMutation, usePermissionUpdateMutation, useStatusUpdateMutation, useUpdateBranchMutation } from "@/redux-store/services/api"
 import PermissionModal from "../PermissionModal"
 import ChangePasswordModal from "./settings/ChangePasswordModal"
-import { IoMdClose } from 'react-icons/io'
-import { cities } from '@/data/dropdowns/cities'
-import { LoadingButton } from '@mui/lab'
-import { tr } from 'date-fns/locale'
+
 
 const fuzzyFilter = (row, columnId, value, addMeta) => {
     const itemRank = rankItem(row.getValue(columnId), value)
+
     addMeta({ itemRank })
+
     return itemRank.passed
 }
 
@@ -81,6 +87,7 @@ const BranchTable = () => {
         pageSize: rowsPerPage,
         searchText: globalFilter,
     })
+
     const branches = detail_data?.data || []
     const totalCount = detail_data?.total || 0
 
@@ -250,6 +257,7 @@ const BranchTable = () => {
         const body = {
             _method: 'patch',
         }
+
         updateStatus({ uuid, body }).then((response) => {
             toast.success('Status Changed!')
         })
@@ -288,12 +296,16 @@ const BranchTable = () => {
     const showUpdatePermissionModal = async (uuid) => {
         setPermissionListByTypeLoading(uuid)
         const type = 'branch'
+
         await permissionListByType({ uuid, type }).then((response) => {
             setPermissionListByTypeLoading(null)
+
             if ("error" in response) {
                 toast.error("something went wrong.")
+
                 return false
             }
+
             setPermissionList(response?.data?.permission_list)
             setSelectedPermissions(response?.data?.selected_permissions)
             setIsPermissionModal(true)
@@ -328,8 +340,10 @@ const BranchTable = () => {
         await updatePermissions({ userUUid, selectedPermissionUUIDs }).then((response) => {
             if ("error" in response) {
                 setErrors(response?.error?.data?.errors)
+
                 return
             }
+
             toast.success(`Permissions has been Updated`)
             setPermissionList('')
             setSelectedPermissions('')
@@ -347,11 +361,14 @@ const BranchTable = () => {
                 _method: 'put',
                 ...data
             }
+
             await updateBranch({ branchId, updated_data }).then((response) => {
                 if ("error" in response) {
                     setErrors(response?.error?.data?.errors)
+
                     return
                 }
+
                 toast.success(`Branch has been Updated`)
                 reset({
                     org_name: "",
@@ -368,9 +385,12 @@ const BranchTable = () => {
             await createBranch(data).then((response) => {
                 if ("error" in response) {
                     setErrors(response?.error?.data?.errors)
+
                     return
                 }
+
                 const { data } = response?.data
+
                 toast.success(`${data.name} has been created`)
                 reset({
                     org_name: "",
@@ -618,3 +638,4 @@ const BranchTable = () => {
 }
 
 export { BranchTable }
+

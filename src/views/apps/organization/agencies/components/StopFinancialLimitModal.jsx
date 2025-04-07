@@ -9,7 +9,9 @@ import { IoMdClose } from 'react-icons/io';
 
 const StopFinancialLimitModal = ({ isOpen, handleClose }) => {
     const { control } = useForm()
-    return (
+
+    
+return (
         <Dialog open={isOpen} className=" h-11/12">
             <DialogTitle className='font-semibold flex justify-between'>
                 Stop Financial

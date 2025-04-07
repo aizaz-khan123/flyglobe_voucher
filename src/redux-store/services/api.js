@@ -683,6 +683,7 @@ export const api = emptySplitApi.injectEndpoints({
       }),
       transformResponse: (response) => response.data,
     }),
+
     // Settings //
     temporaryLimit: builder.mutation({
       query: (body) => ({
@@ -748,6 +749,7 @@ export const {
   useUpdateConnectorMutation,
   useAirlineDropDownQuery,
   useConnectorDropDownQuery,
+
   /////////////////////////
   useGetAirlineMarginsQuery,
   useShowAirlineMarginQuery,
@@ -770,6 +772,7 @@ export const {
   useDeleteAgencyMutation,
   useUpdateAgencyMutation,
   useAgencystatusUpdateMutation,
+
   // ///////////////////////
   useCreateEmployeeMutation,
   useDeleteEmployeeMutation,
@@ -802,6 +805,7 @@ export const {
   ///settings
   useTemporaryLimitMutation,
   useGeneralSettingMutation,
+
   //dashboard
   useLazyDashboardSaleStaticsQuery,
   useDashboardSaleStaticsQuery,

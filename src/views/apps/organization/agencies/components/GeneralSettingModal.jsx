@@ -1,11 +1,13 @@
-import MuiTextField from '@/components/mui-form-inputs/MuiTextField';
-import { useGeneralSettingMutation } from '@/redux-store/services/api';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormLabel, Switch } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import { IoMdClose } from 'react-icons/io';
 import { toast } from 'react-toastify';
 import { z } from "zod";
+
+import { useGeneralSettingMutation } from '@/redux-store/services/api';
+import MuiTextField from '@/components/mui-form-inputs/MuiTextField';
+
 
 const GeneralSettingModal = ({ isOpen, handleClose, generalSettingData, orgUUid, refetch }) => {
 
@@ -40,9 +42,12 @@ const GeneralSettingModal = ({ isOpen, handleClose, generalSettingData, orgUUid,
             if ("error" in response) {
                 if (response.error.data?.code == 400) {
                     toast.error(response.error.data?.message);
-                    return;
+                    
+return;
                 }
+
                 setErrors(response.error.data.errors);
+                
                 return;
             }
 
