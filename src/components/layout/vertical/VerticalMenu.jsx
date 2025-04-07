@@ -65,7 +65,7 @@ const VerticalMenu = ({ dictionary, scrollMenu }) => {
         menuSectionStyles={menuSectionStyles(verticalNavOptions, theme)}
       >
 
-        <SubMenu
+        {/* <SubMenu
           label={dictionary['navigation'].dashboards}
           icon={<i className='ri-home-smile-line' />}
 
@@ -73,7 +73,15 @@ const VerticalMenu = ({ dictionary, scrollMenu }) => {
         >
           <MenuItem href={`/${locale}/dashboards/crm`}>{dictionary['navigation'].crm}</MenuItem>
           <MenuItem href={`/${locale}/dashboards/logistics`}>{dictionary['navigation'].logistics}</MenuItem>
-        </SubMenu>
+        </SubMenu> */}
+        <MenuItem
+          href={`/${locale}/dashboard`}
+          exactMatch={false}
+          activeUrl='/dashboard'
+          icon={<i className='ri-home-smile-line' />}
+        >
+          {dictionary['navigation'].dashboard}
+        </MenuItem>
 
 
 

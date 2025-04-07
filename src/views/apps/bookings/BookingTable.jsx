@@ -69,7 +69,7 @@ const BookingTable = ({ hidePagination }) => {
 
     // RTK Query
     const { data: detail_data, refetch, isFetching } = useBookingListQuery({
-        page: page + 1, // Adding 1 because backend typically starts at 1
+        page: page + 1, 
         pageSize: rowsPerPage,
         searchText: globalFilter,
         ...filters,
