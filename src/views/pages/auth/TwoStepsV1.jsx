@@ -119,7 +119,7 @@ const TwoStepsV1 = ({ mode }) => {
         ]);
         setIsLoading(false);
         toast.success("Login successfully...");
-        router.push('/dashboards/crm');
+        router.push('/dashboard');
       }
     });
   };
