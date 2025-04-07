@@ -1,4 +1,15 @@
-.css-1rwwqow-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input.MuiSelect-select{
+.mui-custom-date-picker .css-1ysp02-MuiButtonBase-root-MuiIconButton-root {
+    position: absolute !important;
+    width: 100% !important;
+    height: 100% !important;
+    left: 0 !important;
+    border-radius: 0 !important;
+}
+.mui-custom-date-picker .css-1umw9bq-MuiSvgIcon-root {
+    position: absolute !important;
+    right: 10px !important;
+}
+.css-1rwwqow-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input.MuiSelect-select {
     height: 1.4375em !important;
     display: flex !important;
 }

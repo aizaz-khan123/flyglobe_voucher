@@ -1,0 +1,14 @@
+.tailwind-date-range input {
+    height: 50px !important;
+    border-color: var(--fallback-bc, oklch(var(--bc) / 0.2));
+    border-width: 1px;
+    border-radius: var(--rounded-box, 1rem);
+    cursor: pointer;
+}
+.tailwind-date-range input:focus{
+    outline: none !important;
+} 
+.custom-dateRange input{
+    width: 271px;
+
+}

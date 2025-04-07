@@ -1,10 +1,9 @@
-import FlightFound from '@/views/apps/Flight/ResultComponent/FlightFound'
 import React from 'react'
 
+import FlightFound from '@/views/apps/Flight/ResultComponent/FlightFound'
+
 const page = () => {
-    return (
-        <div><FlightFound /></div>
-    )
+    return <FlightFound />
 }
 
 export default page

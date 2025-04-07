@@ -1,9 +1,10 @@
 'use client'
 
-import { formatTime } from '@/utils/formatTime'
 import { Button, Card, CardContent, FormControlLabel, FormLabel, Switch } from '@mui/material'
 import 'react-google-flight-datepicker/dist/main.css'
 import { GoClock } from 'react-icons/go'
+
+import { formatTime } from '@/utils/formatTime'
 
 const FlightFilter = ({
   time,
@@ -48,7 +49,7 @@ const FlightFilter = ({
           <Button
             size='sm'
             onClick={resetAllFilterHandler}
-            className='text-blue-600 flex items-center gap-1 bg-transparent outline-none border-none underline'
+            className='text-primary flex items-center gap-1 bg-transparent outline-none border-none underline'
           >
             Reset All
           </Button>
@@ -78,7 +79,7 @@ const FlightFilter = ({
             step='10'
             value={priceRange.max}
             onChange={e => handlePriceChange(e, 'max')}
-            className='w-full mt-3 accent-blue-600'
+            className='w-full mt-3 accent-primary hover:accent-primary cursor-pointer'
           />
         </CardContent>
 

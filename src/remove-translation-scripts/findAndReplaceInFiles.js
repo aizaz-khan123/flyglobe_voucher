@@ -74,7 +74,7 @@ async function updateNextConfig() {
 
   const redirect = `return [{
     source: '/',
-    destination: '/dashboards/crm',
+    destination: '/login',
     permanent: true
   }]`
 

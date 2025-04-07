@@ -1,28 +1,43 @@
 "use client";
 
+import { useEffect, useMemo, useRef, useState } from "react";
+
+import { useRouter, useSearchParams } from "next/navigation";
+
 import { Box, Button, Card, CardContent, CircularProgress, Dialog, DialogContent, DialogTitle, Divider, Drawer, IconButton, Menu, Typography } from "@mui/material";
 import dayjs from "dayjs";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useMemo, useRef, useState } from "react";
+
 import { FiSun } from "react-icons/fi";
 import { IoMoonOutline } from "react-icons/io5";
 import { PiSunHorizonLight } from "react-icons/pi";
-import DateSelector from "./DateSelector";
 
 import { LuMenu } from "react-icons/lu";
+
 import { useSelector } from "react-redux";
+
+import InfoIcon from "@mui/icons-material/Info";
+
+import { GoTypography } from "react-icons/go";
+
+import { FaPlane } from "react-icons/fa6";
+
+
 import AddCommission from "./AddCommission";
 import FlightFilter from "./FlightFilter";
 import FlightRouteDisplay from "./FlightRouteDisplay";
 import { useFlightSearchMutation, useInitiatingMutation } from "@/redux-store/services/api";
 import FlightDetailDrawer from "./FlightDetailDrawer";
-import InfoIcon from "@mui/icons-material/Info";
-import { GoTypography } from "react-icons/go";
+
+
 import SearchResultExpireModal from "./SearchResultExpireModal";
 import { formatTime } from "@/utils/formatTime";
+
 import FlightDetailModal from "./FlightDetailModal";
 
+import DateSelector from "./DateSelector";
+
 const stopsOptions = ["Non Stop", "1 Stop", "1+ Stops"];
+
 const departureTimes = [
     { label: "00:00 - 06:00", icon: <PiSunHorizonLight /> },
     { label: "06:00 - 12:00", icon: <FiSun /> },
@@ -87,6 +102,8 @@ const FlightFound = () => {
                     departure_date: array[index + 2],
                 });
             }
+
+
             return acc;
         }, []);
     }, [queryParams.legsParam]);
@@ -96,47 +113,60 @@ const FlightFound = () => {
         flightSearchTrigger,
         { data: flightSearchData, isLoading: flightSreachIsloading },
     ] = useFlightSearchMutation();
+
     const [initiateBookFareTrigger, { data: initiateBookFareData }] =
         useInitiatingMutation();
 
     // Prevent duplicate API calls
     const isFetching = useRef(false);
+    const [mergeFlightResponse, setMergeFlightResponse] = useState([]);
 
     const searchApiPayload = async () => {
         if (isFetching.current) return;
         isFetching.current = true;
 
         try {
+
             if (!queryParams.cabin_class || !queryParams.route_type) return;
+
             if (!connectors?.length) {
+
                 console.warn("No connectors found.");
+
                 return;
             }
 
-            // Loop through each connector and trigger the API call
             const promises = connectors.map(async (connector) => {
                 const payload = {
                     cabin_class: queryParams.cabin_class,
                     departure_date: queryParams.departure_date,
                     destination: queryParams.destination,
                     origin: queryParams.origin,
-                    return_date:
-                        queryParams.route_type === "ONEWAY" ? null : queryParams.return_date,
+                    return_date: queryParams.route_type === "ONEWAY" ? null : queryParams.return_date,
                     route_type: queryParams.route_type,
                     traveler_count: {
                         adult_count: parseInt(queryParams.adult_count || "0", 10),
                         child_count: parseInt(queryParams.child_count || "0", 10),
                         infant_count: parseInt(queryParams.infant_count || "0", 10),
                     },
-                    uid: connector.uuid, // Pass the connector UUID dynamically
+                    uid: connector.uuid,
                     ...(queryParams.route_type === "MULTICITY" && { legs }),
                 };
 
-                return flightSearchTrigger(payload);
+                const response = await flightSearchTrigger(payload);
+
+                // ✅ Safely access data to avoid JavaScript errors
+                return response?.data?.journey_legs?.flight_options || [];
             });
 
-            // Wait for all API calls to finish
-            await Promise.allSettled(promises);
+            const results = await Promise.allSettled(promises);
+
+            const mergedFlights = results
+                .filter((result) => result.status === "fulfilled") // Ignore failed responses
+                .flatMap((result) => result.value); // Extract values
+
+            setMergeFlightResponse(mergedFlights);
+            setFilteredFlights((prev) => [...prev, ...mergedFlights]); // Merge new results
         } catch (error) {
             console.error("Error fetching flights:", error);
         } finally {
@@ -145,8 +175,9 @@ const FlightFound = () => {
     };
 
 
+
     // Debounced API call with stable dependencies
-    const stableConnectors = useMemo(() => connectors, []); // Memoize `connectors`
+    // const stableConnectors = useMemo(() => connectors, []); // Memoize `connectors`
 
     useEffect(() => {
         const timeout = setTimeout(() => {
@@ -198,15 +229,21 @@ const FlightFound = () => {
     };
 
     const [open, setOpen] = useState(false);
+
     const [filteredFlights, setFilteredFlights] = useState(
         flightSearchData?.journey_legs?.flight_options || []
     );
+
     const [searchResultExpireModal, setsearchResultExpireModal] = useState(false);
+
     const handleCloseSearchResultExpireModal = () =>
         setsearchResultExpireModal(false);
+
     const [openComission, setOpenComission] = useState(false);
+
     const searchResultExpireModalHandleOpen = () =>
         setsearchResultExpireModal(true);
+
     const [bookingFareModal, setBookingFareModal] = useState(false);
     const handleCloseBookingFareModal = () => setBookingFareModal(false);
 
@@ -215,13 +252,16 @@ const FlightFound = () => {
             const response = await initiateBookFareTrigger({
                 booking_id,
             }).unwrap();
+
             setBookingFareModal(true);
+
             if (response?.status === true) {
                 router.push(`/en/apps/flight/new-booking/${response?.data?.confirmation_id}`);
             }
         } catch (error) {
             console.error("Mutation failed:", error);
             let errorMessage = "Something went wrong. Please try again.";
+
             if (
                 error &&
                 typeof error === "object" &&
@@ -232,6 +272,7 @@ const FlightFound = () => {
             ) {
                 errorMessage = (error.data.message);
             }
+
             toaster.error(errorMessage);
         }
     };
@@ -240,11 +281,14 @@ const FlightFound = () => {
     const handleClose = () => setOpen(false);
 
     const [time, setTime] = useState(10 * 60);
+
     useEffect(() => {
         if (time <= 0) {
             searchResultExpireModalHandleOpen();
+
             return;
         }
+
         const timer = setInterval(() => {
             setTime((prevTime) => prevTime - 1);
         }, 1000);
@@ -255,25 +299,18 @@ const FlightFound = () => {
         setTime(10 * 60);
     }, [queryParams]);
 
-    // const airlines = useMemo(() => {
-    //   if (!flightSearchData?.journey_legs?.flight_options) return [];
-    //   const uniqueAirlines = new Set(
-    //     flightSearchData.journey_legs.flight_options.map(
-    //       (flight) => flight.airline.name
-    //     )
-    //   );
-    //   return Array.from(uniqueAirlines);
-    // }, [flightSearchData]);
-
     const airlines = useMemo(() => {
-        if (!flightSearchData?.journey_legs?.flight_options) return [];
+        if (!mergeFlightResponse) return [];
+
         const uniqueAirlines = new Set(
-            flightSearchData.journey_legs.flight_options.map(
+            mergeFlightResponse.map(
                 (flight) => flight.airline.name
             )
         );
+        
         return Array.from(uniqueAirlines);
     }, [flightSearchData]);
+
 
     const [selectedStops, setSelectedStops] = useState([]);
     const [selectedAirlines, setSelectedAirlines] = useState([]);
@@ -288,6 +325,7 @@ const FlightFound = () => {
         setViewFlightDetail(true);
         setFlightData(data);
     };
+
     const handleCloseViewFlightDetail = () => {
         setViewFlightDetail(false);
         setFlightData("");
@@ -295,8 +333,8 @@ const FlightFound = () => {
 
     // Initialize filtered flights
     useEffect(() => {
-        if (flightSearchData?.journey_legs?.flight_options) {
-            setFilteredFlights(flightSearchData.journey_legs.flight_options);
+        if (mergeFlightResponse) {
+            setFilteredFlights(mergeFlightResponse);
         } else {
             setFilteredFlights([]);
         }
@@ -323,12 +361,14 @@ const FlightFound = () => {
         // If manually selecting stops, turn off "Select All" mode
         setSelectAllStops(false);
     };
+
     const handleSelectAllToggle = () => {
         if (selectAllStops) {
             setSelectedStops([]); // Uncheck all stops
         } else {
             setSelectedStops([0, 1, 2]); // Select all stops
         }
+
         setSelectAllStops(!selectAllStops);
     };
 
@@ -339,6 +379,8 @@ const FlightFound = () => {
                 : [...prev, airline]
         );
     };
+
+
     // Handle Departure Time Selection
     const handleDepartureTimeChange = (timeLabel) => {
         setSelectedDepartureTimes((prev) =>
@@ -349,6 +391,8 @@ const FlightFound = () => {
 
         setSelectAllDepartureTimes(false);
     };
+
+
     // Handle "Select All Departure Times" Toggle
     const handleSelectAllDepartureTimes = () => {
         if (selectAllDepartureTimes) {
@@ -356,55 +400,60 @@ const FlightFound = () => {
         } else {
             setSelectedDepartureTimes(departureTimes.map((t) => t.label));
         }
+
         setSelectAllDepartureTimes(!selectAllDepartureTimes);
     };
+
     const isWithinTimeRange = (departureTime, timeRange) => {
         const [start, end] = timeRange
             .split(" - ")
             .map((t) => parseInt(t.replace(":", ""), 10));
+
         const flightTime = parseInt(departureTime.replace(":", ""), 10);
 
         return flightTime >= start && flightTime <= end;
     };
+
+
     // Filter flights when selectedStops updates
     useEffect(() => {
-        if (!flightSearchData?.journey_legs?.flight_options) return;
+        if (!mergeFlightResponse) return;
 
-        const filtered = flightSearchData.journey_legs.flight_options.filter(
-            (flight) => {
-                const stops = flight.legs[0]?.segments?.length
-                    ? flight.legs[0].segments.length - 1
-                    : 0;
-                const departureTime =
-                    flight.legs[0]?.segments[0]?.departure_datetime || "";
+        const filtered = mergeFlightResponse.filter((flight) => {
+            const stops = flight.legs[0]?.segments?.length
+                ? flight.legs[0].segments.length - 1
+                : 0;
 
-                // Convert price to a number (remove commas)
-                const priceString = flight.fare_option[0]?.price?.gross_amount || "0";
-                const price = Number(priceString.replace(/,/g, ""));
+            const departureTime = flight.legs[0]?.segments[0]?.departure_datetime || "";
 
-                const matchesStops =
-                    selectedStops.length === 0 || selectedStops.includes(stops);
-                const matchesAirlines =
-                    selectedAirlines.length === 0 ||
-                    selectedAirlines.includes(flight.airline.name);
-                const matchesDepartureTime =
-                    selectedDepartureTimes.length === 0 ||
-                    selectedDepartureTimes.some((timeRange) =>
-                        isWithinTimeRange(departureTime, timeRange)
-                    );
-                const matchesPrice = price >= priceRange.min && price <= priceRange.max;
+            // Convert price to a number (remove commas)
+            const priceString = flight.fare_option[0]?.price?.gross_amount || "0";
+            const price = Number(priceString.replace(/,/g, ""));
 
-                return (
-                    matchesStops &&
-                    matchesAirlines &&
-                    matchesDepartureTime &&
-                    matchesPrice
+            const matchesStops = selectedStops.length === 0 || selectedStops.includes(stops);
+
+            const matchesAirlines =
+                selectedAirlines.length === 0 || selectedAirlines.includes(flight.airline.name);
+
+            const matchesDepartureTime =
+                selectedDepartureTimes.length === 0 ||
+                selectedDepartureTimes.some((timeRange) =>
+                    isWithinTimeRange(departureTime, timeRange)
                 );
-            }
-        );
+
+            const matchesPrice = price >= priceRange.min && price <= priceRange.max;
+
+            return (
+                matchesStops &&
+                matchesAirlines &&
+                matchesDepartureTime &&
+                matchesPrice
+            );
+        });
 
         setFilteredFlights(filtered || []);
-    }, [selectedStops, selectedAirlines, selectedDepartureTimes, priceRange]);
+    }, [flightSearchData, selectedStops, selectedAirlines, selectedDepartureTimes, priceRange]);
+
 
     const resetAllFilterHandler = () => {
         // Reset local state filters
@@ -416,8 +465,8 @@ const FlightFound = () => {
         setSelectAllDepartureTimes(false);
 
         // Reset filtered flights to show all available flights
-        if (flightSearchData?.journey_legs?.flight_options) {
-            setFilteredFlights(flightSearchData.journey_legs.flight_options);
+        if (mergeFlightResponse) {
+            setFilteredFlights(mergeFlightResponse);
         }
     };
 
@@ -579,12 +628,7 @@ const FlightFound = () => {
                               ---------- */}
                                                         <div className="flex text-center items-center justify-center">
                                                             <hr className="w-[30px] md:w-[50px] xl:w-[200px] border-2" />
-
-                                                            <img
-                                                                src="/media/icons/plane.svg"
-                                                                alt=""
-                                                                className="h-10 md:h-10 xl:h-12"
-                                                            />
+                                                            <FaPlane fontSize={30} className="text-primary" />
                                                             <hr className="w-[30px] md:w-[50px] xl:w-[200px] border-2" />
                                                         </div>
                                                         {/* </span> */}
@@ -672,10 +716,12 @@ const FlightFound = () => {
                                                         Number(
                                                             faresGroupData?.price?.base_fare.replace(/,/g, "")
                                                         ) || 0;
+
                                                     const tax =
                                                         Number(
                                                             faresGroupData?.price?.tax.replace(/,/g, "")
                                                         ) || 0;
+
                                                     const grossAmount =
                                                         Number(
                                                             faresGroupData?.price?.gross_amount.replace(
@@ -683,6 +729,7 @@ const FlightFound = () => {
                                                                 ""
                                                             )
                                                         ) || 0;
+
                                                     const totalFare = grossAmount;
                                                     const formattedTotalFare = totalFare.toLocaleString();
 
@@ -852,7 +899,7 @@ const FlightFound = () => {
                                     </Card>
                                 ))}
                             </div>
-                            {flightSearchData?.journey_legs?.flight_options === false && (
+                            {mergeFlightResponse === false && (
                                 <p className="text-gray-500 text-center">
                                     No flight options found.
                                 </p>
@@ -879,6 +926,7 @@ const FlightFound = () => {
             <Drawer
                 open={filterVisible == 2}
                 onClickOverlay={() => toggleFilterVisible(2)}
+
                 // sideClassName="z-[50]"
                 onClose={() => setFilterVisible(null)}
                 end
@@ -888,27 +936,27 @@ const FlightFound = () => {
                 sx={{ '& .MuiDrawer-paper': { width: { xs: 300, sm: 400 } } }}
             >
                 <div className="w-full md:sticky top-2">
-                            <FlightFilter
-                                time={time}
-                                formatTime={formatTime}
-                                priceRange={priceRange}
-                                handlePriceChange={handlePriceChange}
-                                resetAllFilterHandler={resetAllFilterHandler}
-                                selectAllStops={selectAllStops}
-                                stopsOptions={stopsOptions}
-                                selectedStops={selectedStops}
-                                handleSelectAllToggle={handleSelectAllToggle}
-                                handleStopChange={handleStopChange}
-                                airlines={airlines}
-                                selectedAirlines={selectedAirlines}
-                                handleAirlineChange={handleAirlineChange}
-                                selectAllDepartureTimes={selectAllDepartureTimes}
-                                departureTimes={departureTimes}
-                                selectedDepartureTimes={selectedDepartureTimes}
-                                handleSelectAllDepartureTimes={handleSelectAllDepartureTimes}
-                                handleDepartureTimeChange={handleDepartureTimeChange}
-                            />
-                        </div>
+                    <FlightFilter
+                        time={time}
+                        formatTime={formatTime}
+                        priceRange={priceRange}
+                        handlePriceChange={handlePriceChange}
+                        resetAllFilterHandler={resetAllFilterHandler}
+                        selectAllStops={selectAllStops}
+                        stopsOptions={stopsOptions}
+                        selectedStops={selectedStops}
+                        handleSelectAllToggle={handleSelectAllToggle}
+                        handleStopChange={handleStopChange}
+                        airlines={airlines}
+                        selectedAirlines={selectedAirlines}
+                        handleAirlineChange={handleAirlineChange}
+                        selectAllDepartureTimes={selectAllDepartureTimes}
+                        departureTimes={departureTimes}
+                        selectedDepartureTimes={selectedDepartureTimes}
+                        handleSelectAllDepartureTimes={handleSelectAllDepartureTimes}
+                        handleDepartureTimeChange={handleDepartureTimeChange}
+                    />
+                </div>
             </Drawer>
 
 
@@ -934,6 +982,7 @@ const FlightFound = () => {
             </Dialog>
             <Dialog
                 open={searchResultExpireModal}
+
                 // onClose={handleCloseSearchResultExpireModal}
                 onClose={handleCloseSearchResultExpireModal}
                 maxWidth="md"
@@ -956,6 +1005,7 @@ const FlightFound = () => {
             </Dialog>
             <Dialog
                 open={bookingFareModal}
+
                 // onClose={handleCloseBookingFareModal}
                 onClose={(event, reason) => {
                     if (reason !== "backdropClick") {
@@ -978,4 +1028,5 @@ const FlightFound = () => {
         </div>
     );
 };
+
 export default FlightFound

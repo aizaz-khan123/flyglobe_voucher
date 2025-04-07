@@ -5,13 +5,13 @@ const nextConfig = {
     return [
       {
         source: '/',
-        destination: '/en/dashboards/crm',
+        destination: '/en/login',
         permanent: true,
         locale: false
       },
       {
         source: '/:lang(en|fr|ar)',
-        destination: '/:lang/dashboards/crm',
+        destination: '/:lang/login',
         permanent: true,
         locale: false
       },
@@ -22,7 +22,10 @@ const nextConfig = {
         locale: false
       }
     ]
-  }
+  },
+  images: {
+    domains: ["127.0.0.1", "api.bookairticket.pk"],
+  },
 }
 
 export default nextConfig

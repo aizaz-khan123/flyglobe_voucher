@@ -1,25 +1,41 @@
 "use client"
 
+import { Fragment, useCallback, useEffect, useState } from 'react'
+
+import { useRouter } from 'next/navigation'
+
+import { Button, Card, CardContent, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup } from '@mui/material'
+
+import dayjs from 'dayjs'
+
+import { debounce } from 'lodash'
+
+import { Controller, useForm } from 'react-hook-form'
+
+import { FaPlaneArrival, FaPlaneDeparture } from 'react-icons/fa6'
+
+import { toast } from 'react-toastify'
+
+import CryptoJS from "crypto-js";
+
 import MuiAutocomplete from '@/components/mui-form-inputs/MuiAutoComplete'
 import MuiDatePicker from '@/components/mui-form-inputs/MuiDatePicker'
 import MuiDateRangePicker from '@/components/mui-form-inputs/MuiDateRangePicker'
 import { airportsNames, cabin_class } from '@/data/dropdowns/DropdownValues'
 import { useLazyLocationsLookupQuery } from '@/redux-store/services/api'
-import { Button, Card, CardContent, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup } from '@mui/material'
-import dayjs from 'dayjs'
-import { debounce } from 'lodash'
-import { useRouter } from 'next/navigation'
-import { Fragment, useCallback, useEffect, useState } from 'react'
+
+
+
 import "react-google-flight-datepicker/dist/main.css"
-import { Controller, useForm } from 'react-hook-form'
-import { FaPlaneArrival, FaPlaneDeparture } from 'react-icons/fa6'
-import { toast } from 'react-toastify'
+
 import TravelersDropdown from './TravelersDropdown'
-import CryptoJS from "crypto-js";
+
+
 import MuiDropdown from '@/components/mui-form-inputs/MuiDropdown'
 
 const FlightSearch = ({ initialValues, flightSearchOpen }) => {
   const [furnishingDetails, setFurnishingDetails] = useState(['Fridge', 'AC', 'TV'])
+
   const furnishingArray = [
     'AC',
     'TV',
@@ -33,8 +49,10 @@ const FlightSearch = ({ initialValues, flightSearchOpen }) => {
     'Dining Table',
     'Washing Machine'
   ]
+
   const [startDate, setStartDate] = useState(null)
   const [endDate, setEndDate] = useState(null)
+
   const handleDateChange = (dates, event) => {
     const [start, end] = dates
 
@@ -62,6 +80,7 @@ const FlightSearch = ({ initialValues, flightSearchOpen }) => {
 
   const today = dayjs();
   const [locationApiTrigger, { data: locationNames, isFetching, isSuccess }] = useLazyLocationsLookupQuery({});
+
   const { control, handleSubmit, setValue, watch, setError, clearErrors, reset, formState: { errors } } = useForm({
     defaultValues: initialValues || {
       traveler_count: {
@@ -108,7 +127,7 @@ const FlightSearch = ({ initialValues, flightSearchOpen }) => {
         });
       }
     }, 500),
-    [locationApiTrigger]
+    [locationApiTrigger, setLoadingFields] // Add setLoadingFields here
   );
 
   const toDelayedSearch = useCallback(
@@ -120,10 +139,12 @@ const FlightSearch = ({ initialValues, flightSearchOpen }) => {
         });
       }
     }, 500),
-    [locationApiTrigger]
+    [locationApiTrigger, setLoadingFields]
   );
+
   const handleFromSearchChange = (_, newValue, reason) => {
     setFromSearchStr(newValue);
+
     if (reason === "input" && newValue.length >= 3) {
       fromDelayedSearch(newValue);
     }
@@ -131,6 +152,7 @@ const FlightSearch = ({ initialValues, flightSearchOpen }) => {
 
   const handleToSearchChange = (_, newValue, reason) => {
     setToSearchStr(newValue);
+
     if (reason === "input" && newValue.length >= 3) {
       toDelayedSearch(newValue);
     }
@@ -146,7 +168,7 @@ const FlightSearch = ({ initialValues, flightSearchOpen }) => {
         });
       }
     }, 500),
-    [locationApiTrigger]
+    [locationApiTrigger, setLoadingFields]
   );
 
   const legsToDelayedSearch = useCallback(
@@ -158,13 +180,15 @@ const FlightSearch = ({ initialValues, flightSearchOpen }) => {
         });
       }
     }, 500),
-    [locationApiTrigger]
+    [locationApiTrigger, setLoadingFields]
   );
+
   const handleLegsFromSearchChange = (index, value, reason) => {
     setLegsFromSearchStrs((prev) => ({
       ...prev,
       [index]: value,
     }));
+
     if (reason === "input" && value.length >= 3) {
       legsFromDelayedSearch(index, value);
     }
@@ -175,6 +199,7 @@ const FlightSearch = ({ initialValues, flightSearchOpen }) => {
       ...prev,
       [index]: value,
     }));
+
     if (reason === "input" && value.length >= 3) {
       legsToDelayedSearch(index, value);
     }
@@ -193,6 +218,7 @@ const FlightSearch = ({ initialValues, flightSearchOpen }) => {
     setFromSearchStr(toSearchStr);
     setToSearchStr(fromSearchStr);
   };
+
   const swapLegsLocations = (index) => {
     const currentOrigin = watch(`legs[${index}].origin`);
     const currentDestination = watch(`legs[${index}].destination`);
@@ -232,7 +258,7 @@ const FlightSearch = ({ initialValues, flightSearchOpen }) => {
 
   useEffect(() => {
     clearErrors(); // Clears all errors when route_type changes
-  }, [watch('route_type')]);
+  }, [watch('route_type'), clearErrors]); // Add clearErrors to the dependency array
 
   const validateFlightData = (data, route_type) => {
     // if (!route_type) return "The route type field is required.";
@@ -243,8 +269,10 @@ const FlightSearch = ({ initialValues, flightSearchOpen }) => {
       if (!Array.isArray(data.legs) || data.legs.length < 2) {
         return "At least two flight legs are required.";
       }
+
       for (let index = 0; index < data.legs.length; index++) {
         const { origin, destination, departure_date } = data.legs[index];
+
         if (!origin) return `The origin field is required for Flight ${index + 1}`;
         if (!destination) return `The destination field is required for Flight ${index + 1}`;
         if (!departure_date) return `The departure date field is required for Flight ${index + 1}`;
@@ -253,22 +281,30 @@ const FlightSearch = ({ initialValues, flightSearchOpen }) => {
       if (!data.origin) return "The origin field is required.";
       if (!data.destination) return "The destination field is required.";
       if (!data.departure_date) return "The departure date field is required.";
+
       if (route_type === "RETURN") {
         if (!data.return_date) return "The return date field is required.";
+
         if (new Date(data.return_date) < new Date(data.departure_date)) {
           return "The return date must be after the departure date.";
         }
       }
     }
+
+
     return null; // No errors
   };
 
   const onSubmit = async (data) => {
     const error = validateFlightData(data, route_type);
+
     if (error) {
       toast.error(error)
+
       return;
     }
+
+
     // Extract dates from `date_range`
     const departureDate = data.date_range?.start ? dayjs(data.date_range.start).format("YYYY-MM-DD") : null;
     const returnDate = data.date_range?.end ? dayjs(data.date_range.end).format("YYYY-MM-DD") : null;
@@ -289,6 +325,7 @@ const FlightSearch = ({ initialValues, flightSearchOpen }) => {
         route_type,
         traveler_count: data.traveler_count,
       };
+
     console.log('payload', payload);
 
     if (!payload) return;
@@ -311,6 +348,7 @@ const FlightSearch = ({ initialValues, flightSearchOpen }) => {
         .filter(([_, value]) => value !== null && value !== undefined) // Remove null & undefined values
         .reduce((acc, [key, value]) => {
           acc[key] = String(value); // Convert all values to strings
+
           return acc;
         }, {}) // Initialize with an empty object
     ).toString();
@@ -325,6 +363,8 @@ const FlightSearch = ({ initialValues, flightSearchOpen }) => {
     // }
 
     const SECRET_KEY = "my_random_secret_key_12345";
+
+
     // Function to encrypt data
     const encryptData = (data) => {
       return CryptoJS.AES.encrypt(JSON.stringify(data), SECRET_KEY).toString();
@@ -335,9 +375,12 @@ const FlightSearch = ({ initialValues, flightSearchOpen }) => {
       try {
         const bytes = CryptoJS.AES.decrypt(ciphertext, SECRET_KEY);
         const decryptedData = bytes.toString(CryptoJS.enc.Utf8);
+
+
         return decryptedData ? JSON.parse(decryptedData) : [];
       } catch (error) {
         console.error("Decryption error:", error);
+
         return [];
       }
     };
@@ -354,6 +397,7 @@ const FlightSearch = ({ initialValues, flightSearchOpen }) => {
 
     // Remove searches with a past departure date
     const today = dayjs().format("YYYY-MM-DD");
+
     recentSearches = recentSearches.filter((search) => search.departure_date >= today);
 
 
@@ -424,6 +468,7 @@ const FlightSearch = ({ initialValues, flightSearchOpen }) => {
                       aria-labelledby="travel-type-group-label"
                       name="route-type"
                       value={field.value}
+
                       // onChange={(event) => field.onChange(event.target.value)}
                       onChange={(event) => {
                         console.log("Selected Travel Type:", event.target.value);
@@ -447,12 +492,12 @@ const FlightSearch = ({ initialValues, flightSearchOpen }) => {
                     name="origin"
                     label="From"
                     placeholder="From"
-                    selectIcon={<FaPlaneDeparture />}
+                    selectIcon={<FaPlaneDeparture className='!text-primary' />}
                     options={[...(locationNames?.data || []), ...airportsNames].map((location) => ({
                       value: location.iata_code,
                       label: `${location.municipality} (${location.iata_code})`,
                       subLabel: location.name,
-                      icon: <FaPlaneDeparture className='h-8 w-5' />
+                      icon: <FaPlaneDeparture className='h-8 w-5 text-primary' />
                     }))}
                     onInputChange={handleFromSearchChange}
                     inputValue={fromSearchStr}
@@ -477,7 +522,7 @@ const FlightSearch = ({ initialValues, flightSearchOpen }) => {
                 <div className="col-span-12 md:col-span-6 lg:col-span-3 mb-5">
                   <MuiAutocomplete
                     control={control}
-                    selectIcon={<FaPlaneArrival />}
+                    selectIcon={<FaPlaneArrival className='!text-primary' />}
                     name="destination"
                     label="To"
                     placeholder="To"
@@ -485,7 +530,7 @@ const FlightSearch = ({ initialValues, flightSearchOpen }) => {
                       value: location.iata_code,
                       label: `${location.municipality} (${location.iata_code})`,
                       subLabel: location.name,
-                      icon: <FaPlaneArrival className='h-8 w-5' />
+                      icon: <FaPlaneArrival className='h-8 w-5 text-primary' />
                     }))}
                     onInputChange={handleToSearchChange}
                     inputValue={toSearchStr}
@@ -616,6 +661,7 @@ const FlightSearch = ({ initialValues, flightSearchOpen }) => {
                       <div className="relative col-span-12 md:col-span-4 lg:col-span-3  pt-[5px]">
                         <MuiAutocomplete
                           control={control}
+
                           // name={`origin`}
                           name={`legs[${index}].origin`}
                           label="From"
@@ -651,6 +697,7 @@ const FlightSearch = ({ initialValues, flightSearchOpen }) => {
                         <MuiAutocomplete
                           control={control}
                           selectIcon={<FaPlaneArrival />}
+
                           // name={`destination`}
                           name={`legs[${index}].destination`}
                           label="To"
@@ -664,8 +711,10 @@ const FlightSearch = ({ initialValues, flightSearchOpen }) => {
                           onInputChange={(event, value, reason) => handleLegsToSearchChange(index, value, reason)}
                           inputValue={legsToSearchStrs[index] || ""}
                           setInputValue={(value) => handleLegsToSearchChange(index, value)}
+
                           // loading={loadingField === "legsDestination"}
                           loading={loadingFields[`legsDestination-${index}`] || false}
+
                         // onChange={(value: string | null) => handleMultiDestinationChange(index, value)}
                         // selectLabelInsteadOfValue={true}
                         />
@@ -738,6 +787,7 @@ const FlightSearch = ({ initialValues, flightSearchOpen }) => {
                     value: cabin,
                     label: `${cabin}`,
                   }))}
+
                 // onChange={handleCityChange}
                 />
               </div>
@@ -750,145 +800,6 @@ const FlightSearch = ({ initialValues, flightSearchOpen }) => {
           </form>
         </CardContent>
       </Card>
-      {/* <Card>
-        <CardHeader title='Search Flights' />
-        <CardContent>
-          <Grid container spacing={5}>
-            <Grid size={{ xs: 12 }}>
-              <FormLabel>Travel Type</FormLabel>
-              <RadioGroup
-                row
-                name='radio-buttons-group'
-                defaultValue='oneWay'
-              // onChange={e => setCardData({ ...cardData, addressType: e.target.value })}
-              >
-                <FormControlLabel value='oneWay' control={<Radio />} label='One Way' />
-                <FormControlLabel value='roundTrip' control={<Radio />} label='Round Trip' />
-                <FormControlLabel value='multiCity' control={<Radio />} label='Multi City' />
-              </RadioGroup>
-            </Grid>
-            <Grid size={{ xs: 12, sm: 3 }}>
-              <Autocomplete
-                fullWidth
-                onChange={(event, value) => setFurnishingDetails(value)}
-                id='flight-from'
-                options={furnishingArray}
-                // value={furnishingDetails}
-                // defaultValue={furnishingDetails}
-                // getOptionLabel={option => option || ''}
-                // popupIcon={<img src="/images/flight/FlightImage.png" className="h-8" />}
-                renderInput={params => <TextField {...params} label='From' />}
-                renderTags={(value, getTagProps) =>
-                  value.map((option, index) => {
-                    const { key, ...otherProps } = getTagProps({ index })
-
-                    return <Chip key={key} size='small' label={option} {...otherProps} />
-                  })
-                }
-              />
-            </Grid>
-            <Grid size={{ xs: 12, sm: 3 }}>
-              <Autocomplete
-                fullWidth
-                onChange={(event, value) => setFurnishingDetails(value)}
-                id='flight-to'
-                options={furnishingArray}
-                // value={furnishingDetails}
-                // defaultValue={furnishingDetails}
-                // getOptionLabel={option => option || ''}
-                renderInput={params => <TextField {...params} label='To' />}
-                renderTags={(value, getTagProps) =>
-                  value.map((option, index) => {
-                    const { key, ...otherProps } = getTagProps({ index })
-
-                    return <Chip key={key} size='small' label={option} {...otherProps} />
-                  })
-                }
-              />
-            </Grid>
-            <Grid size={{ xs: 12, sm: 3 }}>
-              <AppReactDatepicker
-                selectsRange
-                endDate={endDate}
-                selected={startDate}
-                startDate={startDate}
-                id='date-range-picker'
-                onChange={handleDateChange}
-                shouldCloseOnSelect={false}
-                customInput={<CustomInput label='Depature Date' start={startDate} end={endDate} />}
-              />
-            </Grid>
-            <Grid size={{ xs: 12, sm: 3 }}>
-              <AppReactDatepicker
-                // selected={formData.date}
-                showYearDropdown
-                showMonthDropdown
-                // onChange={date => setFormData({ ...formData, date })}
-                placeholderText='MM/DD/YYYY'
-                customInput={<TextField fullWidth label='Return Date' placeholder='MM-DD-YYYY' />}
-              />
-            </Grid>
-            <Grid size={{ xs: 12, sm: 3 }}>
-              <FormControl fullWidth>
-                <InputLabel>Travelers</InputLabel>
-                <Select
-                  label='From'
-                  //   value={formData.country}
-                  value='test'
-                //   onChange={e => setFormData({ ...formData, country: e.target.value })}
-                >
-                  <MenuItem value='UK'>UK</MenuItem>
-                  <MenuItem value='USA'>USA</MenuItem>
-                  <MenuItem value='Australia'>Australia</MenuItem>
-                  <MenuItem value='Germany'>Germany</MenuItem>
-                </Select>
-              </FormControl>
-            </Grid>
-            <Grid size={{ xs: 12, sm: 3 }}>
-              <FormControl fullWidth>
-                <InputLabel>Financial Profiles</InputLabel>
-                <Select
-                  label='From'
-                  //   value={formData.country}
-                  value='test'
-                //   onChange={e => setFormData({ ...formData, country: e.target.value })}
-                >
-                  <MenuItem value='UK'>UK</MenuItem>
-                  <MenuItem value='USA'>USA</MenuItem>
-                  <MenuItem value='Australia'>Australia</MenuItem>
-                  <MenuItem value='Germany'>Germany</MenuItem>
-                </Select>
-              </FormControl>
-            </Grid>
-            <Grid size={{ xs: 12, sm: 3 }}>
-              <Autocomplete
-                fullWidth
-                onChange={(event, value) => setFurnishingDetails(value)}
-                id='cabin-class'
-                options={furnishingArray}
-                // value={furnishingDetails}
-                // defaultValue={furnishingDetails}
-                // getOptionLabel={option => option || ''}
-                renderInput={params => <TextField {...params} label='Cabin Class' />}
-                renderTags={(value, getTagProps) =>
-                  value.map((option, index) => {
-                    const { key, ...otherProps } = getTagProps({ index })
-
-                    return <Chip key={key} size='small' label={option} {...otherProps} />
-                  })
-                }
-              />
-            </Grid>
-            <Grid size={{ xs: 12, sm: 3 }}>
-              <FormControl fullWidth>
-                <Button variant='contained' type='submit' className='py-4'>
-                  Get Started!
-                </Button>
-              </FormControl>
-            </Grid>
-          </Grid>
-        </CardContent>
-      </Card> */}
     </div>
   )
 }
