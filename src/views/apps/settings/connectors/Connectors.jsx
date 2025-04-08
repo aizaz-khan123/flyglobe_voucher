@@ -1,6 +1,5 @@
-import React from 'react'
 import { PIAConnector } from './PIAConnector';
-import {SABREConnector} from './SABREConnector'
+import { SABREConnector } from './SABREConnector';
 
 const Connectors = () => {
   return (

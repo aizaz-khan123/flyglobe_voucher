@@ -1,5 +1,6 @@
-import MarginPage from '@/views/apps/settings/airline-margin/MarginPage'
 import React from 'react'
+
+import MarginPage from '@/views/apps/settings/airline-margin/MarginPage'
 
 const page = () => {
   return (

@@ -1,5 +1,5 @@
-import { Metadata } from 'next'
 import { Typography } from '@mui/material'
+
 import { BankAccountTable } from './components/BankAccountTable'
 
 export const metadata = {

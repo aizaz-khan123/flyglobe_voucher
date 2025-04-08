@@ -1,8 +1,8 @@
 'use client'
 
-import Image from 'next/image'
-import Link from 'next/link'
 import { useEffect, useMemo, useState } from 'react'
+
+import Image from 'next/image'
 
 // MUI Imports
 import {
@@ -20,7 +20,7 @@ import {
   Tooltip
 } from '@mui/material'
 import { FaPencil, FaPlus, FaTrash } from 'react-icons/fa6'
-import { toast, useToast } from 'react-toastify'
+import { toast } from 'react-toastify'
 
 // Component Imports
 import { IoMdClose } from 'react-icons/io'
@@ -39,20 +39,22 @@ import {
   getSortedRowModel,
   useReactTable
 } from '@tanstack/react-table'
+import { useForm } from 'react-hook-form'
+
 import {
   useCreateBankAccountMutation,
   useDeleteBankAccountMutation,
   useGetBankAccountsQuery
 } from '@/redux-store/services/api'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form'
 import MuiTextField from '@/components/mui-form-inputs/MuiTextField'
 import EditBankAccount from './EditBankAccount'
 
 const fuzzyFilter = (row, columnId, value, addMeta) => {
   const itemRank = rankItem(row.getValue(columnId), value)
+
   addMeta({ itemRank })
-  return itemRank.passed
+  
+return itemRank.passed
 }
 
 const BankAccountTable = () => {
@@ -111,6 +113,7 @@ const BankAccountTable = () => {
         cell: ({ row }) => (
           <div className='flex items-center space-x-3 truncate'>
             <Image
+
               //   src={product1Img.src}
               height={40}
               width={40}
@@ -150,9 +153,9 @@ const BankAccountTable = () => {
           <div className='flex items-center w-fit gap-2'>
             <Tooltip title='Edit Bank Account' placement='top'>
               {/* <Link href={`/settings/bank-accounts/${row.original.uuid}`} aria-label='Edit bank account'> */}
-                <IconButton size='small' onClick={()=> handleShowEdit(row.original.uuid)}>
-                  <FaPencil className='cursor-pointer text-base text-primary' />
-                </IconButton>
+              <IconButton size='small' onClick={() => handleShowEdit(row.original.uuid)}>
+                <FaPencil className='cursor-pointer text-base text-primary' />
+              </IconButton>
               {/* </Link> */}
             </Tooltip>
             <Tooltip title='Delete Bank Account' placement='top'>
@@ -201,6 +204,7 @@ const BankAccountTable = () => {
         } else {
           toast.error(response?.data?.message || 'Something went wrong')
         }
+
         setBankAccountToBeDelete(null)
       })
     }
@@ -235,10 +239,12 @@ const BankAccountTable = () => {
   const handleChangeImage = fileItems => {
     if (fileItems.length > 0) {
       const fileItem = fileItems[0]
+
       const file = new File([fileItem.file], fileItem.file.name, {
         type: fileItem.file.type,
         lastModified: fileItem.file.lastModified
       })
+
       setValue('bank_logo', file)
     } else {
       setValue('bank_logo', undefined)
@@ -253,8 +259,10 @@ const BankAccountTable = () => {
     await createBankAccount(data).then(response => {
       if ('error' in response) {
         setErrors(response?.error?.data?.errors)
-        return
+        
+return
       }
+
       toaster.success('Bank Account has been created')
       onClose()
     })
@@ -270,6 +278,7 @@ const BankAccountTable = () => {
 
   const handleClose = () => {
     setIsModalOpen(false)
+
     // setIsEditMode(false)
     setIsEditModalOpen(false)
   }
@@ -281,7 +290,7 @@ const BankAccountTable = () => {
   }
 
 
-  
+
 
 
 
@@ -393,7 +402,7 @@ const BankAccountTable = () => {
           </Button>
         </DialogActions>
       </Dialog>
-{/* ------------------- Add Bank Account ------------------ */}
+      {/* ------------------- Add Bank Account ------------------ */}
       <Dialog open={isModalOpen} onClose={handleClose} fullWidth maxWidth='md'>
         <DialogTitle className='font-bold flex items-center justify-between'>
           Add Bank Account
@@ -488,8 +497,8 @@ const BankAccountTable = () => {
           </Button>
         </DialogActions>
       </Dialog>
-{/* ---------------------- Edit Bank Account ------------------ */}
-<EditBankAccount open={isEditModalOpen} onClose={handleClose} bankAccountId={selectedBankAccountId}/>
+      {/* ---------------------- Edit Bank Account ------------------ */}
+      <EditBankAccount open={isEditModalOpen} onClose={handleClose} bankAccountId={selectedBankAccountId} />
 
 
 

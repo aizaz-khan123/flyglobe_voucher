@@ -1,18 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import Link from "next/link";
-import { useForm } from "react-hook-form";
-// import { useToast } from "@/hooks/use-toast";
-// import { ISupplier } from "@/types/settings/suppliers";
-// import { routes } from "@/lib/routes";
 
-// Icons
-// import pencilIcon from "@iconify/icons-lucide/pencil";
-// import trashIcon from "@iconify/icons-lucide/trash";
-// import plusIcon from "@iconify/icons-lucide/plus";
-// import xIcon from "@iconify/icons-lucide/x";
-// import { Icon } from "@/components/Icon";
+import Link from "next/link";
 
 // MUI Components
 import {
@@ -30,8 +20,6 @@ import {
   Tooltip,
 } from "@mui/material";
 
-// Table imports
-// import { rankItem } from "@tanstack/match-sorter-utils";
 import {
   createColumnHelper,
   flexRender,
@@ -44,13 +32,16 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { useDeleteSupplierMutation, useGetSuppliersQuery } from "@/redux-store/services/api";
 import { FaPencil, FaPlus, FaTrash } from "react-icons/fa6";
+
+import { useDeleteSupplierMutation, useGetSuppliersQuery } from "@/redux-store/services/api";
 
 const fuzzyFilter = (row, columnId, value, addMeta) => {
   const itemRank = rankItem(row.getValue(columnId), value);
+
   addMeta({ itemRank });
-  return itemRank.passed;
+  
+return itemRank.passed;
 };
 
 const SupplierTable = () => {
@@ -130,9 +121,10 @@ const SupplierTable = () => {
           <div className="flex items-center w-fit gap-2">
             <Tooltip title="Edit Supplier" placement="top">
               <Link
-              href={'#'}
-            //    href={routes.apps.settings.supplier_edit(row.original.uuid)} 
-              aria-label="Edit supplier">
+                href={'#'}
+
+                //    href={routes.apps.settings.supplier_edit(row.original.uuid)} 
+                aria-label="Edit supplier">
                 <IconButton size="small">
                   <FaPencil className="text-base-content/70" fontSize={20} />
                 </IconButton>
@@ -185,6 +177,7 @@ const SupplierTable = () => {
         } else {
           toaster.error(response?.data.message);
         }
+
         setSupplierToBeDelete(null);
       });
     }
@@ -220,11 +213,12 @@ const SupplierTable = () => {
               className="w-full max-w-md"
             />
             <Link
-            href={'#'} 
-            // href={routes.apps.settings.supplier_create}
-             aria-label={"Create supplier link"}>
+              href={'#'}
+
+              // href={routes.apps.settings.supplier_create}
+              aria-label={"Create supplier link"}>
               <Button color="primary" size="md" className="hidden md:flex">
-                <FaPlus  fontSize={16} />
+                <FaPlus fontSize={16} />
                 <span>New Supplier</span>
               </Button>
             </Link>
@@ -302,7 +296,7 @@ const SupplierTable = () => {
         <DialogTitle className="font-bold flex items-center justify-between">
           Confirm Delete
           {/* <Icon icon={xIcon} className="cursor-pointer" onClick={() => setSupplierToBeDelete(null)} /> */}
-X
+          X
         </DialogTitle>
 
         <DialogContent>
@@ -326,3 +320,4 @@ X
 };
 
 export { SupplierTable };
+

@@ -1,16 +1,14 @@
-import React, { useEffect } from 'react';
-// import { useRouter } from 'next/router';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import MuiTextField from '@/components/mui-form-inputs/MuiTextField';
+import { useEffect } from 'react';
+
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
+import { useForm } from 'react-hook-form';
 import { IoMdClose } from 'react-icons/io';
-// import { bankAccountSchema } from '@/schemas/bankAccountSchema';
-// import routes from '@/routes';   
+
+import MuiTextField from '@/components/mui-form-inputs/MuiTextField';
 import { useShowBankAccountQuery, useUpdateBankAccountMutation } from '@/redux-store/services/api';
 
 const EditBankAccount = ({ open, onClose, bankAccountId }) => {
-  
+
   const {
     data: bank_account,
     isSuccess: isBankAccountsSuccess,
@@ -62,11 +60,13 @@ const EditBankAccount = ({ open, onClose, bankAccountId }) => {
     if (fileItems.length > 0) {
       const fileItem = fileItems[0];
       const reader = new FileReader();
+
       reader.onloadend = () => {
         if (reader.result) {
           setValue("bank_logo", reader.result);
         }
       };
+
       if (fileItem.type.match("image.*")) {
         reader.readAsDataURL(fileItem);
       }
@@ -80,14 +80,15 @@ const EditBankAccount = ({ open, onClose, bankAccountId }) => {
       _method: 'put',
       ...data
     };
-    
+
     try {
       const response = await updateBankAccount({ bankAccountId, updated_data }).unwrap();
-      
+
       if (response.code === 200) {
         // toaster.success(response.message);
         refetch();
         onClose();
+
         // router.push(routes.apps.settings.bank_accounts);
       } else if (response.errors) {
         setErrors(response.errors);
@@ -208,9 +209,9 @@ const EditBankAccount = ({ open, onClose, bankAccountId }) => {
         <Button variant='outlined' onClick={onClose} disabled={isLoadingBankAccount}>
           Cancel
         </Button>
-        <Button 
-          variant='contained' 
-          onClick={onSubmit} 
+        <Button
+          variant='contained'
+          onClick={onSubmit}
           disabled={isLoadingBankAccount}
         >
           {isLoadingBankAccount ? 'Updating...' : 'Update'}

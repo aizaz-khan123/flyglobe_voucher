@@ -1,21 +1,21 @@
 "use client";
-import Link from "next/link";
-// import Pagination from "@/components/Pagination/Pagination";
-// import { routes } from "@/lib/routes";
-
-// import { IAirlineMargin } from "@/types/settings/airline_margins";
-import { useBranchDropDownQuery, useDeleteAirlineMarginMutation, useGetAirlineMarginsQuery } from "@/redux-store/services/api";
-
 import { useEffect, useRef, useState } from "react";
-import { useForm } from "react-hook-form";
-import SearchInput from "@/components/searchInput/SearchInput";
+
+import Link from "next/link";
+
 import { Button, Card, CardContent, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
+
+import { useForm } from "react-hook-form";
+
 import { FaPlus } from "react-icons/fa6";
-import { AirlineMarginRow } from "./AirlineMarginRow";
-import { routes } from "@/libs/routes";
-import { TbMoodAnnoyed } from "react-icons/tb";
-import MuiTextField from "@/components/mui-form-inputs/MuiTextField";
+
+import { useBranchDropDownQuery, useDeleteAirlineMarginMutation, useGetAirlineMarginsQuery } from "@/redux-store/services/api";
 import MuiDropdown from "@/components/mui-form-inputs/MuiDropdown";
+import MuiTextField from "@/components/mui-form-inputs/MuiTextField";
+import SearchInput from "@/components/searchInput/SearchInput";
+import { routes } from "@/libs/routes";
+
+import { AirlineMarginRow } from "./AirlineMarginRow";
 
 const MarginTable = () => {
     // const toaster = useToast();
@@ -27,9 +27,12 @@ const MarginTable = () => {
     const { data: detail_data, isFetching, refetch } = useGetAirlineMarginsQuery({ searchText, pageUrl });
     const airline_margins = detail_data?.data;
     const links = detail_data?.links;
+
     const [deleteAirlineMargin, {
         isLoading: deleteAirlineMarginLoading,
     }] = useDeleteAirlineMarginMutation();
+
+
 // branch dropdown 
 const { data: branchDropdownData, isFetching:isFetchingBranch, refetch:refetchBranch } = useBranchDropDownQuery()
 
@@ -38,6 +41,7 @@ const initialValues = {
         margin: marginModal || "", 
         margin_type: marginTypeModal || "amount",
     })) || [],
+
     // user: branchDropdownData?.map((data) => ({
     //     id: data?.id,
     //     name: data?.name
@@ -47,6 +51,7 @@ const initialValues = {
   const { control:controlAssignModal, handleSubmit, reset } = useForm({
     defaultValues: initialValues,
   });
+
  const onSubmit = handleSubmit(async (data) => {
 
         const updated_data = {
@@ -68,7 +73,8 @@ const initialValues = {
         //         setErrors(response?.data?.errors)
         //     }
         // });
-    });  
+    });
+  
   useEffect(() => {
     reset(initialValues); 
 }, [marginModal, marginTypeModal, reset]);
@@ -90,6 +96,7 @@ const initialValues = {
         AirlineMarginDeleteConfirmationRef.current?.showModal();
         setAirlineMarginToBeDelete(airline_margins?.find((b) => uuid === b.uuid));
     };
+
     const showAssignAirlineMarginConfirmation = (margin,margin_type) => {
         AirlineMarginAssignConfirmationRef.current?.showModal();
         setMarginModal(margin?.toString());
@@ -224,6 +231,7 @@ const initialValues = {
                             <tbody isLoading={isFetching} hasData={!!branchDropdownData?.length}>
                                 {branchDropdownData?.map((data, index) => {                                    
                                     return(
+
                                 //    <TableRow className="hover:bg-base-200/40">
                                 <>
                                    <div className="font-medium">{index+1}</div>
@@ -254,6 +262,7 @@ const initialValues = {
                                     />
                             </div>
                             </>
+
                                 //    </TableRow>
                                 )})}
                             </tbody>
