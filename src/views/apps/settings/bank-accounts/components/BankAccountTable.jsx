@@ -499,9 +499,6 @@ const BankAccountTable = () => {
       </Dialog>
       {/* ---------------------- Edit Bank Account ------------------ */}
       <EditBankAccount open={isEditModalOpen} onClose={handleClose} bankAccountId={selectedBankAccountId} />
-
-
-
     </>
   )
 }

@@ -1,290 +1,501 @@
-"use client";
-import { useEffect, useRef, useState } from "react";
+'use client'
+import { useEffect, useMemo, useRef, useState } from 'react'
 
-import Link from "next/link";
+import Link from 'next/link'
 
-import { Button, Card, CardContent, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
+import { Badge, Button, Card, CardContent, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, TablePagination } from '@mui/material'
 
-import { useForm } from "react-hook-form";
+import { useForm } from 'react-hook-form'
 
-import { FaPlus } from "react-icons/fa6";
+import { FaPencil, FaPlus, FaTrash } from 'react-icons/fa6'
 
-import { useBranchDropDownQuery, useDeleteAirlineMarginMutation, useGetAirlineMarginsQuery } from "@/redux-store/services/api";
-import MuiDropdown from "@/components/mui-form-inputs/MuiDropdown";
-import MuiTextField from "@/components/mui-form-inputs/MuiTextField";
-import SearchInput from "@/components/searchInput/SearchInput";
-import { routes } from "@/libs/routes";
+import {
+  useBranchDropDownQuery,
+  useDeleteAirlineMarginMutation,
+  useGetAirlineMarginsQuery
+} from '@/redux-store/services/api'
+import MuiDropdown from '@/components/mui-form-inputs/MuiDropdown'
+import MuiTextField from '@/components/mui-form-inputs/MuiTextField'
+import SearchInput from '@/components/searchInput/SearchInput'
+import { routes } from '@/libs/routes'
+import { rankItem } from '@tanstack/match-sorter-utils'
 
-import { AirlineMarginRow } from "./AirlineMarginRow";
+import {
+  createColumnHelper,
+  flexRender,
+  getCoreRowModel,
+  getFacetedMinMaxValues,
+  getFacetedRowModel,
+  getFacetedUniqueValues,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+  useReactTable
+} from '@tanstack/react-table'
+import { CreateAirlineMargin } from './CreateAirlineMargin'
+import { EditAirlineMargin } from './EditAirlineMargin'
+import { MdOutlineAssignmentInd } from 'react-icons/md'
 
 const MarginTable = () => {
-    // const toaster = useToast();
-    const [searchText, setSearchText] = useState("");
-    const [pageUrl, setPageUrl] = useState("");
-    const [marginModal, setMarginModal] = useState("");
-    const [marginTypeModal, setMarginTypeModal] = useState("");
+  // const toaster = useToast();
+  // States
+  const [rowSelection, setRowSelection] = useState({})
+  const [globalFilter, setGlobalFilter] = useState('')
+  const [page, setPage] = useState(0)
+  const [rowsPerPage, setRowsPerPage] = useState(10)
+  const [searchText, setSearchText] = useState('')
+  const [pageUrl, setPageUrl] = useState('')
+  const [marginModal, setMarginModal] = useState('')
+  const [marginTypeModal, setMarginTypeModal] = useState('')
 
-    const { data: detail_data, isFetching, refetch } = useGetAirlineMarginsQuery({ searchText, pageUrl });
-    const airline_margins = detail_data?.data;
-    const links = detail_data?.links;
+  const fuzzyFilter = (row, columnId, value, addMeta) => {
+    const itemRank = rankItem(row.getValue(columnId), value)
 
-    const [deleteAirlineMargin, {
-        isLoading: deleteAirlineMarginLoading,
-    }] = useDeleteAirlineMarginMutation();
+    addMeta({ itemRank })
 
+    return itemRank.passed
+  }
+  const { data: detail_data, isFetching, refetch } = useGetAirlineMarginsQuery({ searchText, pageUrl })
+  const airline_margins = detail_data?.data
+  const links = detail_data?.links
+  const totalCount = detail_data?.total || 0
 
-    // branch dropdown 
-    const { data: branchDropdownData, isFetching: isFetchingBranch, refetch: refetchBranch } = useBranchDropDownQuery()
+  const [deleteAirlineMargin, { isLoading: deleteAirlineMarginLoading }] = useDeleteAirlineMarginMutation()
 
-    const initialValues = {
-        branchData: branchDropdownData?.map((data) => ({
-            margin: marginModal || "",
-            margin_type: marginTypeModal || "amount",
-        })) || [],
+  // branch dropdown
+  const { data: branchDropdownData, isFetching: isFetchingBranch, refetch: refetchBranch } = useBranchDropDownQuery()
 
-        // user: branchDropdownData?.map((data) => ({
-        //     id: data?.id,
-        //     name: data?.name
-        //   }))
-    };
+  const initialValues = {
+    branchData:
+      branchDropdownData?.map(data => ({
+        margin: marginModal || '',
+        margin_type: marginTypeModal || 'amount'
+      })) || []
 
-    const { control: controlAssignModal, handleSubmit, reset } = useForm({
-        defaultValues: initialValues,
-    });
+    // user: branchDropdownData?.map((data) => ({
+    //     id: data?.id,
+    //     name: data?.name
+    //   }))
+  }
 
-    const onSubmit = handleSubmit(async (data) => {
+  const {
+    control: controlAssignModal,
+    handleSubmit,
+    reset
+  } = useForm({
+    defaultValues: initialValues
+  })
 
-        const updated_data = {
-            _method: 'put',
-            ...data
+  const onSubmit = handleSubmit(async data => {
+    const updated_data = {
+      _method: 'put',
+      ...data
+    }
+
+    // await updateAirlineMargin({ airlineMarginId, updated_data }).then((response) => {
+
+    //     if('error' in response){
+    //         setErrors(response?.error.data?.errors);
+    //         return;
+    //     }
+    //     if (response.data?.code == 200) {
+    //         toaster.success(response?.data?.message);
+    //         refetch();
+    //         router.push(routes.apps.settings.airline_margins);
+    //     } else {
+    //         setErrors(response?.data?.errors)
+    //     }
+    // });
+  })
+
+  useEffect(() => {
+    reset(initialValues)
+  }, [marginModal, marginTypeModal, reset])
+  useEffect(() => {
+    refetch()
+  }, [searchText, pageUrl])
+  const [AirlineMarginToBeDelete, setAirlineMarginToBeDelete] = useState()
+  const AirlineMarginDeleteConfirmationRef = useRef(null)
+  const AirlineMarginAssignConfirmationRef = useRef(null)
+
+  const { control: filterControl } = useForm({
+    defaultValues: {
+      category: 'default',
+      search: ''
+    }
+  })
+
+  const showDeleteAirlineMarginConfirmation = uuid => {
+    AirlineMarginDeleteConfirmationRef.current?.showModal()
+    setAirlineMarginToBeDelete(airline_margins?.find(b => uuid === b.uuid))
+  }
+
+  const showAssignAirlineMarginConfirmation = (margin, margin_type) => {
+    AirlineMarginAssignConfirmationRef.current?.showModal()
+    setMarginModal(margin?.toString())
+    setMarginTypeModal(margin_type)
+  }
+
+  const handleDeleteAirlineMargin = async () => {
+    if (AirlineMarginToBeDelete) {
+      deleteAirlineMargin(AirlineMarginToBeDelete.uuid).then(response => {
+        if (response?.data.code == 200) {
+          // toaster.success(response?.data.message);
+        } else {
+          // toaster.error(response?.data.message);
         }
+      })
+    }
+  }
 
-        // await updateAirlineMargin({ airlineMarginId, updated_data }).then((response) => {
+  const paginationClickHandler = url => {
+    if (url) {
+      setPageUrl(url)
+    }
+  }
+  const handlePageChange = (event, newPage) => {
+    setPage(newPage)
+  }
 
-        //     if('error' in response){
-        //         setErrors(response?.error.data?.errors);
-        //         return;
-        //     }
-        //     if (response.data?.code == 200) {
-        //         toaster.success(response?.data?.message);
-        //         refetch();
-        //         router.push(routes.apps.settings.airline_margins);
-        //     } else {
-        //         setErrors(response?.data?.errors)
-        //     }
-        // });
-    });
+  const handleRowsPerPageChange = event => {
+    setRowsPerPage(parseInt(event.target.value, 10))
+    setPage(0)
+  }
+  const columnHelper = createColumnHelper()
 
-    useEffect(() => {
-        reset(initialValues);
-    }, [marginModal, marginTypeModal, reset]);
-    useEffect(() => {
-        refetch()
-    }, [searchText, pageUrl])
-    const [AirlineMarginToBeDelete, setAirlineMarginToBeDelete] = useState();
-    const AirlineMarginDeleteConfirmationRef = useRef(null);
-    const AirlineMarginAssignConfirmationRef = useRef(null);
-
-    const { control: filterControl } = useForm({
-        defaultValues: {
-            category: "default",
-            search: "",
-        },
-    });
-
-    const showDeleteAirlineMarginConfirmation = (uuid) => {
-        AirlineMarginDeleteConfirmationRef.current?.showModal();
-        setAirlineMarginToBeDelete(airline_margins?.find((b) => uuid === b.uuid));
-    };
-
-    const showAssignAirlineMarginConfirmation = (margin, margin_type) => {
-        AirlineMarginAssignConfirmationRef.current?.showModal();
-        setMarginModal(margin?.toString());
-        setMarginTypeModal(margin_type)
-    };
-
-    const handleDeleteAirlineMargin = async () => {
-        if (AirlineMarginToBeDelete) {
-            deleteAirlineMargin(AirlineMarginToBeDelete.uuid).then((response) => {
-                if (response?.data.code == 200) {
-                    // toaster.success(response?.data.message);
-                } else {
-                    // toaster.error(response?.data.message);
-                }
-            });
+  const columns = useMemo(
+    () => [
+      columnHelper.accessor('id', {
+        header: 'ID',
+        cell: ({ row }) => <div className='font-medium'>{row.original.id}</div>
+      }),
+      columnHelper.accessor('sales_channel', {
+        header: 'Sales Channel',
+        cell: ({ row }) => <div className='flex items-center space-x-3 truncate'>{row.original.sales_channel}</div>
+      }),
+      columnHelper.accessor('airline.name', {
+        header: 'Airline',
+        cell: ({ row }) => <div className='flex items-center space-x-3 truncate'>{row.original.airline?.name}</div>
+      }),
+      columnHelper.accessor('margin', {
+        header: 'Pricing',
+        cell: ({ row }) => {
+          const { margin, margin_type } = row.original
+          const color = Number(margin) > 0 ? 'warning' : 'success'
+          return (
+            <Badge color={color}>
+              {margin}
+              {margin_type === 'amount' ? ' PKR' : '%'}
+            </Badge>
+          )
         }
-    };
+      }),
+      columnHelper.accessor('region', {
+        header: 'Region',
+        cell: ({ row }) => <div className='font-medium'>{row.original.region}</div>
+      }),
+      columnHelper.accessor('is_apply_on_gross', {
+        header: 'Apply on gross fare',
+        cell: ({ row }) => (
+          <Badge color={row.original.is_apply_on_gross ? 'success' : 'warning'}>
+            {row.original.is_apply_on_gross ? 'Yes' : 'No'}
+          </Badge>
+        )
+      }),
+      columnHelper.accessor('status', {
+        header: 'Status',
+        cell: ({ row }) => (
+          <Badge color={row.original.status ? 'success' : 'warning'} variant='outlined' className='w-[8rem]'>
+            {row.original.status ? 'Active' : 'In-Active'}
+          </Badge>
+        )
+      }),
+      columnHelper.accessor('rbds', {
+        header: 'Rbds',
+        cell: ({ row }) => <div className='font-medium'>{row.original.rbds}</div>
+      }),
+      columnHelper.accessor('remarks', {
+        header: 'Remarks',
+        cell: ({ row }) => (
+          <div className='text-sm'>
+            {row.original.remarks?.length > 20 ? `${row.original.remarks.slice(0, 20)}...` : row.original.remarks}
+          </div>
+        )
+      }),
+      {
+        id: 'actions',
+        header: 'Action',
+        cell: ({ row }) => (
+          <div className='inline-flex w-fit gap-2'>
+              <Button color='ghost' size='sm' shape='square'  onClick={() => handleShowEdit(row.original.uuid)}>
+                <FaPencil className='text-base-content/70' />
+              </Button>
+            <Button
+              color='ghost'
+              className='text-error/70 hover:bg-error/20'
+              size='sm'
+              shape='square'
+              onClick={e => {
+                e.stopPropagation()
+                showDeleteAirlineMarginConfirmation(row.original.uuid)
+              }}
+            >
+              <FaTrash fontSize={20} />
+            </Button>
+            {/* <Button
+              color='ghost'
+              className='text-error/70 hover:bg-error/20'
+              size='sm'
+              shape='square'
+              onClick={e => {
+                e.stopPropagation()
+                showAssignAirlineMarginConfirmation(row.original.margin, row.original.margin_type)
+              }}
+            >
+              <MdOutlineAssignmentInd />
 
-    const paginationClickHandler = (url) => {
-        if (url) {
-            setPageUrl(url)
-        }
-    };
+            </Button> */}
+          </div>
+        )
+      }
+    ],
+    []
+  )
 
-    return (
-        <>
-            <Card className="mt-5 bg-base-100">
-                <CardContent className={"p-0"}>
-                    <div className="flex items-center justify-between px-5 pt-5">
-                        <div className="inline-flex items-center gap-3">
-                            <SearchInput onSearch={setSearchText} control={filterControl} />
-                        </div>
-                        <div className="inline-flex items-center gap-3">
-                            <Link href={routes.apps.settings.airline_margin_create} aria-label={"Create product link"}>
-                                <Button variant='contained' className="hidden md:flex">
-                                    <FaPlus fontSize={16} />
-                                    <span>New Airline Margin</span>
-                                </Button>
-                            </Link>
-                        </div>
-                    </div>
-                    <div className="overflow-x-auto p-5">
-                        <table className="w-full border-collapse">
-                            <thead>
-                                <tr>
-                                    <td className="text-sm font-medium text-base-content/80">ID</td>
-                                    <td className="text-sm font-medium text-base-content/80">Sales Channel</td>
-                                    <td className="text-sm font-medium text-base-content/80">Airline</td>
-                                    <td className="text-sm font-medium text-base-content/80">Pricing</td>
-                                    <td className="text-sm font-medium text-base-content/80">Region</td>
-                                    <td className="text-sm font-medium text-base-content/80">Apply on gross fare</td>
-                                    <td className="text-sm font-medium text-base-content/80">Status</td>
-                                    <td className="text-sm font-medium text-base-content/80">Rbds</td>
-                                    <td className="text-sm font-medium text-base-content/80">Remarks</td>
-                                    <td className="text-sm font-medium text-base-content/80">Action</td>
-                                </tr>
-                            </thead>
+  const table = useReactTable({
+    data: airline_margins,
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+    manualPagination: true,
+    pageCount: Math.ceil(totalCount / rowsPerPage),
+    enableRowSelection: true,
+    globalFilterFn: fuzzyFilter,
+    onRowSelectionChange: setRowSelection,
+    getCoreRowModel: getCoreRowModel(),
+    onGlobalFilterChange: setGlobalFilter,
+    getFilteredRowModel: getFilteredRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getFacetedRowModel: getFacetedRowModel(),
+    getFacetedUniqueValues: getFacetedUniqueValues(),
+    getFacetedMinMaxValues: getFacetedMinMaxValues(),
+    getPaginationRowModel: getPaginationRowModel()
+  })
 
-                            <tbody isLoading={isFetching} hasData={!!airline_margins?.length}>
-                                {airline_margins?.map((airline_margin, index) => (
-                                    <AirlineMarginRow
-                                        airline_margin={airline_margin}
-                                        key={airline_margin.uuid}
-                                        showDeleteAirlineMarginConfirmation={showDeleteAirlineMarginConfirmation}
-                                        showAssignAirlineMarginConfirmation={showAssignAirlineMarginConfirmation}
-                                    />
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
-                    {/* <div className="flex items-center justify-end px-5 pb-5 pt-3">
-                        <Pagination pagination={links} clickHandler={paginationClickHandler} />
-                    </div> */}
-                </CardContent>
-            </Card>
-            {/* delete modal  */}
-            <Dialog ref={AirlineMarginDeleteConfirmationRef} backdrop>
-                <form method="dialog">
-                    <Button
-                        size="sm"
-                        color="ghost"
-                        shape="circle"
-                        className="absolute right-2 top-2"
-                        aria-label="Close modal">
-                        {/* <Icon icon={xIcon} className="h-4" /> */}
-                        X
-                    </Button>
-                </form>
-                <DialogTitle className="font-bold">Confirm Delete</DialogTitle>
-                <DialogContent>
-                    You are about to delete. Would you like to proceed further ?
-                </DialogContent>
-                <DialogActions>
-                    <form method="dialog">
-                        <Button color="error" size="sm">
-                            No
-                        </Button>
-                    </form>
-                    <form method="dialog">
-                        <Button loading={deleteAirlineMarginLoading} color="primary" size="sm" onClick={() => handleDeleteAirlineMargin()}>
-                            Yes
-                        </Button>
-                    </form>
-                </DialogActions>
-            </Dialog>
-            {/* assign modal  */}
-            <Dialog className="w-11/12 max-w-6xl h-11/12" ref={AirlineMarginAssignConfirmationRef} backdrop>
-                <form method="dialog">
-                    <Button
-                        size="sm"
-                        color="ghost"
-                        shape="circle"
-                        className="absolute right-2 top-2"
-                        aria-label="Close modal">
-                        X
-                        {/* <Icon icon={xIcon} className="h-4" /> */}
-                    </Button>
-                </form>
-                <DialogTitle className="font-bold">Assign Margin</DialogTitle>
-                <DialogContent>
-                    <div className="overflow-auto">
-                        <table className="mt-2 rounded-box">
-                            <thead>
-                                <tr>
-                                    <td className="text-sm font-medium text-base-content/80">ID</td>
-                                    <td className="text-sm font-medium text-base-content/80">Name</td>
-                                    <td className="text-sm font-medium text-base-content/80">Margin</td>
-                                    <td className="text-sm font-medium text-base-content/80">Margin Type</td>
-                                </tr>
-                            </thead>
+// create airline margin 
 
-                            <tbody isLoading={isFetching} hasData={!!branchDropdownData?.length}>
-                                {branchDropdownData?.map((data, index) => {
-                                    return (
+const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false)
+  const [selectedAirlineMarginId, setSelectedAirlineMarginId] = useState('')
 
-                                        //    <TableRow className="hover:bg-base-200/40">
-                                        <>
-                                            <div className="font-medium">{index + 1}</div>
-                                            <div className="flex items-center space-x-3 truncate">{data?.name}</div>
-                                            <div>
-                                                <MuiTextField
-                                                    className="w-64 border-0 focus:outline-0"
-                                                    control={controlAssignModal}
-                                                    size="md"
-                                                    id={`margin-${index}`}
-                                                    name={`branchData.${index}.margin`}
-                                                    placeholder="Enter Margin"
-                                                    wrapperClassName="w-[29rem]"
-                                                />
+  const handleShow = () => {
+    setIsModalOpen(true)
+  }
 
-                                            </div>
-                                            <div>
-                                                <MuiDropdown
-                                                    control={controlAssignModal}
-                                                    name={`branchData.${index}.margin_type`}
-                                                    size="md"
-                                                    id={`margin_type-${index}`}
-                                                    className="w-full border-0 text-base w-[18rem]"
-                                                    options={[{ id: 'amount', name: 'Amount' }, { id: 'percentage', name: 'Percentage' }].map((connector) => ({
-                                                        label: connector.name,
-                                                        value: connector.id,
-                                                    }))}
-                                                />
-                                            </div>
-                                        </>
+  const handleClose = () => {
+    setIsModalOpen(false)
+    // setIsEditMode(false)
+    setIsEditModalOpen(false)
+  }
 
-                                        //    </TableRow>
-                                    )
-                                })}
-                            </tbody>
-                        </table>
-                    </div>
-                </DialogContent>
-                <DialogActions>
-                    <form method="dialog">
-                        <Button color="error" size="sm">
-                            No
-                        </Button>
-                    </form>
-                    <form method="dialog">
-                        <Button loading={deleteAirlineMarginLoading} color="primary" size="sm" onClick={onSubmit}>
-                            Yes
-                        </Button>
-                    </form>
-                </DialogActions>
-            </Dialog>
-        </>
-    );
-};
+  const handleShowEdit = (id) => {
+    setSelectedAirlineMarginId(id)
+    setIsEditModalOpen(true)
+  }
 
-export { MarginTable };
+
+  return (
+    <>
+      <Card className='mt-5 bg-base-100'>
+        <CardContent className={'p-0'}>
+          <div className='flex items-center justify-between px-5 pt-5'>
+            <div className='inline-flex items-center gap-3'>
+              <SearchInput onSearch={setSearchText} control={filterControl} />
+            </div>
+            <div className='inline-flex items-center gap-3'>
+                <Button onClick={handleShow} variant='contained' className='hidden md:flex'>
+                  <FaPlus fontSize={16} />
+                  <span>New Airline Margin</span>
+                </Button>
+            </div>
+          </div>
+          <div className='overflow-x-auto p-5'>
+            <table className='w-full border-collapse'>
+              <thead>
+                {
+                table.getHeaderGroups().map(headerGroup => (
+                  <tr key={headerGroup.id}>
+                    {headerGroup.headers.map(header => (
+                      <th key={header.id} className='text-left p-3 border-b'>
+                        {header.isPlaceholder ? null : (
+                          <div
+                            className={header.column.getCanSort() ? 'cursor-pointer select-none' : ''}
+                            onClick={header.column.getToggleSortingHandler()}
+                          >
+                            {flexRender(header.column.columnDef.header, header.getContext())}
+                            {{
+                              asc: ' 🔼',
+                              desc: ' 🔽'
+                            }[header.column.getIsSorted()] ?? null}
+                          </div>
+                        )}
+                      </th>
+                    ))}
+                  </tr>
+                ))}
+              </thead>
+              <tbody>
+                {!isFetching ? (
+                  table.getRowModel().rows.length > 0 ? (
+                    table.getRowModel().rows.map(row =>{                        
+                     return(
+                      <tr key={row?.original?.id} className='hover:bg-gray-50'>
+                        {row.getVisibleCells().map(cell => {                            
+                            return(
+                          <td key={cell?.id} className='py-5 text-center border-b'>
+                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                          </td>
+                        )})}
+                      </tr>
+                    )})
+                  ) : (
+                    <tr>
+                      <td colSpan={table.getAllColumns().length} className='text-center p-5'>
+                        No airline margins found
+                      </td>
+                    </tr>
+                  )
+                ) : (
+                  <tr>
+                    <td colSpan={table.getAllColumns().length}>
+                      <div className='flex justify-center items-center py-5'>
+                        <CircularProgress />
+                      </div>
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+          <TablePagination
+            rowsPerPageOptions={[10, 25, 50, 100]}
+            component='div'
+            count={totalCount}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handlePageChange}
+            onRowsPerPageChange={handleRowsPerPageChange}
+          />
+        </CardContent>
+      </Card>
+      {/* delete modal  */}
+      <Dialog ref={AirlineMarginDeleteConfirmationRef} backdrop>
+        <form method='dialog'>
+          <Button size='sm' color='ghost' shape='circle' className='absolute right-2 top-2' aria-label='Close modal'>
+            {/* <Icon icon={xIcon} className="h-4" /> */}X
+          </Button>
+        </form>
+        <DialogTitle className='font-bold'>Confirm Delete</DialogTitle>
+        <DialogContent>You are about to delete. Would you like to proceed further ?</DialogContent>
+        <DialogActions>
+          <form method='dialog'>
+            <Button color='error' size='sm'>
+              No
+            </Button>
+          </form>
+          <form method='dialog'>
+            <Button
+              loading={deleteAirlineMarginLoading}
+              color='primary'
+              size='sm'
+              onClick={() => handleDeleteAirlineMargin()}
+            >
+              Yes
+            </Button>
+          </form>
+        </DialogActions>
+      </Dialog>
+      {/* assign modal  */}
+      <Dialog className='w-11/12 max-w-6xl h-11/12' ref={AirlineMarginAssignConfirmationRef} backdrop>
+        <form method='dialog'>
+          <Button size='sm' color='ghost' shape='circle' className='absolute right-2 top-2' aria-label='Close modal'>
+            X{/* <Icon icon={xIcon} className="h-4" /> */}
+          </Button>
+        </form>
+        <DialogTitle className='font-bold'>Assign Margin</DialogTitle>
+        <DialogContent>
+          <div className='overflow-auto'>
+            <table className='mt-2 rounded-box'>
+              <thead>
+                <tr>
+                  <td className='text-sm font-medium text-base-content/80'>ID</td>
+                  <td className='text-sm font-medium text-base-content/80'>Name</td>
+                  <td className='text-sm font-medium text-base-content/80'>Margin</td>
+                  <td className='text-sm font-medium text-base-content/80'>Margin Type</td>
+                </tr>
+              </thead>
+
+              <tbody isLoading={isFetching} hasData={!!branchDropdownData?.length}>
+                {branchDropdownData?.map((data, index) => {
+                  return (
+                    //    <TableRow className="hover:bg-base-200/40">
+                    <>
+                      <div className='font-medium'>{index + 1}</div>
+                      <div className='flex items-center space-x-3 truncate'>{data?.name}</div>
+                      <div>
+                        <MuiTextField
+                          className='w-64 border-0 focus:outline-0'
+                          control={controlAssignModal}
+                          size='md'
+                          id={`margin-${index}`}
+                          name={`branchData.${index}.margin`}
+                          placeholder='Enter Margin'
+                          wrapperClassName='w-[29rem]'
+                        />
+                      </div>
+                      <div>
+                        <MuiDropdown
+                          control={controlAssignModal}
+                          name={`branchData.${index}.margin_type`}
+                          size='md'
+                          id={`margin_type-${index}`}
+                          className='w-full border-0 text-base w-[18rem]'
+                          options={[
+                            { id: 'amount', name: 'Amount' },
+                            { id: 'percentage', name: 'Percentage' }
+                          ].map(connector => ({
+                            label: connector.name,
+                            value: connector.id
+                          }))}
+                        />
+                      </div>
+                    </>
+
+                    //    </TableRow>
+                  )
+                })}
+              </tbody>
+            </table>
+          </div>
+        </DialogContent>
+        <DialogActions>
+          <form method='dialog'>
+            <Button color='error' size='sm'>
+              No
+            </Button>
+          </form>
+          <form method='dialog'>
+            <Button loading={deleteAirlineMarginLoading} color='primary' size='sm' onClick={onSubmit}>
+              Yes
+            </Button>
+          </form>
+        </DialogActions>
+      </Dialog>
+       {/* ---------------------- Create Airline Margin ------------------ */}
+            <CreateAirlineMargin open={isCreateModalOpen} onClose={handleClose}/>
+            {/* ---------------------- Edit Airline Margin ------------------ */}
+            <EditAirlineMargin open={isEditModalOpen} onClose={handleClose} airlineMarginId={selectedAirlineMarginId}/>
+    </>
+  )
+}
+
+export { MarginTable }
