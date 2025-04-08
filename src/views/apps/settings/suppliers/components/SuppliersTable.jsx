@@ -40,8 +40,8 @@ const fuzzyFilter = (row, columnId, value, addMeta) => {
   const itemRank = rankItem(row.getValue(columnId), value);
 
   addMeta({ itemRank });
-  
-return itemRank.passed;
+
+  return itemRank.passed;
 };
 
 const SupplierTable = () => {
@@ -214,10 +214,8 @@ const SupplierTable = () => {
             />
             <Link
               href={'#'}
-
-              // href={routes.apps.settings.supplier_create}
               aria-label={"Create supplier link"}>
-              <Button color="primary" size="md" className="hidden md:flex">
+              <Button variant='contained' className="hidden md:flex">
                 <FaPlus fontSize={16} />
                 <span>New Supplier</span>
               </Button>

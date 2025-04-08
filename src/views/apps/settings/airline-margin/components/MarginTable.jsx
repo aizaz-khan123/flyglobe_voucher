@@ -33,32 +33,32 @@ const MarginTable = () => {
     }] = useDeleteAirlineMarginMutation();
 
 
-// branch dropdown 
-const { data: branchDropdownData, isFetching:isFetchingBranch, refetch:refetchBranch } = useBranchDropDownQuery()
+    // branch dropdown 
+    const { data: branchDropdownData, isFetching: isFetchingBranch, refetch: refetchBranch } = useBranchDropDownQuery()
 
-const initialValues = {
-    branchData: branchDropdownData?.map((data) => ({
-        margin: marginModal || "", 
-        margin_type: marginTypeModal || "amount",
-    })) || [],
+    const initialValues = {
+        branchData: branchDropdownData?.map((data) => ({
+            margin: marginModal || "",
+            margin_type: marginTypeModal || "amount",
+        })) || [],
 
-    // user: branchDropdownData?.map((data) => ({
-    //     id: data?.id,
-    //     name: data?.name
-    //   }))
-  };
-  
-  const { control:controlAssignModal, handleSubmit, reset } = useForm({
-    defaultValues: initialValues,
-  });
+        // user: branchDropdownData?.map((data) => ({
+        //     id: data?.id,
+        //     name: data?.name
+        //   }))
+    };
 
- const onSubmit = handleSubmit(async (data) => {
+    const { control: controlAssignModal, handleSubmit, reset } = useForm({
+        defaultValues: initialValues,
+    });
+
+    const onSubmit = handleSubmit(async (data) => {
 
         const updated_data = {
             _method: 'put',
             ...data
         }
-        
+
         // await updateAirlineMargin({ airlineMarginId, updated_data }).then((response) => {
 
         //     if('error' in response){
@@ -74,10 +74,10 @@ const initialValues = {
         //     }
         // });
     });
-  
-  useEffect(() => {
-    reset(initialValues); 
-}, [marginModal, marginTypeModal, reset]);
+
+    useEffect(() => {
+        reset(initialValues);
+    }, [marginModal, marginTypeModal, reset]);
     useEffect(() => {
         refetch()
     }, [searchText, pageUrl])
@@ -97,7 +97,7 @@ const initialValues = {
         setAirlineMarginToBeDelete(airline_margins?.find((b) => uuid === b.uuid));
     };
 
-    const showAssignAirlineMarginConfirmation = (margin,margin_type) => {
+    const showAssignAirlineMarginConfirmation = (margin, margin_type) => {
         AirlineMarginAssignConfirmationRef.current?.showModal();
         setMarginModal(margin?.toString());
         setMarginTypeModal(margin_type)
@@ -131,8 +131,8 @@ const initialValues = {
                         </div>
                         <div className="inline-flex items-center gap-3">
                             <Link href={routes.apps.settings.airline_margin_create} aria-label={"Create product link"}>
-                                <Button color="primary" size="md" className="hidden md:flex">
-                                    <FaPlus  fontSize={16} />
+                                <Button variant='contained' className="hidden md:flex">
+                                    <FaPlus fontSize={16} />
                                     <span>New Airline Margin</span>
                                 </Button>
                             </Link>
@@ -142,16 +142,16 @@ const initialValues = {
                         <table className="w-full border-collapse">
                             <thead>
                                 <tr>
-                                <td className="text-sm font-medium text-base-content/80">ID</td>
-                                <td className="text-sm font-medium text-base-content/80">Sales Channel</td>
-                                <td className="text-sm font-medium text-base-content/80">Airline</td>
-                                <td className="text-sm font-medium text-base-content/80">Pricing</td>
-                                <td className="text-sm font-medium text-base-content/80">Region</td>
-                                <td className="text-sm font-medium text-base-content/80">Apply on gross fare</td>
-                                <td className="text-sm font-medium text-base-content/80">Status</td>
-                                <td className="text-sm font-medium text-base-content/80">Rbds</td>
-                                <td className="text-sm font-medium text-base-content/80">Remarks</td>
-                                <td className="text-sm font-medium text-base-content/80">Action</td>
+                                    <td className="text-sm font-medium text-base-content/80">ID</td>
+                                    <td className="text-sm font-medium text-base-content/80">Sales Channel</td>
+                                    <td className="text-sm font-medium text-base-content/80">Airline</td>
+                                    <td className="text-sm font-medium text-base-content/80">Pricing</td>
+                                    <td className="text-sm font-medium text-base-content/80">Region</td>
+                                    <td className="text-sm font-medium text-base-content/80">Apply on gross fare</td>
+                                    <td className="text-sm font-medium text-base-content/80">Status</td>
+                                    <td className="text-sm font-medium text-base-content/80">Rbds</td>
+                                    <td className="text-sm font-medium text-base-content/80">Remarks</td>
+                                    <td className="text-sm font-medium text-base-content/80">Action</td>
                                 </tr>
                             </thead>
 
@@ -211,60 +211,61 @@ const initialValues = {
                         shape="circle"
                         className="absolute right-2 top-2"
                         aria-label="Close modal">
-                            X
+                        X
                         {/* <Icon icon={xIcon} className="h-4" /> */}
                     </Button>
                 </form>
                 <DialogTitle className="font-bold">Assign Margin</DialogTitle>
                 <DialogContent>
-                <div className="overflow-auto">
+                    <div className="overflow-auto">
                         <table className="mt-2 rounded-box">
                             <thead>
                                 <tr>
-                                <td className="text-sm font-medium text-base-content/80">ID</td>
-                                <td className="text-sm font-medium text-base-content/80">Name</td>
-                                <td className="text-sm font-medium text-base-content/80">Margin</td>
-                                <td className="text-sm font-medium text-base-content/80">Margin Type</td>
+                                    <td className="text-sm font-medium text-base-content/80">ID</td>
+                                    <td className="text-sm font-medium text-base-content/80">Name</td>
+                                    <td className="text-sm font-medium text-base-content/80">Margin</td>
+                                    <td className="text-sm font-medium text-base-content/80">Margin Type</td>
                                 </tr>
                             </thead>
 
                             <tbody isLoading={isFetching} hasData={!!branchDropdownData?.length}>
-                                {branchDropdownData?.map((data, index) => {                                    
-                                    return(
+                                {branchDropdownData?.map((data, index) => {
+                                    return (
 
-                                //    <TableRow className="hover:bg-base-200/40">
-                                <>
-                                   <div className="font-medium">{index+1}</div>
-                                   <div className="flex items-center space-x-3 truncate">{data?.name}</div>
-                                   <div>
-                                    <MuiTextField
-                                        className="w-64 border-0 focus:outline-0"
-                                        control={controlAssignModal}
-                                        size="md"
-                                        id={`margin-${index}`}
-                                        name={`branchData.${index}.margin`} 
-                                        placeholder="Enter Margin"
-                                        wrapperClassName="w-[29rem]"
-                                    />
-    
-                                </div>
-                             <div>
-                                    <MuiDropdown
-                                        control={controlAssignModal}
-                                        name={`branchData.${index}.margin_type`}
-                                        size="md"
-                                        id={`margin_type-${index}`}
-                                        className="w-full border-0 text-base w-[18rem]"
-                                        options={[{ id: 'amount', name: 'Amount' }, { id: 'percentage', name: 'Percentage' }].map((connector) => ({
-                                            label: connector.name,
-                                            value: connector.id,
-                                        }))}
-                                    />
-                            </div>
-                            </>
+                                        //    <TableRow className="hover:bg-base-200/40">
+                                        <>
+                                            <div className="font-medium">{index + 1}</div>
+                                            <div className="flex items-center space-x-3 truncate">{data?.name}</div>
+                                            <div>
+                                                <MuiTextField
+                                                    className="w-64 border-0 focus:outline-0"
+                                                    control={controlAssignModal}
+                                                    size="md"
+                                                    id={`margin-${index}`}
+                                                    name={`branchData.${index}.margin`}
+                                                    placeholder="Enter Margin"
+                                                    wrapperClassName="w-[29rem]"
+                                                />
 
-                                //    </TableRow>
-                                )})}
+                                            </div>
+                                            <div>
+                                                <MuiDropdown
+                                                    control={controlAssignModal}
+                                                    name={`branchData.${index}.margin_type`}
+                                                    size="md"
+                                                    id={`margin_type-${index}`}
+                                                    className="w-full border-0 text-base w-[18rem]"
+                                                    options={[{ id: 'amount', name: 'Amount' }, { id: 'percentage', name: 'Percentage' }].map((connector) => ({
+                                                        label: connector.name,
+                                                        value: connector.id,
+                                                    }))}
+                                                />
+                                            </div>
+                                        </>
+
+                                        //    </TableRow>
+                                    )
+                                })}
                             </tbody>
                         </table>
                     </div>

@@ -69,8 +69,8 @@ const fuzzyFilter = (row, columnId, value, addMeta) => {
     const itemRank = rankItem(row.getValue(columnId), value)
 
     addMeta({ itemRank })
-    
-return itemRank.passed
+
+    return itemRank.passed
 }
 
 const AgencyTable = () => {
@@ -347,8 +347,8 @@ const AgencyTable = () => {
 
             if ("error" in response) {
                 toast.error("something went wrong.")
-                
-return false
+
+                return false
             }
 
             setPermissionList(response?.data?.permission_list)
@@ -393,8 +393,8 @@ return false
         await updatePermissions({ userUUid, selectedPermissionUUIDs }).then((response) => {
             if ("error" in response) {
                 setErrors(response?.error?.data?.errors)
-                
-return
+
+                return
             }
 
             toast.success(`Permissions has been Updated`)
@@ -418,8 +418,8 @@ return
             await updateAgency({ agencyId, updated_data }).then((response) => {
                 if ("error" in response) {
                     setErrors(response?.error?.data?.errors)
-                    
-return
+
+                    return
                 }
 
                 toast.success(`Agency has been Updated`)
@@ -438,8 +438,8 @@ return
             await createAgency(data).then((response) => {
                 if ("error" in response) {
                     setErrors(response?.error?.data?.errors)
-                    
-return
+
+                    return
                 }
 
                 toast.success(`${data.name} has been created`)
@@ -485,7 +485,7 @@ return
                             placeholder="Search agencies..."
                             className="w-full max-w-md"
                         />
-                        <Button onClick={handleShow} color="primary" size="md" className="hidden md:flex">
+                        <Button onClick={handleShow} variant='contained' className="hidden md:flex">
                             <FaPlus fontSize={16} />
                             <span>New Agency</span>
                         </Button>

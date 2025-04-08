@@ -434,7 +434,7 @@ const BranchTable = () => {
                             placeholder="Search branches..."
                             className="w-full max-w-md"
                         />
-                        <Button onClick={handleShow} color="primary" size="md" className="hidden md:flex">
+                        <Button onClick={handleShow} variant='contained' className="hidden md:flex">
                             <FaPlus fontSize={16} />
                             <span>New Branch</span>
                         </Button>

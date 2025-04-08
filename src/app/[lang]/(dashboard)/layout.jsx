@@ -61,8 +61,7 @@ const Layout = async props => {
           <i className='ri-arrow-up-line' />
         </Button>
       </ScrollToTop>
-      <Customizer dir={direction} />
-      {/* </AuthGuard> */}
+      {/* <Customizer dir={direction} /> */}
     </Providers>
   )
 }

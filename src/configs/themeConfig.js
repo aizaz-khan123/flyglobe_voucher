@@ -16,10 +16,10 @@
  * Another way is to clear the cookie from the browser's Application/Storage tab and then reload the page.
  */
 const themeConfig = {
-  templateName: 'Materio',
+  templateName: 'FlyGlobe',
   homePageUrl: '/dashboards/crm',
   settingsCookieName: 'materio-mui-next-demo-1',
-  mode: 'system', // 'system', 'light', 'dark'
+  mode: 'light', // 'system', 'light', 'dark'
   skin: 'default', // 'default', 'bordered'
   semiDark: false, // true, false
   layout: 'vertical', // 'vertical', 'collapsed', 'horizontal'
@@ -27,12 +27,12 @@ const themeConfig = {
   compactContentWidth: 1440, // in px
   navbar: {
     type: 'fixed', // 'fixed', 'static'
-    contentWidth: 'compact', // 'compact', 'wide'
+    contentWidth: 'wide', // 'compact', 'wide'
     floating: false, //! true, false (This will not work in the Horizontal Layout)
     detached: true, //! true, false (This will not work in the Horizontal Layout or floating navbar is enabled)
     blur: true // true, false
   },
-  contentWidth: 'compact', // 'compact', 'wide'
+  contentWidth: 'wide', // 'compact', 'wide'
   footer: {
     type: 'static', // 'fixed', 'static'
     contentWidth: 'compact', // 'compact', 'wide'

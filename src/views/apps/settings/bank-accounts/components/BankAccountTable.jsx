@@ -53,8 +53,8 @@ const fuzzyFilter = (row, columnId, value, addMeta) => {
   const itemRank = rankItem(row.getValue(columnId), value)
 
   addMeta({ itemRank })
-  
-return itemRank.passed
+
+  return itemRank.passed
 }
 
 const BankAccountTable = () => {
@@ -259,8 +259,8 @@ const BankAccountTable = () => {
     await createBankAccount(data).then(response => {
       if ('error' in response) {
         setErrors(response?.error?.data?.errors)
-        
-return
+
+        return
       }
 
       toaster.success('Bank Account has been created')
@@ -310,7 +310,7 @@ return
               className='w-full max-w-md'
             />
             {/* <Link href={'/settings/bank-accounts/create'} aria-label={'Create bank account'}> */}
-            <Button onClick={handleShow} color='primary' size='md' className='hidden md:flex'>
+            <Button onClick={handleShow} variant='contained' className='hidden md:flex'>
               <FaPlus fontSize={16} />
               <span>New Bank Account</span>
             </Button>

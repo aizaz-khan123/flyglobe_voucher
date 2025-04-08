@@ -84,15 +84,15 @@ const Login = ({ mode }) => {
         toast.error(response.error.data?.message);
         setIsDisable(false);
         setIsLoading(false);
-        
-return;
+
+        return;
       }
 
       setErrors(response.error.data.errors);
       setIsDisable(false);
       setIsLoading(false);
-      
-return;
+
+      return;
     }
 
     if (response.data.code === 200) {
