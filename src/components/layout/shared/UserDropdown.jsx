@@ -7,18 +7,18 @@ import { useRef, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 
 // MUI Imports
-import { styled } from '@mui/material/styles'
-import Badge from '@mui/material/Badge'
 import Avatar from '@mui/material/Avatar'
-import Popper from '@mui/material/Popper'
-import Fade from '@mui/material/Fade'
-import Paper from '@mui/material/Paper'
-import ClickAwayListener from '@mui/material/ClickAwayListener'
-import MenuList from '@mui/material/MenuList'
-import Typography from '@mui/material/Typography'
-import Divider from '@mui/material/Divider'
-import MenuItem from '@mui/material/MenuItem'
+import Badge from '@mui/material/Badge'
 import Button from '@mui/material/Button'
+import ClickAwayListener from '@mui/material/ClickAwayListener'
+import Divider from '@mui/material/Divider'
+import Fade from '@mui/material/Fade'
+import MenuItem from '@mui/material/MenuItem'
+import MenuList from '@mui/material/MenuList'
+import Paper from '@mui/material/Paper'
+import Popper from '@mui/material/Popper'
+import { styled } from '@mui/material/styles'
+import Typography from '@mui/material/Typography'
 
 // Third-party Imports
 
@@ -26,7 +26,12 @@ import Button from '@mui/material/Button'
 import { useSettings } from '@core/hooks/useSettings'
 
 // Util Imports
+import { updateAuthCookie } from '@/libs/cookie/auth'
+import { userLogout } from '@/redux-store/Features/authslice'
+import { useLogoutMutation } from '@/redux-store/services/api'
 import { getLocalizedUrl } from '@/utils/i18n'
+import { useDispatch } from 'react-redux'
+import { toast } from 'react-toastify'
 
 // Styled component for badge content
 const BadgeContentSpan = styled('span')({
@@ -65,18 +70,27 @@ const UserDropdown = () => {
 
     setOpen(false)
   }
-
-  const handleUserLogout = async () => {
+  const dispatch = useDispatch();
+  const [logout] = useLogoutMutation();
+  const onLogout = async () => {
     try {
-      // Sign out from the app
-      await signOut({ callbackUrl: process.env.NEXT_PUBLIC_APP_URL })
+      await logout({}).unwrap();
+      toast.success("Logout successfully...");
+      await Promise.allSettled([
+        updateAuthCookie({ user: undefined }),
+        dispatch(userLogout()),
+      ]);
+      window.location.href = "/login";
     } catch (error) {
-      console.error(error)
+      toast.success("Logout successfully...");
+      dispatch(userLogout());
+      await Promise.allSettled([
+        updateAuthCookie({ user: undefined }),
+        dispatch(userLogout()),
+      ]);
 
-      // Show above error in a toast like following
-      // toastService.error((err as Error).message)
     }
-  }
+  };
 
   return (
     <>
@@ -147,7 +161,7 @@ const UserDropdown = () => {
                       color='error'
                       size='small'
                       endIcon={<i className='ri-logout-box-r-line' />}
-                      onClick={handleUserLogout}
+                      onClick={onLogout}
                       sx={{ '& .MuiButton-endIcon': { marginInlineStart: 1.5 } }}
                     >
                       Logout
