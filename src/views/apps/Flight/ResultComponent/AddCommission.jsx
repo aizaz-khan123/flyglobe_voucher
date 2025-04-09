@@ -1,82 +1,88 @@
-"use client";
+'use client'
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react'
 
 const AddCommission = ({ filteredFlights, setFilteredFlights }) => {
-    const [amount, setAmount] = useState("");
-    const [amountType, setAmountType] = useState("fixAmount");
-    const [fareType, setFareType] = useState("grossfare");
-    const [originalFlights, setOriginalFlights] = useState([]); // Untyped array
+  const [amount, setAmount] = useState('')
+  const [amountType, setAmountType] = useState('fixAmount')
+  const [fareType, setFareType] = useState('grossfare')
+  const [originalFlights, setOriginalFlights] = useState([]) // Untyped array
 
-    // On initial render, store original fares
-    useEffect(() => {
-        if (originalFlights.length === 0 && filteredFlights.length > 0) {
-            setOriginalFlights(JSON.parse(JSON.stringify(filteredFlights))); // Deep copy to avoid reference issues
-        }
-    }, [filteredFlights, originalFlights]);
+  // On initial render, store original fares
+  useEffect(() => {
+    if (originalFlights.length === 0 && filteredFlights.length > 0) {
+      setOriginalFlights(JSON.parse(JSON.stringify(filteredFlights))) // Deep copy to avoid reference issues
+    }
+  }, [filteredFlights, originalFlights])
 
+  const handleAmountTypeChange = e => {
+    setAmountType(e.target.id)
+  }
 
-    const handleAmountTypeChange = (e) => {
-        setAmountType(e.target.id);
-    };
+  const handleFareTypeChange = e => {
+    setFareType(e.target.id)
+  }
 
-    const handleFareTypeChange = (e) => {
-        setFareType(e.target.id);
-    };
+  const handleApply = () => {
+    if (!amount) return // If input is empty, do nothing
 
-    const handleApply = () => {
-        if (!amount) return; // If input is empty, do nothing
+    let updatedFlights = filteredFlights.map((flight, flightIndex) => {
+      return {
+        ...flight,
+        fare_option: flight.fare_option.map((fare, fareIndex) => {
+          let originalBaseFare = Number(
+            originalFlights[flightIndex]?.fare_option?.[fareIndex]?.price?.base_fare.replace(/,/g, '') || 0
+          )
+          let originalGrossAmount = Number(
+            originalFlights[flightIndex]?.fare_option?.[fareIndex]?.price?.gross_amount.replace(/,/g, '') || 0
+          )
 
-        let updatedFlights = filteredFlights.map((flight, flightIndex) => {
-            return {
-                ...flight,
-                fare_option: flight.fare_option.map((fare, fareIndex) => {
-                    let originalBaseFare = Number(originalFlights[flightIndex]?.fare_option?.[fareIndex]?.price?.base_fare.replace(/,/g, "") || 0);
-                    let originalGrossAmount = Number(originalFlights[flightIndex]?.fare_option?.[fareIndex]?.price?.gross_amount.replace(/,/g, "") || 0);
+          let newBaseFare = originalBaseFare
+          let newGrossAmount = originalGrossAmount
 
-                    let newBaseFare = originalBaseFare;
-                    let newGrossAmount = originalGrossAmount;
+          if (amountType === 'fixAmount') {
+            if (fareType === 'basefare') {
+              newBaseFare = originalBaseFare + Number(amount)
+            } else {
+              newGrossAmount = originalGrossAmount + Number(amount)
+            }
+          } else if (amountType === 'percentageAmount') {
+            if (Number(amount) > 100) return fare // Prevent more than 100%
 
-                    if (amountType === "fixAmount") {
-                        if (fareType === "basefare") {
-                            newBaseFare = originalBaseFare + Number(amount);
-                        } else {
-                            newGrossAmount = originalGrossAmount + Number(amount);
-                        }
-                    } else if (amountType === "percentageAmount") {
-                        if (Number(amount) > 100) return fare; // Prevent more than 100%
+            if (fareType === 'basefare') {
+              newBaseFare = originalBaseFare + (originalBaseFare * Number(amount)) / 100
+            } else {
+              newGrossAmount = originalGrossAmount + (originalGrossAmount * Number(amount)) / 100
+            }
+          }
 
-                        if (fareType === "basefare") {
-                            newBaseFare = originalBaseFare + (originalBaseFare * Number(amount)) / 100;
-                        } else {
-                            newGrossAmount = originalGrossAmount + (originalGrossAmount * Number(amount)) / 100;
-                        }
-                    }
+          return {
+            ...fare,
+            price: {
+              ...fare.price,
+              base_fare: newBaseFare.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
+              gross_amount: newGrossAmount.toLocaleString('en-US', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+              })
+            }
+          }
+        })
+      }
+    })
 
-                    return {
-                        ...fare,
-                        price: {
-                            ...fare.price,
-                            base_fare: newBaseFare.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
-                            gross_amount: newGrossAmount.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
-                        },
-                    };
-                }),
-            };
-        });
+    setFilteredFlights(updatedFlights)
+  }
 
-        setFilteredFlights(updatedFlights);
-    };
+  const handleClear = () => {
+    setAmount('')
+    setAmountType('fixAmount')
+    setFilteredFlights(JSON.parse(JSON.stringify(originalFlights)))
+  }
 
-    const handleClear = () => {
-        setAmount("");
-        setAmountType("fixAmount");
-        setFilteredFlights(JSON.parse(JSON.stringify(originalFlights)));
-    };
-
-    return (
-        <>
-            {/* <Dropdown vertical="bottom" end className="z-50">
+  return (
+    <>
+      {/* <Dropdown vertical="bottom" end className="z-50">
                 <DropdownToggle button={false}>
                     <Button
                         color="primary"
@@ -170,8 +176,8 @@ const AddCommission = ({ filteredFlights, setFilteredFlights }) => {
                     </div>
                 </DropdownMenu>
             </Dropdown> */}
-        </>
-    )
+    </>
+  )
 }
 
-export default AddCommission;
+export default AddCommission

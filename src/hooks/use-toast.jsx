@@ -1,23 +1,23 @@
-import { toast } from "sonner";
+import { toast } from 'sonner'
 
 const useToast = () => {
-    const show = (message) => {
-        toast(message);
-    };
+  const show = message => {
+    toast(message)
+  }
 
-    const showSuccess = (message) => {
-        toast.success(message);
-    };
+  const showSuccess = message => {
+    toast.success(message)
+  }
 
-    const showError = (message) => {
-        toast.error(message);
-    };
+  const showError = message => {
+    toast.error(message)
+  }
 
-    return {
-        show,
-        success: showSuccess,
-        error: showError,
-    };
-};
+  return {
+    show,
+    success: showSuccess,
+    error: showError
+  }
+}
 
-export { useToast };
+export { useToast }

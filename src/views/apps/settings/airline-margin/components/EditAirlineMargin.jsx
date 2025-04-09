@@ -13,10 +13,22 @@ import {
   useUpdateAirlineMarginMutation
 } from '@/redux-store/services/api'
 import Select from 'react-select'
-import { Button, Card, CardContent, Dialog, DialogActions, DialogContent, DialogTitle, FormControlLabel, FormLabel, Switch } from '@mui/material'
+import {
+  Button,
+  Card,
+  CardContent,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  FormControlLabel,
+  FormLabel,
+  Switch
+} from '@mui/material'
 import MuiTextField from '@/components/mui-form-inputs/MuiTextField'
 import MuiDropdown from '@/components/mui-form-inputs/MuiDropdown'
 import { IoMdClose } from 'react-icons/io'
+import { toast } from 'react-toastify'
 
 const regionOptions = [
   { label: 'ALL-SECTORS', value: 'ALL-SECTORS' },
@@ -27,7 +39,7 @@ const regionOptions = [
   { label: 'EX-PAKISTAN', value: 'EX-PAKISTAN' }
 ]
 
-const EditAirlineMargin = ({ airlineMarginId,onClose,open }) => {
+const EditAirlineMargin = ({ airlineMarginId, onClose, open }) => {
   const { data: airlineDropDown } = useAirlineDropDownQuery()
   const { data: connectorDropDown } = useConnectorDropDownQuery()
 
@@ -44,9 +56,7 @@ const EditAirlineMargin = ({ airlineMarginId,onClose,open }) => {
   const [updateAirlineMargin, { error: errorAirlineMargin, isLoading: isLoadingAirlineMargin }] =
     useUpdateAirlineMarginMutation()
 
-  const { control, handleSubmit, setError, reset } = useForm({
-    resolver: zodResolver()
-  })
+  const { control, handleSubmit, setError, reset } = useForm()
 
   useEffect(() => {
     refetch()
@@ -88,7 +98,7 @@ const EditAirlineMargin = ({ airlineMarginId,onClose,open }) => {
         return
       }
       if (response.data?.code == 200) {
-        toaster.success(response?.data?.message)
+        toast.success(response?.data?.message)
         refetch()
         router.push(routes.apps.settings.airline_margins)
       } else {
@@ -106,14 +116,6 @@ const EditAirlineMargin = ({ airlineMarginId,onClose,open }) => {
       <div className='flex items-center justify-center h-64'>
         <span className='loading loading-spinner loading-lg'></span>
         <p className='ml-2'>Loading airline margin details...</p>
-      </div>
-    )
-  }
-
-  if (error) {
-    return (
-      <div className='flex flex-col items-center justify-center h-64 text-red-500'>
-        <p>Error fetching bank account details.</p>
       </div>
     )
   }
@@ -283,10 +285,10 @@ const EditAirlineMargin = ({ airlineMarginId,onClose,open }) => {
 
                   <div>
                     <FormControlLabel
-                      control={<Switch control name='is_apply_on_gross' color='primary' />}
+                      control={<Switch name='is_apply_on_gross' color='primary' />}
                       label='is_apply_on_gross'
                     />
-                    <FormControlLabel control={<Switch control name='status' color='primary' />} label='status' />
+                    <FormControlLabel control={<Switch name='status' color='primary' />} label='status' />
                   </div>
 
                   <div className='col-span-1 md:col-span-2'>

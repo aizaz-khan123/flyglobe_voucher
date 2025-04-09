@@ -113,7 +113,6 @@ const BankAccountTable = () => {
         cell: ({ row }) => (
           <div className='flex items-center space-x-3 truncate'>
             <Image
-
               //   src={product1Img.src}
               height={40}
               width={40}
@@ -283,20 +282,10 @@ const BankAccountTable = () => {
     setIsEditModalOpen(false)
   }
 
-
-  const handleShowEdit = (id) => {
+  const handleShowEdit = id => {
     setSelectedBankAccountId(id)
     setIsEditModalOpen(true)
   }
-
-
-
-
-
-
-
-
-
 
   return (
     <>

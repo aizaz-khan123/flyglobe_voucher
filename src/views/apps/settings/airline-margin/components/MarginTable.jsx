@@ -1,9 +1,18 @@
 'use client'
 import { useEffect, useMemo, useRef, useState } from 'react'
 
-import Link from 'next/link'
-
-import { Badge, Button, Card, CardContent, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, TablePagination } from '@mui/material'
+import {
+  Badge,
+  Button,
+  Card,
+  CardContent,
+  CircularProgress,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  TablePagination
+} from '@mui/material'
 
 import { useForm } from 'react-hook-form'
 
@@ -17,7 +26,6 @@ import {
 import MuiDropdown from '@/components/mui-form-inputs/MuiDropdown'
 import MuiTextField from '@/components/mui-form-inputs/MuiTextField'
 import SearchInput from '@/components/searchInput/SearchInput'
-import { routes } from '@/libs/routes'
 import { rankItem } from '@tanstack/match-sorter-utils'
 
 import {
@@ -34,10 +42,10 @@ import {
 } from '@tanstack/react-table'
 import { CreateAirlineMargin } from './CreateAirlineMargin'
 import { EditAirlineMargin } from './EditAirlineMargin'
-import { MdOutlineAssignmentInd } from 'react-icons/md'
+import { IoMdClose } from 'react-icons/io'
+import { toast } from 'react-toastify'
 
 const MarginTable = () => {
-  // const toaster = useToast();
   // States
   const [rowSelection, setRowSelection] = useState({})
   const [globalFilter, setGlobalFilter] = useState('')
@@ -114,7 +122,8 @@ const MarginTable = () => {
   useEffect(() => {
     refetch()
   }, [searchText, pageUrl])
-  const [AirlineMarginToBeDelete, setAirlineMarginToBeDelete] = useState()
+  const [AirlineMarginToBeDelete, setAirlineMarginToBeDelete] = useState(null)
+
   const AirlineMarginDeleteConfirmationRef = useRef(null)
   const AirlineMarginAssignConfirmationRef = useRef(null)
 
@@ -140,9 +149,10 @@ const MarginTable = () => {
     if (AirlineMarginToBeDelete) {
       deleteAirlineMargin(AirlineMarginToBeDelete.uuid).then(response => {
         if (response?.data.code == 200) {
-          // toaster.success(response?.data.message);
+          toast.success(response?.data.message)
+          setAirlineMarginToBeDelete(null)
         } else {
-          // toaster.error(response?.data.message);
+          toast.error(response?.data.message)
         }
       })
     }
@@ -204,11 +214,12 @@ const MarginTable = () => {
       }),
       columnHelper.accessor('status', {
         header: 'Status',
-        cell: ({ row }) => (
-          <Badge color={row.original.status ? 'success' : 'warning'} variant='outlined' className='w-[8rem]'>
-            {row.original.status ? 'Active' : 'In-Active'}
-          </Badge>
-        )
+        cell: ({ row }) =>
+          row?.original?.status ? (
+            <span className='text-success'>Active</span>
+          ) : (
+            <span className='text-warning'>In-Active</span>
+          )
       }),
       columnHelper.accessor('rbds', {
         header: 'Rbds',
@@ -227,9 +238,9 @@ const MarginTable = () => {
         header: 'Action',
         cell: ({ row }) => (
           <div className='inline-flex w-fit gap-2'>
-              <Button color='ghost' size='sm' shape='square'  onClick={() => handleShowEdit(row.original.uuid)}>
-                <FaPencil className='text-base-content/70' />
-              </Button>
+            <Button color='ghost' size='sm' shape='square' onClick={() => handleShowEdit(row.original.uuid)}>
+              <FaPencil className='text-base-content/70' />
+            </Button>
             <Button
               color='ghost'
               className='text-error/70 hover:bg-error/20'
@@ -281,27 +292,26 @@ const MarginTable = () => {
     getPaginationRowModel: getPaginationRowModel()
   })
 
-// create airline margin 
+  // create and edit airline margin
 
-const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
   const [selectedAirlineMarginId, setSelectedAirlineMarginId] = useState('')
 
   const handleShow = () => {
-    setIsModalOpen(true)
+    setIsCreateModalOpen(true)
   }
 
   const handleClose = () => {
-    setIsModalOpen(false)
+    setIsCreateModalOpen(false)
     // setIsEditMode(false)
     setIsEditModalOpen(false)
   }
 
-  const handleShowEdit = (id) => {
+  const handleShowEdit = id => {
     setSelectedAirlineMarginId(id)
     setIsEditModalOpen(true)
   }
-
 
   return (
     <>
@@ -312,17 +322,16 @@ const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
               <SearchInput onSearch={setSearchText} control={filterControl} />
             </div>
             <div className='inline-flex items-center gap-3'>
-                <Button onClick={handleShow} variant='contained' className='hidden md:flex'>
-                  <FaPlus fontSize={16} />
-                  <span>New Airline Margin</span>
-                </Button>
+              <Button onClick={handleShow} variant='contained' className='hidden md:flex'>
+                <FaPlus fontSize={16} />
+                <span>New Airline Margin</span>
+              </Button>
             </div>
           </div>
           <div className='overflow-x-auto p-5'>
             <table className='w-full border-collapse'>
               <thead>
-                {
-                table.getHeaderGroups().map(headerGroup => (
+                {table.getHeaderGroups().map(headerGroup => (
                   <tr key={headerGroup.id}>
                     {headerGroup.headers.map(header => (
                       <th key={header.id} className='text-left p-3 border-b'>
@@ -346,17 +355,19 @@ const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
               <tbody>
                 {!isFetching ? (
                   table.getRowModel().rows.length > 0 ? (
-                    table.getRowModel().rows.map(row =>{                        
-                     return(
-                      <tr key={row?.original?.id} className='hover:bg-gray-50'>
-                        {row.getVisibleCells().map(cell => {                            
-                            return(
-                          <td key={cell?.id} className='py-5 text-center border-b'>
-                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                          </td>
-                        )})}
-                      </tr>
-                    )})
+                    table.getRowModel().rows.map(row => {
+                      return (
+                        <tr key={row?.id} className='hover:bg-gray-50'>
+                          {row.getVisibleCells().map(cell => {
+                            return (
+                              <td key={cell?.id} className='py-5 text-center border-b'>
+                                {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                              </td>
+                            )
+                          })}
+                        </tr>
+                      )
+                    })
                   ) : (
                     <tr>
                       <td colSpan={table.getAllColumns().length} className='text-center p-5'>
@@ -388,11 +399,9 @@ const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
         </CardContent>
       </Card>
       {/* delete modal  */}
-      <Dialog ref={AirlineMarginDeleteConfirmationRef} backdrop>
+      {/* <Dialog ref={AirlineMarginDeleteConfirmationRef} backdrop>
         <form method='dialog'>
-          <Button size='sm' color='ghost' shape='circle' className='absolute right-2 top-2' aria-label='Close modal'>
-            {/* <Icon icon={xIcon} className="h-4" /> */}X
-          </Button>
+        <IoMdClose className='cursor-pointer' onClick={() => setAirlineMarginToBeDelete(null)} />
         </form>
         <DialogTitle className='font-bold'>Confirm Delete</DialogTitle>
         <DialogContent>You are about to delete. Would you like to proceed further ?</DialogContent>
@@ -412,6 +421,23 @@ const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
               Yes
             </Button>
           </form>
+        </DialogActions>
+      </Dialog> */}
+      <Dialog open={!!AirlineMarginToBeDelete} onClose={() => setAirlineMarginToBeDelete(null)}>
+        <DialogTitle className='font-bold flex items-center justify-between'>
+          Confirm Delete
+          <IoMdClose className='cursor-pointer' onClick={() => setAirlineMarginToBeDelete(null)} />
+        </DialogTitle>
+        <DialogContent>
+          You are about to delete <b>{AirlineMarginToBeDelete?.bank_name}</b>. Would you like to proceed further?
+        </DialogContent>
+        <DialogActions>
+          <Button color='error' onClick={() => setAirlineMarginToBeDelete(null)}>
+            No
+          </Button>
+          <Button variant='contained' onClick={handleDeleteAirlineMargin}>
+            {'Yes'}
+          </Button>
         </DialogActions>
       </Dialog>
       {/* assign modal  */}
@@ -490,10 +516,10 @@ const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
           </form>
         </DialogActions>
       </Dialog>
-       {/* ---------------------- Create Airline Margin ------------------ */}
-            <CreateAirlineMargin open={isCreateModalOpen} onClose={handleClose}/>
-            {/* ---------------------- Edit Airline Margin ------------------ */}
-            <EditAirlineMargin open={isEditModalOpen} onClose={handleClose} airlineMarginId={selectedAirlineMarginId}/>
+      {/* ---------------------- Create Airline Margin ------------------ */}
+      <CreateAirlineMargin open={isCreateModalOpen} onClose={handleClose} />
+      {/* ---------------------- Edit Airline Margin ------------------ */}
+      <EditAirlineMargin open={isEditModalOpen} onClose={handleClose} airlineMarginId={selectedAirlineMarginId} />
     </>
   )
 }

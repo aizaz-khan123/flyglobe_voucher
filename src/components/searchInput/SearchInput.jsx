@@ -1,35 +1,31 @@
-'use client';
-import React, { useState, useMemo, useCallback } from "react";
+'use client'
+import React, { useState, useMemo, useCallback } from 'react'
 
-import debounce from "lodash.debounce";
-import TextField from "@mui/material/TextField";
+import debounce from 'lodash.debounce'
+import TextField from '@mui/material/TextField'
 
-const SearchInput = ({ onSearch, label = "Search", debounceTime = 500, ...props }) => {
-    const [searchText, setSearchText] = useState("");
+const SearchInput = ({ onSearch, label = 'Search', debounceTime = 500, ...props }) => {
+  const [searchText, setSearchText] = useState('')
 
-    const debouncedSearch = useMemo(() => {
-        return debounce((value) => {
-            onSearch(value);
-        }, debounceTime);
-    }, [onSearch, debounceTime]);
+  const debouncedSearch = useMemo(() => {
+    return debounce(value => {
+      onSearch(value)
+    }, debounceTime)
+  }, [onSearch, debounceTime])
 
-    const handleSearchChange = useCallback((e) => {
-        const { value } = e.target;
+  const handleSearchChange = useCallback(
+    e => {
+      const { value } = e.target
 
-        setSearchText(value);
-        debouncedSearch(value);
-    }, [debouncedSearch]);
+      setSearchText(value)
+      debouncedSearch(value)
+    },
+    [debouncedSearch]
+  )
 
-    return (
-        <TextField
-            fullWidth
-            variant="outlined"
-            label={label}
-            value={searchText}
-            onChange={handleSearchChange}
-            {...props}
-        />
-    );
-};
+  return (
+    <TextField fullWidth variant='outlined' label={label} value={searchText} onChange={handleSearchChange} {...props} />
+  )
+}
 
-export default SearchInput;
+export default SearchInput

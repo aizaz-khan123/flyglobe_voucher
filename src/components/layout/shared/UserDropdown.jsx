@@ -89,7 +89,6 @@ const UserDropdown = () => {
       >
         <Avatar
           ref={anchorRef}
-
           // alt={session?.user?.name || ''}
           // src={session?.user?.image || ''}
           onClick={handleDropdownOpen}
