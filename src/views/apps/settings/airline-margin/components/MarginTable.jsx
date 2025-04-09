@@ -1,13 +1,22 @@
 'use client'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 
-import Link from 'next/link'
-
-import { Button, Card, CardContent, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material'
+import {
+  Badge,
+  Button,
+  Card,
+  CardContent,
+  CircularProgress,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  TablePagination
+} from '@mui/material'
 
 import { useForm } from 'react-hook-form'
 
-import { FaPlus } from 'react-icons/fa6'
+import { FaPencil, FaPlus, FaTrash } from 'react-icons/fa6'
 
 import {
   useBranchDropDownQuery,
@@ -17,20 +26,47 @@ import {
 import MuiDropdown from '@/components/mui-form-inputs/MuiDropdown'
 import MuiTextField from '@/components/mui-form-inputs/MuiTextField'
 import SearchInput from '@/components/searchInput/SearchInput'
-import { routes } from '@/libs/routes'
+import { rankItem } from '@tanstack/match-sorter-utils'
 
-import { AirlineMarginRow } from './AirlineMarginRow'
+import {
+  createColumnHelper,
+  flexRender,
+  getCoreRowModel,
+  getFacetedMinMaxValues,
+  getFacetedRowModel,
+  getFacetedUniqueValues,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+  useReactTable
+} from '@tanstack/react-table'
+import { CreateAirlineMargin } from './CreateAirlineMargin'
+import { EditAirlineMargin } from './EditAirlineMargin'
+import { IoMdClose } from 'react-icons/io'
+import { toast } from 'react-toastify'
 
 const MarginTable = () => {
-  // const toaster = useToast();
+  // States
+  const [rowSelection, setRowSelection] = useState({})
+  const [globalFilter, setGlobalFilter] = useState('')
+  const [page, setPage] = useState(0)
+  const [rowsPerPage, setRowsPerPage] = useState(10)
   const [searchText, setSearchText] = useState('')
   const [pageUrl, setPageUrl] = useState('')
   const [marginModal, setMarginModal] = useState('')
   const [marginTypeModal, setMarginTypeModal] = useState('')
 
+  const fuzzyFilter = (row, columnId, value, addMeta) => {
+    const itemRank = rankItem(row.getValue(columnId), value)
+
+    addMeta({ itemRank })
+
+    return itemRank.passed
+  }
   const { data: detail_data, isFetching, refetch } = useGetAirlineMarginsQuery({ searchText, pageUrl })
   const airline_margins = detail_data?.data
   const links = detail_data?.links
+  const totalCount = detail_data?.total || 0
 
   const [deleteAirlineMargin, { isLoading: deleteAirlineMarginLoading }] = useDeleteAirlineMarginMutation()
 
@@ -86,7 +122,8 @@ const MarginTable = () => {
   useEffect(() => {
     refetch()
   }, [searchText, pageUrl])
-  const [AirlineMarginToBeDelete, setAirlineMarginToBeDelete] = useState()
+  const [AirlineMarginToBeDelete, setAirlineMarginToBeDelete] = useState(null)
+
   const AirlineMarginDeleteConfirmationRef = useRef(null)
   const AirlineMarginAssignConfirmationRef = useRef(null)
 
@@ -112,9 +149,10 @@ const MarginTable = () => {
     if (AirlineMarginToBeDelete) {
       deleteAirlineMargin(AirlineMarginToBeDelete.uuid).then(response => {
         if (response?.data.code == 200) {
-          // toaster.success(response?.data.message);
+          toast.success(response?.data.message)
+          setAirlineMarginToBeDelete(null)
         } else {
-          // toaster.error(response?.data.message);
+          toast.error(response?.data.message)
         }
       })
     }
@@ -124,6 +162,155 @@ const MarginTable = () => {
     if (url) {
       setPageUrl(url)
     }
+  }
+  const handlePageChange = (event, newPage) => {
+    setPage(newPage)
+  }
+
+  const handleRowsPerPageChange = event => {
+    setRowsPerPage(parseInt(event.target.value, 10))
+    setPage(0)
+  }
+  const columnHelper = createColumnHelper()
+
+  const columns = useMemo(
+    () => [
+      columnHelper.accessor('id', {
+        header: 'ID',
+        cell: ({ row }) => <div className='font-medium'>{row.original.id}</div>
+      }),
+      columnHelper.accessor('sales_channel', {
+        header: 'Sales Channel',
+        cell: ({ row }) => <div className='flex items-center space-x-3 truncate'>{row.original.sales_channel}</div>
+      }),
+      columnHelper.accessor('airline.name', {
+        header: 'Airline',
+        cell: ({ row }) => <div className='flex items-center space-x-3 truncate'>{row.original.airline?.name}</div>
+      }),
+      columnHelper.accessor('margin', {
+        header: 'Pricing',
+        cell: ({ row }) => {
+          const { margin, margin_type } = row.original
+          const color = Number(margin) > 0 ? 'warning' : 'success'
+          return (
+            <Badge color={color}>
+              {margin}
+              {margin_type === 'amount' ? ' PKR' : '%'}
+            </Badge>
+          )
+        }
+      }),
+      columnHelper.accessor('region', {
+        header: 'Region',
+        cell: ({ row }) => <div className='font-medium'>{row.original.region}</div>
+      }),
+      columnHelper.accessor('is_apply_on_gross', {
+        header: 'Apply on gross fare',
+        cell: ({ row }) => (
+          <Badge color={row.original.is_apply_on_gross ? 'success' : 'warning'}>
+            {row.original.is_apply_on_gross ? 'Yes' : 'No'}
+          </Badge>
+        )
+      }),
+      columnHelper.accessor('status', {
+        header: 'Status',
+        cell: ({ row }) =>
+          row?.original?.status ? (
+            <span className='text-success'>Active</span>
+          ) : (
+            <span className='text-warning'>In-Active</span>
+          )
+      }),
+      columnHelper.accessor('rbds', {
+        header: 'Rbds',
+        cell: ({ row }) => <div className='font-medium'>{row.original.rbds}</div>
+      }),
+      columnHelper.accessor('remarks', {
+        header: 'Remarks',
+        cell: ({ row }) => (
+          <div className='text-sm'>
+            {row.original.remarks?.length > 20 ? `${row.original.remarks.slice(0, 20)}...` : row.original.remarks}
+          </div>
+        )
+      }),
+      {
+        id: 'actions',
+        header: 'Action',
+        cell: ({ row }) => (
+          <div className='inline-flex w-fit gap-2'>
+            <Button color='ghost' size='sm' shape='square' onClick={() => handleShowEdit(row.original.uuid)}>
+              <FaPencil className='text-base-content/70' />
+            </Button>
+            <Button
+              color='ghost'
+              className='text-error/70 hover:bg-error/20'
+              size='sm'
+              shape='square'
+              onClick={e => {
+                e.stopPropagation()
+                showDeleteAirlineMarginConfirmation(row.original.uuid)
+              }}
+            >
+              <FaTrash fontSize={20} />
+            </Button>
+            {/* <Button
+              color='ghost'
+              className='text-error/70 hover:bg-error/20'
+              size='sm'
+              shape='square'
+              onClick={e => {
+                e.stopPropagation()
+                showAssignAirlineMarginConfirmation(row.original.margin, row.original.margin_type)
+              }}
+            >
+              <MdOutlineAssignmentInd />
+
+            </Button> */}
+          </div>
+        )
+      }
+    ],
+    []
+  )
+
+  const table = useReactTable({
+    data: airline_margins,
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+    manualPagination: true,
+    pageCount: Math.ceil(totalCount / rowsPerPage),
+    enableRowSelection: true,
+    globalFilterFn: fuzzyFilter,
+    onRowSelectionChange: setRowSelection,
+    getCoreRowModel: getCoreRowModel(),
+    onGlobalFilterChange: setGlobalFilter,
+    getFilteredRowModel: getFilteredRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getFacetedRowModel: getFacetedRowModel(),
+    getFacetedUniqueValues: getFacetedUniqueValues(),
+    getFacetedMinMaxValues: getFacetedMinMaxValues(),
+    getPaginationRowModel: getPaginationRowModel()
+  })
+
+  // create and edit airline margin
+
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false)
+  const [selectedAirlineMarginId, setSelectedAirlineMarginId] = useState('')
+
+  const handleShow = () => {
+    setIsCreateModalOpen(true)
+  }
+
+  const handleClose = () => {
+    setIsCreateModalOpen(false)
+    // setIsEditMode(false)
+    setIsEditModalOpen(false)
+  }
+
+  const handleShowEdit = id => {
+    setSelectedAirlineMarginId(id)
+    setIsEditModalOpen(true)
   }
 
   return (
@@ -135,54 +322,86 @@ const MarginTable = () => {
               <SearchInput onSearch={setSearchText} control={filterControl} />
             </div>
             <div className='inline-flex items-center gap-3'>
-              <Link href={routes.apps.settings.airline_margin_create} aria-label={'Create product link'}>
-                <Button variant='contained' className='hidden md:flex'>
-                  <FaPlus fontSize={16} />
-                  <span>New Airline Margin</span>
-                </Button>
-              </Link>
+              <Button onClick={handleShow} variant='contained' className='hidden md:flex'>
+                <FaPlus fontSize={16} />
+                <span>New Airline Margin</span>
+              </Button>
             </div>
           </div>
           <div className='overflow-x-auto p-5'>
             <table className='w-full border-collapse'>
               <thead>
-                <tr>
-                  <td className='text-sm font-medium text-base-content/80'>ID</td>
-                  <td className='text-sm font-medium text-base-content/80'>Sales Channel</td>
-                  <td className='text-sm font-medium text-base-content/80'>Airline</td>
-                  <td className='text-sm font-medium text-base-content/80'>Pricing</td>
-                  <td className='text-sm font-medium text-base-content/80'>Region</td>
-                  <td className='text-sm font-medium text-base-content/80'>Apply on gross fare</td>
-                  <td className='text-sm font-medium text-base-content/80'>Status</td>
-                  <td className='text-sm font-medium text-base-content/80'>Rbds</td>
-                  <td className='text-sm font-medium text-base-content/80'>Remarks</td>
-                  <td className='text-sm font-medium text-base-content/80'>Action</td>
-                </tr>
-              </thead>
-
-              <tbody isLoading={isFetching} hasData={!!airline_margins?.length}>
-                {airline_margins?.map((airline_margin, index) => (
-                  <AirlineMarginRow
-                    airline_margin={airline_margin}
-                    key={airline_margin.uuid}
-                    showDeleteAirlineMarginConfirmation={showDeleteAirlineMarginConfirmation}
-                    showAssignAirlineMarginConfirmation={showAssignAirlineMarginConfirmation}
-                  />
+                {table.getHeaderGroups().map(headerGroup => (
+                  <tr key={headerGroup.id}>
+                    {headerGroup.headers.map(header => (
+                      <th key={header.id} className='text-left p-3 border-b'>
+                        {header.isPlaceholder ? null : (
+                          <div
+                            className={header.column.getCanSort() ? 'cursor-pointer select-none' : ''}
+                            onClick={header.column.getToggleSortingHandler()}
+                          >
+                            {flexRender(header.column.columnDef.header, header.getContext())}
+                            {{
+                              asc: ' 🔼',
+                              desc: ' 🔽'
+                            }[header.column.getIsSorted()] ?? null}
+                          </div>
+                        )}
+                      </th>
+                    ))}
+                  </tr>
                 ))}
+              </thead>
+              <tbody>
+                {!isFetching ? (
+                  table.getRowModel().rows.length > 0 ? (
+                    table.getRowModel().rows.map(row => {
+                      return (
+                        <tr key={row?.id} className='hover:bg-gray-50'>
+                          {row.getVisibleCells().map(cell => {
+                            return (
+                              <td key={cell?.id} className='py-5 text-center border-b'>
+                                {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                              </td>
+                            )
+                          })}
+                        </tr>
+                      )
+                    })
+                  ) : (
+                    <tr>
+                      <td colSpan={table.getAllColumns().length} className='text-center p-5'>
+                        No airline margins found
+                      </td>
+                    </tr>
+                  )
+                ) : (
+                  <tr>
+                    <td colSpan={table.getAllColumns().length}>
+                      <div className='flex justify-center items-center py-5'>
+                        <CircularProgress />
+                      </div>
+                    </td>
+                  </tr>
+                )}
               </tbody>
             </table>
           </div>
-          {/* <div className="flex items-center justify-end px-5 pb-5 pt-3">
-                        <Pagination pagination={links} clickHandler={paginationClickHandler} />
-                    </div> */}
+          <TablePagination
+            rowsPerPageOptions={[10, 25, 50, 100]}
+            component='div'
+            count={totalCount}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handlePageChange}
+            onRowsPerPageChange={handleRowsPerPageChange}
+          />
         </CardContent>
       </Card>
       {/* delete modal  */}
-      <Dialog ref={AirlineMarginDeleteConfirmationRef} backdrop>
+      {/* <Dialog ref={AirlineMarginDeleteConfirmationRef} backdrop>
         <form method='dialog'>
-          <Button size='sm' color='ghost' shape='circle' className='absolute right-2 top-2' aria-label='Close modal'>
-            {/* <Icon icon={xIcon} className="h-4" /> */}X
-          </Button>
+        <IoMdClose className='cursor-pointer' onClick={() => setAirlineMarginToBeDelete(null)} />
         </form>
         <DialogTitle className='font-bold'>Confirm Delete</DialogTitle>
         <DialogContent>You are about to delete. Would you like to proceed further ?</DialogContent>
@@ -202,6 +421,23 @@ const MarginTable = () => {
               Yes
             </Button>
           </form>
+        </DialogActions>
+      </Dialog> */}
+      <Dialog open={!!AirlineMarginToBeDelete} onClose={() => setAirlineMarginToBeDelete(null)}>
+        <DialogTitle className='font-bold flex items-center justify-between'>
+          Confirm Delete
+          <IoMdClose className='cursor-pointer' onClick={() => setAirlineMarginToBeDelete(null)} />
+        </DialogTitle>
+        <DialogContent>
+          You are about to delete <b>{AirlineMarginToBeDelete?.bank_name}</b>. Would you like to proceed further?
+        </DialogContent>
+        <DialogActions>
+          <Button color='error' onClick={() => setAirlineMarginToBeDelete(null)}>
+            No
+          </Button>
+          <Button variant='contained' onClick={handleDeleteAirlineMargin}>
+            {'Yes'}
+          </Button>
         </DialogActions>
       </Dialog>
       {/* assign modal  */}
@@ -280,6 +516,10 @@ const MarginTable = () => {
           </form>
         </DialogActions>
       </Dialog>
+      {/* ---------------------- Create Airline Margin ------------------ */}
+      <CreateAirlineMargin open={isCreateModalOpen} onClose={handleClose} />
+      {/* ---------------------- Edit Airline Margin ------------------ */}
+      <EditAirlineMargin open={isEditModalOpen} onClose={handleClose} airlineMarginId={selectedAirlineMarginId} />
     </>
   )
 }
