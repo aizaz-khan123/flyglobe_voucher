@@ -2,8 +2,6 @@
 
 import { useEffect, useMemo, useState } from "react";
 
-import Link from "next/link";
-
 // MUI Components
 import {
   Button,
@@ -32,9 +30,14 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+
 import { FaPencil, FaPlus, FaTrash } from "react-icons/fa6";
 
+// Redux & Local Components
 import { useDeleteSupplierMutation, useGetSuppliersQuery } from "@/redux-store/services/api";
+import AddNewSupplier from "./AddNewSupplier";
+import { EditSupplier } from "./EditSupplier";
+
 
 const fuzzyFilter = (row, columnId, value, addMeta) => {
   const itemRank = rankItem(row.getValue(columnId), value);
@@ -56,9 +59,13 @@ const SupplierTable = () => {
   const { data: detail_data, isFetching, refetch } = useGetSuppliersQuery({
     page: page + 1,
     pageSize: rowsPerPage,
-    searchText: globalFilter,
+
+    // searchText: globalFilter,
   });
 
+    useEffect(() => {
+      refetch()
+    }, [globalFilter])
   const suppliers = detail_data?.data || [];
   const totalCount = detail_data?.total || 0;
 
@@ -120,15 +127,10 @@ const SupplierTable = () => {
         cell: ({ row }) => (
           <div className="flex items-center w-fit gap-2">
             <Tooltip title="Edit Supplier" placement="top">
-              <Link
-                href={'#'}
-
-                //    href={routes.apps.settings.supplier_edit(row.original.uuid)} 
-                aria-label="Edit supplier">
-                <IconButton size="small">
+           
+                <IconButton size="small" onClick={()=>handleShowEdit(row.original)}>
                   <FaPencil className="text-base-content/70" fontSize={20} />
                 </IconButton>
-              </Link>
             </Tooltip>
             <Tooltip title="Delete Supplier" placement="top">
               <IconButton size="small">
@@ -183,6 +185,27 @@ const SupplierTable = () => {
     }
   };
 
+
+   const [isModalOpen, setIsModalOpen] = useState(false)
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false)
+    const [selectedSupplierId, setSelectedSupplierId] = useState('')
+  
+    const handleShow = () => {
+      setIsModalOpen(true)
+    }
+  
+    const handleClose = () => {
+      setIsModalOpen(false)
+  
+      // setIsEditMode(false)
+      setIsEditModalOpen(false)
+    }
+  
+    const handleShowEdit = (id) => {
+      setSelectedSupplierId(id.id)
+      setIsEditModalOpen(true)
+    }
+
   const DebouncedInput = ({ value: initialValue, onChange, debounce = 500, ...props }) => {
     const [value, setValue] = useState(initialValue);
 
@@ -212,14 +235,11 @@ const SupplierTable = () => {
               placeholder="Search suppliers..."
               className="w-full max-w-md"
             />
-            <Link
-              href={'#'}
-              aria-label={"Create supplier link"}>
-              <Button variant='contained' className="hidden md:flex">
+           
+              <Button variant='contained' onClick={handleShow}  className="hidden md:flex">
                 <FaPlus fontSize={16} />
                 <span>New Supplier</span>
               </Button>
-            </Link>
           </div>
 
           <div className="overflow-x-auto p-5">
@@ -313,6 +333,14 @@ const SupplierTable = () => {
           </Button>
         </DialogActions>
       </Dialog>
+
+      <AddNewSupplier open={isModalOpen} onClose={handleClose} />
+      <EditSupplier open={isEditModalOpen} onClose={handleClose} supplierId={selectedSupplierId}/>
+
+
+
+
+
     </>
   );
 };

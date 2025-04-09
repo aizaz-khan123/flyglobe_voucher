@@ -73,13 +73,17 @@ const BankAccountTable = () => {
   } = useGetBankAccountsQuery({
     page: page + 1,
     pageSize: rowsPerPage,
-    searchText: globalFilter
   })
+  
+  // searchText: globalFilter
 
   const bank_accounts = detail_data?.data || []
   const totalCount = detail_data?.total || 0
 
-  // Mutations
+  useEffect(() => {
+    refetch()
+  }, [globalFilter])
+  
   const [deleteBankAccount, { isLoading: deleteBankAccountLoading }] = useDeleteBankAccountMutation()
 
   const handlePageChange = (event, newPage) => {
@@ -112,14 +116,13 @@ const BankAccountTable = () => {
         header: 'Bank Name',
         cell: ({ row }) => (
           <div className='flex items-center space-x-3 truncate'>
-            <Image
-
+            {/* <Image
               //   src={product1Img.src}
               height={40}
               width={40}
               className='size-10 rounded-box'
               alt='Bank Image'
-            />
+            /> */}
             <div className='font-medium'>{row.original.bank_name}</div>
           </div>
         )
@@ -283,20 +286,10 @@ const BankAccountTable = () => {
     setIsEditModalOpen(false)
   }
 
-
-  const handleShowEdit = (id) => {
+  const handleShowEdit = id => {
     setSelectedBankAccountId(id)
     setIsEditModalOpen(true)
   }
-
-
-
-
-
-
-
-
-
 
   return (
     <>
@@ -499,9 +492,6 @@ const BankAccountTable = () => {
       </Dialog>
       {/* ---------------------- Edit Bank Account ------------------ */}
       <EditBankAccount open={isEditModalOpen} onClose={handleClose} bankAccountId={selectedBankAccountId} />
-
-
-
     </>
   )
 }
