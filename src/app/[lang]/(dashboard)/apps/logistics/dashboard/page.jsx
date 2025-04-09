@@ -50,7 +50,7 @@ const LogisticsDashboard = async () => {
   // Vars
   const data = await getStatisticsData()
   const vehicleData = await getLogisticsData()
-  const hidePagination = true;
+  const hidePagination = true
 
   return (
     <Grid container spacing={6}>

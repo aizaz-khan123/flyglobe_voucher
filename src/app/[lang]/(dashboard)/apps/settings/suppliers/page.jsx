@@ -5,8 +5,7 @@ import Suppliers from '@/views/apps/settings/suppliers/Suppliers'
 const page = () => {
   return (
     <>
-<Suppliers/>
-
+      <Suppliers />
     </>
   )
 }

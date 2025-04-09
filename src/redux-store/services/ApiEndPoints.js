@@ -128,6 +128,5 @@ export const API_END_POINTS = {
   generalSetting: BASE_URL_V1 + '/setting/general-setting',
   finanicalProfile: BASE_URL_V1 + '/setting/finanical-profile',
   dashboardStats: BASE_URL_V1 + '/dashboard/stats',
-  dashboardSaleStatics: BASE_URL_V1 + '/dashboard/sale-statistics',
-
+  dashboardSaleStatics: BASE_URL_V1 + '/dashboard/sale-statistics'
 }

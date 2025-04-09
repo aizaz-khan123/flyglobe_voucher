@@ -3,7 +3,6 @@ import { SupplierTable } from './components/SuppliersTable'
 const Suppliers = () => {
   return (
     <>
-
       <SupplierTable />
     </>
   )

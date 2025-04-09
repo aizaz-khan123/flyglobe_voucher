@@ -45,17 +45,16 @@ const VerticalMenu = ({ dictionary, scrollMenu }) => {
     <ScrollWrapper
       {...(isBreakpointReached
         ? {
-          className: 'bs-full overflow-y-auto overflow-x-hidden',
-          onScroll: container => scrollMenu(container, false)
-        }
+            className: 'bs-full overflow-y-auto overflow-x-hidden',
+            onScroll: container => scrollMenu(container, false)
+          }
         : {
-          options: { wheelPropagation: false, suppressScrollX: true },
-          onScrollY: container => scrollMenu(container, true)
-        })}
+            options: { wheelPropagation: false, suppressScrollX: true },
+            onScrollY: container => scrollMenu(container, true)
+          })}
     >
       {/* Incase you also want to scroll NavHeader to scroll with Vertical Menu, remove NavHeader from above and paste it below this comment */}
       {/* Vertical Menu */}
-
 
       <Menu
         popoutMenuOffset={{ mainAxis: 10 }}
@@ -64,7 +63,6 @@ const VerticalMenu = ({ dictionary, scrollMenu }) => {
         renderExpandedMenuItemIcon={{ icon: <i className='ri-circle-line' /> }}
         menuSectionStyles={menuSectionStyles(verticalNavOptions, theme)}
       >
-
         {/* <SubMenu
           label={dictionary['navigation'].dashboards}
           icon={<i className='ri-home-smile-line' />}
@@ -82,8 +80,6 @@ const VerticalMenu = ({ dictionary, scrollMenu }) => {
         >
           {dictionary['navigation'].dashboard}
         </MenuItem>
-
-
 
         <MenuSection label={dictionary['navigation'].appsPages}>
           <MenuItem
@@ -106,7 +102,7 @@ const VerticalMenu = ({ dictionary, scrollMenu }) => {
             href={`/${locale}/apps/bookings`}
             exactMatch={false}
             activeUrl='/apps/bookings'
-            icon={<i className="ri-calendar-line"></i>}
+            icon={<i className='ri-calendar-line'></i>}
           >
             {dictionary['navigation'].bookings}
           </MenuItem>
@@ -114,40 +110,60 @@ const VerticalMenu = ({ dictionary, scrollMenu }) => {
             href={`/${locale}/apps/refund-request`}
             exactMatch={false}
             activeUrl='/apps/refund-request'
-            icon={<i className="ri-calendar-line"></i>}
+            icon={<i className='ri-calendar-line'></i>}
           >
             {dictionary['navigation'].refundRequest}
           </MenuItem>
 
-          <SubMenu label={dictionary['navigation'].organization} icon={<i className="ri-organization-chart"></i>}>
+          <SubMenu label={dictionary['navigation'].organization} icon={<i className='ri-organization-chart'></i>}>
             <MenuItem href={`/${locale}/apps/organization/branches`}>{dictionary['navigation'].branches}</MenuItem>
             <MenuItem href={`/${locale}/apps/organization/agencies`}>{dictionary['navigation'].agencies}</MenuItem>
             <MenuItem href={`/${locale}/apps/organization/employees`}>{dictionary['navigation'].employees}</MenuItem>
           </SubMenu>
 
-          <SubMenu label={dictionary['navigation'].accounts} icon={<i className="ri-calculator-line"></i>}>
-            <MenuItem href={`/${locale}/apps/accounts/chart-of-account`}>{dictionary['navigation'].chartOfAccount}</MenuItem>
-            <MenuItem href={`/${locale}/apps/accounts/general-legder`}>{dictionary['navigation'].generalLegder}</MenuItem>
-            <MenuItem href={`/${locale}/apps/accounts/journal-entries`}>{dictionary['navigation'].journalEntries}</MenuItem>
-            <MenuItem href={`/${locale}/apps/accounts/account-statement`}>{dictionary['navigation'].accountStatement}</MenuItem>
+          <SubMenu label={dictionary['navigation'].accounts} icon={<i className='ri-calculator-line'></i>}>
+            <MenuItem href={`/${locale}/apps/accounts/chart-of-account`}>
+              {dictionary['navigation'].chartOfAccount}
+            </MenuItem>
+            <MenuItem href={`/${locale}/apps/accounts/general-legder`}>
+              {dictionary['navigation'].generalLegder}
+            </MenuItem>
+            <MenuItem href={`/${locale}/apps/accounts/journal-entries`}>
+              {dictionary['navigation'].journalEntries}
+            </MenuItem>
+            <MenuItem href={`/${locale}/apps/accounts/account-statement`}>
+              {dictionary['navigation'].accountStatement}
+            </MenuItem>
             <MenuItem href={`/${locale}/apps/accounts/trail-balance`}>{dictionary['navigation'].trailBalance}</MenuItem>
           </SubMenu>
 
-          <SubMenu label={dictionary['navigation'].deposites} icon={<i className="ri-luggage-deposit-line"></i>}>
-            <MenuItem href={`/${locale}/apps/deposites/agency-deposite`}>{dictionary['navigation'].agencyDeposite}</MenuItem>
-            <MenuItem href={`/${locale}/apps/deposites/branch-deposite`}>{dictionary['navigation'].branchDeposite}</MenuItem>
+          <SubMenu label={dictionary['navigation'].deposites} icon={<i className='ri-luggage-deposit-line'></i>}>
+            <MenuItem href={`/${locale}/apps/deposites/agency-deposite`}>
+              {dictionary['navigation'].agencyDeposite}
+            </MenuItem>
+            <MenuItem href={`/${locale}/apps/deposites/branch-deposite`}>
+              {dictionary['navigation'].branchDeposite}
+            </MenuItem>
           </SubMenu>
 
-          <SubMenu label={dictionary['navigation'].reports} icon={<i className="ri-file-chart-line"></i>}>
+          <SubMenu label={dictionary['navigation'].reports} icon={<i className='ri-file-chart-line'></i>}>
             <MenuItem href={`/${locale}/apps/reports/sales-reports`}>{dictionary['navigation'].salesReports}</MenuItem>
-            <MenuItem href={`/${locale}/apps/reports/refund-reports`}>{dictionary['navigation'].refundReports}</MenuItem>
-            <MenuItem href={`/${locale}/apps/reports/supplier-reports`}>{dictionary['navigation'].supplierReports}</MenuItem>
-            <MenuItem href={`/${locale}/apps/reports/un-used-tickets`}>{dictionary['navigation'].unUsedTickets}</MenuItem>
+            <MenuItem href={`/${locale}/apps/reports/refund-reports`}>
+              {dictionary['navigation'].refundReports}
+            </MenuItem>
+            <MenuItem href={`/${locale}/apps/reports/supplier-reports`}>
+              {dictionary['navigation'].supplierReports}
+            </MenuItem>
+            <MenuItem href={`/${locale}/apps/reports/un-used-tickets`}>
+              {dictionary['navigation'].unUsedTickets}
+            </MenuItem>
           </SubMenu>
 
-          <SubMenu label={dictionary['navigation'].settings} icon={<i className="ri-file-settings-line"></i>}>
+          <SubMenu label={dictionary['navigation'].settings} icon={<i className='ri-file-settings-line'></i>}>
             <MenuItem href={`/${locale}/apps/settings/bank-accounts`}>{dictionary['navigation'].bankAccounts}</MenuItem>
-            <MenuItem href={`/${locale}/apps/settings/airline-margins`}>{dictionary['navigation'].airlineMargins}</MenuItem>
+            <MenuItem href={`/${locale}/apps/settings/airline-margins`}>
+              {dictionary['navigation'].airlineMargins}
+            </MenuItem>
             <MenuItem href={`/${locale}/apps/settings/connectors`}>{dictionary['navigation'].connectors}</MenuItem>
             <MenuItem href={`/${locale}/apps/settings/suppliers`}>{dictionary['navigation'].suppliers}</MenuItem>
 
@@ -160,7 +176,7 @@ const VerticalMenu = ({ dictionary, scrollMenu }) => {
             href={`/${locale}/apps/notifications`}
             exactMatch={false}
             activeUrl='/apps/notifications'
-            icon={<i className="ri-calendar-line"></i>}
+            icon={<i className='ri-calendar-line'></i>}
           >
             {dictionary['navigation'].notifications}
           </MenuItem>
@@ -191,7 +207,6 @@ const VerticalMenu = ({ dictionary, scrollMenu }) => {
             <MenuItem href={`/${locale}/apps/logistics/fleet`}>{dictionary['navigation'].fleet}</MenuItem>
           </SubMenu> */}
         </MenuSection>
-
       </Menu>
     </ScrollWrapper>
   )

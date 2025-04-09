@@ -99,16 +99,13 @@ const LoginV3 = ({ mode }) => {
     //   password: data.password,
     //   redirect: false
     // })
-
     // if (res && res.ok && res.error === null) {
     //   // Vars
     //   const redirectURL = searchParams.get('redirectTo') ?? '/'
-
     //   router.replace(getLocalizedUrl(redirectURL, locale))
     // } else {
     //   if (res?.error) {
     //     const error = JSON.parse(res.error)
-
     //     setErrorState(error)
     //   }
     // }
@@ -155,7 +152,7 @@ const LoginV3 = ({ mode }) => {
 
           <form
             noValidate
-            action={() => { }}
+            action={() => {}}
             autoComplete='off'
             onSubmit={handleSubmit(onSubmit)}
             className='flex flex-col gap-5'
@@ -241,7 +238,7 @@ const LoginV3 = ({ mode }) => {
             startIcon={<img src='/images/logos/google.png' alt='Google' width={22} />}
             sx={{ '& .MuiButton-startIcon': { marginInlineEnd: 3 } }}
 
-          // onClick={() => signIn('google')}
+            // onClick={() => signIn('google')}
           >
             Sign in with Google
           </Button>

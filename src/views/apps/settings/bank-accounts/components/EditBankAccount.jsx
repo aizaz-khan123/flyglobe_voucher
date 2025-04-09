@@ -1,14 +1,13 @@
-import { useEffect } from 'react';
+import { useEffect } from 'react'
 
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
-import { useForm } from 'react-hook-form';
-import { IoMdClose } from 'react-icons/io';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material'
+import { useForm } from 'react-hook-form'
+import { IoMdClose } from 'react-icons/io'
 
-import MuiTextField from '@/components/mui-form-inputs/MuiTextField';
-import { useShowBankAccountQuery, useUpdateBankAccountMutation } from '@/redux-store/services/api';
+import MuiTextField from '@/components/mui-form-inputs/MuiTextField'
+import { useShowBankAccountQuery, useUpdateBankAccountMutation } from '@/redux-store/services/api'
 
 const EditBankAccount = ({ open, onClose, bankAccountId }) => {
-
   const {
     data: bank_account,
     isSuccess: isBankAccountsSuccess,
@@ -16,107 +15,110 @@ const EditBankAccount = ({ open, onClose, bankAccountId }) => {
     isLoading: isShowLoading,
     refetch
   } = useShowBankAccountQuery(bankAccountId, {
-    refetchOnMountOrArgChange: true,
-  });
+    skip: !open || !bankAccountId // skip if modal is not open or bankAccountId is not valid
+  })
 
-  const [updateBankAccount, { error: errorBankAccount, isLoading: isLoadingBankAccount }] = useUpdateBankAccountMutation();
+  const [updateBankAccount, { error: errorBankAccount, isLoading: isLoadingBankAccount }] =
+    useUpdateBankAccountMutation()
 
   const { control, handleSubmit, setError, setValue, reset } = useForm({
     // resolver: zodResolver(bankAccountSchema),
     defaultValues: {
-      account_holder_name: "",
-      bank_name: "",
-      bank_address: "",
-      contact_number: "",
-      account_number: "",
-      iban: "",
-      bank_logo: "",
-    },
-  });
+      account_holder_name: '',
+      bank_name: '',
+      bank_address: '',
+      contact_number: '',
+      account_number: '',
+      iban: '',
+      bank_logo: ''
+    }
+  })
 
   useEffect(() => {
-    refetch();
-  }, [refetch]);
+    if (open) {
+      refetch()
+    }
+  }, [open, refetch])
 
   useEffect(() => {
     if (isBankAccountsSuccess && bank_account) {
       reset({
-        account_holder_name: bank_account.account_holder_name || "",
-        bank_name: bank_account.bank_name || "",
-        bank_address: bank_account.bank_address || "",
-        contact_number: bank_account.contact_number || "",
-        account_number: bank_account.account_number || "",
-        iban: bank_account.iban || "",
-        bank_logo: bank_account.bank_logo || "",
-      });
+        account_holder_name: bank_account.account_holder_name || '',
+        bank_name: bank_account.bank_name || '',
+        bank_address: bank_account.bank_address || '',
+        contact_number: bank_account.contact_number || '',
+        account_number: bank_account.account_number || '',
+        iban: bank_account.iban || '',
+        bank_logo: bank_account.bank_logo || ''
+      })
     }
-  }, [bank_account, isBankAccountsSuccess, reset]);
+  }, [bank_account, isBankAccountsSuccess, reset])
 
-  const setErrors = (errors) => {
-    Object.entries(errors).forEach(([key, value]) => setError(key, { message: value }));
-  };
+  const setErrors = errors => {
+    Object.entries(errors).forEach(([key, value]) => setError(key, { message: value }))
+  }
 
-  const handleChangeImage = (fileItems) => {
+  const handleChangeImage = fileItems => {
     if (fileItems.length > 0) {
-      const fileItem = fileItems[0];
-      const reader = new FileReader();
+      const fileItem = fileItems[0]
+      const reader = new FileReader()
 
       reader.onloadend = () => {
         if (reader.result) {
-          setValue("bank_logo", reader.result);
+          setValue('bank_logo', reader.result)
         }
-      };
+      }
 
-      if (fileItem.type.match("image.*")) {
-        reader.readAsDataURL(fileItem);
+      if (fileItem.type.match('image.*')) {
+        reader.readAsDataURL(fileItem)
       }
     } else {
-      setValue("bank_logo", "");
+      setValue('bank_logo', '')
     }
-  };
+  }
 
-  const onSubmit = handleSubmit(async (data) => {
+  const onSubmit = handleSubmit(async data => {
     const updated_data = {
       _method: 'put',
       ...data
-    };
+    }
 
     try {
-      const response = await updateBankAccount({ bankAccountId, updated_data }).unwrap();
+      const response = await updateBankAccount({ bankAccountId, updated_data }).unwrap()
 
       if (response.code === 200) {
         // toaster.success(response.message);
-        refetch();
-        onClose();
+        refetch()
+        onClose()
 
         // router.push(routes.apps.settings.bank_accounts);
       } else if (response.errors) {
-        setErrors(response.errors);
+        setErrors(response.errors)
       }
     } catch (error) {
       if (error.data?.errors) {
-        setErrors(error.data.errors);
+        setErrors(error.data.errors)
       } else {
         // toaster.error("An error occurred while updating the bank account");
       }
     }
-  });
+  })
 
   if (isShowLoading) {
     return (
-      <div className="flex items-center justify-center h-64">
-        <span className="loading loading-spinner loading-lg"></span>
-        <p className="ml-2">Loading bank account details...</p>
+      <div className='flex items-center justify-center h-64'>
+        <span className='loading loading-spinner loading-lg'></span>
+        <p className='ml-2'>Loading bank account details...</p>
       </div>
-    );
+    )
   }
 
   if (error) {
     return (
-      <div className="flex flex-col items-center justify-center h-64 text-red-500">
+      <div className='flex flex-col items-center justify-center h-64 text-red-500'>
         <p>Error fetching bank account details.</p>
       </div>
-    );
+    )
   }
 
   return (
@@ -160,14 +162,7 @@ const EditBankAccount = ({ open, onClose, bankAccountId }) => {
                 />
               </div>
               <div>
-                <MuiTextField
-                  control={control}
-                  size='md'
-                  label='IBAN'
-                  id='iban'
-                  name='iban'
-                  placeholder='Enter IBAN'
-                />
+                <MuiTextField control={control} size='md' label='IBAN' id='iban' name='iban' placeholder='Enter IBAN' />
               </div>
               <div>
                 <MuiTextField
@@ -198,8 +193,8 @@ const EditBankAccount = ({ open, onClose, bankAccountId }) => {
             <div className='filepond-file-upload'>
               <input
                 type='file'
-                onChange={(e) => handleChangeImage(e.target.files ? Array.from(e.target.files) : [])}
-                accept="image/*"
+                onChange={e => handleChangeImage(e.target.files ? Array.from(e.target.files) : [])}
+                accept='image/*'
               />
             </div>
           </div>
@@ -209,16 +204,12 @@ const EditBankAccount = ({ open, onClose, bankAccountId }) => {
         <Button variant='outlined' onClick={onClose} disabled={isLoadingBankAccount}>
           Cancel
         </Button>
-        <Button
-          variant='contained'
-          onClick={onSubmit}
-          disabled={isLoadingBankAccount}
-        >
+        <Button variant='contained' onClick={onSubmit} disabled={isLoadingBankAccount}>
           {isLoadingBankAccount ? 'Updating...' : 'Update'}
         </Button>
       </DialogActions>
     </Dialog>
-  );
-};
+  )
+}
 
-export default EditBankAccount;
+export default EditBankAccount

@@ -22,11 +22,8 @@ import {
 } from '@mui/material'
 
 import MuiTextField from '@/components/mui-form-inputs/MuiTextField'
-import {
-  useShowSupplierQuery,
-  useUpdateSupplierMutation
-} from '@/redux-store/services/api'
-
+import { useShowSupplierQuery, useUpdateSupplierMutation } from '@/redux-store/services/api'
+import { toast } from 'react-toastify'
 
 const EditSupplier = ({ open, onClose, supplierId }) => {
   const router = useRouter()
@@ -40,7 +37,6 @@ const EditSupplier = ({ open, onClose, supplierId }) => {
     isFetching,
     refetch
   } = useShowSupplierQuery(supplierId, {
- 
     refetchOnMountOrArgChange: true
   })
 
@@ -78,26 +74,25 @@ const EditSupplier = ({ open, onClose, supplierId }) => {
         _method: 'put',
         ...data
       }
-      
+
       const response = await updateSupplier({ supplierId, updated_data })
-      
+
       if ('error' in response) {
         setErrors(response?.error?.data?.errors || {})
-       
+
         return
       }
 
       if (response.data?.code === 200) {
-        toaster.success(response?.data?.message)
+        toast.success(response?.data?.message)
         refetch()
         onClose()
-        router.push(routes.apps.settings.suppliers)
       } else {
         setErrors(response?.data?.errors || {})
       }
     } catch (err) {
       console.error('Update failed:', err)
-      toaster.error('Failed to update supplier')
+      toast.error('Failed to update supplier')
     }
   })
 
