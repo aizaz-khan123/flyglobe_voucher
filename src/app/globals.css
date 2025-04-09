@@ -139,3 +139,11 @@ code {
   background-color: rgb(var(--mui-palette-info-mainChannel) / 0.08);
   border: 0;
 }
+
+.customMultiselect .mui-13cymwt-control{
+  min-height: 58px !important;
+}
+
+.customMultiselect .mui-t3ipsp-control{
+  min-height: 58px !important;
+}
