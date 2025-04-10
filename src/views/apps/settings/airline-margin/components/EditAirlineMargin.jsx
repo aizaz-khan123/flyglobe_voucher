@@ -56,7 +56,10 @@ const EditAirlineMargin = ({ airlineMarginId, onClose, open }) => {
   const [updateAirlineMargin, { error: errorAirlineMargin, isLoading: isLoadingAirlineMargin }] =
     useUpdateAirlineMarginMutation()
 
-  const { control, handleSubmit, setError, reset } = useForm()
+
+  const { control, handleSubmit, setError, reset } = useForm({
+    resolver: zodResolver()
+  })
 
   useEffect(() => {
     refetch()
@@ -119,7 +122,15 @@ const EditAirlineMargin = ({ airlineMarginId, onClose, open }) => {
       </div>
     )
   }
-
+  
+  if (error) {
+    return (
+      <div className='flex flex-col items-center justify-center h-64 text-red-500'>
+        <p>Error fetching Airline Margin details.</p>
+      </div>
+    )
+  }
+  
   return (
     <div>
       <Dialog open={open} onClose={onClose} fullWidth maxWidth='md'>
