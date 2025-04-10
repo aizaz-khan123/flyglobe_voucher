@@ -1,17 +1,17 @@
-import { Controller } from "react-hook-form";
-import { TextField, InputAdornment, IconButton } from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
+import { Controller } from 'react-hook-form'
+import { TextField, InputAdornment, IconButton } from '@mui/material'
+import CloseIcon from '@mui/icons-material/Close'
 
 const MuiTextField = ({
   control,
   name,
   label,
-  type = "text",
+  type = 'text',
   placeholder,
   onChange,
   className,
   startIcon,
-  endIcon,
+  endIcon
 }) => {
   return (
     <Controller
@@ -27,36 +27,34 @@ const MuiTextField = ({
           className={className}
           error={!!fieldState.error}
           helperText={fieldState.error?.message}
-          onChange={(event) => {
-            field.onChange(event.target.value);
-            onChange?.(event.target.value);
+          onChange={event => {
+            field.onChange(event.target.value)
+            onChange?.(event.target.value)
           }}
-          value={field.value || ""}
+          value={field.value || ''}
           InputProps={{
-            startAdornment: startIcon && (
-              <InputAdornment position="start">{startIcon}</InputAdornment>
-            ),
+            startAdornment: startIcon && <InputAdornment position='start'>{startIcon}</InputAdornment>,
             endAdornment: (
-              <InputAdornment position="end">
+              <InputAdornment position='end'>
                 {field.value && (
                   <IconButton
                     onClick={() => {
-                      field.onChange(""); // Clear input
-                      onChange?.("");
+                      field.onChange('') // Clear input
+                      onChange?.('')
                     }}
-                    size="small"
+                    size='small'
                   >
                     <CloseIcon />
                   </IconButton>
                 )}
                 {endIcon}
               </InputAdornment>
-            ),
+            )
           }}
         />
       )}
     />
-  );
-};
+  )
+}
 
-export default MuiTextField;
+export default MuiTextField

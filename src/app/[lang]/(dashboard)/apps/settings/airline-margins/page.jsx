@@ -5,10 +5,9 @@ import MarginPage from '@/views/apps/settings/airline-margin/MarginPage'
 const page = () => {
   return (
     <div>
-      <MarginPage/>
+      <MarginPage />
     </div>
   )
 }
 
 export default page
-

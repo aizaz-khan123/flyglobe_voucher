@@ -72,9 +72,9 @@ const BankAccountTable = () => {
     refetch
   } = useGetBankAccountsQuery({
     page: page + 1,
-    pageSize: rowsPerPage,
+    searchText: globalFilter
   })
-  
+
   // searchText: globalFilter
 
   const bank_accounts = detail_data?.data || []
@@ -83,7 +83,7 @@ const BankAccountTable = () => {
   useEffect(() => {
     refetch()
   }, [globalFilter])
-  
+
   const [deleteBankAccount, { isLoading: deleteBankAccountLoading }] = useDeleteBankAccountMutation()
 
   const handlePageChange = (event, newPage) => {
@@ -266,7 +266,7 @@ const BankAccountTable = () => {
         return
       }
 
-      toaster.success('Bank Account has been created')
+      toast.success('Bank Account has been created')
       onClose()
     })
   })

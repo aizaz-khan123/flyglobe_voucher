@@ -17,7 +17,6 @@ import {
 import BaggageInformation from './BaggageInformation'
 import CancellationInformation from './CancellationInformation'
 
-
 const FlightDetailDrawer = ({ flightFearOptionsData, formatDuration }) => {
   const [flightDrawerTabs, setFlightDrawerTabs] = useState('flightInfo')
 

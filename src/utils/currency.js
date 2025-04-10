@@ -1,12 +1,12 @@
-const sign = "$";
+const sign = '$'
 
 export const currencyHelper = {
-    sign,
-};
+  sign
+}
 
-export const formatCurrency = (amount) => {
-    return `PKR ${amount.toLocaleString('en-PK', {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-    })}`;
-};
+export const formatCurrency = amount => {
+  return `PKR ${amount.toLocaleString('en-PK', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  })}`
+}

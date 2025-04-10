@@ -1,9 +1,9 @@
-"use client";
+'use client'
 
-import { Icon as IconComp} from "@iconify/react";
+import { Icon as IconComp } from '@iconify/react'
 
-const Icon = (props) => {
-    return <IconComp {...props}></IconComp>;
-};
+const Icon = props => {
+  return <IconComp {...props}></IconComp>
+}
 
-export { Icon };
+export { Icon }
