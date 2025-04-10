@@ -47,7 +47,9 @@ import {
   useGetBankAccountsQuery
 } from '@/redux-store/services/api'
 import MuiTextField from '@/components/mui-form-inputs/MuiTextField'
-import EditBankAccount from './EditBankAccount'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { z } from 'zod'
+import BankAccountForm from './BankAccountForm'
 
 const fuzzyFilter = (row, columnId, value, addMeta) => {
   const itemRank = rankItem(row.getValue(columnId), value)
@@ -72,10 +74,9 @@ const BankAccountTable = () => {
     refetch
   } = useGetBankAccountsQuery({
     page: page + 1,
-    searchText: globalFilter
+    searchText: globalFilter,
+    pageSize: rowsPerPage
   })
-
-  // searchText: globalFilter
 
   const bank_accounts = detail_data?.data || []
   const totalCount = detail_data?.total || 0
@@ -156,7 +157,7 @@ const BankAccountTable = () => {
           <div className='flex items-center w-fit gap-2'>
             <Tooltip title='Edit Bank Account' placement='top'>
               {/* <Link href={`/settings/bank-accounts/${row.original.uuid}`} aria-label='Edit bank account'> */}
-              <IconButton size='small' onClick={() => handleShowEdit(row.original.uuid)}>
+              <IconButton size='small' onClick={() => handleEdit(row.original.uuid)}>
                 <FaPencil className='cursor-pointer text-base text-primary' />
               </IconButton>
               {/* </Link> */}
@@ -204,6 +205,7 @@ const BankAccountTable = () => {
       deleteBankAccount(bankAccountToBeDelete.uuid).then(response => {
         if (response?.data?.code == 200) {
           toast.success(response?.data.message)
+          refetch()
         } else {
           toast.error(response?.data?.message || 'Something went wrong')
         }
@@ -231,64 +233,23 @@ const BankAccountTable = () => {
     return <TextField {...props} value={value} onChange={e => setValue(e.target.value)} size='small' />
   }
 
-  // const toaster = useToast()
+  const [isFormOpen, setIsFormOpen] = useState(false)
 
-  const [createBankAccount, { isLoading }] = useCreateBankAccountMutation()
+  const [selectedBankAccountId, setSelectedBankAccountId] = useState(null)
 
-  const { control, handleSubmit, setError, setValue } = useForm({
-    // resolver: zodResolver(bankAccountSchema),
-  })
-
-  const handleChangeImage = fileItems => {
-    if (fileItems.length > 0) {
-      const fileItem = fileItems[0]
-
-      const file = new File([fileItem.file], fileItem.file.name, {
-        type: fileItem.file.type,
-        lastModified: fileItem.file.lastModified
-      })
-
-      setValue('bank_logo', file)
-    } else {
-      setValue('bank_logo', undefined)
-    }
+  const handleAddNew = () => {
+    setSelectedBankAccountId(null)
+    setIsFormOpen(true)
   }
 
-  const setErrors = errors => {
-    Object.entries(errors).forEach(([key]) => setError(key, { message: value }))
-  }
-
-  const onSubmit = handleSubmit(async data => {
-    await createBankAccount(data).then(response => {
-      if ('error' in response) {
-        setErrors(response?.error?.data?.errors)
-
-        return
-      }
-
-      toast.success('Bank Account has been created')
-      onClose()
-    })
-  })
-
-  const [isModalOpen, setIsModalOpen] = useState(false)
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false)
-  const [selectedBankAccountId, setSelectedBankAccountId] = useState('')
-
-  const handleShow = () => {
-    setIsModalOpen(true)
-  }
-
-  const handleClose = () => {
-    setIsModalOpen(false)
-
-    // setIsEditMode(false)
-    setIsEditModalOpen(false)
-  }
-
-  const handleShowEdit = id => {
+  const handleEdit = id => {
     setSelectedBankAccountId(id)
-    setIsEditModalOpen(true)
+    setIsFormOpen(true)
+  }
+
+  const handleCloseForm = () => {
+    setIsFormOpen(false)
+    setSelectedBankAccountId(null)
   }
 
   return (
@@ -302,12 +263,10 @@ const BankAccountTable = () => {
               placeholder='Search bank accounts...'
               className='w-full max-w-md'
             />
-            {/* <Link href={'/settings/bank-accounts/create'} aria-label={'Create bank account'}> */}
-            <Button onClick={handleShow} variant='contained' className='hidden md:flex'>
+            <Button onClick={handleAddNew} variant='contained' className='hidden md:flex'>
               <FaPlus fontSize={16} />
               <span>New Bank Account</span>
             </Button>
-            {/* </Link> */}
           </div>
 
           <div className='overflow-x-auto p-5'>
@@ -395,103 +354,13 @@ const BankAccountTable = () => {
           </Button>
         </DialogActions>
       </Dialog>
-      {/* ------------------- Add Bank Account ------------------ */}
-      <Dialog open={isModalOpen} onClose={handleClose} fullWidth maxWidth='md'>
-        <DialogTitle className='font-bold flex items-center justify-between'>
-          Add Bank Account
-          <IoMdClose className='cursor-pointer' onClick={handleClose} />
-        </DialogTitle>
-        <DialogContent>
-          <div className='grid grid-cols-1 gap-6 xl:grid-cols-2 mt-5'>
-            <div>
-              <div className='grid grid-cols-1 gap-5 gap-y-3 md:grid-cols-2'>
-                <div>
-                  <MuiTextField
-                    control={control}
-                    size='md'
-                    label='Bank Name'
-                    id='bank_name'
-                    name='bank_name'
-                    placeholder='Enter Bank Name'
-                  />
-                </div>
-                <div>
-                  <MuiTextField
-                    control={control}
-                    size='md'
-                    label='Account Holder Name'
-                    id='account_holder_name'
-                    name='account_holder_name'
-                    placeholder='Enter Account Holder Name'
-                  />
-                </div>
-                <div>
-                  <MuiTextField
-                    control={control}
-                    size='md'
-                    label='Account Number'
-                    id='account_number'
-                    name='account_number'
-                    placeholder='Enter Account Number'
-                  />
-                </div>
-                <div>
-                  <MuiTextField
-                    control={control}
-                    size='md'
-                    label='IBAN'
-                    id='iban'
-                    name='iban'
-                    placeholder='Enter IBAN'
-                  />
-                </div>
-                <div>
-                  <MuiTextField
-                    control={control}
-                    size='md'
-                    label='Contact Number'
-                    id='contact_number'
-                    name='contact_number'
-                    placeholder='Enter Contact Number'
-                  />
-                </div>
-                <div className='col-span-1 md:col-span-2'>
-                  <MuiTextField
-                    control={control}
-                    size='md'
-                    multiline
-                    rows={3}
-                    label='Bank Address'
-                    id='bank_address'
-                    name='bank_address'
-                    placeholder='Enter Bank Address'
-                  />
-                </div>
-              </div>
-            </div>
-            <div>
-              <div className='mb-2 text-sm font-medium'>Bank Logo</div>
-              <div className='filepond-file-upload'>
-                <input
-                  type='file'
-                  onupdatefiles={handleChangeImage}
-                  labelIdle={`<div>Drag and Drop your files or <span style="text-decoration: underline">Browse</span></div>`}
-                />
-              </div>
-            </div>
-          </div>
-        </DialogContent>
-        <DialogActions>
-          <Button variant='outlined' onClick={handleClose} disabled={isLoading}>
-            Cancel
-          </Button>
-          <Button variant='contained' onClick={onSubmit} loading={isLoading}>
-            Save
-          </Button>
-        </DialogActions>
-      </Dialog>
-      {/* ---------------------- Edit Bank Account ------------------ */}
-      <EditBankAccount open={isEditModalOpen} onClose={handleClose} bankAccountId={selectedBankAccountId} />
+
+      <BankAccountForm
+        open={isFormOpen}
+        onClose={handleCloseForm}
+        refetch={refetch}
+        bankAccountId={selectedBankAccountId}
+      />
     </>
   )
 }

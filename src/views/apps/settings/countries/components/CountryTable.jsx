@@ -1,7 +1,7 @@
 'use client'
 
-import { useEffect, useMemo, useState, useRef } from 'react'
-import Link from 'next/link'
+import { useEffect, useMemo, useState } from 'react'
+import { rankItem } from '@tanstack/match-sorter-utils'
 
 // MUI Components
 import {
@@ -18,66 +18,65 @@ import {
   TextField,
   Tooltip
 } from '@mui/material'
-
-import { createColumnHelper, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
-
-// import { FaPencil, FaPlus, FaTrash, FaSearch, FaTimes } from 'react-icons/fa6'
-
-// Redux & Hooks
-import { toast } from 'react-toastify'
-import { useDeleteCountryMutation, useGetCountriesQuery } from '@/redux-store/services/api'
 import { FaPencil, FaPlus, FaTrash } from 'react-icons/fa6'
-import CreateCountry from './CreateCountry'
-import EditCountry from './EditCountry'
-// FaSearch, FaTimes
+import { IoMdClose } from 'react-icons/io'
+import { toast } from 'react-toastify'
+
+// Table imports
+import {
+  createColumnHelper,
+  flexRender,
+  getCoreRowModel,
+  getFacetedMinMaxValues,
+  getFacetedRowModel,
+  getFacetedUniqueValues,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+  useReactTable
+} from '@tanstack/react-table'
+
+// Redux & Components
+import { useDeleteCountryMutation, useGetCountriesQuery } from '@/redux-store/services/api'
+import CountryForm from './CountryForm'
+
+const fuzzyFilter = (row, columnId, value, addMeta) => {
+  const itemRank = rankItem(row.getValue(columnId), value)
+  addMeta({ itemRank })
+  return itemRank.passed
+}
+
 const CountryTable = () => {
   // States
-  const [searchText, setSearchText] = useState('')
+  const [rowSelection, setRowSelection] = useState({})
+  const [globalFilter, setGlobalFilter] = useState('')
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(10)
-  const [countryToBeDelete, setCountryToBeDelete] = useState(null)
-  const [selectedCountryId, setSelectedCountryId] = useState('')
+  const [countryToDelete, setCountryToDelete] = useState(null)
+  const [isFormOpen, setIsFormOpen] = useState(false)
+  const [isEditFormOpen, setIsEditFormOpen] = useState(false)
+  const [selectedCountryId, setSelectedCountryId] = useState(null)
+
+
 
   // RTK Query
   const {
-    data: detail_data,
+    data: countryData,
     isFetching,
     refetch
   } = useGetCountriesQuery({
-    pageUrl: page,
-    searchText
+    page: page + 1,
+    pageSize: rowsPerPage,
+    searchText: globalFilter,
   })
 
-  useEffect(() => {
-    refetch()
-  }, [searchText, page])
+  const countries = countryData?.data || []
+  const totalCount = countryData?.meta?.total || 0
 
-  const countries = detail_data?.data || []
-  const links = detail_data?.links || []
-  const totalCount = detail_data?.meta?.total || 0
-
-  const [isModalOpen, setIsModalOpen] = useState(false)
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false)
-  const [selectedSupplierId, setSelectedSupplierId] = useState('')
-
-  const handleShow = () => {
-    setIsModalOpen(true)
-  }
-
-  const handleClose = () => {
-    setIsModalOpen(false)
-
-    // setIsEditMode(false)
-    setIsEditModalOpen(false)
-  }
-
-  const handleShowEdit = id => {
-    setSelectedCountryId(id)
-    setIsEditModalOpen(true)
-  }
   // Mutations
-  const [deleteCountry, { isLoading: deleteCountryLoading }] = useDeleteCountryMutation()
+  const [deleteCountry, { isLoading: isDeleting }] = useDeleteCountryMutation()
 
+  // Handlers
   const handlePageChange = (event, newPage) => {
     setPage(newPage)
   }
@@ -87,7 +86,42 @@ const CountryTable = () => {
     setPage(0)
   }
 
-  // Column Definitions
+  const handleDelete = async () => {
+    if (countryToDelete) {
+      try {
+        const response = await deleteCountry(countryToDelete.uuid)
+        if (response?.data?.code === 200) {
+          toast.success(response.data.message)
+          refetch()
+        } else {
+          toast.error(response?.data?.message || 'Failed to delete country')
+        }
+      } catch (error) {
+        toast.error('An error occurred while deleting country')
+      } finally {
+        setCountryToDelete(null)
+      }
+    }
+  }
+
+  const handleAddNew = () => {
+    setSelectedCountryId(null)
+    setIsFormOpen(true)
+  }
+
+  const handleEdit = (id) => {
+    setSelectedCountryId(id)
+    setIsFormOpen(true)
+  }
+
+  const handleCloseForm = () => {
+    setIsFormOpen(false)
+    setIsEditFormOpen(false)
+    setSelectedCountryId(null)
+    refetch()
+  }
+
+  // Columns
   const columnHelper = createColumnHelper()
 
   const columns = useMemo(
@@ -98,11 +132,19 @@ const CountryTable = () => {
       }),
       columnHelper.accessor('name', {
         header: 'Country Name',
-        cell: ({ row }) => <div className='flex items-center space-x-3 truncate'>{row.original.name}</div>
+        cell: ({ row }) => (
+          <div className='flex items-center space-x-3 truncate'>
+            <div className='font-medium'>{row.original.name}</div>
+          </div>
+        )
       }),
       columnHelper.accessor('nice_name', {
         header: 'Nice Name',
-        cell: ({ row }) => <div className='flex items-center space-x-3 truncate'>{row.original.nice_name}</div>
+        cell: ({ row }) => (
+          <div className='flex items-center space-x-3 truncate'>
+            <div className='font-medium'>{row.original.nice_name}</div>
+          </div>
+        )
       }),
       columnHelper.accessor('iso', {
         header: 'ISO',
@@ -114,27 +156,23 @@ const CountryTable = () => {
       }),
       {
         id: 'actions',
-        header: 'Action',
+        header: 'Actions',
         cell: ({ row }) => (
-          <div className='flex items-center w-fit gap-2'>
-            <Tooltip title='Edit Country' placement='top'>
-              {/* <Link href={routes.apps.settings.country_edit(row.original.uuid)} passHref> */}
-              {/* <IconButton size='small' onClick={event => event.stopPropagation()}> */}
-              <IconButton size='small' onClick={() => handleShowEdit(row.original.uuid)}>
-                <FaPencil className='text-base-content/70' fontSize={20} />
+          <div className='flex items-center gap-2'>
+            <Tooltip title='Edit Country'>
+              <IconButton size='small' onClick={() => handleEdit(row.original.uuid)}>
+                <FaPencil className='text-primary' />
               </IconButton>
-              {/* </Link> */}
             </Tooltip>
-            <Tooltip title='Delete Country' placement='top'>
-              <IconButton size='small'>
-                <FaTrash
-                  className='text-error/70 hover:text-error'
-                  fontSize={22}
-                  onClick={event => {
-                    event.stopPropagation()
-                    setCountryToBeDelete(row.original)
-                  }}
-                />
+            <Tooltip title='Delete Country'>
+              <IconButton 
+                size='small' 
+                onClick={(e) => {
+                  e.stopPropagation()
+                  setCountryToDelete(row.original)
+                }}
+              >
+                <FaTrash className='text-error' />
               </IconButton>
             </Tooltip>
           </div>
@@ -144,27 +182,28 @@ const CountryTable = () => {
     []
   )
 
+  // Table instance
   const table = useReactTable({
     data: countries,
     columns,
-    getCoreRowModel: getCoreRowModel(),
+    filterFns: { fuzzy: fuzzyFilter },
+    state: { rowSelection, globalFilter },
     manualPagination: true,
-    pageCount: Math.ceil(totalCount / rowsPerPage)
+    pageCount: Math.ceil(totalCount / rowsPerPage),
+    enableRowSelection: true,
+    globalFilterFn: fuzzyFilter,
+    onRowSelectionChange: setRowSelection,
+    getCoreRowModel: getCoreRowModel(),
+    onGlobalFilterChange: setGlobalFilter,
+    getFilteredRowModel: getFilteredRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getFacetedRowModel: getFacetedRowModel(),
+    getFacetedUniqueValues: getFacetedUniqueValues(),
+    getFacetedMinMaxValues: getFacetedMinMaxValues(),
+    getPaginationRowModel: getPaginationRowModel()
   })
 
-  const handleDeleteCountry = async () => {
-    if (countryToBeDelete) {
-      deleteCountry(countryToBeDelete.uuid).then(response => {
-        if (response?.data.code == 200) {
-          toast.success(response?.data.message)
-        } else {
-          toast.error(response?.data.message)
-        }
-        setCountryToBeDelete(null)
-      })
-    }
-  }
-
+  // Debounced search input
   const DebouncedInput = ({ value: initialValue, onChange, debounce = 500, ...props }) => {
     const [value, setValue] = useState(initialValue)
 
@@ -175,20 +214,13 @@ const CountryTable = () => {
     useEffect(() => {
       const timeout = setTimeout(() => {
         onChange(value)
+        setPage(0) // Reset to first page when search term changes
       }, debounce)
 
       return () => clearTimeout(timeout)
     }, [value])
 
-    return (
-      <TextField
-        {...props}
-        value={value}
-        onChange={e => setValue(e.target.value)}
-        size='small'
-        placeholder='Search countries...'
-      />
-    )
+    return <TextField {...props} value={value} onChange={e => setValue(e.target.value)} size='small' />
   }
 
   return (
@@ -196,11 +228,19 @@ const CountryTable = () => {
       <Card className='mt-5 bg-base-100'>
         <CardContent className='p-0'>
           <div className='flex items-center justify-between px-5 pt-5'>
-            <DebouncedInput value={searchText} onChange={value => setSearchText(value)} className='w-full max-w-md' />
-
-            <Button variant='contained' onClick={handleShow} className='hidden md:flex'>
+            <DebouncedInput
+              value={globalFilter ?? ''}
+              onChange={value => setGlobalFilter(String(value))}
+              placeholder='Search countries...'
+              className='w-full max-w-md'
+            />
+            <Button 
+              variant='contained' 
+              onClick={handleAddNew}
+              className='hidden md:flex'
+            >
               <FaPlus fontSize={16} />
-              <span>New Country</span>
+              <span className='ml-2'>New Country</span>
             </Button>
           </div>
 
@@ -212,7 +252,16 @@ const CountryTable = () => {
                     {headerGroup.headers.map(header => (
                       <th key={header.id} className='text-left p-3 border-b'>
                         {header.isPlaceholder ? null : (
-                          <div>{flexRender(header.column.columnDef.header, header.getContext())}</div>
+                          <div
+                            className={header.column.getCanSort() ? 'cursor-pointer select-none' : ''}
+                            onClick={header.column.getToggleSortingHandler()}
+                          >
+                            {flexRender(header.column.columnDef.header, header.getContext())}
+                            {{
+                              asc: ' 🔼',
+                              desc: ' 🔽'
+                            }[header.column.getIsSorted()] ?? null}
+                          </div>
                         )}
                       </th>
                     ))}
@@ -223,7 +272,7 @@ const CountryTable = () => {
                 {!isFetching ? (
                   table.getRowModel().rows.length > 0 ? (
                     table.getRowModel().rows.map(row => (
-                      <tr key={row.id} className='hover:bg-base-200/40'>
+                      <tr key={row.id} className='hover:bg-gray-50'>
                         {row.getVisibleCells().map(cell => (
                           <td key={cell.id} className='p-3 border-b'>
                             {flexRender(cell.column.columnDef.cell, cell.getContext())}
@@ -263,32 +312,39 @@ const CountryTable = () => {
         </CardContent>
       </Card>
 
-      <Dialog open={!!countryToBeDelete} onClose={() => setCountryToBeDelete(null)}>
+      {/* Delete Confirmation Dialog */}
+      <Dialog open={!!countryToDelete} onClose={() => setCountryToDelete(null)}>
         <DialogTitle className='font-bold flex items-center justify-between'>
           Confirm Delete
-          <IconButton onClick={() => setCountryToBeDelete(null)}>
-            {/* <FaTimes /> */}
-            times
+          <IconButton onClick={() => setCountryToDelete(null)}>
+            <IoMdClose />
           </IconButton>
         </DialogTitle>
-
         <DialogContent>
-          You are about to delete <b>{countryToBeDelete?.name}</b>. Would you like to proceed further?
+          You are about to delete <b>{countryToDelete?.name}</b>. This action cannot be undone.
         </DialogContent>
         <DialogActions>
-          <Button color='error' onClick={() => setCountryToBeDelete(null)}>
-            No
+          <Button color='error' onClick={() => setCountryToDelete(null)}>
+            Cancel
           </Button>
-          <Button variant='contained' onClick={handleDeleteCountry} disabled={deleteCountryLoading}>
-            {deleteCountryLoading ? <CircularProgress size={24} /> : 'Yes'}
+          <Button
+            variant='contained'
+            onClick={handleDelete}
+            disabled={isDeleting}
+          >
+            {isDeleting ? <CircularProgress size={24} /> : 'Delete'}
           </Button>
         </DialogActions>
       </Dialog>
 
-      <CreateCountry open={isModalOpen} onClose={handleClose} />
-      <EditCountry open={isEditModalOpen} onClose={handleClose} countryId={selectedCountryId} />
+      <CountryForm
+  open={isFormOpen}
+  onClose={handleCloseForm}
+  refetch={refetch}
+  countryId={selectedCountryId} // null for create, ID for edit
+/>
+
     </>
   )
 }
-
 export { CountryTable }
