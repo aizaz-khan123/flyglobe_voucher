@@ -4,14 +4,15 @@ import { useEffect } from 'react'
 
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 
-import { Button, Card, CardContent, FormLabel } from '@mui/material'
+import { Button, Card, CardContent, FormControlLabel, FormLabel, Switch } from '@mui/material'
 
 import { useGetSupplierListQuery, useShowConnectorQuery, useUpdateConnectorMutation } from '@/redux-store/services/api'
 
 import MuiTextField from '@/components/mui-form-inputs/MuiTextField'
 import MuiDropdown from '@/components/mui-form-inputs/MuiDropdown'
+import { toast } from 'react-toastify'
 
 const SABREConnector = () => {
   const { data: supplierDropDown } = useGetSupplierListQuery()
@@ -55,7 +56,7 @@ const SABREConnector = () => {
 
     await updateConnector(updated_data).then(response => {
       if (response.data?.code == 200) {
-        // toaster.success('SABRE Api Credentials Updated!');
+        toast.success('SABRE Api Credentials Updated!');
       }
     })
   })
@@ -142,13 +143,26 @@ const SABREConnector = () => {
                 )}
               </div>
 
-              {/* <div>
-                                <Form className="mt-1 w-fit rounded-lg">
-                                    <FormLabel title="Status">
-                                        <FormToggle control={control} aria-label="Toggle" name="is_enable" className="m-2" color="primary" />
-                                    </FormLabel>
-                                </Form>
-                            </div> */}
+              <div>
+                <div>
+                  <Controller
+                    name="is_enable"
+                    control={control}
+                    render={({ field }) => (
+                      <FormControlLabel
+                        control={
+                          <Switch
+                            {...field}
+                            checked={!!field.value}
+                            color="primary"
+                          />
+                        }
+                        label="Status"
+                      />
+                    )}
+                  />
+                </div>
+              </div>
             </div>
 
             <div className=' flex justify-between gap-6'>

@@ -1,8 +1,9 @@
-import React, { useRef } from 'react'
-import { Button, Box, Typography } from '@mui/material'
+import { Box, Button, Typography } from "@mui/material"
+import { useRef } from "react"
 import UploadFileIcon from '@mui/icons-material/UploadFile'
+import { IoClose } from "react-icons/io5"
 
-const MUIFileUploader = ({ onFileChange }) => {
+export const MUIFileUploader = ({ onFileChange, preview,handleRemoveImage }) => {
   const fileInputRef = useRef(null)
 
   const handleButtonClick = () => {
@@ -11,7 +12,7 @@ const MUIFileUploader = ({ onFileChange }) => {
 
   const handleFileChange = event => {
     const files = event.target.files
-    onFileChange?.(files) // Trigger your custom handler
+    onFileChange?.(files)
   }
 
   return (
@@ -22,24 +23,48 @@ const MUIFileUploader = ({ onFileChange }) => {
       borderRadius={2}
       sx={{
         cursor: 'pointer',
-        '&:hover': { borderColor: 'primary.main' }
+        position: 'relative',
+        '&:hover': { borderColor: 'primary.main' },
+        minHeight: '220px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        flexDirection: 'column'
       }}
     >
-      <Typography variant='body1' mb={2}>
-        Drag and drop your file here or
-      </Typography>
-      <Button variant='contained' startIcon={<UploadFileIcon />} onClick={handleButtonClick}>
-        Browse
-      </Button>
+      {preview ? (
+        <>
+        <Box position='relative'>
+          <img
+            src={preview}
+            alt='Preview'
+            style={{ maxWidth: '100%', maxHeight: '160px', objectFit: 'contain' }}
+          />
+        </Box>
+         <Box position='absolute' top={8} right={8}>
+         <Button size='small' variant='contained' color='error' onClick={handleRemoveImage} >
+           <IoClose/>
+         </Button>
+       </Box>
+       </>
+      ) : (
+        <>
+          <Typography variant='body1' mb={2}>
+            Drag and drop your file here or
+          </Typography>
+          <Button variant='contained' startIcon={<UploadFileIcon />} onClick={handleButtonClick}>
+            Browse
+          </Button>
+        </>
+      )}
+     
       <input
         type='file'
         hidden
         ref={fileInputRef}
         onChange={handleFileChange}
-        accept='image/*' // Accept only images
+        accept='image/*'
       />
     </Box>
   )
 }
-
-export default MUIFileUploader

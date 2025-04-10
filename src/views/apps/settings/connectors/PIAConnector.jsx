@@ -6,14 +6,15 @@ import { z } from 'zod'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 
-import { Button, Card, CardContent, FormLabel } from '@mui/material'
+import { Button, Card, CardContent, FormControlLabel, FormLabel, Switch } from '@mui/material'
 
-import { useForm } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 
 import MuiTextField from '@/components/mui-form-inputs/MuiTextField'
 
 import MuiDropdown from '@/components/mui-form-inputs/MuiDropdown'
 import { useGetSupplierListQuery, useShowConnectorQuery, useUpdateConnectorMutation } from '@/redux-store/services/api'
+import { toast } from 'react-toastify'
 
 const PIAConnector = () => {
   // const toaster = useToast();
@@ -56,7 +57,7 @@ const PIAConnector = () => {
 
     await updateConnector(updated_data).then(response => {
       if (response.data?.code == 200) {
-        // toaster.success('HITIT Api Credentials Updated!');
+        toast.success('HITIT Api Credentials Updated!');
       }
     })
   })
@@ -122,14 +123,24 @@ const PIAConnector = () => {
                   <p>Loading...</p>
                 )}
               </div>
-
-              {/* <div>
-                                <Form className="mt-1 w-fit rounded-lg">
-                                    <FormLabel title="Status">
-                                        <FormToggle control={control} aria-FormLabel="Toggle" name="is_enable" className="m-2" color="primary" />
-                                    </FormLabel>
-                                </Form>
-                            </div> */}
+              <div>
+                <Controller
+                  name="is_enable"
+                  control={control}
+                  render={({ field }) => (
+                    <FormControlLabel
+                      control={
+                        <Switch
+                          {...field}
+                          checked={!!field.value}
+                          color="primary"
+                        />
+                      }
+                      label="Status"
+                    />
+                  )}
+                />
+              </div>
             </div>
 
             <div className='mt-6 flex justify-end gap-6'>
