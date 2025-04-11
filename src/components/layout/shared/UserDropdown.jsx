@@ -23,6 +23,10 @@ import Typography from '@mui/material/Typography'
 // Third-party Imports
 
 // Hook Imports
+import { useDispatch } from 'react-redux'
+
+import { toast } from 'react-toastify'
+
 import { useSettings } from '@core/hooks/useSettings'
 
 // Util Imports
@@ -30,8 +34,6 @@ import { updateAuthCookie } from '@/libs/cookie/auth'
 import { userLogout } from '@/redux-store/Features/authslice'
 import { useLogoutMutation } from '@/redux-store/services/api'
 import { getLocalizedUrl } from '@/utils/i18n'
-import { useDispatch } from 'react-redux'
-import { toast } from 'react-toastify'
 
 // Styled component for badge content
 const BadgeContentSpan = styled('span')({
@@ -70,8 +72,10 @@ const UserDropdown = () => {
 
     setOpen(false)
   }
+
   const dispatch = useDispatch();
   const [logout] = useLogoutMutation();
+
   const onLogout = async () => {
     try {
       await logout({}).unwrap();

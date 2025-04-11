@@ -1,10 +1,32 @@
 'use client'
 
-import React from 'react'
-import { zodResolver } from '@hookform/resolvers/zod'
+import React, { useEffect } from 'react'
+
 import { useRouter } from 'next/navigation'
-import { useEffect } from 'react'
+
+import { zodResolver } from '@hookform/resolvers/zod'
 import { Controller, useForm } from 'react-hook-form'
+
+import Select from 'react-select'
+import {
+  Button,
+  Card,
+  CardContent,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  FormControlLabel,
+  FormLabel,
+  Switch
+} from '@mui/material'
+
+import { IoMdClose } from 'react-icons/io'
+
+import { toast } from 'react-toastify'
+
+import MuiTextField from '@/components/mui-form-inputs/MuiTextField'
+import MuiDropdown from '@/components/mui-form-inputs/MuiDropdown'
 
 import {
   useAirlineDropDownQuery,
@@ -12,11 +34,6 @@ import {
   useShowAirlineMarginQuery,
   useUpdateAirlineMarginMutation
 } from '@/redux-store/services/api'
-import Select from 'react-select'
-import { Button, Card, CardContent, Dialog, DialogActions, DialogContent, DialogTitle, FormControlLabel, FormLabel, Switch } from '@mui/material'
-import MuiTextField from '@/components/mui-form-inputs/MuiTextField'
-import MuiDropdown from '@/components/mui-form-inputs/MuiDropdown'
-import { IoMdClose } from 'react-icons/io'
 
 const regionOptions = [
   { label: 'ALL-SECTORS', value: 'ALL-SECTORS' },
@@ -27,7 +44,7 @@ const regionOptions = [
   { label: 'EX-PAKISTAN', value: 'EX-PAKISTAN' }
 ]
 
-const EditAirlineMargin = ({ airlineMarginId,onClose,open }) => {
+const EditAirlineMargin = ({ airlineMarginId, onClose, open }) => {
   const { data: airlineDropDown } = useAirlineDropDownQuery()
   const { data: connectorDropDown } = useConnectorDropDownQuery()
 
@@ -43,6 +60,7 @@ const EditAirlineMargin = ({ airlineMarginId,onClose,open }) => {
 
   const [updateAirlineMargin, { error: errorAirlineMargin, isLoading: isLoadingAirlineMargin }] =
     useUpdateAirlineMarginMutation()
+
 
   const { control, handleSubmit, setError, reset } = useForm({
     resolver: zodResolver()
@@ -85,10 +103,12 @@ const EditAirlineMargin = ({ airlineMarginId,onClose,open }) => {
     await updateAirlineMargin({ airlineMarginId, updated_data }).then(response => {
       if ('error' in response) {
         setErrors(response?.error.data?.errors)
-        return
+        
+return
       }
+
       if (response.data?.code == 200) {
-        toaster.success(response?.data?.message)
+        toast.success(response?.data?.message)
         refetch()
         router.push(routes.apps.settings.airline_margins)
       } else {
@@ -109,15 +129,15 @@ const EditAirlineMargin = ({ airlineMarginId,onClose,open }) => {
       </div>
     )
   }
-
+  
   if (error) {
     return (
       <div className='flex flex-col items-center justify-center h-64 text-red-500'>
-        <p>Error fetching bank account details.</p>
+        <p>Error fetching Airline Margin details.</p>
       </div>
     )
   }
-
+  
   return (
     <div>
       <Dialog open={open} onClose={onClose} fullWidth maxWidth='md'>
@@ -283,10 +303,10 @@ const EditAirlineMargin = ({ airlineMarginId,onClose,open }) => {
 
                   <div>
                     <FormControlLabel
-                      control={<Switch control name='is_apply_on_gross' color='primary' />}
+                      control={<Switch name='is_apply_on_gross' color='primary' />}
                       label='is_apply_on_gross'
                     />
-                    <FormControlLabel control={<Switch control name='status' color='primary' />} label='status' />
+                    <FormControlLabel control={<Switch name='status' color='primary' />} label='status' />
                   </div>
 
                   <div className='col-span-1 md:col-span-2'>

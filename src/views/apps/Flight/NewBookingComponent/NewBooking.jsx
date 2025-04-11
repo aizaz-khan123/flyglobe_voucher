@@ -147,8 +147,8 @@ const NewBooking = () => {
     await bookingConfirmTrigger(data).then(response => {
       if (response.error) {
         setError('contact_number', { message: 'An error occurred.' })
-        
-return
+
+        return
       }
 
       toaster.success('Booking has been Created Successfully.')
@@ -167,8 +167,8 @@ return
 
   if (isLoading) return <Typography>Loading Booking Confirmation details...</Typography>
   if (error) return <Typography color='error'>Booking Time Expired. Please try again.</Typography>
-  
-return (
+
+  return (
     <>
       <div className='grid grid-cols-12 gap-3 p-4'>
         <div className='col-span-12'>
@@ -291,7 +291,6 @@ return (
                     </div>
                   </div>
 
-
                   {travelers?.map((traveler, index) => (
                     <Accordion
                       key={index}
@@ -330,23 +329,22 @@ return (
                               Scan Passport
                             </Button>
                           </div>
-                          <div className="col-span-12 mb-5">
+                          <div className='col-span-12 mb-5'>
                             <MuiTextField
                               control={control}
                               name={`passengers.${index}.passenger_type`}
-                              label="Passenger Type"
-
+                              label='Passenger Type'
                             />
                           </div>
                           <div className='col-span-2 mb-5'>
                             <MuiDropdown
                               control={control}
                               name={`passengers.${index}.title`}
-                              label="Title"
-                              placeholder="Title"
-                              options={genderTitle.map((title) => ({
+                              label='Title'
+                              placeholder='Title'
+                              options={genderTitle.map(title => ({
                                 value: title,
-                                label: `${title}`,
+                                label: `${title}`
                               }))}
                             />
                           </div>
@@ -372,12 +370,12 @@ return (
                           <div className='col-span-6 mb-5'>
                             <MuiDropdown
                               control={control}
-                              placeholder="Gender"
+                              placeholder='Gender'
                               name={`passengers.${index}.gender`}
-                              label="Gender"
-                              options={gender.map((gender) => ({
+                              label='Gender'
+                              options={gender.map(gender => ({
                                 value: gender.value,
-                                label: `${gender.label}`,
+                                label: `${gender.label}`
                               }))}
                             />
                           </div>
@@ -431,7 +429,6 @@ return (
                 <Button
                   variant='contained'
                   className='text-md font-normal px-5 mt-6'
-
                   // size='md'
                   style={{ float: 'right' }}
                   onClick={handleSubmit(onSubmit)}
@@ -750,9 +747,9 @@ return (
                 </div>
               </div>
             </div>
-          </div >
-        </div >
-      </div >
+          </div>
+        </div>
+      </div>
     </>
   )
 }

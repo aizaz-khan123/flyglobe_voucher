@@ -1,4 +1,3 @@
-import Countdown from "./Countdown";
+import Countdown from './Countdown'
 
-export { Countdown };
-
+export { Countdown }

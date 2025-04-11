@@ -1,5 +1,5 @@
-import { PIAConnector } from './PIAConnector';
-import { SABREConnector } from './SABREConnector';
+import { PIAConnector } from './PIAConnector'
+import { SABREConnector } from './SABREConnector'
 
 const Connectors = () => {
   return (
