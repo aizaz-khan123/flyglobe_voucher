@@ -34,10 +34,13 @@ import {
 import { FaPencil, FaPlus, FaTrash } from 'react-icons/fa6'
 
 // Redux & Local Components
-import { useDeleteSupplierMutation, useGetSuppliersQuery } from '@/redux-store/services/api'
 import { toast } from 'react-toastify'
-import SupplierForm from './SupplierForm'
+
 import { IoMdClose } from 'react-icons/io'
+
+import { useDeleteSupplierMutation, useGetSuppliersQuery } from '@/redux-store/services/api'
+import SupplierForm from './SupplierForm'
+
 
 const fuzzyFilter = (row, columnId, value, addMeta) => {
   const itemRank = rankItem(row.getValue(columnId), value)
@@ -64,6 +67,7 @@ const SupplierTable = () => {
      refetch
    } = useGetSuppliersQuery({
      page: page + 1,
+
     //  pageSize: rowsPerPage,
      searchText: globalFilter,
    })
@@ -90,6 +94,7 @@ const SupplierTable = () => {
      if (supplierToDelete) {
        try {
          const response = await deleteSupplier(supplierToDelete.uuid)
+
          if (response?.data?.code === 200) {
            toast.success(response.data.message)
            refetch()

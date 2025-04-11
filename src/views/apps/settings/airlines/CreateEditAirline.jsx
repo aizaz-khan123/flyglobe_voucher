@@ -1,5 +1,7 @@
 'use client'
 
+import { useEffect, useState } from 'react'
+
 import {
   Button,
   Card,
@@ -13,12 +15,15 @@ import {
   Typography
 } from '@mui/material'
 import { Controller, useForm } from 'react-hook-form'
+
+import { toast } from 'react-toastify'
+
+import { IoMdClose } from 'react-icons/io'
+
 import { useCreateAirlineMutation, useGetCountryListQuery, useShowAirlineQuery, useUpdateAirlineMutation } from '@/redux-store/services/api'
 import MuiTextField from '@/components/mui-form-inputs/MuiTextField'
 import MuiDropdown from '@/components/mui-form-inputs/MuiDropdown'
-import { toast } from 'react-toastify'
-import { IoMdClose } from 'react-icons/io'
-import { useEffect, useState } from 'react'
+
 import { MUIFileUploader } from './MuiUploader'
 
 const CreateEditAirline = ({ open, onClose, airlineId, isEdit,refetch }) => {
@@ -36,6 +41,7 @@ const CreateEditAirline = ({ open, onClose, airlineId, isEdit,refetch }) => {
       thumbnail: undefined
     }
   })
+
   const [airlineImage, setAirlineImage] = useState()
 
   const {
@@ -52,11 +58,14 @@ const CreateEditAirline = ({ open, onClose, airlineId, isEdit,refetch }) => {
 
   const handleChangeImage = fileItems => {
     const file = fileItems[0]
+
     if (file) {
       const actualFile = file?.file ?? file
+
       setValue('thumbnail', actualFile)
 
       const previewUrl = URL.createObjectURL(actualFile)
+
       setAirlineImage([{ preview: previewUrl, file: actualFile }])
     } else {
       setValue('thumbnail', undefined)
@@ -71,6 +80,7 @@ const CreateEditAirline = ({ open, onClose, airlineId, isEdit,refetch }) => {
   const onSubmit = handleSubmit(async data => {
     if (!airlineId) {
       const formData = new FormData()
+
       Object.entries(data).forEach(([key, value]) => {
         if (key === 'thumbnail' && value instanceof File) {
           formData.append(key, value)
@@ -82,10 +92,12 @@ const CreateEditAirline = ({ open, onClose, airlineId, isEdit,refetch }) => {
       await createAirline(formData).then(response => {
         if ('error' in response) {
           setErrors(response?.error.data?.errors)
-          return
+          
+return
         }
 
         const { status, data } = response?.data
+
         if (status) {
           toast.success(`${data.name} has been created`)
           onClose()
@@ -110,7 +122,8 @@ const CreateEditAirline = ({ open, onClose, airlineId, isEdit,refetch }) => {
       await updateAirline({ airlineId, formData }).then(response => {
         if ('error' in response) {
           setErrors(response?.error.data?.errors)
-          return
+          
+return
         }
 
         if (response.data?.code == 200) {
@@ -123,6 +136,7 @@ const CreateEditAirline = ({ open, onClose, airlineId, isEdit,refetch }) => {
       })
     }
   })
+
   useEffect(() => {
     if (isAirlineSuccess && airline && isEdit === true) {
       reset({

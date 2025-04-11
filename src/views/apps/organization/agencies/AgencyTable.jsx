@@ -536,14 +536,14 @@ const AgencyTable = () => {
                     {table.rows?.length > 0
                       ? 'No Record Found'
                       : table.getRowModel().rows.map(row => (
-                          <tr key={row.id} className='hover:bg-gray-50'>
-                            {row.getVisibleCells().map(cell => (
-                              <td key={cell.id} className='p-3 border-b'>
-                                {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                              </td>
-                            ))}
-                          </tr>
-                        ))}
+                        <tr key={row.id} className='hover:bg-gray-50'>
+                          {row.getVisibleCells().map(cell => (
+                            <td key={cell.id} className='p-3 border-b'>
+                              {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                            </td>
+                          ))}
+                        </tr>
+                      ))}
                   </>
                 ) : (
                   <td colSpan={table.getAllColumns().length}>

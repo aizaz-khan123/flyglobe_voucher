@@ -1,5 +1,6 @@
-import { Box, Button, Typography } from "@mui/material"
 import { useRef } from "react"
+
+import { Box, Button, Typography } from "@mui/material"
 import UploadFileIcon from '@mui/icons-material/UploadFile'
 import { IoClose } from "react-icons/io5"
 
@@ -12,6 +13,7 @@ export const MUIFileUploader = ({ onFileChange, preview,handleRemoveImage }) => 
 
   const handleFileChange = event => {
     const files = event.target.files
+
     onFileChange?.(files)
   }
 

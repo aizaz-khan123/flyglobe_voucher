@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useMemo, useRef, useState } from 'react'
+
 import { useForm } from 'react-hook-form'
 import { FaPencil, FaPlus, FaTrash } from 'react-icons/fa6'
 import { IoMdClose } from 'react-icons/io'
@@ -17,9 +18,7 @@ import {
   getSortedRowModel,
   useReactTable
 } from '@tanstack/react-table'
-import { useDeleteAirlineMutation, useGetAirlinesQuery } from '@/redux-store/services/api'
-import SearchInput from '@/components/searchInput/SearchInput'
-// import product1Img from "@/assets/images/apps/ecommerce/products/1.jpg"
+
 import {
   Button,
   Card,
@@ -34,8 +33,15 @@ import {
   TextField,
   Tooltip
 } from '@mui/material'
-import { CreateEditAirline } from './CreateEditAirline'
+
 import { toast } from 'react-toastify'
+
+import { useDeleteAirlineMutation, useGetAirlinesQuery } from '@/redux-store/services/api'
+import SearchInput from '@/components/searchInput/SearchInput'
+
+// import product1Img from "@/assets/images/apps/ecommerce/products/1.jpg"
+import { CreateEditAirline } from './CreateEditAirline'
+
 
 const AirlineTable = () => {
   //   const toaster = useToast()
@@ -48,8 +54,10 @@ const AirlineTable = () => {
 
   const fuzzyFilter = (row, columnId, value, addMeta) => {
     const itemRank = rankItem(row.getValue(columnId), value)
+
     addMeta({ itemRank })
-    return itemRank.passed
+    
+return itemRank.passed
   }
 
   const { data: detail_data, isFetching, refetch } = useGetAirlinesQuery({ searchText })
@@ -216,6 +224,7 @@ const AirlineTable = () => {
     setSelectedAirlineId(id)
     setIsEdit(true)
   }
+
  const DebouncedInput = ({ value: initialValue, onChange, debounce = 500, ...props }) => {
     const [value, setValue] = useState(initialValue)
 
@@ -233,7 +242,9 @@ const AirlineTable = () => {
 
     return <TextField {...props} value={value} onChange={e => setValue(e.target.value)} size='small' />
   }
-  return (
+
+  
+return (
     <>
       <Card className='mt-5 bg-base-100'>
         <CardContent className={'p-0'}>

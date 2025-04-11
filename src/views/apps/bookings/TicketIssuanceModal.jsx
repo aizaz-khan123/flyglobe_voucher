@@ -403,6 +403,7 @@ const TicketIssuanceModal = ({ isModalOpen, handleIssueTicketModal, bookingPnr, 
               <Button
                 color='primary'
                 size='md'
+
                 // onClick={() => {
                 //   setStep(2);
                 //   handleSelfProceed()

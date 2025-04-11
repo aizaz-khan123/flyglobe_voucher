@@ -429,6 +429,7 @@ const NewBooking = () => {
                 <Button
                   variant='contained'
                   className='text-md font-normal px-5 mt-6'
+
                   // size='md'
                   style={{ float: 'right' }}
                   onClick={handleSubmit(onSubmit)}

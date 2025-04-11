@@ -105,6 +105,7 @@ const BookingDetail = ({ bookingId }) => {
     baggage,
     issued_at
   } = booking
+
   const isPNRValid = !pnr_expiry || dayjs(pnr_expiry).isAfter(dayjs())
   const isConfirmed = status?.toLowerCase() === 'confirmed'
   const issuedAtTime = dayjs(issued_at)

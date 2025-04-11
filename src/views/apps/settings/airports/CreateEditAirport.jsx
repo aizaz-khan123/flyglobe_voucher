@@ -1,15 +1,19 @@
 'use client'
 
+import { useEffect } from 'react'
+
 import CheckIcon from '@mui/icons-material/Check'
 import CloseIcon from '@mui/icons-material/Close'
 import { Button, Card, CardContent, Dialog, DialogContent, DialogTitle, FormLabel, Typography } from '@mui/material'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+
+import { toast } from 'react-toastify'
+
+import { IoMdClose } from 'react-icons/io'
+
 import { useCreateAirportMutation, useShowAirportQuery, useUpdateAirportMutation } from '@/redux-store/services/api'
 import MuiTextField from '@/components/mui-form-inputs/MuiTextField'
-import { toast } from 'react-toastify'
-import { IoMdClose } from 'react-icons/io'
-import { useEffect } from 'react'
 
 const CreateEditAirport = ({ open, onClose, airportId, isEdit, refetch }) => {
   const [createAirport, { isLoading }] = useCreateAirportMutation()
@@ -37,9 +41,12 @@ const CreateEditAirport = ({ open, onClose, airportId, isEdit, refetch }) => {
       await createAirport(data).then(response => {
         if ('error' in response) {
           setErrors(response?.error.data?.errors)
-          return
+          
+return
         }
+
         const { status, data: responseData } = response?.data
+
         if (status) {
           toast.success(`${responseData.name} has been created`)
           onClose()
@@ -54,10 +61,12 @@ const CreateEditAirport = ({ open, onClose, airportId, isEdit, refetch }) => {
         _method: 'put',
         ...data
       }
+
       await updateAirport({ airportId, updated_data }).then(response => {
         if ('error' in response) {
           setErrors(response?.error.data?.errors)
-          return
+          
+return
         }
 
         if (response.data?.code == 200) {
@@ -71,6 +80,7 @@ const CreateEditAirport = ({ open, onClose, airportId, isEdit, refetch }) => {
     }
 
   })
+
   useEffect(() => {
     if (isAirportSuccess && airport && isEdit) {
       reset({
@@ -91,6 +101,7 @@ const CreateEditAirport = ({ open, onClose, airportId, isEdit, refetch }) => {
       })
     }
   }, [airport, isAirportSuccess, reset,isEdit])
+
   const handleCancel = () => {
     onClose()
   }

@@ -1,14 +1,10 @@
 'use client'
 
+import { useEffect } from 'react'
+
 import Select from 'react-select'
 import { Controller, useForm } from 'react-hook-form'
-import {
-  useAirlineDropDownQuery,
-  useConnectorDropDownQuery,
-  useCreateAirlineMarginMutation,
-  useShowAirlineMarginQuery,
-  useUpdateAirlineMarginMutation
-} from '@/redux-store/services/api'
+
 import {
   Button,
   Card,
@@ -21,11 +17,22 @@ import {
   FormLabel,
   Switch
 } from '@mui/material'
+
 import { IoMdClose } from 'react-icons/io'
+
+import { toast } from 'react-toastify'
+
+import {
+  useAirlineDropDownQuery,
+  useConnectorDropDownQuery,
+  useCreateAirlineMarginMutation,
+  useShowAirlineMarginQuery,
+  useUpdateAirlineMarginMutation
+} from '@/redux-store/services/api'
+
 import MuiTextField from '@/components/mui-form-inputs/MuiTextField'
 import MuiDropdown from '@/components/mui-form-inputs/MuiDropdown'
-import { toast } from 'react-toastify'
-import { useEffect } from 'react'
+
 
 const regionOptions = [
   { label: 'ALL-SECTORS', value: 'ALL-SECTORS' },
@@ -48,6 +55,7 @@ const CreateEditAirlineMargin = ({ open, isEdit, onClose, airlineMarginId,refetc
   const setErrors = errors => {
     Object.entries(errors).forEach(([key, value]) => setError(key, { message: value }))
   }
+
   const {
     data: airline_margin,
     isSuccess: isAirlineMarginSuccess,
@@ -66,10 +74,12 @@ const CreateEditAirlineMargin = ({ open, isEdit, onClose, airlineMarginId,refetc
       await createAirlineMargin(data).then(response => {
         if ('error' in response) {
           setErrors(response?.error.data?.errors)
-          return
+          
+return
         }
 
         const { status } = response?.data
+
         if (status) {
           toast.success(`Airline Margin has been created`)
           onClose()
@@ -84,11 +94,14 @@ const CreateEditAirlineMargin = ({ open, isEdit, onClose, airlineMarginId,refetc
         _method: 'put',
         ...data
       }
+
       await updateAirlineMargin({ airlineMarginId, updated_data }).then(response => {
         if ('error' in response) {
           setErrors(response?.error.data?.errors)
-          return
+          
+return
         }
+
         if (response.data?.code == 200) {
           toast.success(response?.data?.message)
           onClose()
@@ -99,6 +112,7 @@ const CreateEditAirlineMargin = ({ open, isEdit, onClose, airlineMarginId,refetc
       })
     }
   })
+
   useEffect(() => {
     if (isAirlineMarginSuccess && airline_margin && isEdit === true) {
       reset({

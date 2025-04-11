@@ -1,6 +1,9 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
+
+import { useRouter } from 'next/navigation'
+
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -20,8 +23,8 @@ import {
 } from '@mui/material'
 import { IoMdClose } from 'react-icons/io'
 import { toast } from 'react-toastify'
+
 import { useCreateNewsMutation, useUpdateNewsMutation, useShowNewsQuery } from '@/redux-store/services/api'
-import { useRouter } from 'next/navigation'
 import MuiTextField from '@/components/mui-form-inputs/MuiTextField'
 
 // Define your news schema
@@ -88,6 +91,7 @@ const NewsForm = ({ open, onClose, refetch, newsId }) => {
         news_url: newsDetails.news_url || '',
         is_feature: newsDetails.is_feature || false
       })
+
       if (newsDetails.image_url) {
         setImagePreview(newsDetails.image_url)
       }
@@ -98,14 +102,17 @@ const NewsForm = ({ open, onClose, refetch, newsId }) => {
   const handleChangeImage = fileItems => {
     if (fileItems.length > 0) {
       const file = fileItems[0]
+
       setValue('image', file)
       setIsImageChanged(true)
 
       // Create preview
       const reader = new FileReader()
+
       reader.onload = e => {
         setImagePreview(e.target?.result)
       }
+
       reader.readAsDataURL(file)
     } else {
       setValue('image', undefined)
@@ -163,9 +170,11 @@ const NewsForm = ({ open, onClose, refetch, newsId }) => {
     } else {
       // Create new news
       const createFormData = new FormData()
+
       if (data.image) {
         createFormData.append('image', data.image)
       }
+
       createFormData.append('title', data.title)
       createFormData.append('description', data.description || '')
       createFormData.append('news_url', data.news_url || '')
@@ -259,6 +268,7 @@ const NewsForm = ({ open, onClose, refetch, newsId }) => {
                   style={{
                     width: '100%',
                     padding: '8px',
+
                     // borderColor: errors.description ? '#f44336' : '#ccc',
                     borderRadius: '4px',
                     fontFamily: 'inherit'
