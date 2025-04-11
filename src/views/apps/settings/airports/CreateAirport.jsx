@@ -5,10 +5,13 @@ import CloseIcon from '@mui/icons-material/Close'
 import { Button, Card, CardContent, Dialog, DialogContent, DialogTitle, FormLabel, Typography } from '@mui/material'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+
+import { toast } from 'react-toastify'
+
+import { IoMdClose } from 'react-icons/io'
+
 import { useCreateAirportMutation } from '@/redux-store/services/api'
 import MuiTextField from '@/components/mui-form-inputs/MuiTextField'
-import { toast } from 'react-toastify'
-import { IoMdClose } from 'react-icons/io'
 
 const CreateAirport = ({ open, onClose }) => {
   const [createAirport, { isLoading }] = useCreateAirportMutation()
@@ -23,12 +26,15 @@ const CreateAirport = ({ open, onClose }) => {
     await createAirport(data).then(response => {
       if ('error' in response) {
         setErrors(response?.error.data?.errors)
-        return
+        
+return
       }
 
       const { status, data: responseData } = response?.data
+
       if (status) {
         toast.success(`${responseData.name} has been created`)
+
         // router.push(routes.apps.settings.airports)
         onClose()
       } else {

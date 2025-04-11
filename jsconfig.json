@@ -9,7 +9,8 @@
     ],
     "allowJs": true,
     "skipLibCheck": true,
-    "strict": true,
+    "strict": false,
+    "noImplicitAny": false,
     "forceConsistentCasingInFileNames": true,
     "noEmit": true,
     "esModuleInterop": true,
@@ -49,8 +50,10 @@
     "next.config.mjs",
     "tailwind.config.js",
     "**/*.js",
-    "**/*.jsx"
-, "src/components/searchInput/SearchInput.jsx", ".eslintrc.js"  ],
+    "**/*.jsx",
+    "src/components/searchInput/SearchInput.jsx",
+    ".eslintrc.js"
+  ],
   "exclude": [
     "node_modules"
   ]

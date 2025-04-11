@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState } from 'react'
+
 import { useForm } from 'react-hook-form'
 import {
   Box,
@@ -17,9 +18,11 @@ import {
   CircularProgress
 } from '@mui/material'
 import { IoMdClose } from 'react-icons/io'
+
 // import { FaCheck, FaTimes } from 'react-icons/fa'
 
 import { toast } from 'react-toastify'
+
 import { useCreateNewsMutation } from '@/redux-store/services/api'
 
 const CreateNews = ({ open, onClose }) => {
@@ -57,13 +60,16 @@ const CreateNews = ({ open, onClose }) => {
     if (fileItems.length > 0) {
       const fileItem = fileItems[0]
       const file = fileItem.file
+
       setValue('image', file)
 
       // Create preview
       const reader = new FileReader()
+
       reader.onload = e => {
         setImagePreview(e.target?.result)
       }
+
       reader.readAsDataURL(file)
     } else {
       setValue('image', undefined)
@@ -74,6 +80,7 @@ const CreateNews = ({ open, onClose }) => {
   const onSubmit = handleSubmit(async data => {
     try {
       const formData = new FormData()
+
       Object.entries(data).forEach(([key, value]) => {
         if (value !== undefined) {
           formData.append(key, value)
@@ -174,6 +181,7 @@ const CreateNews = ({ open, onClose }) => {
               <Box mb={2}>
                 <input
                   type='file'
+
                   // ref={fileInputRef}
                   onChange={handleChangeImage}
                   accept='image/*'
@@ -203,6 +211,7 @@ const CreateNews = ({ open, onClose }) => {
           variant='outlined'
           onClick={handleCancel}
           disabled={isLoading}
+
           //   startIcon={<FaTimes />}
         >
           Cancel
@@ -211,6 +220,7 @@ const CreateNews = ({ open, onClose }) => {
           variant='contained'
           onClick={onSubmit}
           disabled={isLoading}
+
           //   startIcon={<FaCheck />}
         >
           {isLoading ? <CircularProgress size={24} /> : 'Save'}

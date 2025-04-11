@@ -2,11 +2,7 @@
 
 import Select from 'react-select'
 import { Controller, useForm } from 'react-hook-form'
-import {
-  useAirlineDropDownQuery,
-  useConnectorDropDownQuery,
-  useCreateAirlineMarginMutation
-} from '@/redux-store/services/api'
+
 import {
   Button,
   Card,
@@ -19,10 +15,20 @@ import {
   FormLabel,
   Switch
 } from '@mui/material'
+
 import { IoMdClose } from 'react-icons/io'
+
+import { toast } from 'react-toastify'
+
+import {
+  useAirlineDropDownQuery,
+  useConnectorDropDownQuery,
+  useCreateAirlineMarginMutation
+} from '@/redux-store/services/api'
+
 import MuiTextField from '@/components/mui-form-inputs/MuiTextField'
 import MuiDropdown from '@/components/mui-form-inputs/MuiDropdown'
-import { toast } from 'react-toastify'
+
 
 const regionOptions = [
   { label: 'ALL-SECTORS', value: 'ALL-SECTORS' },
@@ -50,12 +56,15 @@ const CreateAirlineMargin = ({ open, onClose }) => {
     await createAirlineMargin(data).then(response => {
       if ('error' in response) {
         setErrors(response?.error.data?.errors)
-        return
+        
+return
       }
 
       const { status } = response?.data
+
       if (status) {
         toast.success(`Airline Margin has been created`)
+
         // router.push(routes.apps.settings.airline_margins)
       } else {
         setErrors(response?.data?.errors)

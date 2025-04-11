@@ -18,14 +18,6 @@ import { useForm } from 'react-hook-form'
 
 import { FaPencil, FaPlus, FaTrash } from 'react-icons/fa6'
 
-import {
-  useBranchDropDownQuery,
-  useDeleteAirlineMarginMutation,
-  useGetAirlineMarginsQuery
-} from '@/redux-store/services/api'
-import MuiDropdown from '@/components/mui-form-inputs/MuiDropdown'
-import MuiTextField from '@/components/mui-form-inputs/MuiTextField'
-import SearchInput from '@/components/searchInput/SearchInput'
 import { rankItem } from '@tanstack/match-sorter-utils'
 
 import {
@@ -40,10 +32,24 @@ import {
   getSortedRowModel,
   useReactTable
 } from '@tanstack/react-table'
+
+import { IoMdClose } from 'react-icons/io'
+
+import { toast } from 'react-toastify'
+
+import {
+  useBranchDropDownQuery,
+  useDeleteAirlineMarginMutation,
+  useGetAirlineMarginsQuery
+} from '@/redux-store/services/api'
+import MuiDropdown from '@/components/mui-form-inputs/MuiDropdown'
+import MuiTextField from '@/components/mui-form-inputs/MuiTextField'
+import SearchInput from '@/components/searchInput/SearchInput'
+
+
 import { CreateAirlineMargin } from './CreateAirlineMargin'
 import { EditAirlineMargin } from './EditAirlineMargin'
-import { IoMdClose } from 'react-icons/io'
-import { toast } from 'react-toastify'
+
 
 const MarginTable = () => {
   // States
@@ -63,6 +69,7 @@ const MarginTable = () => {
 
     return itemRank.passed
   }
+
   const { data: detail_data, isFetching, refetch } = useGetAirlineMarginsQuery({ searchText, pageUrl })
   const airline_margins = detail_data?.data
   const links = detail_data?.links
@@ -163,6 +170,7 @@ const MarginTable = () => {
       setPageUrl(url)
     }
   }
+
   const handlePageChange = (event, newPage) => {
     setPage(newPage)
   }
@@ -171,6 +179,7 @@ const MarginTable = () => {
     setRowsPerPage(parseInt(event.target.value, 10))
     setPage(0)
   }
+
   const columnHelper = createColumnHelper()
 
   const columns = useMemo(
@@ -192,7 +201,9 @@ const MarginTable = () => {
         cell: ({ row }) => {
           const { margin, margin_type } = row.original
           const color = Number(margin) > 0 ? 'warning' : 'success'
-          return (
+
+          
+return (
             <Badge color={color}>
               {margin}
               {margin_type === 'amount' ? ' PKR' : '%'}
@@ -304,6 +315,7 @@ const MarginTable = () => {
 
   const handleClose = () => {
     setIsCreateModalOpen(false)
+
     // setIsEditMode(false)
     setIsEditModalOpen(false)
   }
@@ -463,6 +475,7 @@ const MarginTable = () => {
               <tbody isLoading={isFetching} hasData={!!branchDropdownData?.length}>
                 {branchDropdownData?.map((data, index) => {
                   return (
+
                     //    <TableRow className="hover:bg-base-200/40">
                     <>
                       <div className='font-medium'>{index + 1}</div>

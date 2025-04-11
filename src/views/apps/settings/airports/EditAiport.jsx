@@ -1,14 +1,17 @@
 'use client'
 
-import React from 'react'
+import React, { useEffect } from 'react'
+
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
-import { useShowAirportQuery, useUpdateAirportMutation } from '@/redux-store/services/api'
+
 import { toast } from 'react-toastify'
 import { Button, Card, CardContent, Dialog, DialogContent, DialogTitle, FormLabel, Typography } from '@mui/material'
-import MuiTextField from '@/components/mui-form-inputs/MuiTextField'
+
 import { IoMdClose } from 'react-icons/io'
+
+import MuiTextField from '@/components/mui-form-inputs/MuiTextField'
+import { useShowAirportQuery, useUpdateAirportMutation } from '@/redux-store/services/api'
 
 const EditAirport = ({ airportId, open, onClose }) => {
   const {
@@ -50,10 +53,12 @@ const EditAirport = ({ airportId, open, onClose }) => {
       _method: 'put',
       ...data
     }
+
     await updateAirport({ airportId, updated_data }).then(response => {
       if ('error' in response) {
         setErrors(response?.error.data?.errors)
-        return
+        
+return
       }
 
       if (response.data?.code == 200) {
@@ -167,6 +172,7 @@ const EditAirport = ({ airportId, open, onClose }) => {
               variant='contained'
               size='medium'
               onClick={onSubmit}
+
               //   startIcon={<Icon icon={arrowUpFromLineIcon} fontSize={18} />}
               loading={isLoadingAirport}
             >

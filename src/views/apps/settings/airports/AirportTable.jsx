@@ -1,5 +1,8 @@
 'use client'
 
+import { useState, useEffect, useMemo } from 'react'
+
+import { Edit, Delete, Add, Search } from '@mui/icons-material'
 import {
   Button,
   Card,
@@ -13,10 +16,8 @@ import {
   InputAdornment,
   TablePagination
 } from '@mui/material'
-import { Edit, Delete, Add, Search } from '@mui/icons-material'
-import { useState, useEffect, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
-import { useDeleteAirportMutation, useGetAirportsQuery } from '@/redux-store/services/api'
+
 import { toast } from 'react-toastify'
 import { rankItem } from '@tanstack/match-sorter-utils'
 import {
@@ -32,13 +33,17 @@ import {
   useReactTable
 } from '@tanstack/react-table'
 import { IoMdClose } from 'react-icons/io'
+
+import { useDeleteAirportMutation, useGetAirportsQuery } from '@/redux-store/services/api'
 import { CreateAirport } from './CreateAirport'
 import { EditAirport } from './EditAiport'
 
 const fuzzyFilter = (row, columnId, value, addMeta) => {
   const itemRank = rankItem(row.getValue(columnId), value)
+
   addMeta({ itemRank })
-  return itemRank.passed
+  
+return itemRank.passed
 }
 
 const AirportTable = () => {

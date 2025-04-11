@@ -1,17 +1,12 @@
 'use client'
 
-import React from 'react'
-import { zodResolver } from '@hookform/resolvers/zod'
+import React, { useEffect } from 'react'
+
 import { useRouter } from 'next/navigation'
-import { useEffect } from 'react'
+
+import { zodResolver } from '@hookform/resolvers/zod'
 import { Controller, useForm } from 'react-hook-form'
 
-import {
-  useAirlineDropDownQuery,
-  useConnectorDropDownQuery,
-  useShowAirlineMarginQuery,
-  useUpdateAirlineMarginMutation
-} from '@/redux-store/services/api'
 import Select from 'react-select'
 import {
   Button,
@@ -25,10 +20,20 @@ import {
   FormLabel,
   Switch
 } from '@mui/material'
+
+import { IoMdClose } from 'react-icons/io'
+
+import { toast } from 'react-toastify'
+
 import MuiTextField from '@/components/mui-form-inputs/MuiTextField'
 import MuiDropdown from '@/components/mui-form-inputs/MuiDropdown'
-import { IoMdClose } from 'react-icons/io'
-import { toast } from 'react-toastify'
+
+import {
+  useAirlineDropDownQuery,
+  useConnectorDropDownQuery,
+  useShowAirlineMarginQuery,
+  useUpdateAirlineMarginMutation
+} from '@/redux-store/services/api'
 
 const regionOptions = [
   { label: 'ALL-SECTORS', value: 'ALL-SECTORS' },
@@ -98,8 +103,10 @@ const EditAirlineMargin = ({ airlineMarginId, onClose, open }) => {
     await updateAirlineMargin({ airlineMarginId, updated_data }).then(response => {
       if ('error' in response) {
         setErrors(response?.error.data?.errors)
-        return
+        
+return
       }
+
       if (response.data?.code == 200) {
         toast.success(response?.data?.message)
         refetch()

@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useMemo, useState, useRef } from 'react'
+
 import Link from 'next/link'
 
 // MUI Components
@@ -25,10 +26,14 @@ import { createColumnHelper, flexRender, getCoreRowModel, useReactTable } from '
 
 // Redux & Hooks
 import { toast } from 'react-toastify'
-import { useDeleteCountryMutation, useGetCountriesQuery } from '@/redux-store/services/api'
+
 import { FaPencil, FaPlus, FaTrash } from 'react-icons/fa6'
+
+import { useDeleteCountryMutation, useGetCountriesQuery } from '@/redux-store/services/api'
 import CreateCountry from './CreateCountry'
 import EditCountry from './EditCountry'
+
+
 // FaSearch, FaTimes
 const CountryTable = () => {
   // States
@@ -75,6 +80,8 @@ const CountryTable = () => {
     setSelectedCountryId(id)
     setIsEditModalOpen(true)
   }
+
+
   // Mutations
   const [deleteCountry, { isLoading: deleteCountryLoading }] = useDeleteCountryMutation()
 
@@ -160,6 +167,7 @@ const CountryTable = () => {
         } else {
           toast.error(response?.data.message)
         }
+
         setCountryToBeDelete(null)
       })
     }

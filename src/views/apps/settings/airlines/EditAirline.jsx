@@ -1,5 +1,7 @@
 'use client'
 
+import { useEffect, useState } from 'react'
+
 import {
   Box,
   Button,
@@ -14,15 +16,17 @@ import {
   Typography,
   CircularProgress
 } from '@mui/material'
-import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+
+import { IoMdClose } from 'react-icons/io'
+
+import { toast } from 'react-toastify'
+
 import { useGetCountryListQuery, useShowAirlineQuery, useUpdateAirlineMutation } from '@/redux-store/services/api'
 import MuiTextField from '@/components/mui-form-inputs/MuiTextField'
 import MuiDropdown from '@/components/mui-form-inputs/MuiDropdown'
 import MUIFileUploader from './MuiUploader'
-import { IoMdClose } from 'react-icons/io'
-import { toast } from 'react-toastify'
 
 const EditAirline = ({ airlineId, open, onClose }) => {
   const [airlineImage, setAirlineImage] = useState()
@@ -81,10 +85,12 @@ const EditAirline = ({ airlineId, open, onClose }) => {
   const handleChangeImage = fileItems => {
     if (fileItems.length > 0) {
       const fileItem = fileItems[0]
+
       const file = new File([fileItem.file], fileItem.file.name, {
         type: fileItem.file.type,
         lastModified: fileItem.file.lastModified
       })
+
       setValue('thumbnail', file)
     } else {
       setValue('thumbnail', undefined)
@@ -106,7 +112,8 @@ const EditAirline = ({ airlineId, open, onClose }) => {
     await updateAirline({ airlineId, formData }).then(response => {
       if ('error' in response) {
         setErrors(response?.error.data?.errors)
-        return
+        
+return
       }
 
       if (response.data?.code == 200) {

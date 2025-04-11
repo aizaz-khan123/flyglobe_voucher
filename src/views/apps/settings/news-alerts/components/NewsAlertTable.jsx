@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useMemo, useState } from 'react'
+
 import Image from 'next/image'
 
 // MUI Components
@@ -25,8 +26,10 @@ import { FaPencil, FaPlus, FaTrash } from 'react-icons/fa6'
 
 // Redux & Hooks
 import { toast } from 'react-toastify'
-import { useDeleteNewsMutation, useGetNewsQuery } from '@/redux-store/services/api'
+
 import { createColumnHelper, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
+
+import { useDeleteNewsMutation, useGetNewsQuery } from '@/redux-store/services/api'
 import CreateNews from './CreateNews'
 
 const NewsAlertTable = () => {
@@ -165,6 +168,7 @@ const NewsAlertTable = () => {
     if (newsToDelete) {
       try {
         const response = await deleteNews(newsToDelete.uuid).unwrap()
+
         if (response?.code === 200) {
           toast.success(response?.message)
         } else {
@@ -173,6 +177,7 @@ const NewsAlertTable = () => {
       } catch (error) {
         toast.error('Failed to delete news')
       }
+
       setNewsToDelete(null)
     }
   }
@@ -209,6 +214,7 @@ const NewsAlertTable = () => {
         onChange={e => setValue(e.target.value)}
         size='small'
         placeholder='Search news...'
+
         // InputProps={{
         //   startAdornment: <FaSearch className='mr-2 text-base-content/50' />,
         //   endAdornment: value && (

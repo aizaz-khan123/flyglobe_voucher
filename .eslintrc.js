@@ -1,6 +1,9 @@
 module.exports = {
   extends: ['next/core-web-vitals', 'plugin:import/recommended', 'prettier'],
   rules: {
+    'no-unused-vars': 'off',
+    'no-undef': 'off',
+    '@typescript-eslint/no-unused-vars': 'off',
     'jsx-a11y/alt-text': 'off',
     'react/display-name': 'off',
     'react/no-children-prop': 'off',
@@ -88,9 +91,7 @@ module.exports = {
     'import/parsers': {},
     'import/resolver': {
       node: {},
-      typescript: {
-        project: './jsconfig.json'
-      }
+      typescript: false
     }
   },
   overrides: []

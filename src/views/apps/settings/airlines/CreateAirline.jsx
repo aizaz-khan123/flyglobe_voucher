@@ -13,12 +13,15 @@ import {
   Typography
 } from '@mui/material'
 import { useForm } from 'react-hook-form'
+
+import { toast } from 'react-toastify'
+
+import { IoMdClose } from 'react-icons/io'
+
 import { useCreateAirlineMutation, useGetCountryListQuery } from '@/redux-store/services/api'
 import MuiTextField from '@/components/mui-form-inputs/MuiTextField'
 import MuiDropdown from '@/components/mui-form-inputs/MuiDropdown'
 import MUIFileUploader from './MuiUploader'
-import { toast } from 'react-toastify'
-import { IoMdClose } from 'react-icons/io'
 
 const CreateAirline = ({ open, onClose }) => {
   const [createAirline, { isLoading }] = useCreateAirlineMutation()
@@ -39,15 +42,18 @@ const CreateAirline = ({ open, onClose }) => {
   const handleChangeImage = fileItems => {
     if (fileItems.length > 0) {
       const fileItem = fileItems[0]
+
       const file = new File([fileItem.file], fileItem.file.name, {
         type: fileItem.file.type,
         lastModified: fileItem.file.lastModified
       })
+
       setValue('thumbnail', file)
     } else {
       setValue('thumbnail', undefined)
     }
   }
+
   //   const handleChangeImage = (files) => {
   //     if (files && files.length > 0) {
   //       const file = files[0];
@@ -63,6 +69,7 @@ const CreateAirline = ({ open, onClose }) => {
 
   const onSubmit = handleSubmit(async data => {
     const formData = new FormData()
+
     Object.entries(data).forEach(([key, value]) => {
       if (key === 'thumbnail' && value instanceof File) {
         formData.append(key, value)
@@ -74,10 +81,12 @@ const CreateAirline = ({ open, onClose }) => {
     await createAirline(formData).then(response => {
       if ('error' in response) {
         setErrors(response?.error.data?.errors)
-        return
+        
+return
       }
 
       const { status, data } = response?.data
+
       if (status) {
         toast.success(`${data.name} has been created`)
         router.push(routes.apps.settings.airlines)

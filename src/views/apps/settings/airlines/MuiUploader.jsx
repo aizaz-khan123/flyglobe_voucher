@@ -1,4 +1,5 @@
 import React, { useRef } from 'react'
+
 import { Button, Box, Typography } from '@mui/material'
 import UploadFileIcon from '@mui/icons-material/UploadFile'
 
@@ -11,6 +12,7 @@ const MUIFileUploader = ({ onFileChange }) => {
 
   const handleFileChange = event => {
     const files = event.target.files
+
     onFileChange?.(files) // Trigger your custom handler
   }
 
