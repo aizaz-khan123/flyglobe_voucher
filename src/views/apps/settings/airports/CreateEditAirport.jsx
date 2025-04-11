@@ -109,21 +109,21 @@ const CreateEditAirport = ({ open, onClose, airportId, isEdit, refetch }) => {
             </Typography>
             <div className='mt-1 grid grid-cols-1 gap-5 gap-y-3 md:grid-cols-2'>
               <div>
-                <FormLabel htmlFor='name'>Airport Name</FormLabel>
                 <MuiTextField
                   fullWidth
                   control={control}
                   size='small'
+                  label={'Airport Name'}
                   id='name'
                   name='name'
                   placeholder='Enter Airport Name'
                 />
               </div>
               <div>
-                <FormLabel htmlFor='iso_country'>ISO Country</FormLabel>
                 <MuiTextField
                   fullWidth
                   control={control}
+                  label={'ISO Country'}
                   size='small'
                   id='iso_country'
                   name='iso_country'
@@ -131,10 +131,10 @@ const CreateEditAirport = ({ open, onClose, airportId, isEdit, refetch }) => {
                 />
               </div>
               <div>
-                <FormLabel htmlFor='municipality'>Municipality</FormLabel>
                 <MuiTextField
                   fullWidth
                   control={control}
+                  label={'Municipality'}
                   size='small'
                   id='municipality'
                   name='municipality'
@@ -142,10 +142,10 @@ const CreateEditAirport = ({ open, onClose, airportId, isEdit, refetch }) => {
                 />
               </div>
               <div>
-                <FormLabel htmlFor='iata_code'>IATA Code</FormLabel>
                 <MuiTextField
                   fullWidth
                   control={control}
+                  label={'IATA Code'}
                   size='small'
                   id='iata_code'
                   name='iata_code'
@@ -153,10 +153,10 @@ const CreateEditAirport = ({ open, onClose, airportId, isEdit, refetch }) => {
                 />
               </div>
               <div>
-                <FormLabel htmlFor='country'>Country</FormLabel>
                 <MuiTextField
                   fullWidth
                   control={control}
+                  label={'Country'}
                   size='small'
                   id='country'
                   name='country'

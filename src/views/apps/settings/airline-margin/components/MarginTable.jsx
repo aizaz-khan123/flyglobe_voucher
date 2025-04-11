@@ -149,7 +149,7 @@ const MarginTable = () => {
 
   const handleDeleteAirlineMargin = async () => {
     if (AirlineMarginToBeDelete) {
-      deleteAirlineMargin(AirlineMarginToBeDelete.uuid).then(response => {
+       deleteAirlineMargin(AirlineMarginToBeDelete.uuid).then(response => {
         if (response?.data.code == 200) {
           toast.success(response?.data.message)
           setAirlineMarginToBeDelete(null)
