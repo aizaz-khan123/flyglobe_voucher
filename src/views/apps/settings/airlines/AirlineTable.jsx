@@ -29,10 +29,12 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  TablePagination
+  IconButton,
+  TablePagination,
+  TextField,
+  Tooltip
 } from '@mui/material'
-import { CreateAirline } from './CreateAirline'
-import { EditAirline } from './EditAirline'
+import { CreateEditAirline } from './CreateEditAirline'
 import { toast } from 'react-toastify'
 
 const AirlineTable = () => {
@@ -50,7 +52,7 @@ const AirlineTable = () => {
     return itemRank.passed
   }
 
-  const { data: detail_data, isFetching, refetch } = useGetAirlinesQuery({ searchText, pageUrl })
+  const { data: detail_data, isFetching, refetch } = useGetAirlinesQuery({ searchText })
   const airlines = detail_data?.data
   const links = detail_data?.links
   const totalCount = detail_data?.total || 0
@@ -81,6 +83,7 @@ const AirlineTable = () => {
         if (response?.data.code == 200) {
           toast.success(response?.data.message)
           setAirlineToBeDelete(null)
+          refetch()
         } else {
           toast.error(response?.data.message)
         }
@@ -145,36 +148,30 @@ const AirlineTable = () => {
             <span className='text-warning cursor-pointer'>In-Active</span>
           )
       }),
-      {
-        id: 'actions',
-        header: 'Action',
-        cell: ({ row }) => (
-          <div className='inline-flex w-fit gap-2'>
-            <Button
-              color='ghost'
-              size='sm'
-              shape='square'
-              aria-label='Edit airline'
-              onClick={() => handleShowEdit(row?.original.uuid)}
-            >
-              <FaPencil className='text-base-content/70' fontSize={20} />
-            </Button>
-            <Button
-              color='ghost'
-              className='text-error/70 hover:bg-error/20'
-              size='sm'
-              shape='square'
-              aria-label='Delete airline'
-              onClick={event => {
-                event.stopPropagation()
-                showDeleteAirlineConfirmation(row.original.uuid)
-              }}
-            >
-              <FaTrash fontSize={20} />
-            </Button>
-          </div>
-        )
-      }
+       {
+              id: 'actions',
+              header: 'Action',
+              cell: ({ row }) => (
+                <div className='flex items-center w-fit gap-2'>
+                  <Tooltip title='Edit Airlines' placement='top'>
+                    <IconButton size='small' onClick={() => handleShowEdit(row.original.uuid)}>
+                      <FaPencil className='cursor-pointer text-base text-primary' />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title='Delete Airlines' placement='top'>
+                    <IconButton size='small'>
+                      <FaTrash
+                        className='cursor-pointer text-base text-red-600'
+                        onClick={e => {
+                          e.stopPropagation()
+                          showDeleteAirlineConfirmation(row.original.uuid)
+                        }}
+                      />
+                    </IconButton>
+                  </Tooltip>
+                </div>
+              )
+            }
     ],
     []
   )
@@ -201,31 +198,54 @@ const AirlineTable = () => {
   // create and edit airline margin
 
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false)
+  const [isEdit, setIsEdit] = useState(false)
   const [selectedAirlineId, setSelectedAirlineId] = useState('')
 
   const handleShow = () => {
     setIsCreateModalOpen(true)
+    setIsEdit(false)
+    setSelectedAirlineId(null)
   }
 
   const handleClose = () => {
     setIsCreateModalOpen(false)
-    // setIsEditMode(false)
-    setIsEditModalOpen(false)
   }
 
   const handleShowEdit = id => {
+    setIsCreateModalOpen(true)
     setSelectedAirlineId(id)
-    setIsEditModalOpen(true)
+    setIsEdit(true)
   }
+ const DebouncedInput = ({ value: initialValue, onChange, debounce = 500, ...props }) => {
+    const [value, setValue] = useState(initialValue)
 
+    useEffect(() => {
+      setValue(initialValue)
+    }, [initialValue])
+
+    useEffect(() => {
+      const timeout = setTimeout(() => {
+        onChange(value)
+      }, debounce)
+
+      return () => clearTimeout(timeout)
+    }, [value])
+
+    return <TextField {...props} value={value} onChange={e => setValue(e.target.value)} size='small' />
+  }
   return (
     <>
       <Card className='mt-5 bg-base-100'>
         <CardContent className={'p-0'}>
           <div className='flex items-center justify-between px-5 pt-5'>
             <div className='inline-flex items-center gap-3'>
-              <SearchInput onSearch={setSearchText} control={filterControl} />
+            <DebouncedInput
+              value={searchText ?? ''}
+              onChange={value => setSearchText(String(value))}
+              placeholder='Search Airline Margin...'
+              className='w-full max-w-md'
+            />
+              {/* <SearchInput onSearch={setSearchText} control={filterControl} /> */}
             </div>
             <div className='inline-flex items-center gap-3'>
               <Button variant='contained' className='hidden md:flex' onClick={handleShow}>
@@ -264,7 +284,7 @@ const AirlineTable = () => {
                     table.getRowModel().rows.map(row => (
                       <tr key={row.id} className='hover:bg-gray-50'>
                         {row.getVisibleCells().map(cell => (
-                          <td key={cell.id} className='py-5 text-left border-b'>
+                          <td key={cell.id} className='p-3 border-b'>
                             {flexRender(cell.column.columnDef.cell, cell.getContext())}
                           </td>
                         ))}
@@ -321,9 +341,8 @@ const AirlineTable = () => {
       </Dialog>
 
       {/* create airline dialog */}
-      <CreateAirline open={isCreateModalOpen} onClose={handleClose} />
-      {/* Edit airline dialog */}
-      <EditAirline open={isEditModalOpen} onClose={handleClose} airlineId={selectedAirlineId} />
+          
+          <CreateEditAirline open={isCreateModalOpen} onClose={handleClose} airlineId={selectedAirlineId} isEdit={isEdit} refetch={refetch}  />
     </>
   )
 }

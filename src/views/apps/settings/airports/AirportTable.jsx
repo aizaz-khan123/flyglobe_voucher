@@ -11,7 +11,9 @@ import {
   CircularProgress,
   TextField,
   InputAdornment,
-  TablePagination
+  TablePagination,
+  IconButton,
+  Tooltip
 } from '@mui/material'
 import { Edit, Delete, Add, Search } from '@mui/icons-material'
 import { useState, useEffect, useMemo } from 'react'
@@ -32,8 +34,9 @@ import {
   useReactTable
 } from '@tanstack/react-table'
 import { IoMdClose } from 'react-icons/io'
-import { CreateAirport } from './CreateAirport'
+import { CreateAirport, CreateEditAirport } from './CreateEditAirport'
 import { EditAirport } from './EditAiport'
+import { FaPencil, FaTrash } from 'react-icons/fa6'
 
 const fuzzyFilter = (row, columnId, value, addMeta) => {
   const itemRank = rankItem(row.getValue(columnId), value)
@@ -77,6 +80,7 @@ const AirportTable = () => {
         if (response?.data.code == 200) {
           toast.success(response?.data.message)
           setAirportToBeDelete(null)
+          refetch()
         } else {
           toast.error(response?.data.message)
         }
@@ -129,26 +133,23 @@ const AirportTable = () => {
         id: 'actions',
         header: 'Action',
         cell: ({ row }) => (
-          <div className='inline-flex w-fit gap-2'>
-            <Button
-              color='inherit'
-              size='small'
-              aria-label='Edit airport'
-              onClick={() => handleShowEdit(row.original.uuid)}
-            >
-              <Edit fontSize='small' className='text-gray-600' />
-            </Button>
-            <Button
-              color='inherit'
-              size='small'
-              aria-label='Delete airport'
-              onClick={event => {
-                event.stopPropagation()
-                showDeleteAirportConfirmation(row.original.uuid)
-              }}
-            >
-              <Delete fontSize='small' className='text-red-500' />
-            </Button>
+          <div className='flex items-center w-fit gap-2'>
+            <Tooltip title='Edit Airports' placement='top'>
+              <IconButton size='small' onClick={() => handleShowEdit(row.original.uuid)}>
+                <FaPencil className='cursor-pointer text-base text-primary' />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title='Delete Airports' placement='top'>
+              <IconButton size='small'>
+                <FaTrash
+                  className='cursor-pointer text-base text-red-600'
+                  onClick={e => {
+                    e.stopPropagation()
+                    showDeleteAirportConfirmation(row.original.uuid)
+                  }}
+                />
+              </IconButton>
+            </Tooltip>
           </div>
         )
       }
@@ -176,41 +177,53 @@ const AirportTable = () => {
 
   // create and edit airport
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false)
+  const [isEdit, setIsEdit] = useState(false)
   const [selectedAirportId, setSelectedAirportId] = useState('')
 
   const handleShow = () => {
     setIsCreateModalOpen(true)
+    setIsEdit(false)
+    setSelectedAirportId(null)
+
   }
 
   const handleClose = () => {
     setIsCreateModalOpen(false)
-    setIsEditModalOpen(false)
   }
 
   const handleShowEdit = id => {
     setSelectedAirportId(id)
-    setIsEditModalOpen(true)
-  }
+    setIsCreateModalOpen(true)
+    setIsEdit(true)
 
+  }
+  const DebouncedInput = ({ value: initialValue, onChange, debounce = 500, ...props }) => {
+    const [value, setValue] = useState(initialValue)
+
+    useEffect(() => {
+      setValue(initialValue)
+    }, [initialValue])
+
+    useEffect(() => {
+      const timeout = setTimeout(() => {
+        onChange(value)
+      }, debounce)
+
+      return () => clearTimeout(timeout)
+    }, [value])
+
+    return <TextField {...props} value={value} onChange={e => setValue(e.target.value)} size='small' />
+  }
   return (
     <>
       <Card className='mt-5 bg-white'>
         <CardContent className='p-0'>
           <div className='flex items-center justify-between px-5 pt-5'>
-            <TextField
-              variant='outlined'
-              size='small'
-              placeholder='Search...'
-              value={searchText}
-              onChange={e => setSearchText(e.target.value)}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position='start'>
-                    <Search />
-                  </InputAdornment>
-                )
-              }}
+            <DebouncedInput
+              value={searchText ?? ''}
+              onChange={value => setSearchText(String(value))}
+              placeholder='Search Airports...'
+              className='w-full max-w-md'
             />
             <Button variant='contained' startIcon={<Add />} onClick={handleShow}>
               New Airport
@@ -246,7 +259,7 @@ const AirportTable = () => {
                     table.getRowModel().rows.map(row => (
                       <tr key={row.id} className='hover:bg-gray-50'>
                         {row.getVisibleCells().map(cell => (
-                          <td key={cell.id} className='py-5 text-left border-b'>
+                          <td key={cell.id} className='p-3 border-b'>
                             {flexRender(cell.column.columnDef.cell, cell.getContext())}
                           </td>
                         ))}
@@ -303,8 +316,7 @@ const AirportTable = () => {
       </Dialog>
 
       {/* Create and Edit dialogs would go here */}
-      <CreateAirport open={isCreateModalOpen} onClose={handleClose} />
-      <EditAirport open={isEditModalOpen} onClose={handleClose} airportId={selectedAirportId} />
+      <CreateEditAirport open={isCreateModalOpen} onClose={handleClose} airportId={selectedAirportId} isEdit={isEdit} refetch={refetch} />
     </>
   )
 }

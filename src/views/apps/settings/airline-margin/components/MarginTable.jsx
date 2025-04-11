@@ -11,7 +11,10 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  TablePagination
+  IconButton,
+  TablePagination,
+  TextField,
+  Tooltip
 } from '@mui/material'
 
 import { useForm } from 'react-hook-form'
@@ -40,8 +43,7 @@ import {
   getSortedRowModel,
   useReactTable
 } from '@tanstack/react-table'
-import { CreateAirlineMargin } from './CreateAirlineMargin'
-import { EditAirlineMargin } from './EditAirlineMargin'
+import { CreateEditAirlineMargin } from './CreateEditAirlineMargin'
 import { IoMdClose } from 'react-icons/io'
 import { toast } from 'react-toastify'
 
@@ -151,6 +153,7 @@ const MarginTable = () => {
         if (response?.data.code == 200) {
           toast.success(response?.data.message)
           setAirlineMarginToBeDelete(null)
+          refetch()
         } else {
           toast.error(response?.data.message)
         }
@@ -237,35 +240,23 @@ const MarginTable = () => {
         id: 'actions',
         header: 'Action',
         cell: ({ row }) => (
-          <div className='inline-flex w-fit gap-2'>
-            <Button color='ghost' size='sm' shape='square' onClick={() => handleShowEdit(row.original.uuid)}>
-              <FaPencil className='text-base-content/70' />
-            </Button>
-            <Button
-              color='ghost'
-              className='text-error/70 hover:bg-error/20'
-              size='sm'
-              shape='square'
-              onClick={e => {
-                e.stopPropagation()
-                showDeleteAirlineMarginConfirmation(row.original.uuid)
-              }}
-            >
-              <FaTrash fontSize={20} />
-            </Button>
-            {/* <Button
-              color='ghost'
-              className='text-error/70 hover:bg-error/20'
-              size='sm'
-              shape='square'
-              onClick={e => {
-                e.stopPropagation()
-                showAssignAirlineMarginConfirmation(row.original.margin, row.original.margin_type)
-              }}
-            >
-              <MdOutlineAssignmentInd />
-
-            </Button> */}
+          <div className='flex items-center w-fit gap-2'>
+            <Tooltip title='Edit Airline Margin' placement='top'>
+              <IconButton size='small' onClick={() => handleShowEdit(row.original.uuid)}>
+                <FaPencil className='cursor-pointer text-base text-primary' />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title='Delete Airline Margin' placement='top'>
+              <IconButton size='small'>
+                <FaTrash
+                  className='cursor-pointer text-base text-red-600'
+                  onClick={e => {
+                    e.stopPropagation()
+                    showDeleteAirlineMarginConfirmation(row.original.uuid)
+                  }}
+                />
+              </IconButton>
+            </Tooltip>
           </div>
         )
       }
@@ -295,22 +286,41 @@ const MarginTable = () => {
   // create and edit airline margin
 
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false)
+  const [isEdit, setIsEdit] = useState(false)
   const [selectedAirlineMarginId, setSelectedAirlineMarginId] = useState('')
 
   const handleShow = () => {
     setIsCreateModalOpen(true)
+    setIsEdit(false)
+    setSelectedAirlineMarginId(null)
   }
 
   const handleClose = () => {
     setIsCreateModalOpen(false)
     // setIsEditMode(false)
-    setIsEditModalOpen(false)
   }
 
-  const handleShowEdit = id => {
+  const handleShowEdit = (id) => {
     setSelectedAirlineMarginId(id)
-    setIsEditModalOpen(true)
+    setIsCreateModalOpen(true)
+    setIsEdit(true)
+  }
+ const DebouncedInput = ({ value: initialValue, onChange, debounce = 500, ...props }) => {
+    const [value, setValue] = useState(initialValue)
+
+    useEffect(() => {
+      setValue(initialValue)
+    }, [initialValue])
+
+    useEffect(() => {
+      const timeout = setTimeout(() => {
+        onChange(value)
+      }, debounce)
+
+      return () => clearTimeout(timeout)
+    }, [value])
+
+    return <TextField {...props} value={value} onChange={e => setValue(e.target.value)} size='small' />
   }
 
   return (
@@ -319,7 +329,13 @@ const MarginTable = () => {
         <CardContent className={'p-0'}>
           <div className='flex items-center justify-between px-5 pt-5'>
             <div className='inline-flex items-center gap-3'>
-              <SearchInput onSearch={setSearchText} control={filterControl} />
+            <DebouncedInput
+              value={searchText ?? ''}
+              onChange={value => setSearchText(String(value))}
+              placeholder='Search Airline Margin...'
+              className='w-full max-w-md'
+            />
+              {/* <SearchInput onSearch={setSearchText} control={filterControl} /> */}
             </div>
             <div className='inline-flex items-center gap-3'>
               <Button onClick={handleShow} variant='contained' className='hidden md:flex'>
@@ -360,7 +376,7 @@ const MarginTable = () => {
                         <tr key={row?.id} className='hover:bg-gray-50'>
                           {row.getVisibleCells().map(cell => {
                             return (
-                              <td key={cell?.id} className='py-5 text-center border-b'>
+                              <td key={cell?.id} className='p-3 border-b'>
                                 {flexRender(cell.column.columnDef.cell, cell.getContext())}
                               </td>
                             )
@@ -398,31 +414,6 @@ const MarginTable = () => {
           />
         </CardContent>
       </Card>
-      {/* delete modal  */}
-      {/* <Dialog ref={AirlineMarginDeleteConfirmationRef} backdrop>
-        <form method='dialog'>
-        <IoMdClose className='cursor-pointer' onClick={() => setAirlineMarginToBeDelete(null)} />
-        </form>
-        <DialogTitle className='font-bold'>Confirm Delete</DialogTitle>
-        <DialogContent>You are about to delete. Would you like to proceed further ?</DialogContent>
-        <DialogActions>
-          <form method='dialog'>
-            <Button color='error' size='sm'>
-              No
-            </Button>
-          </form>
-          <form method='dialog'>
-            <Button
-              loading={deleteAirlineMarginLoading}
-              color='primary'
-              size='sm'
-              onClick={() => handleDeleteAirlineMargin()}
-            >
-              Yes
-            </Button>
-          </form>
-        </DialogActions>
-      </Dialog> */}
       <Dialog open={!!AirlineMarginToBeDelete} onClose={() => setAirlineMarginToBeDelete(null)}>
         <DialogTitle className='font-bold flex items-center justify-between'>
           Confirm Delete
@@ -517,9 +508,7 @@ const MarginTable = () => {
         </DialogActions>
       </Dialog>
       {/* ---------------------- Create Airline Margin ------------------ */}
-      <CreateAirlineMargin open={isCreateModalOpen} onClose={handleClose} />
-      {/* ---------------------- Edit Airline Margin ------------------ */}
-      <EditAirlineMargin open={isEditModalOpen} onClose={handleClose} airlineMarginId={selectedAirlineMarginId} />
+      <CreateEditAirlineMargin open={isCreateModalOpen} onClose={handleClose} airlineMarginId={selectedAirlineMarginId} isEdit={isEdit} refetch={refetch} />
     </>
   )
 }
