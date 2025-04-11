@@ -10,13 +10,17 @@ import {
   Card,
   CardContent,
   CircularProgress,
+  ClickAwayListener,
   Dialog,
   DialogContent,
   DialogTitle,
   Divider,
   Drawer,
+  Fade,
   IconButton,
   Menu,
+  Paper,
+  Popper,
   Typography
 } from '@mui/material'
 import dayjs from 'dayjs'
@@ -62,6 +66,7 @@ const FlightFound = () => {
   const [visible, setVisible] = useState(null)
   const [filterVisible, setFilterVisible] = useState(null)
   const connectors = useSelector(state => state.auth.connectors)
+  const anchorRef = useRef(null)
 
   const toggleVisible = index => setVisible(visible == index ? null : index)
 
@@ -434,7 +439,7 @@ const FlightFound = () => {
   }
 
   const [anchorEl, setAnchorEl] = useState(null)
-  const openFlightInfo = Boolean(anchorEl)
+  const openFlightInfo = (anchorEl)
 
   const handleClick = event => {
     setAnchorEl(event.currentTarget)
@@ -704,57 +709,110 @@ const FlightFound = () => {
                                     <span className='font-semibold text-base'>
                                       {faresGroupData?.price?.currency} {faresGroupData?.price?.gross_amount}
                                     </span>
+                                    <div className="relative">
+  <IconButton 
+    size='small' 
+    onClick={handleClick}
+    ref={anchorRef}
+    className="text-gray-500 hover:text-gray-700"
+  >
+    <InfoIcon fontSize='small' />
+  </IconButton>
+  
+  <Popper
+    open={openFlightInfo}
+    anchorEl={anchorEl}
+    transition
+    placement="bottom-end"
+    className="!z-[9999]"
+    modifiers={[
+      {
+        name: 'preventOverflow',
+        options: {
+          altBoundary: true,
+          padding: 8,
+        },
+      },
+      {
+        name: 'offset',
+        options: {
+          offset: [0, 8],
+        },
+      },
+    ]}
+  >
+    {({ TransitionProps }) => (
+      <Fade {...TransitionProps}>
+        <Paper 
+          className="rounded-lg min-w-[200px]"
+          sx={{
+            zIndex: 9999,
+            marginTop: '8px',
+            position: 'relative',
+            '&::before': {
+              content: '""',
+              // position: 'absolute',
+              // top: '-8px',
+              // left: '14px',
+              width: 0,
+              height: 0,
+              // borderLeft: '8px solid transparent',
+              // borderRight: '8px solid transparent',
+              // borderBottom: '8px solid #fff',
+              // filter: 'drop-shadow(0 -2px 2px rgba(0,0,0,0.1))',
+              zIndex: 9999,
+            }
+          }}
+        >
+          <ClickAwayListener onClickAway={handleCloseFlightInfo}>
+            <Box p={2}>
+              <Typography variant='body2' color='textSecondary' gutterBottom>
+                Price Detail
+              </Typography>
+              <Box display='flex' justifyContent='space-between' my={1}>
+                <Typography variant='body2' color='textSecondary'>
+                  Base Fare
+                </Typography>
+                <Typography variant='body2' color='textSecondary'>
+                  {faresGroupData?.price?.currency} {faresGroupData?.price?.base_fare}
+                </Typography>
+              </Box>
+              <Box display='flex' justifyContent='space-between' my={1}>
+                <Typography variant='body2' color='textSecondary'>
+                  Tax
+                </Typography>
+                <Typography variant='body2' color='textSecondary'>
+                  {faresGroupData?.price?.currency} {faresGroupData?.price?.tax}
+                </Typography>
+              </Box>
+              <Box display='flex' justifyContent='space-between' my={1}>
+                <Typography variant='body2' color='textSecondary'>
+                  Gross Fare
+                </Typography>
+                <Typography variant='body2' color='textSecondary'>
+                  {faresGroupData?.price?.currency} {faresGroupData?.price?.gross_amount}
+                </Typography>
+              </Box>
+              <Divider sx={{ my: 1 }} />
+              <Box display='flex' justifyContent='space-between' mt={1}>
+                <Typography variant='body2' color='textSecondary'>
+                  Total
+                </Typography>
+                <Typography variant='body2' color='textSecondary'>
+                  {faresGroupData?.price?.currency} {formattedTotalFare}
+                </Typography>
+              </Box>
+            </Box>
+          </ClickAwayListener>
+        </Paper>
+      </Fade>
+    )}
+  </Popper>
+</div>
+
                                     <div>
-                                      <IconButton size='small' onClick={handleClick}>
-                                        <InfoIcon fontSize='small' className='text-gray' />
-                                      </IconButton>
-                                      <Menu
-                                        anchorEl={anchorEl}
-                                        open={openFlightInfo}
-                                        onClose={handleCloseFlightInfo}
-                                        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-                                        transformOrigin={{ vertical: 'top', horizontal: 'left' }}
-                                      >
-                                        <Box p={2} minWidth={200}>
-                                          <GoTypography variant='body2' color='textSecondary'>
-                                            Price Detail
-                                          </GoTypography>
-                                          <Box display='flex' justifyContent='space-between' my={1}>
-                                            <Typography variant='body2' color='textSecondary'>
-                                              Base Fare
-                                            </Typography>
-                                            <Typography variant='body2' color='textSecondary'>
-                                              {faresGroupData?.price?.currency} {faresGroupData?.price?.base_fare}
-                                            </Typography>
-                                          </Box>
-                                          <Box display='flex' justifyContent='space-between' my={1}>
-                                            <Typography variant='body2' color='textSecondary'>
-                                              Tax
-                                            </Typography>
-                                            <Typography variant='body2' color='textSecondary'>
-                                              {faresGroupData?.price?.currency} {faresGroupData?.price?.tax}
-                                            </Typography>
-                                          </Box>
-                                          <Box display='flex' justifyContent='space-between' my={1}>
-                                            <Typography variant='body2' color='textSecondary'>
-                                              Gross Fare
-                                            </Typography>
-                                            <Typography variant='body2' color='textSecondary'>
-                                              {faresGroupData?.price?.currency} {faresGroupData?.price?.gross_amount}
-                                            </Typography>
-                                          </Box>
-                                          <Divider />
-                                          <Box display='flex' justifyContent='space-between' mt={1}>
-                                            <Typography variant='body2' color='textSecondary'>
-                                              Total
-                                            </Typography>
-                                            <Typography variant='body2' color='textSecondary'>
-                                              {faresGroupData?.price?.currency} {formattedTotalFare}
-                                            </Typography>
-                                          </Box>
-                                        </Box>
-                                      </Menu>
-                                    </div>
+ 
+</div>
                                   </div>
                                   <Button
                                     variant='contained'
