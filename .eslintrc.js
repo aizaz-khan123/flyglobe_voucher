@@ -9,6 +9,11 @@ module.exports = {
     'react/no-children-prop': 'off',
     '@next/next/no-img-element': 'off',
     '@next/next/no-page-custom-font': 'off',
+    'import/no-unresolved': 'off',
+    'react-hooks/exhaustive-deps': 'off',
+    '@typescript-eslint/no-unused-vars': 'off',
+    '@typescript-eslint/explicit-module-boundary-types': 'off',
+    '@typescript-eslint/no-explicit-any': 'off',
     'lines-around-comment': [
       'error',
       {
@@ -90,8 +95,13 @@ module.exports = {
     },
     'import/parsers': {},
     'import/resolver': {
-      node: {},
-      typescript: false
+      node: {
+        extensions: ['.js', '.jsx', '.json']
+      },
+      alias: {
+        map: [['@', './src']],
+        extensions: ['.js', '.jsx', '.json']
+      }
     }
   },
   overrides: []

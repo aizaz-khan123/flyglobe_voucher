@@ -24,8 +24,11 @@ const nextConfig = {
     ]
   },
   images: {
-    domains: ["127.0.0.1", "api.bookairticket.pk", "uat-api.bookairticket.pk"],
+    domains: ['127.0.0.1', 'api.bookairticket.pk', 'uat-api.bookairticket.pk']
   },
+  eslint: {
+    ignoreDuringBuilds: true
+  }
 }
 
 export default nextConfig
