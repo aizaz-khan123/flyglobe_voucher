@@ -49,20 +49,6 @@ import {
 } from '@/redux-store/services/api'
 
 
-
-import {
-  useBranchDropDownQuery,
-  useDeleteAirlineMarginMutation,
-  useGetAirlineMarginsQuery
-} from '@/redux-store/services/api'
-import MuiDropdown from '@/components/mui-form-inputs/MuiDropdown'
-import MuiTextField from '@/components/mui-form-inputs/MuiTextField'
-import SearchInput from '@/components/searchInput/SearchInput'
-
-
-import { CreateEditAirlineMargin } from './CreateEditAirlineMargin'
-
-
 const MarginTable = () => {
   // States
   const [rowSelection, setRowSelection] = useState({})
