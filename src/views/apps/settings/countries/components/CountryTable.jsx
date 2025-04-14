@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useMemo, useState } from 'react'
+
 import { rankItem } from '@tanstack/match-sorter-utils'
 
 // MUI Components
@@ -42,8 +43,10 @@ import CountryForm from './CountryForm'
 
 const fuzzyFilter = (row, columnId, value, addMeta) => {
   const itemRank = rankItem(row.getValue(columnId), value)
+
   addMeta({ itemRank })
-  return itemRank.passed
+  
+return itemRank.passed
 }
 
 const CountryTable = () => {
@@ -90,6 +93,7 @@ const CountryTable = () => {
     if (countryToDelete) {
       try {
         const response = await deleteCountry(countryToDelete.uuid)
+
         if (response?.data?.code === 200) {
           toast.success(response.data.message)
           refetch()
@@ -347,4 +351,5 @@ const CountryTable = () => {
     </>
   )
 }
+
 export { CountryTable }

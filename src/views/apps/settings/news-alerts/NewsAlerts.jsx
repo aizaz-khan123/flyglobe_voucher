@@ -1,4 +1,5 @@
 import React from 'react'
+
 import { NewsAlertTable } from './components/NewsAlertTable'
 
 const NewsAlerts = () => {

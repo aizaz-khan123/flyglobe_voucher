@@ -41,14 +41,17 @@ import {
 } from '@tanstack/react-table'
 import { useForm } from 'react-hook-form'
 
+import { zodResolver } from '@hookform/resolvers/zod'
+
+import { z } from 'zod'
+
 import {
   useCreateBankAccountMutation,
   useDeleteBankAccountMutation,
   useGetBankAccountsQuery
 } from '@/redux-store/services/api'
 import MuiTextField from '@/components/mui-form-inputs/MuiTextField'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { z } from 'zod'
+
 import BankAccountForm from './BankAccountForm'
 
 const fuzzyFilter = (row, columnId, value, addMeta) => {

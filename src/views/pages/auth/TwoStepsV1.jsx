@@ -40,6 +40,7 @@ const TwoStepsV1 = ({ mode }) => {
   const email = params.id
   const dispatch = useDispatch()
   const router = useRouter()
+
   const authBackground = useImageVariant(
     mode,
     '/images/pages/auth-v1-mask-light.png',

@@ -1,5 +1,8 @@
 'use client'
 
+import { useState, useEffect, useMemo } from 'react'
+
+import { Edit, Delete, Add, Search } from '@mui/icons-material'
 import {
   Button,
   Card,
@@ -15,10 +18,8 @@ import {
   IconButton,
   Tooltip
 } from '@mui/material'
-import { Edit, Delete, Add, Search } from '@mui/icons-material'
-import { useState, useEffect, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
-import { useDeleteAirportMutation, useGetAirportsQuery } from '@/redux-store/services/api'
+
 import { toast } from 'react-toastify'
 import { rankItem } from '@tanstack/match-sorter-utils'
 import {
@@ -34,14 +35,19 @@ import {
   useReactTable
 } from '@tanstack/react-table'
 import { IoMdClose } from 'react-icons/io'
+
+import { FaPencil, FaTrash } from 'react-icons/fa6'
+
 import { CreateAirport, CreateEditAirport } from './CreateEditAirport'
 import { EditAirport } from './EditAiport'
-import { FaPencil, FaTrash } from 'react-icons/fa6'
+import { useDeleteAirportMutation, useGetAirportsQuery } from '@/redux-store/services/api'
 
 const fuzzyFilter = (row, columnId, value, addMeta) => {
   const itemRank = rankItem(row.getValue(columnId), value)
+
   addMeta({ itemRank })
-  return itemRank.passed
+  
+return itemRank.passed
 }
 
 const AirportTable = () => {
@@ -201,6 +207,7 @@ const AirportTable = () => {
     setIsEdit(true)
 
   }
+
   const DebouncedInput = ({ value: initialValue, onChange, debounce = 500, ...props }) => {
     const [value, setValue] = useState(initialValue)
 
@@ -218,7 +225,9 @@ const AirportTable = () => {
 
     return <TextField {...props} value={value} onChange={e => setValue(e.target.value)} size='small' />
   }
-  return (
+
+  
+return (
     <>
       <Card className='mt-5 bg-white'>
         <CardContent className='p-0'>

@@ -1,13 +1,17 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material'
+import { useEffect } from 'react'
+
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle , CircularProgress } from '@mui/material'
 import { IoMdClose } from 'react-icons/io'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
+
+import { z } from 'zod'
+
+import { zodResolver } from '@hookform/resolvers/zod'
+
 import MuiTextField from '@/components/mui-form-inputs/MuiTextField'
 import { useCreateBankAccountMutation, useUpdateBankAccountMutation, useShowBankAccountQuery } from '@/redux-store/services/api'
-import { useEffect } from 'react'
-import { CircularProgress } from '@mui/material'
-import { z } from 'zod'
-import { zodResolver } from '@hookform/resolvers/zod'
+
 
 const bankAccountSchema = z.object({
   account_holder_name: z.string({required_error: "Account Holder Name Required!"}).trim(),
@@ -71,10 +75,12 @@ const BankAccountForm = ({
   const handleChangeImage = fileItems => {
     if (fileItems.length > 0) {
       const fileItem = fileItems[0]
+
       const file = new File([fileItem.file], fileItem.file.name, {
         type: fileItem.file.type,
         lastModified: fileItem.file.lastModified
       })
+
       setValue('bank_logo', file)
     } else {
       setValue('bank_logo', undefined)
@@ -100,7 +106,8 @@ const onSubmit = handleSubmit(async data => {
       }).then(response => {
         if ('error' in response) {
           setErrors(response?.error?.data?.errors)
-          return
+          
+return
         }
   
         toast.success(response?.message || 'Bank Account updated successfully')
@@ -113,7 +120,8 @@ const onSubmit = handleSubmit(async data => {
       await createBankAccount(data).then(response => {
         if ('error' in response) {
           setErrors(response?.error?.data?.errors)
-          return
+          
+return
         }
   
         toast.success(response?.message || 'Bank Account created successfully')
@@ -123,6 +131,7 @@ const onSubmit = handleSubmit(async data => {
       })
     }
   })
+
   if (isDetailsLoading) {
     return (
       <Dialog open={open} onClose={onClose}>

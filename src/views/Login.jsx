@@ -57,6 +57,7 @@ const Login = ({ mode }) => {
   const searchParams = useSearchParams()
   const router = useRouter()
   const { lang: locale } = useParams()
+
   const authBackground = useImageVariant(
     mode,
     '/images/pages/auth-v1-mask-light.png',

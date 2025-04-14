@@ -856,6 +856,7 @@ const FlightFound = () => {
       <Drawer
         open={filterVisible == 2}
         onClickOverlay={() => toggleFilterVisible(2)}
+
         // sideClassName="z-[50]"
         onClose={() => setFilterVisible(null)}
         end
@@ -910,6 +911,7 @@ const FlightFound = () => {
       </Dialog>
       <Dialog
         open={searchResultExpireModal}
+
         // onClose={handleCloseSearchResultExpireModal}
         onClose={handleCloseSearchResultExpireModal}
         maxWidth='md'
@@ -930,6 +932,7 @@ const FlightFound = () => {
       </Dialog>
       <Dialog
         open={bookingFareModal}
+
         // onClose={handleCloseBookingFareModal}
         onClose={(event, reason) => {
           if (reason !== 'backdropClick') {

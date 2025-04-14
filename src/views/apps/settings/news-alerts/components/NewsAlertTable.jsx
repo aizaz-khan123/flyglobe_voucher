@@ -1,8 +1,10 @@
 'use client'
 
 import { useEffect, useMemo, useState } from 'react'
-import { rankItem } from '@tanstack/match-sorter-utils'
+
 import Image from 'next/image'
+
+import { rankItem } from '@tanstack/match-sorter-utils'
 
 // MUI Components
 import {
@@ -27,7 +29,7 @@ import { IoMdClose } from 'react-icons/io'
 
 // Redux & Table
 import { toast } from 'react-toastify'
-import { useDeleteNewsMutation, useGetNewsQuery } from '@/redux-store/services/api'
+
 import {
   createColumnHelper,
   flexRender,
@@ -41,13 +43,17 @@ import {
   useReactTable
 } from '@tanstack/react-table'
 
+import { useDeleteNewsMutation, useGetNewsQuery } from '@/redux-store/services/api'
+
 // Components
 import NewsForm from './NewsForm'
 
 const fuzzyFilter = (row, columnId, value, addMeta) => {
   const itemRank = rankItem(row.getValue(columnId), value)
+
   addMeta({ itemRank })
-  return itemRank.passed
+  
+return itemRank.passed
 }
 
 const NewsAlertTable = () => {
@@ -89,6 +95,7 @@ const NewsAlertTable = () => {
     if (newsToDelete) {
       try {
         const response = await deleteNews(newsToDelete.uuid)
+
         if (response?.data?.code === 200) {
           toast.success(response.data.message)
           refetch()

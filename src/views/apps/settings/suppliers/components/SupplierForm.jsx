@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect } from 'react'
+
 import { Controller, useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import { z } from 'zod'
@@ -104,7 +105,8 @@ const SupplierForm = ({
       }).then(response => {
         if ('error' in response) {
           setErrors(response?.error?.data?.errors)
-          return
+          
+return
         }
   
         toast.success(response?.data?.message || 'Supplier updated successfully')
@@ -117,7 +119,8 @@ const SupplierForm = ({
       await createSupplier(data).then(response => {
         if ('error' in response) {
           setErrors(response?.error?.data?.errors)
-          return
+          
+return
         }
   
         toast.success(response?.data?.message || 'Supplier created successfully')
