@@ -40,16 +40,6 @@ import { IoMdClose } from 'react-icons/io'
 import { toast } from 'react-toastify'
 import { CreateEditAirlineMargin } from './CreateEditAirlineMargin'
 
-import MuiDropdown from '@/components/mui-form-inputs/MuiDropdown'
-import MuiTextField from '@/components/mui-form-inputs/MuiTextField'
-import {
-  useBranchDropDownQuery,
-  useDeleteAirlineMarginMutation,
-  useGetAirlineMarginsQuery
-} from '@/redux-store/services/api'
-
-
-
 import {
   useBranchDropDownQuery,
   useDeleteAirlineMarginMutation,
@@ -57,10 +47,6 @@ import {
 } from '@/redux-store/services/api'
 import MuiDropdown from '@/components/mui-form-inputs/MuiDropdown'
 import MuiTextField from '@/components/mui-form-inputs/MuiTextField'
-import SearchInput from '@/components/searchInput/SearchInput'
-
-
-import { CreateEditAirlineMargin } from './CreateEditAirlineMargin'
 
 
 const MarginTable = () => {
