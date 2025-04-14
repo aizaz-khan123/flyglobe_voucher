@@ -67,62 +67,39 @@ const CreateEditAirline = ({ open, onClose, airlineId, isEdit,refetch }) => {
   const setErrors = errors => {
     Object.entries(errors).forEach(([key, value]) => setError(key, { message: value }))
   }
+console.log('airlineId',airlineId);
 
-  const onSubmit = handleSubmit(async data => {
-    if (!airlineId) {
-      const formData = new FormData()
-      Object.entries(data).forEach(([key, value]) => {
-        if (key === 'thumbnail' && value instanceof File) {
-          formData.append(key, value)
-        } else {
-          formData.append(key, value)
-        }
-      })
+  const onSubmit = handleSubmit(async (data) => {
+    const formData = new FormData();
+    Object.entries(data).forEach(([key, value]) => {
+      if (key === 'thumbnail' && value instanceof File) {
+        formData.append(key, value);
+      } else {
+        formData.append(key, value);
+      }
+    });
 
-      await createAirline(formData).then(response => {
-        if ('error' in response) {
-          setErrors(response?.error.data?.errors)
-          return
-        }
-
-        const { status, data } = response?.data
-        if (status) {
-          toast.success(`${data.name} has been created`)
-          onClose()
-          refetch()
-        } else {
-          setErrors(response?.data?.errors)
-        }
-      })
+    try {
+      if (!airlineId) {
+        const response = await createAirline(formData).unwrap(); 
+        toast.success(`${response.data.name} has been created`);
+        onClose();
+        refetch();
+      } else {
+        formData.append('_method', 'put');
+        const response = await updateAirline({ airlineId, formData }).unwrap();
+        toast.success(response.message);
+        refetch();
+        onClose();
+      }
+    } catch (error) {
+      console.error("Caught error:", error);
+      setErrors(error?.data?.errors || {});
     }
-    else {
-      const formData = new FormData()
+  });
+  
 
-      Object.entries(data).forEach(([key, value]) => {
-        if (key === 'thumbnail' && value instanceof File) {
-          formData.append(key, value)
-        } else {
-          formData.append(key, value)
-        }
-      })
-      formData.append('_method', 'put')
 
-      await updateAirline({ airlineId, formData }).then(response => {
-        if ('error' in response) {
-          setErrors(response?.error.data?.errors)
-          return
-        }
-
-        if (response.data?.code == 200) {
-          toast.success(response?.data?.message)
-          refetch()
-          onClose()
-        } else {
-          setErrors(response?.data?.errors)
-        }
-      })
-    }
-  })
   useEffect(() => {
     if (isAirlineSuccess && airline && isEdit === true) {
       reset({
@@ -171,10 +148,10 @@ const CreateEditAirline = ({ open, onClose, airlineId, isEdit,refetch }) => {
               <h2 className='text-xl font-bold mb-4'>Airline Information</h2>
               <div className='mt-1 grid grid-cols-1 gap-5 gap-y-3 md:grid-cols-2'>
                 <div>
-                  <FormLabel title={'Airline Name'} htmlFor='name'></FormLabel>
                   <MuiTextField
                     className='w-full border-0 focus:outline-0'
                     control={control}
+                    label='Airline Name'
                     size='md'
                     id='name'
                     name='name'
@@ -182,10 +159,10 @@ const CreateEditAirline = ({ open, onClose, airlineId, isEdit,refetch }) => {
                   />
                 </div>
                 <div>
-                  <FormLabel title={'IATA Code'} htmlFor='iata_code'></FormLabel>
                   <MuiTextField
                     className='w-full border-0 focus:outline-0'
                     control={control}
+                    label='IATA Code'
                     size='md'
                     id='iata_code'
                     name='iata_code'
@@ -193,11 +170,11 @@ const CreateEditAirline = ({ open, onClose, airlineId, isEdit,refetch }) => {
                   />
                 </div>
                 <div>
-                  <FormLabel title='Country' htmlFor='country_id' />
                   {countryDropDown ? (
                     <MuiDropdown
                       control={control}
                       name='country_id'
+                      label='Country'
                       size='md'
                       id='country_id'
                       className='w-full border-0 text-base'
@@ -213,10 +190,10 @@ const CreateEditAirline = ({ open, onClose, airlineId, isEdit,refetch }) => {
                 </div>
 
                 <div>
-                  <FormLabel title={'Reserving PCC'} htmlFor='reserving_pcc'></FormLabel>
                   <MuiTextField
                     className='w-full border-0 focus:outline-0'
                     control={control}
+                    label='Reserving PCC'
                     size='md'
                     id='reserving_pcc'
                     name='reserving_pcc'
@@ -224,10 +201,10 @@ const CreateEditAirline = ({ open, onClose, airlineId, isEdit,refetch }) => {
                   />
                 </div>
                 <div>
-                  <FormLabel title={'Issuing PCC'} htmlFor='issuing_pcc'></FormLabel>
                   <MuiTextField
                     className='w-full border-0 focus:outline-0'
                     control={control}
+                    label='Issuing PCC'
                     size='md'
                     id='issuing_pcc'
                     name='issuing_pcc'
@@ -235,18 +212,17 @@ const CreateEditAirline = ({ open, onClose, airlineId, isEdit,refetch }) => {
                   />
                 </div>
                 <div>
-                  <FormLabel title={'Tour Code'} htmlFor='tour_code'></FormLabel>
                   <MuiTextField
                     className='w-full border-0 focus:outline-0'
                     control={control}
                     size='md'
+                    label='Tour Code'
                     id='tour_code'
                     name='tour_code'
                     placeholder='Enter Tour Code'
                   />
                 </div>
                 <div>
-
                   <Controller
                     name="status"
                     control={control}
@@ -282,7 +258,7 @@ const CreateEditAirline = ({ open, onClose, airlineId, isEdit,refetch }) => {
             <Button variant='outlined' onClick={onClose} disabled={isLoading}>
               Cancel
             </Button>
-            <Button variant='contained' onClick={onSubmit} disabled={isLoading}>
+            <Button variant='contained' onClick={onSubmit}>
               {isLoading ? 'Saving...' : 'Save'}
             </Button>
           </div>

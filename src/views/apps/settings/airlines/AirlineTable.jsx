@@ -52,7 +52,9 @@ const AirlineTable = () => {
     return itemRank.passed
   }
 
-  const { data: detail_data, isFetching, refetch } = useGetAirlinesQuery({ searchText })
+  const { data: detail_data, isFetching, refetch } = useGetAirlinesQuery({  page: page + 1,
+    pageSize: rowsPerPage,
+    searchText: globalFilter })
   const airlines = detail_data?.data
   const links = detail_data?.links
   const totalCount = detail_data?.total || 0
@@ -88,12 +90,6 @@ const AirlineTable = () => {
           toast.error(response?.data.message)
         }
       })
-    }
-  }
-
-  const paginationClickHandler = url => {
-    if (url) {
-      setPageUrl(url)
     }
   }
 
@@ -163,7 +159,7 @@ const AirlineTable = () => {
                       <FaTrash
                         className='cursor-pointer text-base text-red-600'
                         onClick={e => {
-                          e.stopPropagation()
+                          // e.stopPropagation()
                           showDeleteAirlineConfirmation(row.original.uuid)
                         }}
                       />

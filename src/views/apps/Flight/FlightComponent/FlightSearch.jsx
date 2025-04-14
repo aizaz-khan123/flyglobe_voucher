@@ -99,7 +99,7 @@ const FlightSearch = ({ initialValues, flightSearchOpen }) => {
       destination: null,
       departure_date: dayjs().format('MM-DD-YYYY'),
       return_date: '',
-      cabin_class: 'ECONOMY',
+      cabin_class:null,
       traveler: '',
       legs: [
         { origin: '', destination: '', departure_date: '' },
@@ -262,14 +262,20 @@ const FlightSearch = ({ initialValues, flightSearchOpen }) => {
     )
   }
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+
   useEffect(() => {
     clearErrors() // Clears all errors when route_type changes
   }, [watch('route_type'), clearErrors]) // Add clearErrors to the dependency array
 
   const validateFlightData = (data, route_type) => {
-    // if (!route_type) return "The route type field is required.";
-    // if (!data.cabin_class) return "The cabin class field is required.";
-    // if (!data.traveler_count?.adult_count) return "The Adult count field must be at least 1.";
+
+    if (!route_type) return "The route type field is required.";
+    if (!data.cabin_class ) {
+      return "The cabin class field is required.";
+    }
+    if (!data?.traveler_count?.adult_count) return "The Adult count field must be at least 1.";
 
     if (route_type === 'MULTICITY') {
       if (!Array.isArray(data.legs) || data.legs.length < 2) {
@@ -299,16 +305,14 @@ const FlightSearch = ({ initialValues, flightSearchOpen }) => {
 
     return null // No errors
   }
-
-  const onSubmit = async data => {
+    
+  const onSubmit = async data => {  
     const error = validateFlightData(data, route_type)
-
+    
     if (error) {
       toast.error(error)
-
       return
     }
-
     // Extract dates from `date_range`
     const departureDate = data.date_range?.start ? dayjs(data.date_range.start).format('YYYY-MM-DD') : null
     const returnDate = data.date_range?.end ? dayjs(data.date_range.end).format('YYYY-MM-DD') : null
@@ -316,20 +320,20 @@ const FlightSearch = ({ initialValues, flightSearchOpen }) => {
     const payload =
       route_type === 'MULTICITY'
         ? {
-            cabin_class: data.cabin_class,
-            route_type,
-            legs: data.legs,
-            traveler_count: data.traveler_count
-          }
+          cabin_class: data.cabin_class,
+          route_type,
+          legs: data.legs,
+          traveler_count: data.traveler_count
+        }
         : {
-            cabin_class: data.cabin_class,
-            departure_date: route_type === 'RETURN' ? departureDate : dayjs(data.departure_date).format('YYYY-MM-DD'),
-            destination: data.destination,
-            origin: data.origin,
-            return_date: route_type === 'RETURN' ? returnDate : null,
-            route_type,
-            traveler_count: data.traveler_count
-          }
+          cabin_class: data.cabin_class,
+          departure_date: route_type === 'RETURN' ? departureDate : dayjs(data.departure_date).format('YYYY-MM-DD'),
+          destination: data.destination,
+          origin: data.origin,
+          return_date: route_type === 'RETURN' ? returnDate : null,
+          route_type,
+          traveler_count: data.traveler_count
+        }
 
     console.log('payload', payload)
 
@@ -343,10 +347,10 @@ const FlightSearch = ({ initialValues, flightSearchOpen }) => {
         ...restPayload,
         ...(traveler_count
           ? {
-              adult_count: traveler_count.adult_count,
-              child_count: traveler_count.child_count,
-              infant_count: traveler_count.infant_count
-            }
+            adult_count: traveler_count.adult_count,
+            child_count: traveler_count.child_count,
+            infant_count: traveler_count.infant_count
+          }
           : {}),
         ...(legs ? { legs: serializedLegs } : {})
       })
@@ -459,6 +463,7 @@ const FlightSearch = ({ initialValues, flightSearchOpen }) => {
               <Controller
                 control={control}
                 name='route_type'
+                rules={{ required: true }}
                 render={({ field }) => (
                   <FormControl>
                     <FormLabel id='travel-type-group-label'>Travel Type</FormLabel>
@@ -718,8 +723,8 @@ const FlightSearch = ({ initialValues, flightSearchOpen }) => {
                           // loading={loadingField === "legsDestination"}
                           loading={loadingFields[`legsDestination-${index}`] || false}
 
-                          // onChange={(value: string | null) => handleMultiDestinationChange(index, value)}
-                          // selectLabelInsteadOfValue={true}
+                        // onChange={(value: string | null) => handleMultiDestinationChange(index, value)}
+                        // selectLabelInsteadOfValue={true}
                         />
                       </div>
                       <div className='col-span-12 md:col-span-4 lg:col-span-3'>
@@ -792,11 +797,11 @@ const FlightSearch = ({ initialValues, flightSearchOpen }) => {
                     label: `${cabin}`
                   }))}
 
-                  // onChange={handleCityChange}
+                // onChange={handleCityChange}
                 />
               </div>
               <div className='col-span-12 md:col-span-6 lg:col-span-2'>
-                <Button type='submit' variant='contained' className='px-5 py-4 rounded' onClick={onSubmit}>
+                <Button type='submit' variant='contained' className='px-5 py-4 rounded'>
                   Search Flights
                 </Button>
               </div>

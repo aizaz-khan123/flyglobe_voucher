@@ -209,13 +209,12 @@ const CreateEditAirlineMargin = ({ open, isEdit, onClose, airlineMarginId,refetc
               </div>
 
               <div>
-                <FormLabel title={'Margin'} htmlFor='margin'></FormLabel>
-
                 <div className='flex items-center gap-4 w-full'>
                   <div className='flex-1'>
                     <MuiTextField
                       className='w-full border-0 focus:outline-0'
                       control={control}
+                      label={'Margin'}
                       size='md'
                       id='margin'
                       name='margin'
@@ -228,6 +227,7 @@ const CreateEditAirlineMargin = ({ open, isEdit, onClose, airlineMarginId,refetc
                     <MuiDropdown
                       control={control}
                       name='margin_type'
+                      label={'Margin Type'}
                       size='md'
                       id='margin_type'
                       className='w-full border-0 text-base'
@@ -244,11 +244,11 @@ const CreateEditAirlineMargin = ({ open, isEdit, onClose, airlineMarginId,refetc
               </div>
 
               <div>
-                <FormLabel title={'Sale starts and Continues'} htmlFor='sale_start_continue'></FormLabel>
                 <MuiTextField
                   type='date'
                   className='w-full border-0 focus:outline-0'
                   control={control}
+                  label={'Sale starts and Continues'}
                   size='md'
                   id='sale_start_continue'
                   name='sale_start_continue'
@@ -256,11 +256,11 @@ const CreateEditAirlineMargin = ({ open, isEdit, onClose, airlineMarginId,refetc
               </div>
 
               <div>
-                <FormLabel title={'Sale ends on this date'} htmlFor='sale_end_continue'></FormLabel>
                 <MuiTextField
                   type='date'
                   className='w-full border-0 focus:outline-0'
                   control={control}
+                  label={'Sale ends on this date'}
                   size='md'
                   id='sale_end_continue'
                   name='sale_end_continue'
@@ -268,11 +268,11 @@ const CreateEditAirlineMargin = ({ open, isEdit, onClose, airlineMarginId,refetc
               </div>
 
               <div>
-                <FormLabel title={'Travel starts and Continues'} htmlFor='travel_start_continue'></FormLabel>
                 <MuiTextField
                   type='date'
                   className='w-full border-0 focus:outline-0'
                   control={control}
+                  label={'Travel starts and Continues'}
                   size='md'
                   id='travel_start_continue'
                   name='travel_start_continue'
@@ -280,11 +280,11 @@ const CreateEditAirlineMargin = ({ open, isEdit, onClose, airlineMarginId,refetc
               </div>
 
               <div>
-                <FormLabel title={'Travel ends on this date'} htmlFor='travel_end_continue'></FormLabel>
                 <MuiTextField
                   type='date'
                   className='w-full border-0 focus:outline-0'
                   control={control}
+                  label={'Travel ends on this date'}
                   size='md'
                   id='travel_end_continue'
                   name='travel_end_continue'
@@ -292,10 +292,10 @@ const CreateEditAirlineMargin = ({ open, isEdit, onClose, airlineMarginId,refetc
               </div>
 
               <div>
-                <FormLabel title={'Rbds'} htmlFor='rbds'></FormLabel>
                 <MuiTextField
                   className='w-full border-0 focus:outline-0'
                   control={control}
+                  label={'Rbds'}
                   size='md'
                   id='rbds'
                   name='rbds'
@@ -338,10 +338,10 @@ const CreateEditAirlineMargin = ({ open, isEdit, onClose, airlineMarginId,refetc
                 />
               </div>
               <div className='col-span-1 md:col-span-2'>
-                <FormLabel title={'Remarks'} htmlFor='remarks'></FormLabel>
                 <MuiTextField
                   className='w-full border-0 px-0 focus:outline-0'
                   control={control}
+                  label={'Remarks'}
                   size={'md'}
                   id='remarks'
                   name={'remarks'}

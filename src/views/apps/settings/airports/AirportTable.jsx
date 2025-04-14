@@ -52,7 +52,11 @@ const AirportTable = () => {
   const [searchText, setSearchText] = useState('')
   const [pageUrl, setPageUrl] = useState('')
 
-  const { data: detail_data, isFetching, refetch } = useGetAirportsQuery({ searchText, pageUrl })
+  const { data: detail_data, isFetching, refetch } = useGetAirportsQuery({
+    page: page + 1,
+    pageSize: rowsPerPage,
+    searchText: globalFilter
+  })
   const airports = detail_data?.data
   const links = detail_data?.links
   const totalCount = detail_data?.total || 0
@@ -68,7 +72,7 @@ const AirportTable = () => {
 
   useEffect(() => {
     refetch()
-  }, [searchText, pageUrl])
+  }, [searchText, pageUrl,globalFilter])
 
   const showDeleteAirportConfirmation = uuid => {
     setAirportToBeDelete(airports?.find(b => uuid === b.uuid))
@@ -88,7 +92,7 @@ const AirportTable = () => {
     }
   }
 
-  const handlePageChange = (event, newPage) => {
+  const handlePageChange = (event, newPage) => {    
     setPage(newPage)
   }
 
@@ -144,7 +148,7 @@ const AirportTable = () => {
                 <FaTrash
                   className='cursor-pointer text-base text-red-600'
                   onClick={e => {
-                    e.stopPropagation()
+                    // e.stopPropagation()
                     showDeleteAirportConfirmation(row.original.uuid)
                   }}
                 />
