@@ -52,8 +52,8 @@ const fuzzyFilter = (row, columnId, value, addMeta) => {
   const itemRank = rankItem(row.getValue(columnId), value)
 
   addMeta({ itemRank })
-  
-return itemRank.passed
+
+  return itemRank.passed
 }
 
 const NewsAlertTable = () => {
@@ -168,7 +168,7 @@ const NewsAlertTable = () => {
         cell: ({ row }) => (
           <div className='text-sm'>
             {row.original.description?.length > 20
-              ? ${row.original.description.slice(0, 20)}...
+              ? `${row.original.description.slice(0, 20)}...`
               : row.original.description}
           </div>
         )
