@@ -472,6 +472,7 @@ const FlightSearch = ({ initialValues, flightSearchOpen }) => {
                       aria-labelledby='travel-type-group-label'
                       name='route-type'
                       value={field.value}
+
                       // onChange={(event) => field.onChange(event.target.value)}
                       onChange={event => {
                         console.log('Selected Travel Type:', event.target.value)
@@ -665,6 +666,7 @@ const FlightSearch = ({ initialValues, flightSearchOpen }) => {
                       <div className='relative col-span-12 md:col-span-4 lg:col-span-3  pt-[5px]'>
                         <MuiAutocomplete
                           control={control}
+
                           // name={`origin`}
                           name={`legs[${index}].origin`}
                           label='From'
@@ -707,6 +709,7 @@ const FlightSearch = ({ initialValues, flightSearchOpen }) => {
                         <MuiAutocomplete
                           control={control}
                           selectIcon={<FaPlaneArrival />}
+
                           // name={`destination`}
                           name={`legs[${index}].destination`}
                           label='To'
@@ -720,6 +723,7 @@ const FlightSearch = ({ initialValues, flightSearchOpen }) => {
                           onInputChange={(event, value, reason) => handleLegsToSearchChange(index, value, reason)}
                           inputValue={legsToSearchStrs[index] || ''}
                           setInputValue={value => handleLegsToSearchChange(index, value)}
+
                           // loading={loadingField === "legsDestination"}
                           loading={loadingFields[`legsDestination-${index}`] || false}
 

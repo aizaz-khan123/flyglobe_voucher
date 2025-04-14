@@ -9,14 +9,15 @@
     ],
     "allowJs": true,
     "skipLibCheck": true,
-    "strict": true,
-    "forceConsistentCasingInFileNames": true,
+    "strict": false,
+    "noImplicitAny": false,
+    "forceConsistentCasingInFileNames": false,
     "noEmit": true,
     "esModuleInterop": true,
     "module": "ESNext",
     "moduleResolution": "Bundler",
     "resolveJsonModule": true,
-    "isolatedModules": true,
+    "isolatedModules": false,
     "jsx": "preserve",
     "paths": {
       "@/*": [
@@ -49,8 +50,10 @@
     "next.config.mjs",
     "tailwind.config.js",
     "**/*.js",
-    "**/*.jsx"
-, "src/components/searchInput/SearchInput.jsx", ".eslintrc.js"  ],
+    "**/*.jsx",
+    "src/components/searchInput/SearchInput.jsx",
+    ".eslintrc.js"
+  ],
   "exclude": [
     "node_modules"
   ]

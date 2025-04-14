@@ -36,7 +36,7 @@ const regionOptions = [
   { label: 'EX-PAKISTAN', value: 'EX-PAKISTAN' }
 ]
 
-const CreateEditAirlineMargin = ({ open, isEdit, onClose, airlineMarginId,refetch }) => {
+const CreateEditAirlineMargin = ({ open, isEdit, onClose, airlineMarginId, refetch }) => {
   // const toaster = useToast();
   const [createAirlineMargin, { isLoading }] = useCreateAirlineMarginMutation()
 
@@ -71,7 +71,7 @@ const CreateEditAirlineMargin = ({ open, isEdit, onClose, airlineMarginId,refetc
 
         const { status } = response?.data
         if (status) {
-          toast.success(`Airline Margin has been created`)
+          toast.success('Airline Margin has been created')
           onClose()
           refetch()
         } else {

@@ -165,8 +165,8 @@ const CountryTable = () => {
               </IconButton>
             </Tooltip>
             <Tooltip title='Delete Country'>
-              <IconButton 
-                size='small' 
+              <IconButton
+                size='small'
                 onClick={(e) => {
                   e.stopPropagation()
                   setCountryToDelete(row.original)
@@ -234,8 +234,8 @@ const CountryTable = () => {
               placeholder='Search countries...'
               className='w-full max-w-md'
             />
-            <Button 
-              variant='contained' 
+            <Button
+              variant='contained'
               onClick={handleAddNew}
               className='hidden md:flex'
             >
@@ -338,11 +338,11 @@ const CountryTable = () => {
       </Dialog>
 
       <CountryForm
-  open={isFormOpen}
-  onClose={handleCloseForm}
-  refetch={refetch}
-  countryId={selectedCountryId} // null for create, ID for edit
-/>
+        open={isFormOpen}
+        onClose={handleCloseForm}
+        refetch={refetch}
+        countryId={selectedCountryId} // null for create, ID for edit
+      />
 
     </>
   )

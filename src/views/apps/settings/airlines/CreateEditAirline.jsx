@@ -21,7 +21,7 @@ import { IoMdClose } from 'react-icons/io'
 import { useEffect, useState } from 'react'
 import { MUIFileUploader } from './MuiUploader'
 
-const CreateEditAirline = ({ open, onClose, airlineId, isEdit,refetch }) => {
+const CreateEditAirline = ({ open, onClose, airlineId, isEdit, refetch }) => {
   const [createAirline, { isLoading }] = useCreateAirlineMutation()
   const { data: countryDropDown } = useGetCountryListQuery()
 
@@ -67,7 +67,7 @@ const CreateEditAirline = ({ open, onClose, airlineId, isEdit,refetch }) => {
   const setErrors = errors => {
     Object.entries(errors).forEach(([key, value]) => setError(key, { message: value }))
   }
-console.log('airlineId',airlineId);
+  console.log('airlineId', airlineId);
 
   const onSubmit = handleSubmit(async (data) => {
     const formData = new FormData();
@@ -81,8 +81,8 @@ console.log('airlineId',airlineId);
 
     try {
       if (!airlineId) {
-        const response = await createAirline(formData).unwrap(); 
-        toast.success(`${response.data.name} has been created`);
+        const response = await createAirline(formData).unwrap();
+        toast.success(`${response.data.name} has been created successfully`);
         onClose();
         refetch();
       } else {
@@ -97,7 +97,7 @@ console.log('airlineId',airlineId);
       setErrors(error?.data?.errors || {});
     }
   });
-  
+
 
 
   useEffect(() => {
@@ -139,7 +139,7 @@ console.log('airlineId',airlineId);
     <div>
       <Dialog open={open} onClose={onClose} fullWidth maxWidth='md'>
         <DialogTitle className='font-bold flex items-center justify-between'>
-        {isEdit===true?'Edit':"Create"} Airline Margin
+          {isEdit === true ? 'Edit' : "Create"} Airline Margin
           <IoMdClose className='cursor-pointer' onClick={onClose} />
         </DialogTitle>
         <DialogContent>

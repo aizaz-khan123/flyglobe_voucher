@@ -66,7 +66,7 @@ const NewsAlertTable = () => {
     isFetching,
     refetch
   } = useGetNewsQuery({
-  
+
   })
 
   const news = newsData?.data || []
@@ -161,7 +161,7 @@ const NewsAlertTable = () => {
         cell: ({ row }) => (
           <div className='text-sm'>
             {row.original.description?.length > 20
-              ? `${row.original.description.slice(0, 20)}...`
+              ? ${row.original.description.slice(0, 20)}...
               : row.original.description}
           </div>
         )
@@ -177,8 +177,8 @@ const NewsAlertTable = () => {
               </IconButton>
             </Tooltip>
             <Tooltip title='Delete News'>
-              <IconButton 
-                size='small' 
+              <IconButton
+                size='small'
                 onClick={(e) => {
                   e.stopPropagation()
                   setNewsToDelete(row.original)
@@ -246,8 +246,8 @@ const NewsAlertTable = () => {
               placeholder='Search news...'
               className='w-full max-w-md'
             />
-            <Button 
-              variant='contained' 
+            <Button
+              variant='contained'
               onClick={handleAddNew}
               className='hidden md:flex'
             >

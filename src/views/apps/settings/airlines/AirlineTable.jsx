@@ -52,9 +52,11 @@ const AirlineTable = () => {
     return itemRank.passed
   }
 
-  const { data: detail_data, isFetching, refetch } = useGetAirlinesQuery({  page: page + 1,
+  const { data: detail_data, isFetching, refetch } = useGetAirlinesQuery({
+    page: page + 1,
     pageSize: rowsPerPage,
-    searchText: globalFilter })
+    searchText: globalFilter
+  })
   const airlines = detail_data?.data
   const links = detail_data?.links
   const totalCount = detail_data?.total || 0
@@ -144,30 +146,30 @@ const AirlineTable = () => {
             <span className='text-warning cursor-pointer'>In-Active</span>
           )
       }),
-       {
-              id: 'actions',
-              header: 'Action',
-              cell: ({ row }) => (
-                <div className='flex items-center w-fit gap-2'>
-                  <Tooltip title='Edit Airlines' placement='top'>
-                    <IconButton size='small' onClick={() => handleShowEdit(row.original.uuid)}>
-                      <FaPencil className='cursor-pointer text-base text-primary' />
-                    </IconButton>
-                  </Tooltip>
-                  <Tooltip title='Delete Airlines' placement='top'>
-                    <IconButton size='small'>
-                      <FaTrash
-                        className='cursor-pointer text-base text-red-600'
-                        onClick={e => {
-                          // e.stopPropagation()
-                          showDeleteAirlineConfirmation(row.original.uuid)
-                        }}
-                      />
-                    </IconButton>
-                  </Tooltip>
-                </div>
-              )
-            }
+      {
+        id: 'actions',
+        header: 'Action',
+        cell: ({ row }) => (
+          <div className='flex items-center w-fit gap-2'>
+            <Tooltip title='Edit Airlines' placement='top'>
+              <IconButton size='small' onClick={() => handleShowEdit(row.original.uuid)}>
+                <FaPencil className='cursor-pointer text-base text-primary' />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title='Delete Airlines' placement='top'>
+              <IconButton size='small'>
+                <FaTrash
+                  className='cursor-pointer text-base text-red-600'
+                  onClick={e => {
+                    // e.stopPropagation()
+                    showDeleteAirlineConfirmation(row.original.uuid)
+                  }}
+                />
+              </IconButton>
+            </Tooltip>
+          </div>
+        )
+      }
     ],
     []
   )
@@ -212,7 +214,7 @@ const AirlineTable = () => {
     setSelectedAirlineId(id)
     setIsEdit(true)
   }
- const DebouncedInput = ({ value: initialValue, onChange, debounce = 500, ...props }) => {
+  const DebouncedInput = ({ value: initialValue, onChange, debounce = 500, ...props }) => {
     const [value, setValue] = useState(initialValue)
 
     useEffect(() => {
@@ -235,12 +237,12 @@ const AirlineTable = () => {
         <CardContent className={'p-0'}>
           <div className='flex items-center justify-between px-5 pt-5'>
             <div className='inline-flex items-center gap-3'>
-            <DebouncedInput
-              value={searchText ?? ''}
-              onChange={value => setSearchText(String(value))}
-              placeholder='Search Airline Margin...'
-              className='w-full max-w-md'
-            />
+              <DebouncedInput
+                value={searchText ?? ''}
+                onChange={value => setSearchText(String(value))}
+                placeholder='Search Airline Margin...'
+                className='w-full max-w-md'
+              />
               {/* <SearchInput onSearch={setSearchText} control={filterControl} /> */}
             </div>
             <div className='inline-flex items-center gap-3'>
@@ -337,8 +339,8 @@ const AirlineTable = () => {
       </Dialog>
 
       {/* create airline dialog */}
-          
-          <CreateEditAirline open={isCreateModalOpen} onClose={handleClose} airlineId={selectedAirlineId} isEdit={isEdit} refetch={refetch}  />
+
+      <CreateEditAirline open={isCreateModalOpen} onClose={handleClose} airlineId={selectedAirlineId} isEdit={isEdit} refetch={refetch} />
     </>
   )
 }

@@ -72,7 +72,7 @@ const AirportTable = () => {
 
   useEffect(() => {
     refetch()
-  }, [searchText, pageUrl,globalFilter])
+  }, [searchText, pageUrl, globalFilter])
 
   const showDeleteAirportConfirmation = uuid => {
     setAirportToBeDelete(airports?.find(b => uuid === b.uuid))
@@ -92,7 +92,7 @@ const AirportTable = () => {
     }
   }
 
-  const handlePageChange = (event, newPage) => {    
+  const handlePageChange = (event, newPage) => {
     setPage(newPage)
   }
 

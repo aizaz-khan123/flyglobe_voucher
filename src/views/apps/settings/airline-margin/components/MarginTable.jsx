@@ -21,14 +21,6 @@ import { useForm } from 'react-hook-form'
 
 import { FaPencil, FaPlus, FaTrash } from 'react-icons/fa6'
 
-import {
-  useBranchDropDownQuery,
-  useDeleteAirlineMarginMutation,
-  useGetAirlineMarginsQuery
-} from '@/redux-store/services/api'
-import MuiDropdown from '@/components/mui-form-inputs/MuiDropdown'
-import MuiTextField from '@/components/mui-form-inputs/MuiTextField'
-import SearchInput from '@/components/searchInput/SearchInput'
 import { rankItem } from '@tanstack/match-sorter-utils'
 
 import {
@@ -43,9 +35,19 @@ import {
   getSortedRowModel,
   useReactTable
 } from '@tanstack/react-table'
-import { CreateEditAirlineMargin } from './CreateEditAirlineMargin'
 import { IoMdClose } from 'react-icons/io'
 import { toast } from 'react-toastify'
+import { CreateEditAirlineMargin } from './CreateEditAirlineMargin'
+
+import MuiDropdown from '@/components/mui-form-inputs/MuiDropdown'
+import MuiTextField from '@/components/mui-form-inputs/MuiTextField'
+import {
+  useBranchDropDownQuery,
+  useDeleteAirlineMarginMutation,
+  useGetAirlineMarginsQuery
+} from '@/redux-store/services/api'
+
+
 
 const MarginTable = () => {
   // States
@@ -65,6 +67,7 @@ const MarginTable = () => {
 
     return itemRank.passed
   }
+
   const { data: detail_data, isFetching, refetch } = useGetAirlineMarginsQuery({ searchText, pageUrl })
   const airline_margins = detail_data?.data
   const links = detail_data?.links
@@ -149,7 +152,7 @@ const MarginTable = () => {
 
   const handleDeleteAirlineMargin = async () => {
     if (AirlineMarginToBeDelete) {
-       deleteAirlineMargin(AirlineMarginToBeDelete.uuid).then(response => {
+      deleteAirlineMargin(AirlineMarginToBeDelete.uuid).then(response => {
         if (response?.data.code == 200) {
           toast.success(response?.data.message)
           setAirlineMarginToBeDelete(null)
@@ -166,6 +169,7 @@ const MarginTable = () => {
       setPageUrl(url)
     }
   }
+
   const handlePageChange = (event, newPage) => {
     setPage(newPage)
   }
@@ -174,6 +178,7 @@ const MarginTable = () => {
     setRowsPerPage(parseInt(event.target.value, 10))
     setPage(0)
   }
+
   const columnHelper = createColumnHelper()
 
   const columns = useMemo(
@@ -195,6 +200,8 @@ const MarginTable = () => {
         cell: ({ row }) => {
           const { margin, margin_type } = row.original
           const color = Number(margin) > 0 ? 'warning' : 'success'
+
+
           return (
             <Badge color={color}>
               {margin}
@@ -297,6 +304,7 @@ const MarginTable = () => {
 
   const handleClose = () => {
     setIsCreateModalOpen(false)
+
     // setIsEditMode(false)
   }
 
@@ -305,7 +313,7 @@ const MarginTable = () => {
     setIsCreateModalOpen(true)
     setIsEdit(true)
   }
- const DebouncedInput = ({ value: initialValue, onChange, debounce = 500, ...props }) => {
+  const DebouncedInput = ({ value: initialValue, onChange, debounce = 500, ...props }) => {
     const [value, setValue] = useState(initialValue)
 
     useEffect(() => {
@@ -329,12 +337,12 @@ const MarginTable = () => {
         <CardContent className={'p-0'}>
           <div className='flex items-center justify-between px-5 pt-5'>
             <div className='inline-flex items-center gap-3'>
-            <DebouncedInput
-              value={searchText ?? ''}
-              onChange={value => setSearchText(String(value))}
-              placeholder='Search Airline Margin...'
-              className='w-full max-w-md'
-            />
+              <DebouncedInput
+                value={searchText ?? ''}
+                onChange={value => setSearchText(String(value))}
+                placeholder='Search Airline Margin...'
+                className='w-full max-w-md'
+              />
               {/* <SearchInput onSearch={setSearchText} control={filterControl} /> */}
             </div>
             <div className='inline-flex items-center gap-3'>
@@ -454,6 +462,7 @@ const MarginTable = () => {
               <tbody isLoading={isFetching} hasData={!!branchDropdownData?.length}>
                 {branchDropdownData?.map((data, index) => {
                   return (
+
                     //    <TableRow className="hover:bg-base-200/40">
                     <>
                       <div className='font-medium'>{index + 1}</div>
@@ -514,3 +523,4 @@ const MarginTable = () => {
 }
 
 export { MarginTable }
+
