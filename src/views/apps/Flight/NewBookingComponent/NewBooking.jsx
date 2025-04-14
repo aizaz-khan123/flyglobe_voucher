@@ -226,9 +226,9 @@ const NewBooking = () => {
                     </div>
                   </CardContent>
                 </Card>
-                <div>
+                <Card>
                   <div className='pb-0'>
-                    <div className='flex gap-2 items-center py-4'>
+                    <div className='flex gap-2 items-center p-4'>
                       <div className='bg-primary rounded-lg p-3 flex items-center justify-center'>
                         <PhoneEnabledIcon className='text-white' />
                       </div>
@@ -279,10 +279,10 @@ const NewBooking = () => {
                       </div>
                     </AccordionDetails>
                   </Accordion>
-                </div>
+                </Card>
 
-                <div className=' mt-5'>
-                  <div className='pb-0'>
+                <Card className=' mt-5'>
+                  <div className='pb-0 px-4'>
                     <div className='flex gap-2 items-center py-4 '>
                       <div className='bg-primary rounded-lg p-3 flex justify-center items-center'>
                         <FaPersonWalkingLuggage className='text-white text-[1.5rem]' />
@@ -425,7 +425,7 @@ const NewBooking = () => {
                       </AccordionDetails>
                     </Accordion>
                   ))}
-                </div>
+                </Card>
                 <Button
                   variant='contained'
                   className='text-md font-normal px-5 mt-6'
