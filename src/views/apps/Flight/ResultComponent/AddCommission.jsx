@@ -177,7 +177,7 @@ const AddCommission = ({ filteredFlights, setFilteredFlights }) => {
                           type="radio"
                           id="fixAmount"
                           name="amountType"
-                          className="w-5 h-5 text-blue-600 border-gray-300"
+                          className="w-5 h-5 text-primary border-gray-300"
                           checked={amountType === "fixAmount"}
                           onChange={handleAmountTypeChange}
                         />
@@ -189,7 +189,7 @@ const AddCommission = ({ filteredFlights, setFilteredFlights }) => {
                           type="radio"
                           id="percentageAmount"
                           name="amountType"
-                          className="w-5 h-5 text-blue-600 border-gray-300"
+                          className="w-5 h-5 text-primary border-gray-300"
                           checked={amountType === "percentageAmount"}
                           onChange={handleAmountTypeChange}
                         />
@@ -206,7 +206,7 @@ const AddCommission = ({ filteredFlights, setFilteredFlights }) => {
                           type="radio"
                           id="basefare"
                           name="fareType"
-                          className="w-5 h-5 text-blue-600 border-gray-300"
+                          className="w-5 h-5 text-primary border-gray-300"
                           checked={fareType === "basefare"}
                           onChange={handleFareTypeChange}
                         />
@@ -218,7 +218,7 @@ const AddCommission = ({ filteredFlights, setFilteredFlights }) => {
                           type="radio"
                           id="grossfare"
                           name="fareType"
-                          className="w-5 h-5 text-blue-600 border-gray-300"
+                          className="w-5 h-5 text-primary border-gray-300"
                           checked={fareType === "grossfare"}
                           onChange={handleFareTypeChange}
                         />

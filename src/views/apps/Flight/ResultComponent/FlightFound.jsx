@@ -51,6 +51,7 @@ import { formatTime } from '@/utils/formatTime'
 import FlightDetailModal from './FlightDetailModal'
 
 import DateSelector from './DateSelector'
+import BookingFareModal from './BookingFareModal'
 
 const stopsOptions = ['Non Stop', '1 Stop', '1+ Stops']
 
@@ -942,7 +943,11 @@ const FlightFound = () => {
         maxWidth='md'
         disableEscapeKeyDown
       >
-        <DialogContent>{/* <BookingFareModal /> */}</DialogContent>
+        <DialogContent>
+
+          
+        <BookingFareModal/>
+        </DialogContent>
       </Dialog>
 
       <FlightDetailModal
