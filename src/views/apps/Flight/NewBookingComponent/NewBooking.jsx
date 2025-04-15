@@ -165,6 +165,10 @@ const NewBooking = () => {
 
   const segmentData = bookingAvailabilityConfirmationData?.segment_data || []
 
+console.log('first', bookingAvailabilityConfirmationData)
+  
+
+
   if (isLoading) return <Typography>Loading Booking Confirmation details...</Typography>
   if (error) return <Typography color='error'>Booking Time Expired. Please try again.</Typography>
 
@@ -237,13 +241,14 @@ const NewBooking = () => {
                   </div>
 
                   <Accordion
-                    className='mt-0  pl-6 pr-6'
+                    className='mt-0  pl-6 pr-6 shadow-none'
+
                     disableGutters
                     sx={{ boxShadow: 'none', '&:before': { display: 'none' } }}
                     defaultExpanded
                   >
                     <AccordionSummary expandIcon={<ExpandMoreIcon />} className='text-lg font-semibold px-0'>
-                      <h2 className='text-md font-semibold'>Lead Traveler</h2>
+                      <p className='text-md font-semibold'>Lead Traveler</p>
                     </AccordionSummary>
 
                     <AccordionDetails className='p-0'>
@@ -308,7 +313,7 @@ const NewBooking = () => {
                           '&.Mui-expanded': { minHeight: 'unset' }
                         }}
                       >
-                        <h2 className='text-md font-semibold'>{traveler.label}</h2>
+                        <p className='text-md font-semibold'>{traveler.label}</p>
                       </AccordionSummary>
                       <AccordionDetails className='p-0 pr-5'>
                         <div className='grid grid-cols-12 gap-5'>
@@ -449,19 +454,19 @@ const NewBooking = () => {
                   </CardContent>
                 </Card>
                 <div>
-                  {bookingAvailabilityConfirmationData?.fare_info_list?.length > 0 && (
+                  {bookingAvailabilityConfirmationData?.fareInfoList?.length > 0 && (
                     <Card className='bg-base-100 mb-5'>
                       <CardContent>
                         <Typography variant='h6' fontWeight='600' mb={2}>
                           Price Summary
                         </Typography>
 
-                        {bookingAvailabilityConfirmationData?.fare_info[0]?.price?.fare_break_down &&
-                          Object.entries(bookingAvailabilityConfirmationData?.fare_info[0]?.price?.fare_break_down)
+                        {bookingAvailabilityConfirmationData?.fareInfoList[0]?.price?.fare_break_down &&
+                          Object.entries(bookingAvailabilityConfirmationData?.fareInfoList[0]?.price?.fare_break_down)
                             .length > 0 && (
                             <div>
                               {Object.entries(
-                                bookingAvailabilityConfirmationData?.fare_info[0]?.price?.fare_break_down
+                                bookingAvailabilityConfirmationData?.fareInfoList[0]?.price?.fare_break_down
                               ).map(([key, data], index) => {
                                 const passengerType =
                                   key === 'ADT' ? 'Adult' : key === 'CNN' ? 'Child' : key === 'INF' ? 'Infant' : key
@@ -481,37 +486,49 @@ const NewBooking = () => {
 
                               <div className='flex mt-4 border-b pb-2'>
                                 <h4 className='font-semibold'>Price you Pay:</h4>
-                                <h4 className='text-blue-600 font-bold ml-[55px]'>
-                                  {bookingAvailabilityConfirmationData?.fare_info[0]?.price?.currency}{' '}
-                                  {bookingAvailabilityConfirmationData?.fare_info[0]?.price?.gross_amount}
+                                <h4 className='text-primary font-bold ml-[55px]'>
+                                  {bookingAvailabilityConfirmationData?.fareInfoList[0]?.price?.currency}{' '}
+                                  {bookingAvailabilityConfirmationData?.fareInfoList[0]?.price?.gross_amount}
                                 </h4>
                               </div>
                             </div>
                           )}
 
-                        <Accordion className='p-0 ' sx={{ boxShadow: 'none', '&:before': { display: 'none' } }}>
+                        <Accordion   className="p-0"
+  disableGutters
+  elevation={0}
+  square
+  sx={{
+    boxShadow: 'none',
+    '&:before': { display: 'none' },
+    '&.Mui-expanded': {
+      margin: 0,
+      boxShadow: 'none',
+    },
+  }}
+                        >
                           <AccordionSummary
                             expandIcon={
-                              <div className=' text-black rounded-full w-8 h-8 flex items-center justify-center'>
+                              <div className=' text-black rounded-full w-8 flex items-center justify-center'>
                                 <ExpandMoreIcon />
                               </div>
                             }
-                            className='text-lg font-bold mb-3 !px-0'
+                            className='text-lg font-bold !px-0'
                           >
                             <h1 className='text-lg font-bold'>Fare Breakdown</h1>
                           </AccordionSummary>
 
                           <AccordionDetails className='!p-0'>
                             <div className='space-y-5'>
-                              {bookingAvailabilityConfirmationData?.fare_info[0]?.price?.fare_break_down &&
+                              {bookingAvailabilityConfirmationData?.fareInfoList[0]?.price?.fare_break_down &&
                                 Object.entries(
-                                  bookingAvailabilityConfirmationData?.fare_info[0]?.price?.fare_break_down
+                                  bookingAvailabilityConfirmationData?.fareInfoList[0]?.price?.fare_break_down
                                 ).map(([key, data], index) => {
                                   const passengerType =
                                     key === 'ADT' ? 'Adult' : key === 'CHILD' ? 'Child' : key === 'INF' ? 'Infant' : key
 
                                   return (
-                                    <div key={index} className='border p-2 rounded-md'>
+                                    <div key={index} className=''>
                                       <Typography className='px-0'>
                                         <h2 className='font-semibold text-lg py-3'>{passengerType}</h2>
                                       </Typography>
@@ -552,6 +569,7 @@ const NewBooking = () => {
                       </CardContent>
                     </Card>
                   )}
+                 
 
                   {/* <Card className='bg-base-100 mb-5'>
                     <CardContent>
@@ -678,14 +696,12 @@ const NewBooking = () => {
                             <div className='flex items-center justify-between mt-5'>
                               <div className='border-b pb-2'>
                                 <p className='font-semibold'>Departure</p>
-                                date string
-                                {/* <p className="text-gray-400">{formattedDate(firstSegment.departure_datetime)}</p> */}
+                                <p className="text-gray-400">{formattedDate(firstSegment.departure_datetime)}</p>
                               </div>
 
                               <div className=''>
                                 <p className='font-semibold'>Arrival</p>
-                                date string
-                                {/* <p className="text-gray-400">{formattedDate(lastSegment.arrival_datetime)}</p> */}
+                                <p className="text-gray-400">{formattedDate(lastSegment.arrival_datetime)}</p>
                               </div>
                             </div>
 
