@@ -9,7 +9,7 @@ export const useSelectChain = () => {
 
   const focusAndOpenNext = (index) => {
     const next = selectRefs.current[index + 1];
-    if (next && typeof next.focus === 'function') {
+    if (next) {
       next.focus();
 
       const event = new MouseEvent('mousedown', {

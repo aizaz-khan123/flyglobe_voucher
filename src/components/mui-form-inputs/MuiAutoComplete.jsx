@@ -18,7 +18,8 @@ const MuiAutocomplete = ({
   selectLabelInsteadOfValue = false,
   value,
   loading = false,
-  placeholder
+  placeholder,
+  inputRef
 }) => {
   return (
     <Controller
@@ -52,6 +53,7 @@ const MuiAutocomplete = ({
             <TextField
               {...params}
               label={label}
+              inputRef={inputRef}
               className={className}
               placeholder={placeholder}
               error={!!fieldState.error}

@@ -300,7 +300,7 @@ const FlightSearch = ({ initialValues, flightSearchOpen }) => {
       if (!data.departure_date) return 'The departure date field is required.'
 
       if (route_type === 'RETURN') {
-        if (!data.return_date) return 'The return date field is required.'
+        if (!data.dateRange[1]) return 'The return date field is required.'
 
         if (new Date(data.return_date) < new Date(data.departure_date)) {
           return 'The return date must be after the departure date.'
@@ -312,15 +312,10 @@ const FlightSearch = ({ initialValues, flightSearchOpen }) => {
   }
 
   const onSubmit = async data => {
-    const error = validateFlightData(data, route_type)
-
-    if (error) {
-      toast.error(error)
-      return
-    }
+    const departureDate = data.dateRange?.[0] ? dayjs(data.dateRange[0]).format('YYYY-MM-DD') : null;
+    const returnDate = data.dateRange?.[1] ? dayjs(data.dateRange[1]).format('YYYY-MM-DD') : null;
+   
     // Extract dates from `date_range`
-    const departureDate = data.date_range?.start ? dayjs(data.date_range.start).format('YYYY-MM-DD') : null
-    const returnDate = data.date_range?.end ? dayjs(data.date_range.end).format('YYYY-MM-DD') : null
 
     const payload =
       route_type === 'MULTICITY'
@@ -344,6 +339,12 @@ const FlightSearch = ({ initialValues, flightSearchOpen }) => {
 
     if (!payload) return
 
+    const error = validateFlightData(data, route_type)
+    
+    if (error) {
+      toast.error(error)
+      return
+    }
     const { traveler_count, legs, ...restPayload } = payload
     const serializedLegs = legs?.map(leg => `${leg.origin},${leg.destination},${leg.departure_date}`).join(',')
 
@@ -550,12 +551,12 @@ const FlightSearch = ({ initialValues, flightSearchOpen }) => {
                         loading={loadingFields.origin || false}
                         inputRef={(ref) => {
                           attachRef(0)(ref);
-                      }}
-                      onChange={(value) => {
+                        }}
+                        onChange={(value) => {
                           setTimeout(() => {
-                              focusAndOpenNext(0);
+                            focusAndOpenNext(0);
                           }, 100);
-                      }}
+                        }}
                       />
                       <div>
                         <button
