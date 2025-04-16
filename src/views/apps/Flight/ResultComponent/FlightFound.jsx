@@ -35,7 +35,7 @@ import { useSelector } from 'react-redux'
 
 import InfoIcon from '@mui/icons-material/Info'
 
-import { GoTypography } from 'react-icons/go'
+import { GoClock, GoTypography } from 'react-icons/go'
 
 import { FaPlane } from 'react-icons/fa6'
 
@@ -455,11 +455,14 @@ const FlightFound = () => {
       {/* Flight Filters & Results */}
       <h3 className='text-xl mb-5 font-bold space-x-2'>
         {flightSreachIsloading ? (
-          <h1>Loading...</h1>
+          <>
+          {/* <h1>Loading...</h1> */}
+            
+          </>
         ) : (
           <>
-            <span>{filteredFlights?.length}</span>
-            <span>Flights Found</span>
+            {/* <span>{filteredFlights?.length}</span>
+            <span>Flights Found</span> */}
             <span
               className='cursor-pointer inline lg:hidden'
               onClick={() => {
@@ -494,14 +497,29 @@ const FlightFound = () => {
             selectedDepartureTimes={selectedDepartureTimes}
             handleSelectAllDepartureTimes={handleSelectAllDepartureTimes}
             handleDepartureTimeChange={handleDepartureTimeChange}
+            queryParamss= {queryParams}
           />
+          
         </div>
 
         {/* Flight Results */}
         <div className='col-span-12 md:col-span-12 lg:col-span-9'>
+          <Card className='flex justify-between items-center rounded-4xl shadow-md p-2'>
+            <div className='text-xl pl-4 font-bold'>
+              <span>{filteredFlights?.length} </span>
+              <span>Flights Found</span>
+              <p className='text-sm text-center font-normal my-2'>Book before the search expires!</p>
+            </div>
+
+            <div className=' mb-3 flex flex-col items-center justify-center gap-2'>
+              <GoClock className='text-gray-700 text-xl font-bold text-center'/>
+              <span className='text-gray-700 text-xl font-bold text-center gap-2'>{formatTime(time)}</span>
+            </div>
+          </Card>
+
           <div className=' p-1 rounded z-10'>
-            <Card className='bg-base-100/80 backdrop-blur-lg rounded-lg shadow-md mb-5'>
-              <CardContent>
+            <div className='bg-base-100/80 py-4 mb-5'>
+              <div>
                 <div className='lg:flex justify-between items-center'>
                   <div>
                     <FlightRouteDisplay queryParams={queryParams} legs={legs} />
@@ -521,13 +539,15 @@ const FlightFound = () => {
                     </Button>
                   </div>
                 </div>
-              </CardContent>
-            </Card>
-            <DateSelector
+              </div>
+            </div>
+         <div className='block md:hidden'>
+         <DateSelector
               departure_date={queryParams?.departure_date}
               return_date={queryParams?.return_date}
               route_type={queryParams?.route_type}
             />
+         </div>
           </div>
           {flightSreachIsloading ? (
             <div className='flex justify-center items-center h-[50%]'>
@@ -643,50 +663,52 @@ const FlightFound = () => {
                           const formattedTotalFare = totalFare.toLocaleString()
 
                           return (
-                            <div key={faresGroupIndex} className='col-span-12 md:col-span-6 lg:col-span-4 border rounded-lg pb-4 bg-[#F5F6FF]'>
-                           <div className='px-4 py-2 bg-[#8A9DC2] rounded-tl-lg rounded-tr-lg'>
-
-                            <p className='font-bold text-white text-center rounded-lg text-md'>{faresGroupData?.rbd}</p>
-                           </div>
-
-                            <div className='px-4 bg-[#F5F6FF]'>
-
-                         
-                              <div className=''>
-                                <div className='mt-2'>
-                                  <div className='flex justify-between'>
-                                    <p className='text-sm text-gray-500'>Seat Selection</p>
-                                    <p className='text-sm'>not included</p>
-                                  </div>
-                                </div>
+                            <div
+                              key={faresGroupIndex}
+                              className='col-span-12 md:col-span-6 lg:col-span-4 border rounded-lg pb-4 bg-[#F5F6FF]'
+                            >
+                              <div className='px-4 py-2 bg-[#8A9DC2] rounded-tl-lg rounded-tr-lg'>
+                                <p className='font-bold text-white text-center rounded-lg text-md'>
+                                  {faresGroupData?.rbd}
+                                </p>
                               </div>
 
-                              <div className='mt-4'>
-                                <div className='space-y-2'>
-                                  <div className='flex justify-between'>
-                                    <p className='text-sm text-gray-500'>Baggage</p>
-                                  </div>
-                                  <div className='flex justify-between'>
-                                    <p className='text-sm text-gray-500'>Meal</p>
-                                    <p className='text-sm'>{faresGroupData?.has_meal ? 'Included' : 'Excluded'}</p>
-                                  </div>
-                                  <div className='flex justify-between'>
-                                    <p className='text-sm text-gray-500'>Cancellation</p>
-                                    <p
-                                      className={`text-xs px-2 rounded-full ${faresGroupData.is_refundable ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}
-                                    >
-                                      {faresGroupData.is_refundable ? 'Refundable' : 'Non-Refundable'}
-                                    </p>
+                              <div className='px-4 bg-[#F5F6FF]'>
+                                <div className=''>
+                                  <div className='mt-2'>
+                                    <div className='flex justify-between'>
+                                      <p className='text-sm text-gray-500'>Seat Selection</p>
+                                      <p className='text-sm'>not included</p>
+                                    </div>
                                   </div>
                                 </div>
-                              </div>
 
-                              <div className='mt-4 flex flex-col items-end'>
-                                <div className='flex items-center mb-2'>
-                                  {/* <span className='font-bold text-2xl'>
+                                <div className='mt-4'>
+                                  <div className='space-y-2'>
+                                    <div className='flex justify-between'>
+                                      <p className='text-sm text-gray-500'>Baggage</p>
+                                    </div>
+                                    <div className='flex justify-between'>
+                                      <p className='text-sm text-gray-500'>Meal</p>
+                                      <p className='text-sm'>{faresGroupData?.has_meal ? 'Included' : 'Excluded'}</p>
+                                    </div>
+                                    <div className='flex justify-between'>
+                                      <p className='text-sm text-gray-500'>Cancellation</p>
+                                      <p
+                                        className={`text-xs px-2 rounded-full ${faresGroupData.is_refundable ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}
+                                      >
+                                        {faresGroupData.is_refundable ? 'Refundable' : 'Non-Refundable'}
+                                      </p>
+                                    </div>
+                                  </div>
+                                </div>
+
+                                <div className='mt-4 flex flex-col items-end'>
+                                  <div className='flex items-center mb-2'>
+                                    {/* <span className='font-bold text-2xl'>
                                     {faresGroupData?.price?.currency} {faresGroupData?.price?.gross_amount}
                                   </span> */}
-                                  <div className='relative'>
+                                    <div className='relative'>
                                       <IconButton
                                         size='small'
                                         onClick={handleClick}
@@ -783,16 +805,17 @@ const FlightFound = () => {
                                         )}
                                       </Popper>
                                     </div>
-                                </div>
-                                <Button variant='contained' className='w-full'
-                                 onClick={() => {
+                                  </div>
+                                  <Button
+                                    variant='contained'
+                                    className='w-full'
+                                    onClick={() => {
                                       initiateBookFareHandler(faresGroupData?.booking_id)
                                     }}
-                                >
-                                                                     {faresGroupData?.price?.currency} {faresGroupData?.price?.gross_amount}
-
-                                </Button>
-                              </div>
+                                  >
+                                    {faresGroupData?.price?.currency} {faresGroupData?.price?.gross_amount}
+                                  </Button>
+                                </div>
                               </div>
                             </div>
                           )
