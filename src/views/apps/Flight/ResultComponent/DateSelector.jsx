@@ -95,7 +95,7 @@ const DateSelector = ({ departure_date, return_date, route_type }) => {
                                 }`}
               onClick={() => !date.isBefore(dayjs(), 'day') && handleDateSelection(date)} // Prevent click on past dates
             >
-              <div>{date.format('ddd DD MMM')}</div>
+              <p className='text-xs'>{date.format('ddd DD MMM')}</p>
             </div>
           ))}
         </div>
