@@ -47,7 +47,6 @@ import { LoadingButton } from '@mui/lab'
 import MuiDropdown from '@/components/mui-form-inputs/MuiDropdown'
 import MuiTextField from '@/components/mui-form-inputs/MuiTextField'
 import PhoneNumberInput from '@/components/reactPhoneInput/PhoneNumberInput'
-import SearchInput from '@/components/searchInput/SearchInput'
 import {
   useCreateAgencyMutation,
   useDeleteAgencyMutation,
@@ -64,6 +63,7 @@ import GeneralSettingModal from './components/GeneralSettingModal'
 import TemporaryLimitModal from './components/TemporaryLimitModal'
 import { cities } from '@/data/dropdowns/cities'
 import OptionMenu from '@/@core/components/option-menu'
+import AssignedAgencyMarginModal from './components/AssignedAgencyMarginModal'
 
 const fuzzyFilter = (row, columnId, value, addMeta) => {
   const itemRank = rankItem(row.getValue(columnId), value)
@@ -94,6 +94,7 @@ const AgencyTable = () => {
   const [orgUUid, setOrgUUid] = useState()
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(10)
+  const [isAssignMarginModal, setIsAssignMarginModal] = useState(false);
 
   // RTK Query
   const {
@@ -115,6 +116,10 @@ const AgencyTable = () => {
     setPage(0)
   }
 
+  const showAssignAirlineMarginConfirmation = (uuid) => {
+    setIsAssignMarginModal(true);
+    setOrgUUid(uuid)
+};
   const { data: branchesDropDown } = useBranchDropDownQuery()
   const agencies = detail_data?.data || []
   const totalCount = detail_data?.total || 0
@@ -277,6 +282,14 @@ const AgencyTable = () => {
                         showTemporaryLimitModal()
                         setTemporaryLimit(row.original.org_wallet)
                         setOrgUUid(row.original.uuid)
+                      }
+                    }
+                  },
+                  {
+                    text: 'Assigned Margins',
+                    menuItemProps: {
+                      onClick: () => {
+                        showAssignAirlineMarginConfirmation(row.original.uuid)
                       }
                     }
                   }
@@ -726,6 +739,17 @@ const AgencyTable = () => {
           userUUid={userUUid}
         />
       )}
+
+       {isAssignMarginModal &&
+                <AssignedAgencyMarginModal
+                    isOpen={isAssignMarginModal}
+                    refetch={refetch}
+                    handleClose={() => {
+                        setIsAssignMarginModal(false)
+                    }}
+                    orgUUid={orgUUid}
+                />
+            }
     </>
   )
 }

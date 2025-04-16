@@ -128,5 +128,11 @@ export const API_END_POINTS = {
   generalSetting: BASE_URL_V1 + '/setting/general-setting',
   finanicalProfile: BASE_URL_V1 + '/setting/finanical-profile',
   dashboardStats: BASE_URL_V1 + '/dashboard/stats',
-  dashboardSaleStatics: BASE_URL_V1 + '/dashboard/sale-statistics'
+  dashboardSaleStatics: BASE_URL_V1 + '/dashboard/sale-statistics',
+  assignToBranchByAirline: BASE_URL_V1 + '/margin/assign-to-branch-by-airline',
+  branchMargins: BASE_URL_V1 + '/margin/branch-margins',
+  agenciesMargins: BASE_URL_V1 + '/margin/agencies-margins',
+  agencyMarginAssign: BASE_URL_V1 + '/margin/agency-margin-assign',
+  branchMargin: BASE_URL_V1 + '/margin/branch-margin',
+  assignMarginBranch: BASE_URL_V1 + '/margin/assign-margin-branch',
 }

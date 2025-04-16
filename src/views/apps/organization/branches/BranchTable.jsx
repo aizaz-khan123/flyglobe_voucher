@@ -58,6 +58,8 @@ import {
 } from '@/redux-store/services/api'
 import PermissionModal from '../PermissionModal'
 import ChangePasswordModal from './settings/ChangePasswordModal'
+import OptionMenu from '@/@core/components/option-menu'
+import AssignedMarginModal from './settings/AssignedMarginModal'
 
 const fuzzyFilter = (row, columnId, value, addMeta) => {
   const itemRank = rankItem(row.getValue(columnId), value)
@@ -83,6 +85,7 @@ const BranchTable = () => {
   const [BranchToBeDelete, setBranchToBeDelete] = useState()
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(10)
+  const [isAssignMarginModal, setIsAssignMarginModal] = useState(false);
 
   // RTK Query
   const {
@@ -106,6 +109,11 @@ const BranchTable = () => {
     setRowsPerPage(parseInt(event.target.value, 10))
     setPage(0)
   }
+
+  const showAssignAirlineMarginConfirmation = (uuid) => {
+    setIsAssignMarginModal(true);
+    setBranchId(uuid)
+  };
 
   // Mutations
   const [createBranch, { isLoading: createLoading }] = useCreateBranchMutation()
@@ -234,16 +242,29 @@ const BranchTable = () => {
                 />
               </IconButton>
             </Tooltip>
-            <Tooltip title='Change Password' placement='top'>
-              <IconButton>
-                <FaLock
-                  className='cursor-pointer text-base text-primary'
-                  onClick={() => {
-                    showChangePasswordModal()
-                    setuserUUid(row.original.main_user?.uuid)
-                  }}
-                />
-              </IconButton>
+            <Tooltip title='Settings' placement='top'>
+              <OptionMenu
+                iconClassName='text-textPrimary'
+                options={[
+                  {
+                    text: 'Change Password',
+                    menuItemProps: {
+                      onClick: () => {
+                        showChangePasswordModal()
+                        setuserUUid(row.original.main_user?.uuid)
+                      }
+                    }
+                  },
+                  {
+                    text: 'Assigned Margins',
+                    menuItemProps: {
+                      onClick: () => {
+                        showAssignAirlineMarginConfirmation(row.original.id)
+                      }
+                    }
+                  },
+                ]}
+              />
             </Tooltip>
           </div>
         )
@@ -491,14 +512,14 @@ const BranchTable = () => {
                     {table.rows?.length > 0
                       ? 'No Record Found'
                       : table.getRowModel().rows.map(row => (
-                          <tr key={row.id} className='hover:bg-gray-50'>
-                            {row.getVisibleCells().map(cell => (
-                              <td key={cell.id} className='p-3 border-b'>
-                                {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                              </td>
-                            ))}
-                          </tr>
-                        ))}
+                        <tr key={row.id} className='hover:bg-gray-50'>
+                          {row.getVisibleCells().map(cell => (
+                            <td key={cell.id} className='p-3 border-b'>
+                              {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                            </td>
+                          ))}
+                        </tr>
+                      ))}
                   </>
                 ) : (
                   <td colSpan={table.getAllColumns().length}>
@@ -646,6 +667,18 @@ const BranchTable = () => {
           userUUid={userUUid}
         />
       )}
+
+      {isAssignMarginModal &&
+        <AssignedMarginModal
+          isOpen={isAssignMarginModal}
+          refetch={refetch}
+          handleClose={() => {
+            setIsAssignMarginModal(false)
+          }}
+          branchId={branchId}
+        />
+      }
+
     </>
   )
 }

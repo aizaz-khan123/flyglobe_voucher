@@ -682,6 +682,57 @@ export const api = emptySplitApi.injectEndpoints({
       transformResponse: response => response.data
     }),
 
+    branchMargins: builder.query({
+      query: (params) => ({
+        url: API_END_POINTS.branchMargins,
+        method: "GET",
+        params
+      }),
+      transformResponse: (response) => response.data,
+    }),
+
+    assignToBranchByAirline: builder.mutation({
+      query: (body) => ({
+        url: API_END_POINTS.assignToBranchByAirline,
+        method: "POST",
+        body
+      }),
+    }),
+
+    agenciesMargins: builder.query({
+      query: (orgUUid) => ({
+        url: `${API_END_POINTS.agenciesMargins}/${orgUUid}`,
+        method: "GET",
+      }),
+      transformResponse: (response) => response.data,
+    }),
+
+    agencyMarginAssign: builder.mutation({
+      query: ({ orgUUid, data  }) => ({
+        url: `${API_END_POINTS.agencyMarginAssign}/${orgUUid}`,
+        method: "POST",
+        body: data,
+      }),
+    }),
+
+    
+    branchMargin: builder.query({
+      query: (params) => ({
+        url: API_END_POINTS.branchMargin,
+        method: "GET",
+        params
+      }),
+      transformResponse: (response) => response.data,
+    }),
+
+    assignMarginBranch: builder.mutation({
+      query: (body) => ({
+        url: API_END_POINTS.assignMarginBranch,
+        method: "POST",
+        body
+      }),
+    }),
+
     // Settings //
     temporaryLimit: builder.mutation({
       query: body => ({
@@ -762,14 +813,18 @@ export const {
   useStatusUpdateMutation,
   useBranchDropDownQuery,
   useDropDownByTypeQuery,
-
+  useBranchMarginQuery,
+  useAssignMarginBranchMutation,
   //////////////////////
   useGetAgenciesQuery,
   useCreateAgencyMutation,
   useDeleteAgencyMutation,
   useUpdateAgencyMutation,
   useAgencystatusUpdateMutation,
-
+  useAssignToBranchByAirlineMutation,
+  useBranchMarginsQuery,
+  useAgenciesMarginsQuery,
+  useAgencyMarginAssignMutation,
   // ///////////////////////
   useCreateEmployeeMutation,
   useDeleteEmployeeMutation,
