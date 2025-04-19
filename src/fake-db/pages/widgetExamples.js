@@ -27,28 +27,28 @@ export const db = {
   ],
   statsHorizontalWithBorder: [
     {
-      title: 'On route vehicles',
+      title: 'Sales',
       stats: 42,
       trendNumber: 18.2,
       avatarIcon: 'ri-car-line',
       color: 'primary'
     },
     {
-      title: 'Vehicles with errors',
+      title: 'Umrah Package Booking',
       stats: 8,
       trendNumber: -8.7,
       avatarIcon: 'ri-alert-line',
       color: 'warning'
     },
     {
-      title: 'Deviated from route',
+      title: 'Hotel Booking',
       stats: 27,
       trendNumber: 4.3,
       avatarIcon: 'ri-route-line',
       color: 'error'
     },
     {
-      title: 'Late vehicles',
+      title: 'Flight Booking',
       stats: 13,
       trendNumber: 2.5,
       avatarIcon: 'ri-time-line',

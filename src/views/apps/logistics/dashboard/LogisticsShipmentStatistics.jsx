@@ -104,13 +104,23 @@ const MonthButton = () => {
 
 const series = [
   {
-    name: 'Shipment',
+    name: 'Total Sales',
     type: 'column',
     data: [38, 45, 33, 38, 32, 48, 45, 40, 42, 37]
   },
   {
-    name: 'Delivery',
+    name: 'Umrah Bookings',
     type: 'line',
+    data: [4, 18, 33, 42, 55, 1, 5, 6, 36, 24]
+  },
+  {
+    name: 'Hotel Bookings',
+    type: 'column',
+    data: [21, 2, 89, 7, 81, 34, 41, 17, 24, 17]
+  },
+  {
+    name: 'Flight Bookings',
+    type: 'column',
     data: [23, 28, 23, 32, 25, 42, 32, 32, 26, 24]
   }
 ]
@@ -216,7 +226,7 @@ const LogisticsShipmentStatistics = () => {
 
   return (
     <Card>
-      <CardHeader title='Shipment Statistics' subheader='Total number of deliveries 23.8k' action={<MonthButton />} />
+      <CardHeader title='Sales and Booking Statistics' subheader='Total number of bookings 500' action={<MonthButton />} />
       <CardContent>
         <AppReactApexCharts
           id='shipment-statistics'
