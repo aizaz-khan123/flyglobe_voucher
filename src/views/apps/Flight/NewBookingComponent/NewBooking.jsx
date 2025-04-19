@@ -165,8 +165,8 @@ const NewBooking = () => {
 
   const segmentData = bookingAvailabilityConfirmationData?.segment_data || []
 
-console.log('first', bookingAvailabilityConfirmationData)
-  
+  console.log('first', bookingAvailabilityConfirmationData)
+
 
 
   if (isLoading) return <Typography>Loading Booking Confirmation details...</Typography>
@@ -494,18 +494,18 @@ console.log('first', bookingAvailabilityConfirmationData)
                             </div>
                           )}
 
-                        <Accordion   className="p-0"
-  disableGutters
-  elevation={0}
-  square
-  sx={{
-    boxShadow: 'none',
-    '&:before': { display: 'none' },
-    '&.Mui-expanded': {
-      margin: 0,
-      boxShadow: 'none',
-    },
-  }}
+                        <Accordion className="p-0"
+                          disableGutters
+                          elevation={0}
+                          square
+                          sx={{
+                            boxShadow: 'none',
+                            '&:before': { display: 'none' },
+                            '&.Mui-expanded': {
+                              margin: 0,
+                              boxShadow: 'none',
+                            },
+                          }}
                         >
                           <AccordionSummary
                             expandIcon={
@@ -569,7 +569,7 @@ console.log('first', bookingAvailabilityConfirmationData)
                       </CardContent>
                     </Card>
                   )}
-                 
+
 
                   {/* <Card className='bg-base-100 mb-5'>
                     <CardContent>

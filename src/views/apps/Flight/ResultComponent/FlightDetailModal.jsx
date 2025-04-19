@@ -10,7 +10,8 @@ const FlightDetailModal = ({ viewFlightDetailModal, handleCloseViewFlightDetail,
     return null
   }
 
-  const { legs } = data
+  // const { legs } = data
+  const legs = data.legs.flat()
 
   return (
     <Dialog

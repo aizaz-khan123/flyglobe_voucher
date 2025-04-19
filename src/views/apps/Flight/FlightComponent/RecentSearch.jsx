@@ -54,20 +54,20 @@ export const RecentSearch = () => {
     const payload =
       search?.route_type === 'MULTICITY'
         ? {
-            cabin_class: search?.cabin_class,
-            route_type: search?.route_type,
-            legs: search?.legs,
-            traveler_count: search?.traveler_count
-          }
+          cabin_class: search?.cabin_class,
+          route_type: search?.route_type,
+          legs: search?.legs,
+          traveler_count: search?.traveler_count
+        }
         : {
-            cabin_class: search?.cabin_class,
-            departure_date: search?.departure_date,
-            destination: search?.destination,
-            origin: search?.origin,
-            return_date: search?.route_type === 'RETURN' ? search?.return_date : null,
-            route_type: search?.route_type,
-            traveler_count: search?.traveler_count
-          }
+          cabin_class: search?.cabin_class,
+          departure_date: search?.departure_date,
+          destination: search?.destination,
+          origin: search?.origin,
+          return_date: search?.route_type === 'RETURN' ? search?.return_date : null,
+          route_type: search?.route_type,
+          traveler_count: search?.traveler_count
+        }
 
     if (!payload) return // Ensure payload is defined before proceeding
 
@@ -87,7 +87,7 @@ export const RecentSearch = () => {
     ).toString()
 
     setPayloadValues(queryString)
-    router.push(`/flights/search/result?${queryString}`)
+    router.push(`/en/apps/flight/search/result?${queryString}`)
   }
 
   return (
