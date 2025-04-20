@@ -11,7 +11,8 @@ import authReducer from './Features/authslice' // ✅ Import the reducer, not th
 const persistConfig = {
   key: 'root',
   version: 1,
-  storage
+  storage,
+  blacklist: ['api'] // Exclude the API slice from being persisted
 }
 
 // Combine Reducers

@@ -75,7 +75,7 @@ const FlightSearch = ({ initialValues, flightSearchOpen }) => {
   const [legsToSearchStrs, setLegsToSearchStrs] = useState({})
   const [loadingFields, setLoadingFields] = useState({})
   const [flightSearchCalenderIsOpen, setFlightSearchCalenderIsOpen] = useState(false)
-  const flightImage = '/images/flight/FlightImage.png'
+  const flightImage = '/images/flight/FlightImage.svg'
 
   const today = dayjs()
   const [locationApiTrigger, { data: locationNames, isFetching, isSuccess }] = useLazyLocationsLookupQuery({})
@@ -273,9 +273,6 @@ const FlightSearch = ({ initialValues, flightSearchOpen }) => {
   }, [watch('route_type'), clearErrors]) // Add clearErrors to the dependency array
 
   const validateFlightData = (data, route_type) => {
-    console.log('route_type', route_type);
-    console.log('data', data);
-
     if (!route_type) return "The route type field is required.";
     if (!data.cabin_class) {
       return "The cabin class field is required.";
@@ -314,7 +311,7 @@ const FlightSearch = ({ initialValues, flightSearchOpen }) => {
   const onSubmit = async data => {
     const departureDate = data.dateRange?.[0] ? dayjs(data.dateRange[0]).format('YYYY-MM-DD') : null;
     const returnDate = data.dateRange?.[1] ? dayjs(data.dateRange[1]).format('YYYY-MM-DD') : null;
-   
+
     // Extract dates from `date_range`
 
     const payload =
@@ -335,12 +332,11 @@ const FlightSearch = ({ initialValues, flightSearchOpen }) => {
           traveler_count: data.traveler_count
         }
 
-    console.log('payload', payload)
 
     if (!payload) return
 
     const error = validateFlightData(data, route_type)
-    
+
     if (error) {
       toast.error(error)
       return
@@ -496,7 +492,7 @@ const FlightSearch = ({ initialValues, flightSearchOpen }) => {
             <div className='col-span-4'>
               <Typography variant='h4'>Book Flights</Typography>
               <div className='flight-img mt-2'>
-                <img src={flightImage} alt='' className='w-full h-[250] object-contain' />
+                <img src={flightImage} alt='' className='w-full object-contain' />
               </div>
             </div>
             <div className='col-span-8'>
@@ -518,7 +514,6 @@ const FlightSearch = ({ initialValues, flightSearchOpen }) => {
 
                           // onChange={(event) => field.onChange(event.target.value)}
                           onChange={event => {
-                            console.log('Selected Travel Type:', event.target.value)
                             field.onChange(event.target.value)
                           }}
                         >

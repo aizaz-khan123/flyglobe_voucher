@@ -24,6 +24,8 @@ const FlightDetailDrawer = ({ flightFearOptionsData, formatDuration }) => {
     setFlightDrawerTabs(newValue)
   }
 
+  console.log('flightFearOptionsData', flightFearOptionsData);
+
   return (
     <Box className='min-h-full  p-5 shadow-lg rounded-lg border overflow-y-auto'>
       <Typography variant='h6' gutterBottom>
