@@ -90,14 +90,14 @@ const VerticalMenu = ({ dictionary, scrollMenu }) => {
           >
             {dictionary['navigation'].flight}
           </MenuItem>
-          {/* <MenuItem
+          <MenuItem
             href={`/${locale}/apps/import-pnr`}
             exactMatch={false}
             activeUrl='/apps/import-pnr'
             icon={<i className='ri-import-line' />}
           >
             {dictionary['navigation'].importPnr}
-          </MenuItem> */}
+          </MenuItem>
           <MenuItem
             href={`/${locale}/apps/bookings`}
             exactMatch={false}
