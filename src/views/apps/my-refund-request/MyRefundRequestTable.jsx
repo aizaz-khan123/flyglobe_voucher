@@ -19,6 +19,8 @@ import {
   Typography
 } from '@mui/material'
 import { useMyRefundRequestQuery } from '@/redux-store/services/api'
+import DateTimeComp from '@/components/date/DateTimeComp'
+import StatusRefund from '@/components/booking/StatusRefund'
 // import StatusRefund from '@/components/booking/StatusRefund'
 // import DateTimeComp from '@/components/date/DateTimeComp'
 
@@ -33,17 +35,17 @@ const MyRefundrequestRow = ({ myRefundData }) => {
   return (
     <TableRow hover sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
       <TableCell>
-      
-          <Typography color="primary" sx={{ textDecoration: 'underline' }}>
-            {booking?.booking_id}
-          </Typography>
-  
+
+        <Typography color="primary" sx={{ textDecoration: 'underline' }}>
+          {booking?.booking_id}
+        </Typography>
+
       </TableCell>
       <TableCell>{booking?.booking_pnr}</TableCell>
-      {/* <TableCell><StatusRefund status={status} /></TableCell> */}
+      <TableCell><StatusRefund status={status} /></TableCell>
       <TableCell>{booking?.booked_by_user?.name}</TableCell>
-      {/* <TableCell><DateTimeComp formattedDate={booking?.created_at} /></TableCell>
-      <TableCell><DateTimeComp formattedDate={created_at} /></TableCell> */}
+      <TableCell><DateTimeComp formattedDate={booking?.created_at} /></TableCell>
+      <TableCell><DateTimeComp formattedDate={created_at} /></TableCell>
       <TableCell>{booking?.airline?.name}</TableCell>
       <TableCell>{booking?.supplier?.name}</TableCell>
       <TableCell>{formatAmountWithCommas(base_fare)}</TableCell>
@@ -59,14 +61,14 @@ const MyRefundRequestTable = () => {
   const [pageUrl, setPageUrl] = useState('')
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(10)
-  
-  const { data: detail_data, isFetching, refetch: myRefundRequestRefetch } = useMyRefundRequestQuery({ 
-    searchText, 
+
+  const { data: detail_data, isFetching, refetch: myRefundRequestRefetch } = useMyRefundRequestQuery({
+    searchText,
     pageUrl,
     page: page + 1,
     pageSize: rowsPerPage
   })
-  
+
   const myRefundDetail = detail_data?.data || []
   const totalCount = detail_data?.total || 0
 
@@ -116,8 +118,8 @@ const MyRefundRequestTable = () => {
         <TableContainer>
           <Table>
             <TableHead>
-              <TableRow>
-                <TableCell sx={{width:'5rem'}}>Booking ID</TableCell>
+              <TableRow className=' whitespace-nowrap'>
+                <TableCell sx={{ width: '5rem' }}>Booking ID</TableCell>
                 <TableCell>PNR</TableCell>
                 <TableCell>Request Status</TableCell>
                 <TableCell>Booking By</TableCell>
