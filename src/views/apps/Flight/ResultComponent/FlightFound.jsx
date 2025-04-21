@@ -37,7 +37,7 @@ import InfoIcon from '@mui/icons-material/Info'
 
 import { GoClock, GoTypography } from 'react-icons/go'
 
-import { FaPlane } from 'react-icons/fa6'
+import { FaPersonWalkingDashedLineArrowRight, FaPlane } from 'react-icons/fa6'
 
 import AddCommission from './AddCommission'
 import FlightFilter from './FlightFilter'
@@ -131,6 +131,7 @@ const FlightFound = () => {
   // Prevent duplicate API calls
   const isFetching = useRef(false)
   const [mergeFlightResponse, setMergeFlightResponse] = useState([])
+  // console.log('mergeFlightResponse', mergeFlightResponse);
 
   const searchApiPayload = async () => {
     if (isFetching.current) return
@@ -510,7 +511,17 @@ const FlightFound = () => {
   };
   const sortedFlights = [...filteredFlights].sort((a, b) => {
     const getMinFare = (flight) => {
-      const fares = flight?.fare_option?.map((fare) =>
+      // Combine fare options from both the root and legs
+      const combinedFareOptions = [
+        ...(Array.isArray(flight?.fare_option) ? flight.fare_option : []),
+        ...(Array.isArray(flight?.legs)
+          ? flight.legs.flatMap((leg) => Array.isArray(leg?.fare_option) ? leg.fare_option : [])
+          : typeof flight?.legs === 'object'
+            ? Object.values(flight?.legs).flatMap((leg) => Array.isArray(leg?.fare_option) ? leg.fare_option : [])
+            : []),
+      ];
+
+      const fares = combinedFareOptions.map((fare) =>
         Number(fare?.price?.gross_amount.replace(/,/g, "")) || Infinity
       );
       return fares?.length ? Math.min(...fares) : Infinity; // Default to Infinity if no fares
@@ -518,6 +529,7 @@ const FlightFound = () => {
 
     return getMinFare(a) - getMinFare(b);
   });
+
 
   useEffect(() => {
     if (mergeFlightResponse) {
@@ -560,6 +572,9 @@ const FlightFound = () => {
     const firstLeg = legs[0];
     return Array.isArray(firstLeg) ? firstLeg[0] : firstLeg;
   };
+
+  // console.log('sortedFlights', sortedFlights);
+
   return (
     <div className='p-4 min-h-screen'>
       {/* Flight Filters & Results */}
@@ -669,13 +684,24 @@ const FlightFound = () => {
             <>
               <div>
                 <div>
-                  {sortedFlights.map((data, index) => {
+                  {mergeFlightResponse.map((data, index) => {
                     // Normalize legs to handle both PIA and Airblue structures
-                    const normalizedLegs = Array.isArray(data?.legs) && data?.legs.length > 0
-                      ? Array.isArray(data?.legs[0])
-                        ? data?.legs.flat() // Airblue: Flatten the nested arrays
-                        : data?.legs // PIA: Use as-is
-                      : []; // Fallback to an empty array if legs is undefined or empty
+                    // const normalizedLegs = Array.isArray(data?.legs) && data?.legs.length > 0
+                    //   ? Array.isArray(data?.legs[0])
+                    //     ? data?.legs.flat() // Airblue: Flatten the nested arrays
+                    //     : data?.legs // PIA: Use as-is
+                    //   : []; // Fallback to an empty array if legs is undefined or empty
+                    const normalizedLegs = data?.legs
+                      ? Object.values(data.legs).flat() // Convert object to array of arrays and flatten
+                      : [];
+                    // Combine fare options from both the root and legs
+                    const combinedFareOptions = [
+                      ...(Array.isArray(data?.fare_option) ? data.fare_option : []),
+                      ...(Array.isArray(normalizedLegs) ? normalizedLegs.flatMap((leg) => Array.isArray(leg?.fare_option) ? leg.fare_option : []) : []),
+                    ];
+                    const sector = normalizedLegs?.[0]?.sector?.join(' -> ') || 'Sector information not available';
+
+                    console.log('normalizedLegs', normalizedLegs);
 
                     return (
                       <Card key={index} className='mb-5 static'>
@@ -789,7 +815,12 @@ const FlightFound = () => {
                             </div>
                           </div>
                           <div className='grid grid-cols-12 gap-4'>
-                            {data?.fare_option?.map((faresGroupData, faresGroupIndex) => {
+                            <div className='col-span-12 border rounded-lg py-2 bg-[#F5F6FF]'>
+                              <p className='font-bold text-sm text-gray-600 text-center'>
+                                {sector || 'Sector information not available'}
+                              </p>
+                            </div>
+                            {combinedFareOptions?.map((faresGroupData, faresGroupIndex) => {
                               const baseFare = Number(faresGroupData?.price?.base_fare.replace(/,/g, '')) || 0
                               const tax = Number(faresGroupData?.price?.tax.replace(/,/g, '')) || 0
                               const grossAmount = Number(faresGroupData?.price?.gross_amount.replace(/,/g, '')) || 0
@@ -797,161 +828,163 @@ const FlightFound = () => {
                               const formattedTotalFare = totalFare.toLocaleString()
 
                               return (
-                                <div
-                                  key={faresGroupIndex}
-                                  className='col-span-12 md:col-span-6 lg:col-span-4 border rounded-lg pb-4 bg-[#F5F6FF]'
-                                >
-                                  <div className='px-4 py-2 bg-[#8A9DC2] rounded-tl-lg rounded-tr-lg'>
-                                    <p className='font-bold text-white text-center rounded-lg text-md'>
-                                      {faresGroupData?.rbd}
-                                    </p>
-                                  </div>
-
-                                  <div className='px-4 bg-[#F5F6FF]'>
-                                    <div className=''>
-                                      <div className='mt-2'>
-                                        <div className='flex justify-between'>
-                                          <p className='text-sm text-gray-500'>Seat Selection</p>
-                                          <p className='text-sm'>not included</p>
-                                        </div>
-                                      </div>
+                                <>
+                                  <div
+                                    key={faresGroupIndex}
+                                    className='col-span-12 md:col-span-6 lg:col-span-4 border rounded-lg pb-4 bg-[#F5F6FF]'
+                                  >
+                                    <div className='px-4 py-2 bg-[#8A9DC2] rounded-tl-lg rounded-tr-lg'>
+                                      <p className='font-bold text-white text-center rounded-lg text-md'>
+                                        {faresGroupData?.rbd}
+                                      </p>
                                     </div>
 
-                                    <div className='mt-4'>
-                                      <div className='space-y-2'>
-                                        <div className='flex justify-between'>
-                                          <p className='text-sm text-gray-500'>Baggage</p>
-                                        </div>
-                                        <div className='flex justify-between'>
-                                          <p className='text-sm text-gray-500'>Meal</p>
-                                          <p className='text-sm'>{faresGroupData?.has_meal ? 'Included' : 'Excluded'}</p>
-                                        </div>
-                                        <div className='flex justify-between'>
-                                          <p className='text-sm text-gray-500'>Cancellation</p>
-                                          <p
-                                            className={`text-xs px-2 rounded-full ${faresGroupData.is_refundable ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}
-                                          >
-                                            {faresGroupData.is_refundable ? 'Refundable' : 'Non-Refundable'}
-                                          </p>
+                                    <div className='px-4 bg-[#F5F6FF]'>
+                                      <div className=''>
+                                        <div className='mt-2'>
+                                          <div className='flex justify-between'>
+                                            <p className='text-sm text-gray-500'>Seat Selection</p>
+                                            <p className='text-sm'>not included</p>
+                                          </div>
                                         </div>
                                       </div>
-                                    </div>
 
-                                    <div className='mt-4 flex flex-col items-end'>
-                                      <div className='flex items-center mb-2'>
-                                        {/* <span className='font-bold text-2xl'>
+                                      <div className='mt-4'>
+                                        <div className='space-y-2'>
+                                          <div className='flex justify-between'>
+                                            <p className='text-sm text-gray-500'>Baggage</p>
+                                          </div>
+                                          <div className='flex justify-between'>
+                                            <p className='text-sm text-gray-500'>Meal</p>
+                                            <p className='text-sm'>{faresGroupData?.has_meal ? 'Included' : 'Excluded'}</p>
+                                          </div>
+                                          <div className='flex justify-between'>
+                                            <p className='text-sm text-gray-500'>Cancellation</p>
+                                            <p
+                                              className={`text-xs px-2 rounded-full ${faresGroupData.is_refundable ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}
+                                            >
+                                              {faresGroupData.is_refundable ? 'Refundable' : 'Non-Refundable'}
+                                            </p>
+                                          </div>
+                                        </div>
+                                      </div>
+
+                                      <div className='mt-4 flex flex-col items-end'>
+                                        <div className='flex items-center mb-2'>
+                                          {/* <span className='font-bold text-2xl'>
                                     {faresGroupData?.price?.currency} {faresGroupData?.price?.gross_amount}
                                   </span> */}
-                                        <div className='relative'>
-                                          <IconButton
-                                            size='small'
-                                            onClick={handleClick}
-                                            ref={anchorRef}
-                                            className='text-gray-500 hover:text-gray-700'
-                                          >
-                                            <InfoIcon fontSize='small' />
-                                          </IconButton>
+                                          <div className='relative'>
+                                            <IconButton
+                                              size='small'
+                                              onClick={handleClick}
+                                              ref={anchorRef}
+                                              className='text-gray-500 hover:text-gray-700'
+                                            >
+                                              <InfoIcon fontSize='small' />
+                                            </IconButton>
 
-                                          <Popper
-                                            open={openFlightInfo}
-                                            anchorEl={anchorEl}
-                                            transition
-                                            placement='bottom-end'
-                                            className='!z-[9999]'
-                                            modifiers={[
-                                              {
-                                                name: 'preventOverflow',
-                                                options: {
-                                                  altBoundary: true,
-                                                  padding: 8
+                                            <Popper
+                                              open={openFlightInfo}
+                                              anchorEl={anchorEl}
+                                              transition
+                                              placement='bottom-end'
+                                              className='!z-[9999]'
+                                              modifiers={[
+                                                {
+                                                  name: 'preventOverflow',
+                                                  options: {
+                                                    altBoundary: true,
+                                                    padding: 8
+                                                  }
+                                                },
+                                                {
+                                                  name: 'offset',
+                                                  options: {
+                                                    offset: [0, 8]
+                                                  }
                                                 }
-                                              },
-                                              {
-                                                name: 'offset',
-                                                options: {
-                                                  offset: [0, 8]
-                                                }
-                                              }
-                                            ]}
-                                          >
-                                            {({ TransitionProps }) => (
-                                              <Fade {...TransitionProps}>
-                                                <Paper
-                                                  className='rounded-lg min-w-[200px]'
-                                                  sx={{
-                                                    zIndex: 9999,
-                                                    marginTop: '8px',
-                                                    position: 'relative',
-                                                    '&::before': {
-                                                      content: '""',
+                                              ]}
+                                            >
+                                              {({ TransitionProps }) => (
+                                                <Fade {...TransitionProps}>
+                                                  <Paper
+                                                    className='rounded-lg min-w-[200px]'
+                                                    sx={{
+                                                      zIndex: 9999,
+                                                      marginTop: '8px',
+                                                      position: 'relative',
+                                                      '&::before': {
+                                                        content: '""',
 
-                                                      width: 0,
-                                                      height: 0,
+                                                        width: 0,
+                                                        height: 0,
 
-                                                      zIndex: 9999
-                                                    }
-                                                  }}
-                                                >
-                                                  <ClickAwayListener onClickAway={handleCloseFlightInfo}>
-                                                    <Box p={2}>
-                                                      <Typography variant='body2' color='textSecondary' gutterBottom>
-                                                        Price Detail
-                                                      </Typography>
-                                                      <Box display='flex' justifyContent='space-between' my={1}>
-                                                        <Typography variant='body2' color='textSecondary'>
-                                                          Base Fare
+                                                        zIndex: 9999
+                                                      }
+                                                    }}
+                                                  >
+                                                    <ClickAwayListener onClickAway={handleCloseFlightInfo}>
+                                                      <Box p={2}>
+                                                        <Typography variant='body2' color='textSecondary' gutterBottom>
+                                                          Price Detail
                                                         </Typography>
-                                                        <Typography variant='body2' color='textSecondary'>
-                                                          {faresGroupData?.price?.currency}{' '}
-                                                          {faresGroupData?.price?.base_fare}
-                                                        </Typography>
+                                                        <Box display='flex' justifyContent='space-between' my={1}>
+                                                          <Typography variant='body2' color='textSecondary'>
+                                                            Base Fare
+                                                          </Typography>
+                                                          <Typography variant='body2' color='textSecondary'>
+                                                            {faresGroupData?.price?.currency}{' '}
+                                                            {faresGroupData?.price?.base_fare}
+                                                          </Typography>
+                                                        </Box>
+                                                        <Box display='flex' justifyContent='space-between' my={1}>
+                                                          <Typography variant='body2' color='textSecondary'>
+                                                            Tax
+                                                          </Typography>
+                                                          <Typography variant='body2' color='textSecondary'>
+                                                            {faresGroupData?.price?.currency} {faresGroupData?.price?.tax}
+                                                          </Typography>
+                                                        </Box>
+                                                        <Box display='flex' justifyContent='space-between' my={1}>
+                                                          <Typography variant='body2' color='textSecondary'>
+                                                            Gross Fare
+                                                          </Typography>
+                                                          <Typography variant='body2' color='textSecondary'>
+                                                            {faresGroupData?.price?.currency}{' '}
+                                                            {faresGroupData?.price?.gross_amount}
+                                                          </Typography>
+                                                        </Box>
+                                                        <Divider sx={{ my: 1 }} />
+                                                        <Box display='flex' justifyContent='space-between' mt={1}>
+                                                          <Typography variant='body2' color='textSecondary'>
+                                                            Total
+                                                          </Typography>
+                                                          <Typography variant='body2' color='textSecondary'>
+                                                            {faresGroupData?.price?.currency} {formattedTotalFare}
+                                                          </Typography>
+                                                        </Box>
                                                       </Box>
-                                                      <Box display='flex' justifyContent='space-between' my={1}>
-                                                        <Typography variant='body2' color='textSecondary'>
-                                                          Tax
-                                                        </Typography>
-                                                        <Typography variant='body2' color='textSecondary'>
-                                                          {faresGroupData?.price?.currency} {faresGroupData?.price?.tax}
-                                                        </Typography>
-                                                      </Box>
-                                                      <Box display='flex' justifyContent='space-between' my={1}>
-                                                        <Typography variant='body2' color='textSecondary'>
-                                                          Gross Fare
-                                                        </Typography>
-                                                        <Typography variant='body2' color='textSecondary'>
-                                                          {faresGroupData?.price?.currency}{' '}
-                                                          {faresGroupData?.price?.gross_amount}
-                                                        </Typography>
-                                                      </Box>
-                                                      <Divider sx={{ my: 1 }} />
-                                                      <Box display='flex' justifyContent='space-between' mt={1}>
-                                                        <Typography variant='body2' color='textSecondary'>
-                                                          Total
-                                                        </Typography>
-                                                        <Typography variant='body2' color='textSecondary'>
-                                                          {faresGroupData?.price?.currency} {formattedTotalFare}
-                                                        </Typography>
-                                                      </Box>
-                                                    </Box>
-                                                  </ClickAwayListener>
-                                                </Paper>
-                                              </Fade>
-                                            )}
-                                          </Popper>
+                                                    </ClickAwayListener>
+                                                  </Paper>
+                                                </Fade>
+                                              )}
+                                            </Popper>
+                                          </div>
                                         </div>
+                                        <Button
+                                          variant='contained'
+                                          className='w-full'
+                                          onClick={() => {
+                                            initiateBookFareHandler(faresGroupData?.booking_id)
+                                          }}
+                                        >
+                                          {faresGroupData?.price?.currency} {faresGroupData?.price?.gross_amount}
+                                        </Button>
                                       </div>
-                                      <Button
-                                        variant='contained'
-                                        className='w-full'
-                                        onClick={() => {
-                                          initiateBookFareHandler(faresGroupData?.booking_id)
-                                        }}
-                                      >
-                                        {faresGroupData?.price?.currency} {faresGroupData?.price?.gross_amount}
-                                      </Button>
                                     </div>
                                   </div>
-                                </div>
+                                </>
                               )
                             })}
                           </div>
