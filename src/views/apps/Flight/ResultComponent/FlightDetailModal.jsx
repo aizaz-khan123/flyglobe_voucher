@@ -11,7 +11,7 @@ const FlightDetailModal = ({ viewFlightDetailModal, handleCloseViewFlightDetail,
   }
 
   // const { legs } = data
-  const legs = data.legs.flat()
+  const legs = data.legs ? Object.values(data.legs).flat() : [];
 
   return (
     <Dialog

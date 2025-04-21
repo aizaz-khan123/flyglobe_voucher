@@ -24,6 +24,11 @@ const FlightDetailDrawer = ({ flightFearOptionsData, formatDuration }) => {
     setFlightDrawerTabs(newValue)
   }
 
+  const legs = flightFearOptionsData.legs ? Object.values(flightFearOptionsData.legs).flat() : [];
+  const combinedFareOptions = [
+    ...(Array.isArray(flightFearOptionsData?.fare_option) ? flightFearOptionsData.fare_option : []),
+    ...(Array.isArray(legs) ? legs.flatMap((leg) => Array.isArray(leg?.fare_option) ? leg.fare_option : []) : []),
+  ];
   return (
     <Box className='min-h-full  p-5 shadow-lg rounded-lg border overflow-y-auto'>
       <Typography variant='h6' gutterBottom>
@@ -45,7 +50,7 @@ const FlightDetailDrawer = ({ flightFearOptionsData, formatDuration }) => {
       <Box className='mt-5 overflow-hidden'>
         {flightDrawerTabs === 'flightInfo' && (
           <Box>
-            {flightFearOptionsData?.legs?.flat().map((legsData, legIndex) => (
+            {legs?.map((legsData, legIndex) => (
               <Box key={legIndex} className='mb-5'>
                 <Typography variant='subtitle1' className='font-semibold  mb-3'>
                   Sector Detail: ({legsData?.sector[0]} - {legsData?.sector[1]})
@@ -132,7 +137,7 @@ const FlightDetailDrawer = ({ flightFearOptionsData, formatDuration }) => {
             <Typography variant='h6' className='mb-3'>
               Cancellation Information
             </Typography>
-            <CancellationInformation fareOptions={flightFearOptionsData.fare_option} />
+            <CancellationInformation fareOptions={combinedFareOptions} />
           </Box>
         )}
       </Box>
