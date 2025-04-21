@@ -742,6 +742,14 @@ export const api = emptySplitApi.injectEndpoints({
       })
     }),
 
+    myRefundRequest: builder.query({
+      query: () => ({
+        url: `${API_END_POINTS.myRefundRequest}`,
+        method: "GET",
+      }),
+      transformResponse: (response) => response.data,
+    }),
+
     generalSetting: builder.mutation({
       query: body => ({
         url: API_END_POINTS.generalSetting,
@@ -861,5 +869,7 @@ export const {
   //dashboard
   useLazyDashboardSaleStaticsQuery,
   useDashboardSaleStaticsQuery,
-  useLazyDashboardStatsQuery
+  useLazyDashboardStatsQuery,
+
+  useMyRefundRequestQuery
 } = api

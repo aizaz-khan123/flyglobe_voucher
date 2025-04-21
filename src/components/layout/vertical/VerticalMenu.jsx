@@ -114,6 +114,14 @@ const VerticalMenu = ({ dictionary, scrollMenu }) => {
           >
             {dictionary['navigation'].refundRequest}
           </MenuItem>
+          <MenuItem
+            href={`/${locale}/apps/my-refund-request`}
+            exactMatch={false}
+            activeUrl='/apps/my-refund-request'
+            icon={<i className='ri-calendar-line'></i>}
+          >
+            {dictionary['navigation'].myRefundRequest}
+          </MenuItem>
 
           <SubMenu label={dictionary['navigation'].organization} icon={<i className='ri-organization-chart'></i>}>
             <MenuItem href={`/${locale}/apps/organization/branches`}>{dictionary['navigation'].branches}</MenuItem>

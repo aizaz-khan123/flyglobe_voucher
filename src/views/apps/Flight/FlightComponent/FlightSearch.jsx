@@ -4,7 +4,17 @@ import { Fragment, useCallback, useEffect, useState } from 'react'
 
 import { useRouter } from 'next/navigation'
 
-import { Button, Card, CardContent, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup, Typography } from '@mui/material'
+import {
+  Button,
+  Card,
+  CardContent,
+  FormControl,
+  FormControlLabel,
+  FormLabel,
+  Radio,
+  RadioGroup,
+  Typography
+} from '@mui/material'
 
 import dayjs from 'dayjs'
 
@@ -79,7 +89,7 @@ const FlightSearch = ({ initialValues, flightSearchOpen }) => {
 
   const today = dayjs()
   const [locationApiTrigger, { data: locationNames, isFetching, isSuccess }] = useLazyLocationsLookupQuery({})
-  const { attachRef, focusAndOpenNext } = useSelectChain();
+  const { attachRef, focusAndOpenNext } = useSelectChain()
 
   const {
     control,
@@ -265,19 +275,18 @@ const FlightSearch = ({ initialValues, flightSearchOpen }) => {
     )
   }
 
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   useEffect(() => {
     clearErrors() // Clears all errors when route_type changes
   }, [watch('route_type'), clearErrors]) // Add clearErrors to the dependency array
 
   const validateFlightData = (data, route_type) => {
-    if (!route_type) return "The route type field is required.";
+    if (!route_type) return 'The route type field is required.'
     if (!data.cabin_class) {
-      return "The cabin class field is required.";
+      return 'The cabin class field is required.'
     }
-    if (!data?.traveler_count?.adult_count) return "The Adult count field must be at least 1.";
+    if (!data?.traveler_count?.adult_count) return 'The Adult count field must be at least 1.'
 
     if (route_type === 'MULTICITY') {
       if (!Array.isArray(data.legs) || data.legs.length < 2) {
@@ -309,8 +318,8 @@ const FlightSearch = ({ initialValues, flightSearchOpen }) => {
   }
 
   const onSubmit = async data => {
-    const departureDate = data.dateRange?.[0] ? dayjs(data.dateRange[0]).format('YYYY-MM-DD') : null;
-    const returnDate = data.dateRange?.[1] ? dayjs(data.dateRange[1]).format('YYYY-MM-DD') : null;
+    const departureDate = data.dateRange?.[0] ? dayjs(data.dateRange[0]).format('YYYY-MM-DD') : null
+    const returnDate = data.dateRange?.[1] ? dayjs(data.dateRange[1]).format('YYYY-MM-DD') : null
 
     // Extract dates from `date_range`
 
@@ -331,7 +340,6 @@ const FlightSearch = ({ initialValues, flightSearchOpen }) => {
           route_type,
           traveler_count: data.traveler_count
         }
-
 
     if (!payload) return
 
@@ -454,39 +462,36 @@ const FlightSearch = ({ initialValues, flightSearchOpen }) => {
     setFlightSearchCalenderIsOpen(false)
   }, [route_type])
   const travelTypes = ['ONEWAY', 'RETURN', 'MULTICITY']
-  const [airportsNames, setAirportsNames] = useState([]);
+  const [airportsNames, setAirportsNames] = useState([])
 
   const handleDestinationChange = (index, value) => {
-    setValue(`legs[${index}].destination`, value);
+    setValue(`legs[${index}].destination`, value)
 
     if (index < flights.length - 1 && value) {
-      const allLocations = [...(locationNames?.data || []), ...airportsNames];
-      const destinationLabel = allLocations.find(
-        loc => loc.iata_code === value
-      );
+      const allLocations = [...(locationNames?.data || []), ...airportsNames]
+      const destinationLabel = allLocations.find(loc => loc.iata_code === value)
 
       if (destinationLabel) {
         // 🧠 Ensure it's in airportsNames for the next Autocomplete
-        const alreadyExists = airportsNames.some(loc => loc.iata_code === value);
+        const alreadyExists = airportsNames.some(loc => loc.iata_code === value)
         if (!alreadyExists) {
-          setAirportsNames(prev => [...prev, destinationLabel]);
+          setAirportsNames(prev => [...prev, destinationLabel])
         }
 
         // 📝 Set form + UI values
-        setValue(`legs[${index + 1}].origin`, destinationLabel.iata_code);
+        setValue(`legs[${index + 1}].origin`, destinationLabel.iata_code)
         handleLegsFromSearchChange(
           index + 1,
           `${destinationLabel.municipality} (${destinationLabel.iata_code})`,
           'auto'
-        );
+        )
       }
     }
-  };
-
+  }
 
   return (
     <>
-      <Card className={`${flightSearchOpen ? 'border-0' : ' rounded-lg shadow-md mb-5'}`}>
+      <Card className={`${flightSearchOpen ? 'border-0 shadow-none rounded-none mb-0' : 'rounded-lg shadow-md mb-5'}`}>
         <CardContent className='p-6'>
           <div className='grid grid-cols-12 gap-4'>
             <div className='col-span-4'>
@@ -511,7 +516,6 @@ const FlightSearch = ({ initialValues, flightSearchOpen }) => {
                           aria-labelledby='travel-type-group-label'
                           name='route-type'
                           value={field.value}
-
                           // onChange={(event) => field.onChange(event.target.value)}
                           onChange={event => {
                             field.onChange(event.target.value)
@@ -544,13 +548,13 @@ const FlightSearch = ({ initialValues, flightSearchOpen }) => {
                         inputValue={fromSearchStr}
                         setInputValue={setFromSearchStr}
                         loading={loadingFields.origin || false}
-                        inputRef={(ref) => {
-                          attachRef(0)(ref);
+                        inputRef={ref => {
+                          attachRef(0)(ref)
                         }}
-                        onChange={(value) => {
+                        onChange={value => {
                           setTimeout(() => {
-                            focusAndOpenNext(0);
-                          }, 100);
+                            focusAndOpenNext(0)
+                          }, 100)
                         }}
                       />
                       <div>
@@ -559,7 +563,14 @@ const FlightSearch = ({ initialValues, flightSearchOpen }) => {
                           type='button'
                           className='absolute right-[-30px] bottom-2 p-2 border border-gray-300 rounded-full shadow z-10 cursor-pointer'
                         >
-                          <svg width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2'>
+                          <svg
+                            width='20'
+                            height='20'
+                            viewBox='0 0 24 24'
+                            fill='none'
+                            stroke='currentColor'
+                            strokeWidth='2'
+                          >
                             <path d='M8 3 4 7l4 4' />
                             <path d='M4 7h16' />
                             <path d='m16 21 4-4-4-4' />
@@ -585,11 +596,11 @@ const FlightSearch = ({ initialValues, flightSearchOpen }) => {
                         inputValue={toSearchStr}
                         setInputValue={setToSearchStr}
                         loading={loadingFields.destination || false}
-                        inputRef={(ref) => attachRef(1)(ref)}
-                        onChange={(value) => {
+                        inputRef={ref => attachRef(1)(ref)}
+                        onChange={value => {
                           setTimeout(() => {
-                            focusAndOpenNext(1);
-                          }, 100);
+                            focusAndOpenNext(1)
+                          }, 100)
                         }}
                       />
                     </div>
@@ -718,7 +729,6 @@ const FlightSearch = ({ initialValues, flightSearchOpen }) => {
                           <div className='relative col-span-12 md:col-span-6 lg:col-span-6  pt-[5px]'>
                             <MuiAutocomplete
                               control={control}
-
                               // name={`origin`}
                               name={`legs[${index}].origin`}
                               label='From'
@@ -734,11 +744,11 @@ const FlightSearch = ({ initialValues, flightSearchOpen }) => {
                               inputValue={legsFromSearchStrs[index] || ''}
                               setInputValue={value => handleLegsFromSearchChange(index, value)}
                               loading={loadingFields[`legsOrigin-${index}`] || false}
-                              inputRef={(ref) => attachRef(index * 2)(ref)}
+                              inputRef={ref => attachRef(index * 2)(ref)}
                               onChange={() => {
                                 setTimeout(() => {
-                                  focusAndOpenNext(index * 2);
-                                }, 100);
+                                  focusAndOpenNext(index * 2)
+                                }, 100)
                               }}
                             />
                             <div>
@@ -767,7 +777,6 @@ const FlightSearch = ({ initialValues, flightSearchOpen }) => {
                             <MuiAutocomplete
                               control={control}
                               selectIcon={<FaPlaneArrival />}
-
                               // name={`destination`}
                               name={`legs[${index}].destination`}
                               label='To'
@@ -781,12 +790,12 @@ const FlightSearch = ({ initialValues, flightSearchOpen }) => {
                               onInputChange={(event, value, reason) => handleLegsToSearchChange(index, value, reason)}
                               inputValue={legsToSearchStrs[index] || ''}
                               setInputValue={value => handleLegsToSearchChange(index, value)}
-                              inputRef={(ref) => attachRef(index * 2 + 1)(ref)}
-                              onChange={(value) => {
-                                handleDestinationChange(index, value);
+                              inputRef={ref => attachRef(index * 2 + 1)(ref)}
+                              onChange={value => {
+                                handleDestinationChange(index, value)
                                 setTimeout(() => {
-                                  focusAndOpenNext(index * 2 + 1);
-                                }, 100);
+                                  focusAndOpenNext(index * 2 + 1)
+                                }, 100)
                               }}
                               // loading={loadingField === "legsDestination"}
                               loading={loadingFields[`legsDestination-${index}`] || false}
@@ -879,7 +888,6 @@ const FlightSearch = ({ initialValues, flightSearchOpen }) => {
           </div>
         </CardContent>
       </Card>
-
     </>
   )
 }

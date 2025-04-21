@@ -5,6 +5,9 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 
 import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
   Box,
   Button,
   Card,
@@ -52,6 +55,8 @@ import FlightDetailModal from './FlightDetailModal'
 
 import DateSelector from './DateSelector'
 import BookingFareModal from './BookingFareModal'
+import FlightSearch from '../FlightComponent/FlightSearch'
+import { IoIosArrowDown, IoMdClose } from 'react-icons/io'
 
 const stopsOptions = ['Non Stop', '1 Stop', '1+ Stops']
 
@@ -303,14 +308,10 @@ const FlightFound = () => {
   }, [queryParams])
 
   const airlines = useMemo(() => {
-    if (!mergeFlightResponse) return [];
-    const uniqueAirlines = new Set(
-      mergeFlightResponse.map(
-        (flight) => flight?.airline?.name
-      )
-    );
-    return Array.from(uniqueAirlines);
-  }, [mergeFlightResponse]);
+    if (!mergeFlightResponse) return []
+    const uniqueAirlines = new Set(mergeFlightResponse.map(flight => flight?.airline?.name))
+    return Array.from(uniqueAirlines)
+  }, [mergeFlightResponse])
 
   const [selectedStops, setSelectedStops] = useState([])
   const [selectedAirlines, setSelectedAirlines] = useState([])
@@ -322,7 +323,7 @@ const FlightFound = () => {
     min: 0,
     max: 5000000,
     value: [0, 5000000] // Explicit tuple type
-  });
+  })
   const [viewFlightDetailModal, setViewFlightDetail] = useState(false)
   const [flightData, setFlightData] = useState()
 
@@ -339,19 +340,18 @@ const FlightFound = () => {
   // Initialize filtered flights
   useEffect(() => {
     if (mergeFlightResponse) {
-      setFilteredFlights(mergeFlightResponse);
+      setFilteredFlights(mergeFlightResponse)
     } else {
-      setFilteredFlights([]);
+      setFilteredFlights([])
     }
-  }, [mergeFlightResponse]);
+  }, [mergeFlightResponse])
 
   const handlePriceChange = (event, newValue) => {
-    setPriceRange((prev) => ({
+    setPriceRange(prev => ({
       ...prev,
-      value: newValue,
-    }));
-  };
-
+      value: newValue
+    }))
+  }
 
   const handleStopChange = stopLabel => {
     let stopNumber = stopLabel === 'Non Stop' ? 0 : stopLabel === '1 Stop' ? 1 : 2
@@ -405,118 +405,109 @@ const FlightFound = () => {
   }
   useEffect(() => {
     if (mergeFlightResponse) {
-      const allPrices = mergeFlightResponse.flatMap(flight => {
-        // PIA flights
-        if (flight.provider === 'PIA_HITIT' || flight.provider === 'SABRE') {
-          return flight.fare_option?.map(fare =>
-            parseFloat(fare?.price?.gross_amount?.replace(/,/g, '') || 0)
-          ) || [];
-        }
-
-        // Airblue flights
-        if (flight.provider === 'AIRBLUE_API') {
-          const prices = [];
-
-          // Define the fare processor
-          const processFare = (fare) => {
-            const amount = fare?.price?.gross_amount;
-            if (amount) {
-              const parsed = parseFloat(amount.replace(/,/g, '') || 0);
-              if (!isNaN(parsed)) prices.push(parsed);
-            }
-          };
-
-          // Handle leg-based fare_options
-          if (flight.legs) {
-            Object.values(flight.legs).forEach(legGroup => {
-              legGroup.forEach(leg => {
-                leg.fare_option?.forEach(processFare);
-              });
-            });
+      const allPrices = mergeFlightResponse
+        .flatMap(flight => {
+          // PIA flights
+          if (flight.provider === 'PIA_HITIT' || flight.provider === 'SABRE') {
+            return flight.fare_option?.map(fare => parseFloat(fare?.price?.gross_amount?.replace(/,/g, '') || 0)) || []
           }
 
-          return prices;
-        }
+          // Airblue flights
+          if (flight.provider === 'AIRBLUE_API') {
+            const prices = []
 
-        return [];
-      }).filter(price => !isNaN(price));
+            // Define the fare processor
+            const processFare = fare => {
+              const amount = fare?.price?.gross_amount
+              if (amount) {
+                const parsed = parseFloat(amount.replace(/,/g, '') || 0)
+                if (!isNaN(parsed)) prices.push(parsed)
+              }
+            }
+
+            // Handle leg-based fare_options
+            if (flight.legs) {
+              Object.values(flight.legs).forEach(legGroup => {
+                legGroup.forEach(leg => {
+                  leg.fare_option?.forEach(processFare)
+                })
+              })
+            }
+
+            return prices
+          }
+
+          return []
+        })
+        .filter(price => !isNaN(price))
 
       if (allPrices.length > 0) {
-        const minPrice = Math.min(...allPrices);
-        const maxPrice = Math.max(...allPrices);
+        const minPrice = Math.min(...allPrices)
+        const maxPrice = Math.max(...allPrices)
         setPriceRange({
           min: minPrice,
           max: maxPrice,
           value: [minPrice, maxPrice]
-        });
+        })
       }
     }
-  }, [mergeFlightResponse]);
+  }, [mergeFlightResponse])
   useEffect(() => {
-    if (!mergeFlightResponse) return;
+    if (!mergeFlightResponse) return
 
-    const filtered = mergeFlightResponse.filter((flight) => {
+    const filtered = mergeFlightResponse.filter(flight => {
       // Normalize legs to handle both PIA and Airblue structures
       const normalizedLegs = Array.isArray(flight?.legs)
         ? Array.isArray(flight?.legs[0])
           ? flight?.legs.flat() // Airblue: Flatten nested arrays
           : flight?.legs // PIA: Use as-is
-        : Object.values(flight?.legs || {}).flat(); // Handle Airblue object structure
+        : Object.values(flight?.legs || {}).flat() // Handle Airblue object structure
 
-      const stops = normalizedLegs?.[0]?.segments?.length
-        ? normalizedLegs[0].segments.length - 1
-        : 0;
+      const stops = normalizedLegs?.[0]?.segments?.length ? normalizedLegs[0].segments.length - 1 : 0
 
-      const departureTime = normalizedLegs?.[0]?.segments?.[0]?.departure_datetime || "";
+      const departureTime = normalizedLegs?.[0]?.segments?.[0]?.departure_datetime || ''
 
       // Normalize fare_option to handle both array and object structures
       const fareOptions = Array.isArray(flight?.fare_option)
         ? flight?.fare_option
-        : Object.values(flight?.fare_option || {});
+        : Object.values(flight?.fare_option || {})
 
       const hasMatchingFare = (() => {
         // Define price check function
-        const checkFare = (fare) => {
-          const priceStr = fare?.price?.gross_amount || '0';
-          const price = parseFloat(priceStr.replace(/,/g, ''));
-          return price >= priceRange.value[0] && price <= priceRange.value[1];
-        };
+        const checkFare = fare => {
+          const priceStr = fare?.price?.gross_amount || '0'
+          const price = parseFloat(priceStr.replace(/,/g, ''))
+          return price >= priceRange.value[0] && price <= priceRange.value[1]
+        }
 
         // PIA flights
         if (flight.provider === 'PIA_HITIT' || flight.provider === 'SABRE') {
-          return flight.fare_option?.some(checkFare);
+          return flight.fare_option?.some(checkFare)
         }
 
         // Airblue flights
         if (flight.provider === 'AIRBLUE_API') {
           // Check leg-based fares
           if (flight.legs) {
-            return Object.values(flight.legs).some(legGroup =>
-              legGroup.some(leg =>
-                leg.fare_option?.some(checkFare)
-              )
-            );
+            return Object.values(flight.legs).some(legGroup => legGroup.some(leg => leg.fare_option?.some(checkFare)))
           }
-          return false;
+          return false
         }
 
-        return false;
-      })();
+        return false
+      })()
 
-      const matchesStops = selectedStops.length === 0 || selectedStops.includes(stops);
-      const matchesAirlines =
-        selectedAirlines.length === 0 || selectedAirlines.includes(flight?.airline?.name);
+      const matchesStops = selectedStops.length === 0 || selectedStops.includes(stops)
+      const matchesAirlines = selectedAirlines.length === 0 || selectedAirlines.includes(flight?.airline?.name)
       const matchesDepartureTime =
         selectedDepartureTimes.length === 0 ||
-        selectedDepartureTimes.some((timeRange) =>
-          isWithinTimeRange(departureTime, timeRange)
-        );
+        selectedDepartureTimes.some(timeRange => isWithinTimeRange(departureTime, timeRange))
 
-      return matchesStops && matchesAirlines && matchesDepartureTime && hasMatchingFare;
-    });
+      return matchesStops && matchesAirlines && matchesDepartureTime && hasMatchingFare
+    })
 
-    setFilteredFlights(filtered || []);
-  }, [selectedStops, selectedAirlines, selectedDepartureTimes, priceRange.value]);
+    setFilteredFlights(filtered || [])
+  }, [selectedStops, selectedAirlines, selectedDepartureTimes, priceRange.value])
 
   // Filter flights when selectedStops updates
   // useEffect(() => {
@@ -561,116 +552,106 @@ const FlightFound = () => {
       min: 0,
       max: 5000000,
       value: [0, 5000000]
-    });
-    setSelectedStops([]);
-    setSelectedAirlines([]);
-    setSelectedDepartureTimes([]);
-    setSelectAllStops(false);
-    setSelectAllDepartureTimes(false);
+    })
+    setSelectedStops([])
+    setSelectedAirlines([])
+    setSelectedDepartureTimes([])
+    setSelectAllStops(false)
+    setSelectAllDepartureTimes(false)
 
     // Reset filtered flights to show all available flights
     if (mergeFlightResponse) {
-      setFilteredFlights(mergeFlightResponse);
+      setFilteredFlights(mergeFlightResponse)
     }
-  };
+  }
   const handleInputChange = (e, index) => {
-    const value = Math.max(
-      priceRange.min,
-      Math.min(
-        parseFloat(e.target.value) || 0,
-        priceRange.max
-      )
-    );
+    const value = Math.max(priceRange.min, Math.min(parseFloat(e.target.value) || 0, priceRange.max))
 
     setPriceRange(prev => {
-      const newValue = [...prev.value];
-      newValue[index] = value;
+      const newValue = [...prev.value]
+      newValue[index] = value
 
       // Ensure min <= currentMin <= currentMax <= max
       if (index === 0) {
-        newValue[1] = Math.max(newValue[1], value);
+        newValue[1] = Math.max(newValue[1], value)
       } else {
-        newValue[0] = Math.min(newValue[0], value);
+        newValue[0] = Math.min(newValue[0], value)
       }
 
       return {
         ...prev,
         value: newValue
-      };
-    });
-  };
+      }
+    })
+  }
 
-  const getMinFare = (flight) => {
+  const getMinFare = flight => {
     // PIA flights
     if (flight.provider === 'PIA_HITIT' || flight.provider === 'SABRE') {
-      const fares = flight.fare_option?.map(fare =>
-        parseFloat(fare?.price?.gross_amount?.replace(/,/g, '') || Infinity)
-      ) || [];
-      return fares.length ? Math.min(...fares) : Infinity;
+      const fares =
+        flight.fare_option?.map(fare => parseFloat(fare?.price?.gross_amount?.replace(/,/g, '') || Infinity)) || []
+      return fares.length ? Math.min(...fares) : Infinity
     }
 
     // Airblue flights
     if (flight.provider === 'AIRBLUE_API') {
-      const fares = [];
+      const fares = []
 
       // Leg-based fares
       if (flight.legs) {
         Object.values(flight.legs).forEach(legGroup => {
           legGroup.forEach(leg => {
             leg.fare_option?.forEach(fare => {
-              fares.push(
-                parseFloat(fare?.price?.gross_amount?.replace(/,/g, '') || Infinity)
-              );
-            });
-          });
-        });
+              fares.push(parseFloat(fare?.price?.gross_amount?.replace(/,/g, '') || Infinity))
+            })
+          })
+        })
       }
 
-      return fares.length ? Math.min(...fares) : Infinity;
+      return fares.length ? Math.min(...fares) : Infinity
     }
 
-    return Infinity;
-  };
+    return Infinity
+  }
   useEffect(() => {
     if (mergeFlightResponse) {
-      const allPrices = mergeFlightResponse.flatMap(flight => {
-        // PIA flights
-        if (flight.provider === 'PIA_HITIT' || flight.provider === 'SABRE') {
-          return flight.fare_option?.map(fare =>
-            parseFloat(fare?.price?.gross_amount?.replace(/,/g, '')) || 0
-          ) || [];
-        }
+      const allPrices = mergeFlightResponse
+        .flatMap(flight => {
+          // PIA flights
+          if (flight.provider === 'PIA_HITIT' || flight.provider === 'SABRE') {
+            return flight.fare_option?.map(fare => parseFloat(fare?.price?.gross_amount?.replace(/,/g, '')) || 0) || []
+          }
 
-        // Airblue flights
-        if (flight.provider === 'AIRBLUE_API' && flight.legs) {
-          return Object.values(flight.legs).flatMap(legGroup =>
-            legGroup.flatMap(leg =>
-              leg.fare_option?.map(fare =>
-                parseFloat(fare?.price?.gross_amount?.replace(/,/g, '')) || []
+          // Airblue flights
+          if (flight.provider === 'AIRBLUE_API' && flight.legs) {
+            return Object.values(flight.legs).flatMap(legGroup =>
+              legGroup.flatMap(leg =>
+                leg.fare_option?.map(fare => parseFloat(fare?.price?.gross_amount?.replace(/,/g, '')) || [])
               )
-            ));
-        }
+            )
+          }
 
-        return [];
-      }).filter(price => !isNaN(price));
+          return []
+        })
+        .filter(price => !isNaN(price))
 
       if (allPrices.length > 0) {
-        const minPrice = Math.min(...allPrices);
-        const maxPrice = Math.max(...allPrices);
+        const minPrice = Math.min(...allPrices)
+        const maxPrice = Math.max(...allPrices)
         setPriceRange({
           min: minPrice,
           max: maxPrice,
           value: [minPrice, maxPrice]
-        });
+        })
       }
     }
-  }, [mergeFlightResponse]);
+  }, [mergeFlightResponse])
 
   const sortedFlights = [...filteredFlights].sort((a, b) => {
-    const aFare = getMinFare(a);
-    const bFare = getMinFare(b);
-    return aFare - bFare;
-  });
+    const aFare = getMinFare(a)
+    const bFare = getMinFare(b)
+    return aFare - bFare
+  })
 
   const [anchorEl, setAnchorEl] = useState(null)
   const openFlightInfo = anchorEl
@@ -683,23 +664,20 @@ const FlightFound = () => {
     setAnchorEl(null)
   }
   // Add this helper function at the top of your component
-  const getFirstLeg = (legs) => {
-    if (!legs || legs.length === 0) return null;
-    const firstLeg = legs[0];
-    return Array.isArray(firstLeg) ? firstLeg[0] : firstLeg;
-  };
+  const getFirstLeg = legs => {
+    if (!legs || legs.length === 0) return null
+    const firstLeg = legs[0]
+    return Array.isArray(firstLeg) ? firstLeg[0] : firstLeg
+  }
 
-  console.log('sortedFlights', sortedFlights);
+  console.log('sortedFlights', sortedFlights)
 
   return (
     <div className='p-4 min-h-screen'>
       {/* Flight Filters & Results */}
       <h3 className='text-xl mb-5 font-bold space-x-2'>
         {flightSreachIsloading ? (
-          <>
-            {/* <h1>Loading...</h1> */}
-
-          </>
+          <>{/* <h1>Loading...</h1> */}</>
         ) : (
           <>
             {/* <span>{filteredFlights?.length}</span>
@@ -741,8 +719,6 @@ const FlightFound = () => {
             handleDepartureTimeChange={handleDepartureTimeChange}
             queryParamss={queryParams}
           />
-
-
         </div>
 
         {/* Flight Results */}
@@ -784,13 +760,11 @@ const FlightFound = () => {
                 </div>
               </div>
             </div>
-            <div className='block md:hidden'>
-              <DateSelector
-                departure_date={queryParams?.departure_date}
-                return_date={queryParams?.return_date}
-                route_type={queryParams?.route_type}
-              />
-            </div>
+            <DateSelector
+              departure_date={queryParams?.departure_date}
+              return_date={queryParams?.return_date}
+              route_type={queryParams?.route_type}
+            />
           </div>
           {flightSreachIsloading ? (
             <div className='flex justify-center items-center h-[50%]'>
@@ -809,12 +783,14 @@ const FlightFound = () => {
                     //   : []; // Fallback to an empty array if legs is undefined or empty
                     const normalizedLegs = data?.legs
                       ? Object.values(data.legs).flat() // Convert object to array of arrays and flatten
-                      : [];
+                      : []
                     // Combine fare options from both the root and legs
                     const combinedFareOptions = [
                       ...(Array.isArray(data?.fare_option) ? data.fare_option : []),
-                      ...(Array.isArray(normalizedLegs) ? normalizedLegs.flatMap((leg) => Array.isArray(leg?.fare_option) ? leg.fare_option : []) : []),
-                    ];
+                      ...(Array.isArray(normalizedLegs)
+                        ? normalizedLegs.flatMap(leg => (Array.isArray(leg?.fare_option) ? leg.fare_option : []))
+                        : [])
+                    ]
                     // console.log('normalizedLegs', normalizedLegs);
 
                     return (
@@ -822,21 +798,22 @@ const FlightFound = () => {
                         <CardContent>
                           <div className='flex flex-col lg:flex-row gap-4 lg:gap-0 justify-between items-center'>
                             <div className='flex items-center gap-2 mb-2'>
-                              <img src={data?.airline?.thumbnail || ''} alt='img' className='h-14 w-14 object-contain' />
+                              <img
+                                src={data?.airline?.thumbnail || ''}
+                                alt='img'
+                                className='h-14 w-14 object-contain'
+                              />
                               <div>
                                 <h3 className='font-semibold text-base mb-1'>{data?.airline?.name}</h3>
                                 <p className='text-gray-500 text-xs'>
                                   {normalizedLegs
-                                    ?.map((leg) =>
+                                    ?.map(leg =>
                                       Array.isArray(leg?.flight_number)
-                                        ? leg?.flight_number.join(", ")
+                                        ? leg?.flight_number.join(', ')
                                         : leg?.flight_number
                                     )
-                                    .join(" -> ") || "No Flight Numbers"}{" "}
-                                  •{" "}
-                                  {dayjs(
-                                    flightSearchData?.journey_legs?.departure_date
-                                  ).format("ddd, MMM D, YYYY")}
+                                    .join(' -> ') || 'No Flight Numbers'}{' '}
+                                  • {dayjs(flightSearchData?.journey_legs?.departure_date).format('ddd, MMM D, YYYY')}
                                 </p>
                               </div>
                             </div>
@@ -846,16 +823,14 @@ const FlightFound = () => {
                                   {/* {data?.legs[0]?.segments[0]?.origin?.iata_code} */}
                                 </h3>
                                 <span className='text-gray-500 text-xs'>
-                                  {dayjs(
-                                    normalizedLegs?.[0]?.segments?.[0]?.departure_datetime
-                                  ).format("hh:mm A")}
+                                  {dayjs(normalizedLegs?.[0]?.segments?.[0]?.departure_datetime).format('hh:mm A')}
                                 </span>
                               </div>
                               <div className='text-center'>
                                 <h3 className='text-gray text-xs mb-0'>
                                   {normalizedLegs?.[0]?.journey_duration
                                     ? formatDuration(normalizedLegs?.[0]?.journey_duration)
-                                    : "N/A"}
+                                    : 'N/A'}
                                 </h3>
                                 {/* <span className="text-gray-500 flex">
                               ----------{" "}
@@ -869,28 +844,24 @@ const FlightFound = () => {
                                 {/* </span> */}
                                 <h3 className='text-gray text-xs mb-0'>
                                   {normalizedLegs?.[0]?.segments?.length === 1
-                                    ? "Non-Stop"
+                                    ? 'Non-Stop'
                                     : normalizedLegs?.[0]?.segments?.length === 2
                                       ? `1 Stop (${normalizedLegs?.[0]?.segments[1]?.origin?.iata_code})`
                                       : `1+ Stops (${normalizedLegs?.[0]?.segments
-                                        ?.map((segment) => segment?.origin?.iata_code)
-                                        .join("-")})`}
+                                          ?.map(segment => segment?.origin?.iata_code)
+                                          .join('-')})`}
                                 </h3>
                               </div>
                               <div className='text-center'>
                                 <h3 className='font-semibold text-base mb-0 h-4'>
-                                  {
-                                    normalizedLegs?.[0]?.segments[
-                                      normalizedLegs?.[0]?.segments.length - 1
-                                    ]?.destination?.iata_code || "N/A"
-                                  }
+                                  {normalizedLegs?.[0]?.segments[normalizedLegs?.[0]?.segments.length - 1]?.destination
+                                    ?.iata_code || 'N/A'}
                                 </h3>
                                 <span className='text-gray-500 text-xs'>
                                   {dayjs(
-                                    normalizedLegs?.[0]?.segments[
-                                      normalizedLegs?.[0]?.segments.length - 1
-                                    ]?.arrival_datetime
-                                  ).format("hh:mm A")}
+                                    normalizedLegs?.[0]?.segments[normalizedLegs?.[0]?.segments.length - 1]
+                                      ?.arrival_datetime
+                                  ).format('hh:mm A')}
                                 </span>
                               </div>
                             </div>
@@ -931,181 +902,201 @@ const FlightFound = () => {
                           {normalizedLegs.map((leg, legIndex) => (
                             <div key={legIndex} className='grid grid-cols-12 gap-4'>
                               {/* Sector Header */}
-                              <div className='col-span-12 border rounded-lg py-2 mt-3 bg-[#F5F6FF]'>
-                                <p className='font-bold text-sm text-gray-600 text-center'>
-                                  {leg?.sector?.join(' → ') || 'Sector information not available'}
-                                </p>
-                              </div>
-                              {[
-                                ...(Array.isArray(leg?.fare_option) ? leg.fare_option : []),
-                                ...(Array.isArray(data?.fare_option) ? data.fare_option : [])
-                              ]?.map((faresGroupData, faresGroupIndex) => {
-                                const baseFare = Number(faresGroupData?.price?.base_fare.replace(/,/g, '')) || 0
-                                const tax = Number(faresGroupData?.price?.tax.replace(/,/g, '')) || 0
-                                const grossAmount = Number(faresGroupData?.price?.gross_amount.replace(/,/g, '')) || 0
-                                const totalFare = grossAmount
-                                const formattedTotalFare = totalFare.toLocaleString()
 
-                                return (
-                                  <>
-                                    <div
-                                      key={faresGroupIndex}
-                                      className='col-span-12 md:col-span-6 lg:col-span-4 border rounded-lg pb-4 bg-[#F5F6FF] '
-                                    >
-                                      <div className='px-4 py-2 bg-[#8A9DC2] rounded-tl-lg rounded-tr-lg'>
-                                        <p className='font-bold text-white text-center rounded-lg text-md'>
-                                          {faresGroupData?.rbd}
-                                        </p>
-                                      </div>
+                              <Accordion className='col-span-12 mb-3'>
+                                <AccordionSummary
+                                  expandIcon={<IoIosArrowDown />}
+                                  aria-controls={`panel${legIndex}-content`}
+                                  id={`panel${legIndex}-header`}
+                                  className='border rounded-lg bg-[#F5F6FF]'
+                                >
+                                  <p className='font-bold text-sm text-gray-600 text-center w-full'>
+                                    {leg?.sector?.join(' → ') || 'Sector information not available'}
+                                  </p>
+                                </AccordionSummary>
 
-                                      <div className='px-4 bg-[#F5F6FF]'>
-                                        <div className=''>
-                                          <div className='mt-2'>
-                                            <div className='flex justify-between'>
-                                              <p className='text-sm text-gray-500'>Seat Selection</p>
-                                              <p className='text-sm'>not included</p>
-                                            </div>
+                                <AccordionDetails className='grid grid-cols-12 gap-4 pt-4'>
+                                  {[
+                                    ...(Array.isArray(leg?.fare_option) ? leg.fare_option : []),
+                                    ...(Array.isArray(data?.fare_option) ? data.fare_option : [])
+                                  ]?.map((faresGroupData, faresGroupIndex) => {
+                                    const baseFare = Number(faresGroupData?.price?.base_fare.replace(/,/g, '')) || 0
+                                    const tax = Number(faresGroupData?.price?.tax.replace(/,/g, '')) || 0
+                                    const grossAmount =
+                                      Number(faresGroupData?.price?.gross_amount.replace(/,/g, '')) || 0
+                                    const totalFare = grossAmount
+                                    const formattedTotalFare = totalFare.toLocaleString()
+
+                                    return (
+                                      <>
+                                        <div
+                                          key={faresGroupIndex}
+                                          className='col-span-12 md:col-span-6 lg:col-span-4 border rounded-lg pb-4 bg-[#F5F6FF] '
+                                        >
+                                          <div className='px-4 py-2 bg-[#8A9DC2] rounded-tl-lg rounded-tr-lg'>
+                                            <p className='font-bold text-white text-center rounded-lg text-md'>
+                                              {faresGroupData?.rbd}
+                                            </p>
                                           </div>
-                                        </div>
 
-                                        <div className='mt-4'>
-                                          <div className='space-y-2'>
-                                            <div className='flex justify-between'>
-                                              <p className='text-sm text-gray-500'>Baggage</p>
+                                          <div className='px-4 bg-[#F5F6FF]'>
+                                            <div className=''>
+                                              <div className='mt-2'>
+                                                <div className='flex justify-between'>
+                                                  <p className='text-sm text-gray-500'>Seat Selection</p>
+                                                  <p className='text-sm'>not included</p>
+                                                </div>
+                                              </div>
                                             </div>
-                                            <div className='flex justify-between'>
-                                              <p className='text-sm text-gray-500'>Meal</p>
-                                              <p className='text-sm'>{faresGroupData?.has_meal ? 'Included' : 'Excluded'}</p>
-                                            </div>
-                                            <div className='flex justify-between'>
-                                              <p className='text-sm text-gray-500'>Cancellation</p>
-                                              <p
-                                                className={`text-xs px-2 rounded-full ${faresGroupData.is_refundable ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}
-                                              >
-                                                {faresGroupData.is_refundable ? 'Refundable' : 'Non-Refundable'}
-                                              </p>
-                                            </div>
-                                          </div>
-                                        </div>
 
-                                        <div className='mt-4 flex flex-col items-end'>
-                                          <div className='flex items-center mb-2'>
-                                            {/* <span className='font-bold text-2xl'>
+                                            <div className='mt-4'>
+                                              <div className='space-y-2'>
+                                                <div className='flex justify-between'>
+                                                  <p className='text-sm text-gray-500'>Baggage</p>
+                                                  <span className='text-xs'>{faresGroupData?.bagage_info} </span>
+                                                </div>
+                                                <div className='flex justify-between'>
+                                                  <p className='text-sm text-gray-500'>Meal</p>
+                                                  <p className='text-sm'>
+                                                    {faresGroupData?.has_meal ? 'Included' : 'Excluded'}
+                                                  </p>
+                                                </div>
+                                                <div className='flex justify-between'>
+                                                  <p className='text-sm text-gray-500'>Cancellation</p>
+                                                  <p
+                                                    className={`text-xs px-2 rounded-full ${faresGroupData.is_refundable ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}
+                                                  >
+                                                    {faresGroupData.is_refundable ? 'Refundable' : 'Non-Refundable'}
+                                                  </p>
+                                                </div>
+                                              </div>
+                                            </div>
+
+                                            <div className='mt-4 flex flex-col items-end'>
+                                              <div className='flex items-center mb-2'>
+                                                {/* <span className='font-bold text-2xl'>
                                     {faresGroupData?.price?.currency} {faresGroupData?.price?.gross_amount}
                                   </span> */}
-                                            <div className='relative'>
-                                              <IconButton
-                                                size='small'
-                                                onClick={handleClick}
-                                                ref={anchorRef}
-                                                className='text-gray-500 hover:text-gray-700'
-                                              >
-                                                <InfoIcon fontSize='small' />
-                                              </IconButton>
+                                                <div className='relative'>
+                                                  <IconButton
+                                                    size='small'
+                                                    onClick={handleClick}
+                                                    ref={anchorRef}
+                                                    className='text-gray-500 hover:text-gray-700'
+                                                  >
+                                                    <InfoIcon fontSize='small' />
+                                                  </IconButton>
 
-                                              <Popper
-                                                open={openFlightInfo}
-                                                anchorEl={anchorEl}
-                                                transition
-                                                placement='bottom-end'
-                                                className='!z-[9999]'
-                                                modifiers={[
-                                                  {
-                                                    name: 'preventOverflow',
-                                                    options: {
-                                                      altBoundary: true,
-                                                      padding: 8
-                                                    }
-                                                  },
-                                                  {
-                                                    name: 'offset',
-                                                    options: {
-                                                      offset: [0, 8]
-                                                    }
-                                                  }
-                                                ]}
-                                              >
-                                                {({ TransitionProps }) => (
-                                                  <Fade {...TransitionProps}>
-                                                    <Paper
-                                                      className='rounded-lg min-w-[200px]'
-                                                      sx={{
-                                                        zIndex: 9999,
-                                                        marginTop: '8px',
-                                                        position: 'relative',
-                                                        '&::before': {
-                                                          content: '""',
-
-                                                          width: 0,
-                                                          height: 0,
-
-                                                          zIndex: 9999
+                                                  <Popper
+                                                    open={openFlightInfo}
+                                                    anchorEl={anchorEl}
+                                                    transition
+                                                    placement='bottom-end'
+                                                    className='!z-[9999]'
+                                                    modifiers={[
+                                                      {
+                                                        name: 'preventOverflow',
+                                                        options: {
+                                                          altBoundary: true,
+                                                          padding: 8
                                                         }
-                                                      }}
-                                                    >
-                                                      <ClickAwayListener onClickAway={handleCloseFlightInfo}>
-                                                        <Box p={2}>
-                                                          <Typography variant='body2' color='textSecondary' gutterBottom>
-                                                            Price Detail
-                                                          </Typography>
-                                                          <Box display='flex' justifyContent='space-between' my={1}>
-                                                            <Typography variant='body2' color='textSecondary'>
-                                                              Base Fare
-                                                            </Typography>
-                                                            <Typography variant='body2' color='textSecondary'>
-                                                              {faresGroupData?.price?.currency}{' '}
-                                                              {faresGroupData?.price?.base_fare}
-                                                            </Typography>
-                                                          </Box>
-                                                          <Box display='flex' justifyContent='space-between' my={1}>
-                                                            <Typography variant='body2' color='textSecondary'>
-                                                              Tax
-                                                            </Typography>
-                                                            <Typography variant='body2' color='textSecondary'>
-                                                              {faresGroupData?.price?.currency} {faresGroupData?.price?.tax}
-                                                            </Typography>
-                                                          </Box>
-                                                          <Box display='flex' justifyContent='space-between' my={1}>
-                                                            <Typography variant='body2' color='textSecondary'>
-                                                              Gross Fare
-                                                            </Typography>
-                                                            <Typography variant='body2' color='textSecondary'>
-                                                              {faresGroupData?.price?.currency}{' '}
-                                                              {faresGroupData?.price?.gross_amount}
-                                                            </Typography>
-                                                          </Box>
-                                                          <Divider sx={{ my: 1 }} />
-                                                          <Box display='flex' justifyContent='space-between' mt={1}>
-                                                            <Typography variant='body2' color='textSecondary'>
-                                                              Total
-                                                            </Typography>
-                                                            <Typography variant='body2' color='textSecondary'>
-                                                              {faresGroupData?.price?.currency} {formattedTotalFare}
-                                                            </Typography>
-                                                          </Box>
-                                                        </Box>
-                                                      </ClickAwayListener>
-                                                    </Paper>
-                                                  </Fade>
-                                                )}
-                                              </Popper>
+                                                      },
+                                                      {
+                                                        name: 'offset',
+                                                        options: {
+                                                          offset: [0, 8]
+                                                        }
+                                                      }
+                                                    ]}
+                                                  >
+                                                    {({ TransitionProps }) => (
+                                                      <Fade {...TransitionProps}>
+                                                        <Paper
+                                                          className='rounded-lg min-w-[200px]'
+                                                          sx={{
+                                                            zIndex: 9999,
+                                                            marginTop: '8px',
+                                                            position: 'relative',
+                                                            '&::before': {
+                                                              content: '""',
+
+                                                              width: 0,
+                                                              height: 0,
+
+                                                              zIndex: 9999
+                                                            }
+                                                          }}
+                                                        >
+                                                          <ClickAwayListener onClickAway={handleCloseFlightInfo}>
+                                                            <Box p={2}>
+                                                              <Typography
+                                                                variant='body2'
+                                                                color='textSecondary'
+                                                                gutterBottom
+                                                              >
+                                                                Price Detail
+                                                              </Typography>
+                                                              <Box display='flex' justifyContent='space-between' my={1}>
+                                                                <Typography variant='body2' color='textSecondary'>
+                                                                  Base Fare
+                                                                </Typography>
+                                                                <Typography variant='body2' color='textSecondary'>
+                                                                  {faresGroupData?.price?.currency}{' '}
+                                                                  {faresGroupData?.price?.base_fare}
+                                                                </Typography>
+                                                              </Box>
+                                                              <Box display='flex' justifyContent='space-between' my={1}>
+                                                                <Typography variant='body2' color='textSecondary'>
+                                                                  Tax
+                                                                </Typography>
+                                                                <Typography variant='body2' color='textSecondary'>
+                                                                  {faresGroupData?.price?.currency}{' '}
+                                                                  {faresGroupData?.price?.tax}
+                                                                </Typography>
+                                                              </Box>
+                                                              <Box display='flex' justifyContent='space-between' my={1}>
+                                                                <Typography variant='body2' color='textSecondary'>
+                                                                  Gross Fare
+                                                                </Typography>
+                                                                <Typography variant='body2' color='textSecondary'>
+                                                                  {faresGroupData?.price?.currency}{' '}
+                                                                  {faresGroupData?.price?.gross_amount}
+                                                                </Typography>
+                                                              </Box>
+                                                              <Divider sx={{ my: 1 }} />
+                                                              <Box display='flex' justifyContent='space-between' mt={1}>
+                                                                <Typography variant='body2' color='textSecondary'>
+                                                                  Total
+                                                                </Typography>
+                                                                <Typography variant='body2' color='textSecondary'>
+                                                                  {faresGroupData?.price?.currency} {formattedTotalFare}
+                                                                </Typography>
+                                                              </Box>
+                                                            </Box>
+                                                          </ClickAwayListener>
+                                                        </Paper>
+                                                      </Fade>
+                                                    )}
+                                                  </Popper>
+                                                </div>
+                                              </div>
+                                              <Button
+                                                variant='contained'
+                                                className='w-full'
+                                                onClick={() => {
+                                                  initiateBookFareHandler(faresGroupData?.booking_id)
+                                                }}
+                                              >
+                                                {faresGroupData?.price?.currency} {faresGroupData?.price?.gross_amount}
+                                              </Button>
                                             </div>
                                           </div>
-                                          <Button
-                                            variant='contained'
-                                            className='w-full'
-                                            onClick={() => {
-                                              initiateBookFareHandler(faresGroupData?.booking_id)
-                                            }}
-                                          >
-                                            {faresGroupData?.price?.currency} {faresGroupData?.price?.gross_amount}
-                                          </Button>
                                         </div>
-                                      </div>
-                                    </div>
-                                  </>
-                                )
-                              })}
+                                      </>
+                                    )
+                                  })}
+                                </AccordionDetails>
+                              </Accordion>
                             </div>
                           ))}
 
@@ -1298,7 +1289,7 @@ const FlightFound = () => {
                           })} */}
                         </CardContent>
                       </Card>
-                    );
+                    )
                   })}
                 </div>
                 {/* <div>
@@ -1506,7 +1497,6 @@ const FlightFound = () => {
                     );
                   })}
                 </div> */}
-
               </div>
               {mergeFlightResponse === false && <p className='text-gray-500 text-center'>No flight options found.</p>}
             </>
@@ -1571,17 +1561,17 @@ const FlightFound = () => {
         maxWidth='xl'
         PaperProps={{
           sx: {
-            transform: 'translateY(-10%)'
+            // transform: 'translateY(-10%)'
           }
         }}
       >
-        <DialogTitle className='border-b'>Change Search</DialogTitle>
+        <div className='flex items-center justify-between border-b px-4 py-4'>
+          <DialogTitle className='p-0 m-0'>Change Search</DialogTitle>
+          <IoMdClose className='text-2xl cursor-pointer' onClick={handleClose} />
+        </div>
+
         <DialogContent>
-          {/* <FlightSearch
-                        initialValues={initialValues}
-                        flightSearchOpen={open}
-                        flightSearchHandleClose={handleClose}
-                    /> */}
+          <FlightSearch initialValues={initialValues} flightSearchOpen={open} flightSearchHandleClose={handleClose} />
         </DialogContent>
       </Dialog>
       <Dialog
