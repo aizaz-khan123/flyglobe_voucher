@@ -708,14 +708,14 @@ export const api = emptySplitApi.injectEndpoints({
     }),
 
     agencyMarginAssign: builder.mutation({
-      query: ({ orgUUid, data  }) => ({
+      query: ({ orgUUid, data }) => ({
         url: `${API_END_POINTS.agencyMarginAssign}/${orgUUid}`,
         method: "POST",
         body: data,
       }),
     }),
 
-    
+
     branchMargin: builder.query({
       query: (params) => ({
         url: API_END_POINTS.branchMargin,
@@ -732,7 +732,38 @@ export const api = emptySplitApi.injectEndpoints({
         body
       }),
     }),
+    //refund-request
 
+    refundRequest: builder.query({
+      query: () => ({
+        url: `${API_END_POINTS.refundRequest}`,
+        method: "GET",
+      }),
+      transformResponse: (response) => response.data,
+    }),
+
+    makeRefund: builder.mutation({
+      query: ({ booking_id, data }) => ({
+        url: `${API_END_POINTS.makeRefund}/${booking_id}`,
+        method: "POST",
+        body: data,
+      }),
+    }),
+
+    rejectReFund: builder.mutation({
+      query: ({ booking_id, data }) => ({
+        url: `${API_END_POINTS.rejectReFund}/${booking_id}`,
+        method: "GET",
+        body: data,
+      }),
+    }),
+    refundRequestShowFareRule: builder.query({
+      query: (booking_id) => ({
+        url: `${API_END_POINTS.refundRequestShowFareRule}/${booking_id}`,
+        method: "GET",
+      }),
+      transformResponse: (response) => response.data,
+    }),
     // Settings //
     temporaryLimit: builder.mutation({
       query: body => ({
@@ -871,5 +902,10 @@ export const {
   useDashboardSaleStaticsQuery,
   useLazyDashboardStatsQuery,
 
-  useMyRefundRequestQuery
+  useMyRefundRequestQuery,
+  //refund-request
+  useRefundRequestQuery,
+  useMakeRefundMutation,
+  useRejectReFundMutation,
+  useLazyRefundRequestShowFareRuleQuery
 } = api
