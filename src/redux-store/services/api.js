@@ -732,6 +732,29 @@ export const api = emptySplitApi.injectEndpoints({
         body
       }),
     }),
+
+    bankDropdown: builder.query({
+      query: () => ({
+        url: API_END_POINTS.bankDropdown,
+        method: 'GET',
+      }),
+      transformResponse: (response) => response.data,
+    }),
+
+    depositsRequest: builder.mutation({
+      query: (formData) => ({
+        url: `${API_END_POINTS.depositsRequest}`,
+        method: "POST",
+        body: formData,
+      }),
+    }),
+    depositsAgencyList: builder.query({
+      query: () => ({
+        url: `${API_END_POINTS.depositsAgencyList}`,
+        method: "GET",
+      }),
+      transformResponse: (response) => response.data,
+    }),
     //refund-request
 
     refundRequest: builder.query({
@@ -843,8 +866,9 @@ export const {
   useCreateAirlineMarginMutation,
   useDeleteAirlineMarginMutation,
   useUpdateAirlineMarginMutation,
-
+  useBankDropdownQuery,
   useGetBranchesQuery,
+  useDepositsRequestMutation,
   useCreateBranchMutation,
   useDeleteBranchMutation,
   useUpdateBranchMutation,
@@ -892,6 +916,7 @@ export const {
   useBookingListQuery,
   useDownloadBookingMutation,
   useLazyFinanicalProfileQuery,
+  useDepositsAgencyListQuery,
 
   ///settings
   useTemporaryLimitMutation,
