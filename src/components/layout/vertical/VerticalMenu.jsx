@@ -63,15 +63,6 @@ const VerticalMenu = ({ dictionary, scrollMenu }) => {
         renderExpandedMenuItemIcon={{ icon: <i className='ri-circle-line' /> }}
         menuSectionStyles={menuSectionStyles(verticalNavOptions, theme)}
       >
-        {/* <SubMenu
-          label={dictionary['navigation'].dashboards}
-          icon={<i className='ri-home-smile-line' />}
-
-        // suffix={<Chip label='5' size='small' color='error' />}
-        >
-          <MenuItem href={`/${locale}/dashboards/crm`}>{dictionary['navigation'].crm}</MenuItem>
-          <MenuItem href={`/${locale}/dashboards/logistics`}>{dictionary['navigation'].logistics}</MenuItem>
-        </SubMenu> */}
         <MenuItem
           href={`/${locale}/dashboard`}
           exactMatch={false}
