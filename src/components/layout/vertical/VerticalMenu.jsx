@@ -115,10 +115,10 @@ const VerticalMenu = ({ dictionary, scrollMenu }) => {
           </MenuItem>
 
           <SubMenu label={dictionary['navigation'].Sell} icon={<i className='ri-organization-chart'></i>}>
-            <MenuItem href={`/${locale}/apps/Sell/flight`}>{dictionary['navigation'].flight}</MenuItem>
-            <MenuItem href={`/${locale}/apps/Sell/group-flights`}>{dictionary['navigation'].groupFlight}</MenuItem>
-            <MenuItem href={`/${locale}/apps/Sell/umrah-hotels`}>{dictionary['navigation'].umrahHotels}</MenuItem>
-            <MenuItem href={`/${locale}/apps/Sell/bookings`}>{dictionary['navigation'].bookings}</MenuItem>
+            <MenuItem href={`/${locale}/apps/sell/flight`}>{dictionary['navigation'].flight}</MenuItem>
+            <MenuItem href={`/${locale}/apps/sell/group-flights`}>{dictionary['navigation'].groupFlight}</MenuItem>
+            <MenuItem href={`/${locale}/apps/sell/umrah-hotels`}>{dictionary['navigation'].umrahHotels}</MenuItem>
+            <MenuItem href={`/${locale}/apps/sell/bookings`}>{dictionary['navigation'].bookings}</MenuItem>
           
           </SubMenu>
 
