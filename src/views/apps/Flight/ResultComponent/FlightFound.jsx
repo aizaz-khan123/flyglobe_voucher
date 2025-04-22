@@ -57,6 +57,7 @@ import DateSelector from './DateSelector'
 import BookingFareModal from './BookingFareModal'
 import FlightSearch from '../FlightComponent/FlightSearch'
 import { IoIosArrowDown, IoMdClose } from 'react-icons/io'
+import FareOptionCard from './FareOptionCard'
 
 const stopsOptions = ['Non Stop', '1 Stop', '1+ Stops']
 
@@ -579,20 +580,14 @@ const FlightFound = () => {
         return false
       })()
 
-      // New airline matching logic
-      // const matchesAirline = () => {
-      //   // if (isRoundtrip) {
-      //   const flightSector = normalizedLegs?.[0]?.sector?.join('-');
-      //   if (flightSector === returnSector) {
-      //     const selectedAirline = selectedAirlinesBySector[outgoingSector];
-      //     return selectedAirline ? flight.airline.name === selectedAirline : true;
-      //   }
-      //   // }
-      //   return true;
-      // };
+      // Updated airline matching logic
+      const matchesAirline = (() => {
+        const selectedAirline = Object.values(selectedAirlinesBySector || {}).find(airline => airline);
+        return selectedAirline ? flight.airline.name === selectedAirline : true;
+      })();
 
       const matchesStops = selectedStops.length === 0 || selectedStops.includes(stops)
-      const matchesAirlines = selectedAirlines.length === 0 || selectedAirlines.includes(flight?.airline?.name)
+      const matchesAirlines = selectedAirlines.length === 0 || selectedAirlines.includes(flight?.airline?.name) || matchesAirline
       const matchesDepartureTime =
         selectedDepartureTimes.length === 0 ||
         selectedDepartureTimes.some(timeRange => isWithinTimeRange(departureTime, timeRange))
@@ -726,6 +721,7 @@ const FlightFound = () => {
     const firstLeg = legs[0]
     return Array.isArray(firstLeg) ? firstLeg[0] : firstLeg
   }
+  console.log('sortedFlights', sortedFlights);
 
 
   return (
@@ -850,6 +846,7 @@ const FlightFound = () => {
                     const normalizedLegs = data?.legs
                       ? Object.values(data.legs).flat() // Convert object to array of arrays and flatten
                       : []
+
                     // Combine fare options from both the root and legs
                     const combinedFareOptions = [
                       ...(Array.isArray(data?.fare_option) ? data.fare_option : []),
@@ -968,439 +965,246 @@ const FlightFound = () => {
                           {normalizedLegs.map((leg, legIndex) => {
                             const sectorKey = leg.sector.join('-');
                             const isOutbound = legIndex === 0; // Outbound flight is the first leg
-                            // console.log('legIndex', legIndex);
-                            // console.log('sectorKey', sectorKey);
-                            // console.log('isOutbound', isOutbound);
-
-
                             const isInbound = legIndex === 1; // Inbound flight is the second leg
-                            // console.log('isInbound', isInbound);
-                            const isOutboundSelected = Object.values(selectedFares).some(
-                              (fare) => fare.sector === sectorKey && isOutbound
+
+                            const hasSelectedOutbound = Object.values(selectedFares).some(
+                              fare => fare.sector === normalizedLegs[0].sector.join('-')
                             );
-                            console.log('isOutboundSelected', isOutboundSelected);
 
-                            // Show outbound accordion only if no outbound fare is selected
-                            if (isOutbound && isOutboundSelected) return null;
+                            if ((isOutbound && !hasSelectedOutbound) || (isInbound && hasSelectedOutbound)) {
+                              return (
+                                <div key={legIndex} className='grid grid-cols-12 gap-4'>
+                                  {/* Sector Header */}
 
-                            // Show inbound accordion only if an outbound fare is selected
-                            if (isInbound && !isOutboundSelected) return null;
+                                  <Accordion className='col-span-12 mb-3'>
+                                    <AccordionSummary
+                                      expandIcon={<IoIosArrowDown />}
+                                      aria-controls={`panel${legIndex}-content`}
+                                      id={`panel${legIndex}-header`}
+                                      className='border rounded-lg bg-[#F5F6FF]'
+                                    >
+                                      <p className='font-bold text-sm text-gray-600 text-center w-full'>
+                                        {leg?.sector?.join(' → ') || 'Sector information not available'}
+                                      </p>
+                                    </AccordionSummary>
 
-                            return (
-                              <div key={legIndex} className='grid grid-cols-12 gap-4'>
-                                {/* Sector Header */}
+                                    <AccordionDetails className='grid grid-cols-12 gap-4 pt-4'>
+                                      {([
+                                        ...(Array.isArray(leg?.fare_option) ? leg.fare_option : []),
+                                        ...(Array.isArray(data?.fare_option) ? data.fare_option : [])
+                                      ]).map((faresGroupData, faresGroupIndex) => (
+                                        <FareOptionCard
+                                          key={faresGroupIndex}
+                                          faresGroupData={faresGroupData}
+                                          legIndex={legIndex}
+                                          sectorKey={sectorKey}
+                                          data={data}
+                                          isSelected={selectedFares[legIndex]?.booking_id === faresGroupData.booking_id}
+                                          handleFareSelect={handleFareSelect}
+                                          handleClick={handleClick}
+                                          anchorRef={anchorRef}
+                                          openFlightInfo={openFlightInfo}
+                                          anchorEl={anchorEl}
+                                        />
+                                      ))}
+                                      {/* {([
+                                        ...(Array.isArray(leg?.fare_option) ? leg.fare_option : []),
+                                        ...(Array.isArray(data?.fare_option) ? data.fare_option : [])
+                                      ])?.map((faresGroupData, faresGroupIndex) => {
+                                        const baseFare = Number(faresGroupData?.price?.base_fare.replace(/,/g, '')) || 0
+                                        const tax = Number(faresGroupData?.price?.tax.replace(/,/g, '')) || 0
+                                        const grossAmount =
+                                          Number(faresGroupData?.price?.gross_amount.replace(/,/g, '')) || 0
+                                        const totalFare = grossAmount
+                                        const formattedTotalFare = totalFare.toLocaleString()
 
-                                <Accordion className='col-span-12 mb-3'>
-                                  <AccordionSummary
-                                    expandIcon={<IoIosArrowDown />}
-                                    aria-controls={`panel${legIndex}-content`}
-                                    id={`panel${legIndex}-header`}
-                                    className='border rounded-lg bg-[#F5F6FF]'
-                                  >
-                                    <p className='font-bold text-sm text-gray-600 text-center w-full'>
-                                      {leg?.sector?.join(' → ') || 'Sector information not available'}
-                                    </p>
-                                  </AccordionSummary>
-
-                                  <AccordionDetails className='grid grid-cols-12 gap-4 pt-4'>
-                                    {[
-                                      ...(Array.isArray(leg?.fare_option) ? leg.fare_option : []),
-                                      ...(Array.isArray(data?.fare_option) ? data.fare_option : [])
-                                    ]?.filter((faresGroupData) => {
-                                      // Filter inbound flights to match the selected airline
-                                      if (isInbound) {
-                                        const selectedAirline = Object.values(selectedFares)[0]?.airline?.name;
-                                        return faresGroupData.airline?.name === selectedAirline;
-                                      }
-                                      return true;
-                                    })?.map((faresGroupData, faresGroupIndex) => {
-                                      const baseFare = Number(faresGroupData?.price?.base_fare.replace(/,/g, '')) || 0
-                                      const tax = Number(faresGroupData?.price?.tax.replace(/,/g, '')) || 0
-                                      const grossAmount =
-                                        Number(faresGroupData?.price?.gross_amount.replace(/,/g, '')) || 0
-                                      const totalFare = grossAmount
-                                      const formattedTotalFare = totalFare.toLocaleString()
-
-                                      const isSelected =
-                                        selectedFares[legIndex]?.booking_id === faresGroupData.booking_id;
-
-                                      return (
-                                        <>
-                                          <div
-                                            key={faresGroupIndex}
-                                            className='col-span-12 md:col-span-6 lg:col-span-4 border rounded-lg pb-4 bg-[#F5F6FF] '
-                                          >
-                                            <div className='px-4 py-2 bg-[#8A9DC2] rounded-tl-lg rounded-tr-lg'>
-                                              <p className='font-bold text-white text-center rounded-lg text-md'>
-                                                {faresGroupData?.rbd}
-                                              </p>
-                                            </div>
-
-                                            <div className='px-4 bg-[#F5F6FF]'>
-                                              <div className=''>
-                                                <div className='mt-2'>
-                                                  <div className='flex justify-between'>
-                                                    <p className='text-sm text-gray-500'>Seat Selection</p>
-                                                    <p className='text-sm'>not included</p>
-                                                  </div>
-                                                </div>
+                                        const isSelected = selectedFares[legIndex]?.booking_id === faresGroupData.booking_id;
+                                        return (
+                                          <>
+                                            <div
+                                              key={faresGroupIndex}
+                                              className='col-span-12 md:col-span-6 lg:col-span-4 border rounded-lg pb-4 bg-[#F5F6FF]'>
+                                              <div className='px-4 py-2 bg-[#8A9DC2] rounded-tl-lg rounded-tr-lg'>
+                                                <p className='font-bold text-white text-center rounded-lg text-md'>
+                                                  {faresGroupData?.rbd}
+                                                </p>
                                               </div>
 
-                                              <div className='mt-4'>
-                                                <div className='space-y-2'>
-                                                  <div className='flex justify-between'>
-                                                    <p className='text-sm text-gray-500'>Baggage</p>
-                                                    <span className='text-xs'>{faresGroupData?.bagage_info} </span>
-                                                  </div>
-                                                  <div className='flex justify-between'>
-                                                    <p className='text-sm text-gray-500'>Meal</p>
-                                                    <p className='text-sm'>
-                                                      {faresGroupData?.has_meal ? 'Included' : 'Excluded'}
-                                                    </p>
-                                                  </div>
-                                                  <div className='flex justify-between'>
-                                                    <p className='text-sm text-gray-500'>Cancellation</p>
-                                                    <p
-                                                      className={`text-xs px-2 rounded-full ${faresGroupData.is_refundable ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}
-                                                    >
-                                                      {faresGroupData.is_refundable ? 'Refundable' : 'Non-Refundable'}
-                                                    </p>
+                                              <div className='px-4 bg-[#F5F6FF]'>
+                                                <div className=''>
+                                                  <div className='mt-2'>
+                                                    <div className='flex justify-between'>
+                                                      <p className='text-sm text-gray-500'>Seat Selection</p>
+                                                      <p className='text-sm'>not included</p>
+                                                    </div>
                                                   </div>
                                                 </div>
-                                              </div>
 
-                                              <div className='mt-4 flex flex-col items-end'>
-                                                <div className='flex items-center mb-2'>
-                                                  <div className='relative'>
-                                                    <IconButton
-                                                      size='small'
-                                                      onClick={handleClick}
-                                                      ref={anchorRef}
-                                                      className='text-gray-500 hover:text-gray-700'
-                                                    >
-                                                      <InfoIcon fontSize='small' />
-                                                    </IconButton>
-
-                                                    <Popper
-                                                      open={openFlightInfo}
-                                                      anchorEl={anchorEl}
-                                                      transition
-                                                      placement='bottom-end'
-                                                      className='!z-[9999]'
-                                                      modifiers={[
-                                                        {
-                                                          name: 'preventOverflow',
-                                                          options: {
-                                                            altBoundary: true,
-                                                            padding: 8
-                                                          }
-                                                        },
-                                                        {
-                                                          name: 'offset',
-                                                          options: {
-                                                            offset: [0, 8]
-                                                          }
-                                                        }
-                                                      ]}
-                                                    >
-                                                      {({ TransitionProps }) => (
-                                                        <Fade {...TransitionProps}>
-                                                          <Paper
-                                                            className='rounded-lg min-w-[200px]'
-                                                            sx={{
-                                                              zIndex: 9999,
-                                                              marginTop: '8px',
-                                                              position: 'relative',
-                                                              '&::before': {
-                                                                content: '""',
-
-                                                                width: 0,
-                                                                height: 0,
-
-                                                                zIndex: 9999
-                                                              }
-                                                            }}
-                                                          >
-                                                            <ClickAwayListener onClickAway={handleCloseFlightInfo}>
-                                                              <Box p={2}>
-                                                                <Typography
-                                                                  variant='body2'
-                                                                  color='textSecondary'
-                                                                  gutterBottom
-                                                                >
-                                                                  Price Detail
-                                                                </Typography>
-                                                                <Box display='flex' justifyContent='space-between' my={1}>
-                                                                  <Typography variant='body2' color='textSecondary'>
-                                                                    Base Fare
-                                                                  </Typography>
-                                                                  <Typography variant='body2' color='textSecondary'>
-                                                                    {faresGroupData?.price?.currency}{' '}
-                                                                    {faresGroupData?.price?.base_fare}
-                                                                  </Typography>
-                                                                </Box>
-                                                                <Box display='flex' justifyContent='space-between' my={1}>
-                                                                  <Typography variant='body2' color='textSecondary'>
-                                                                    Tax
-                                                                  </Typography>
-                                                                  <Typography variant='body2' color='textSecondary'>
-                                                                    {faresGroupData?.price?.currency}{' '}
-                                                                    {faresGroupData?.price?.tax}
-                                                                  </Typography>
-                                                                </Box>
-                                                                <Box display='flex' justifyContent='space-between' my={1}>
-                                                                  <Typography variant='body2' color='textSecondary'>
-                                                                    Gross Fare
-                                                                  </Typography>
-                                                                  <Typography variant='body2' color='textSecondary'>
-                                                                    {faresGroupData?.price?.currency}{' '}
-                                                                    {faresGroupData?.price?.gross_amount}
-                                                                  </Typography>
-                                                                </Box>
-                                                                <Divider sx={{ my: 1 }} />
-                                                                <Box display='flex' justifyContent='space-between' mt={1}>
-                                                                  <Typography variant='body2' color='textSecondary'>
-                                                                    Total
-                                                                  </Typography>
-                                                                  <Typography variant='body2' color='textSecondary'>
-                                                                    {faresGroupData?.price?.currency} {formattedTotalFare}
-                                                                  </Typography>
-                                                                </Box>
-                                                              </Box>
-                                                            </ClickAwayListener>
-                                                          </Paper>
-                                                        </Fade>
-                                                      )}
-                                                    </Popper>
+                                                <div className='mt-4'>
+                                                  <div className='space-y-2'>
+                                                    <div className='flex justify-between'>
+                                                      <p className='text-sm text-gray-500'>Baggage</p>
+                                                      <span className='text-xs'>{faresGroupData?.bagage_info} </span>
+                                                    </div>
+                                                    <div className='flex justify-between'>
+                                                      <p className='text-sm text-gray-500'>Meal</p>
+                                                      <p className='text-sm'>
+                                                        {faresGroupData?.has_meal ? 'Included' : 'Excluded'}
+                                                      </p>
+                                                    </div>
+                                                    <div className='flex justify-between'>
+                                                      <p className='text-sm text-gray-500'>Cancellation</p>
+                                                      <p
+                                                        className={`text-xs px-2 rounded-full ${faresGroupData.is_refundable ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}
+                                                      >
+                                                        {faresGroupData.is_refundable ? 'Refundable' : 'Non-Refundable'}
+                                                      </p>
+                                                    </div>
                                                   </div>
                                                 </div>
-                                                {data.provider === 'AIRBLUE_API' ? <Button
-                                                  variant='contained'
-                                                  className='w-full'
-                                                  disabled={isSelected}
-                                                  onClick={() => {
-                                                    const sector = leg.sector.join('-');
-                                                    handleFareSelect(legIndex, {
-                                                      ...faresGroupData,
-                                                      sector,
-                                                      airline: data.airline, // Pass airline information
-                                                    });
-                                                  }}
-                                                >
-                                                  {selectedFares[legIndex]?.booking_id === faresGroupData.booking_id
-                                                    ? 'Selected'
-                                                    : `${faresGroupData?.price?.currency} ${faresGroupData?.price?.gross_amount}`}
-                                                </Button> :
-                                                  <Button
+
+                                                <div className='mt-4 flex flex-col items-end'>
+                                                  <div className='flex items-center mb-2'>
+                                                    <div className='relative'>
+                                                      <IconButton
+                                                        size='small'
+                                                        onClick={handleClick}
+                                                        ref={anchorRef}
+                                                        className='text-gray-500 hover:text-gray-700'
+                                                      >
+                                                        <InfoIcon fontSize='small' />
+                                                      </IconButton>
+
+                                                      <Popper
+                                                        open={openFlightInfo}
+                                                        anchorEl={anchorEl}
+                                                        transition
+                                                        placement='bottom-end'
+                                                        className='!z-[9999]'
+                                                        modifiers={[
+                                                          {
+                                                            name: 'preventOverflow',
+                                                            options: {
+                                                              altBoundary: true,
+                                                              padding: 8
+                                                            }
+                                                          },
+                                                          {
+                                                            name: 'offset',
+                                                            options: {
+                                                              offset: [0, 8]
+                                                            }
+                                                          }
+                                                        ]}
+                                                      >
+                                                        {({ TransitionProps }) => (
+                                                          <Fade {...TransitionProps}>
+                                                            <Paper
+                                                              className='rounded-lg min-w-[200px]'
+                                                              sx={{
+                                                                zIndex: 9999,
+                                                                marginTop: '8px',
+                                                                position: 'relative',
+                                                                '&::before': {
+                                                                  content: '""',
+
+                                                                  width: 0,
+                                                                  height: 0,
+
+                                                                  zIndex: 9999
+                                                                }
+                                                              }}
+                                                            >
+                                                              <ClickAwayListener onClickAway={handleCloseFlightInfo}>
+                                                                <Box p={2}>
+                                                                  <Typography
+                                                                    variant='body2'
+                                                                    color='textSecondary'
+                                                                    gutterBottom
+                                                                  >
+                                                                    Price Detail
+                                                                  </Typography>
+                                                                  <Box display='flex' justifyContent='space-between' my={1}>
+                                                                    <Typography variant='body2' color='textSecondary'>
+                                                                      Base Fare
+                                                                    </Typography>
+                                                                    <Typography variant='body2' color='textSecondary'>
+                                                                      {faresGroupData?.price?.currency}{' '}
+                                                                      {faresGroupData?.price?.base_fare}
+                                                                    </Typography>
+                                                                  </Box>
+                                                                  <Box display='flex' justifyContent='space-between' my={1}>
+                                                                    <Typography variant='body2' color='textSecondary'>
+                                                                      Tax
+                                                                    </Typography>
+                                                                    <Typography variant='body2' color='textSecondary'>
+                                                                      {faresGroupData?.price?.currency}{' '}
+                                                                      {faresGroupData?.price?.tax}
+                                                                    </Typography>
+                                                                  </Box>
+                                                                  <Box display='flex' justifyContent='space-between' my={1}>
+                                                                    <Typography variant='body2' color='textSecondary'>
+                                                                      Gross Fare
+                                                                    </Typography>
+                                                                    <Typography variant='body2' color='textSecondary'>
+                                                                      {faresGroupData?.price?.currency}{' '}
+                                                                      {faresGroupData?.price?.gross_amount}
+                                                                    </Typography>
+                                                                  </Box>
+                                                                  <Divider sx={{ my: 1 }} />
+                                                                  <Box display='flex' justifyContent='space-between' mt={1}>
+                                                                    <Typography variant='body2' color='textSecondary'>
+                                                                      Total
+                                                                    </Typography>
+                                                                    <Typography variant='body2' color='textSecondary'>
+                                                                      {faresGroupData?.price?.currency} {formattedTotalFare}
+                                                                    </Typography>
+                                                                  </Box>
+                                                                </Box>
+                                                              </ClickAwayListener>
+                                                            </Paper>
+                                                          </Fade>
+                                                        )}
+                                                      </Popper>
+                                                    </div>
+                                                  </div>
+                                                  {data.provider === 'AIRBLUE_API' ? <Button
                                                     variant='contained'
                                                     className='w-full'
+                                                    disabled={isSelected}
                                                     onClick={() => {
-                                                      initiateBookFareHandler(faresGroupData?.booking_id)
+                                                      handleFareSelect(legIndex, {
+                                                        ...faresGroupData,
+                                                        sector: sectorKey,
+                                                        airline: data.airline,
+                                                      });
                                                     }}
                                                   >
-                                                    {faresGroupData?.price?.currency} {faresGroupData?.price?.gross_amount}
-                                                  </Button>
-                                                }
+                                                    {isSelected ? 'Selected' : `${faresGroupData?.price?.currency} ${faresGroupData?.price?.gross_amount}`}
+                                                  </Button> :
+                                                    <Button
+                                                      variant='contained'
+                                                      className='w-full'
+                                                      onClick={() => {
+                                                        initiateBookFareHandler(faresGroupData?.booking_id)
+                                                      }}
+                                                    >
+                                                      {faresGroupData?.price?.currency} {faresGroupData?.price?.gross_amount}
+                                                    </Button>
+                                                  }
+                                                </div>
                                               </div>
                                             </div>
-                                          </div>
-                                        </>
-                                      )
-                                    })}
-                                  </AccordionDetails>
-                                </Accordion>
-                              </div>
-                            )
+                                          </>
+                                        )
+                                      })} */}
+                                    </AccordionDetails>
+                                  </Accordion>
+                                </div>
+                              )
+                            }
                           }
                           )}
-
-                          {/* {data?.fare_option?.map((faresGroupData, faresGroupIndex) => {
-                            const baseFare = Number(faresGroupData?.price?.base_fare.replace(/,/g, '')) || 0
-
-                            const tax = Number(faresGroupData?.price?.tax.replace(/,/g, '')) || 0
-
-                            const grossAmount = Number(faresGroupData?.price?.gross_amount.replace(/,/g, '')) || 0
-
-                            const totalFare = grossAmount
-                            const formattedTotalFare = totalFare.toLocaleString()
-
-                            return (
-                              <>
-
-
-                                <div className='grid grid-cols-12 items-center gap-2 border-t py-2'>
-                                  <div className='col-span-12 lg:col-span-2 xl:col-span-2 border-r-2 pe-2'>
-                                    <div className='flex justify-between items-center'>
-                                      <p className='font-normal text-sm text-gray'>{faresGroupData?.rbd}</p>
-                                      {faresGroupData?.has_meal ? (
-                                        <img src='/media/icons/food-icon.svg' className='h-5' alt='' />
-                                      ) : (
-                                        <img src='/media/icons/no-food-icon.svg' className='h-5' alt='' />
-                                      )}
-                                    </div>
-                                  </div>
-                                  <div className='col-span-12  lg:col-span-12 xl:col-span-12'>
-                                    {data?.name == 'SABRE_API' ? (
-                                      <div className='flex gap-2 justify-start items-center'>
-                                        <img src='/media/icons/baggage-icon.svg' className='h-5' alt='' />
-                                        <p className='font-normal text-sm text-gray space-x-1'>
-                                          <span>{faresGroupData?.bagage_info}</span>
-                                        </p>
-
-                                        <p
-                                          className={`px-3 py-1 w-[10rem] text-center rounded-full text-xs font-medium ${faresGroupData.is_refundable ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}
-                                        >
-                                          {faresGroupData.is_refundable ? 'Refundable' : 'Non-Refundable'}
-                                        </p>
-                                      </div>
-                                    ) : (
-                                      <div className='flex gap-2 justify-start items-center'>
-                                        {faresGroupData?.bagage_info?.maxAllowedWeight?.weight === 0 ? (
-                                          <img src='/media/icons/no-baggage-icon.svg' className='h-5' alt='' />
-                                        ) : (
-                                          <img src='/media/icons/baggage-icon.svg' className='h-5' alt='' />
-                                        )}
-                                        <p className='font-normal text-sm text-gray space-x-1'>
-                                          {faresGroupData?.bagage_info?.maxAllowedWeight?.weight === 0 ? (
-                                            'No Baggage'
-                                          ) : (
-                                            <>
-                                              <span>{faresGroupData?.bagage_info?.maxAllowedWeight?.weight}</span>
-                                              <span>
-                                                {faresGroupData?.bagage_info?.maxAllowedWeight?.unitOfMeasureCode}
-                                              </span>
-                                              <span>
-                                                (
-                                                {faresGroupData?.bagage_info?.maxAllowedPieces === 0
-                                                  ? 'As per airline policy'
-                                                  : faresGroupData?.bagage_info?.maxAllowedPieces}{' '}
-                                                PC)
-                                              </span>
-                                            </>
-                                          )}
-                                        </p>
-                                      </div>
-                                    )}
-                                  </div>
-                                  <div className='col-span-12 xl:col-span-12'>
-                                    <div className=''>
-                                      <div className='flex items-center gap-2'>
-                                        <span className='font-semibold text-base'>
-                                          {faresGroupData?.price?.currency} {faresGroupData?.price?.gross_amount}
-                                        </span>
-                                        <div className='relative'>
-                                          <IconButton
-                                            size='small'
-                                            onClick={handleClick}
-                                            ref={anchorRef}
-                                            className='text-gray-500 hover:text-gray-700'
-                                          >
-                                            <InfoIcon fontSize='small' />
-                                          </IconButton>
-
-                                          <Popper
-                                            open={openFlightInfo}
-                                            anchorEl={anchorEl}
-                                            transition
-                                            placement='bottom-end'
-                                            className='!z-[9999]'
-                                            modifiers={[
-                                              {
-                                                name: 'preventOverflow',
-                                                options: {
-                                                  altBoundary: true,
-                                                  padding: 8
-                                                }
-                                              },
-                                              {
-                                                name: 'offset',
-                                                options: {
-                                                  offset: [0, 8]
-                                                }
-                                              }
-                                            ]}
-                                          >
-                                            {({ TransitionProps }) => (
-                                              <Fade {...TransitionProps}>
-                                                <Paper
-                                                  className='rounded-lg min-w-[200px]'
-                                                  sx={{
-                                                    zIndex: 9999,
-                                                    marginTop: '8px',
-                                                    position: 'relative',
-                                                    '&::before': {
-                                                      content: '""',
-
-                                                      width: 0,
-                                                      height: 0,
-
-                                                      zIndex: 9999
-                                                    }
-                                                  }}
-                                                >
-                                                  <ClickAwayListener onClickAway={handleCloseFlightInfo}>
-                                                    <Box p={2}>
-                                                      <Typography variant='body2' color='textSecondary' gutterBottom>
-                                                        Price Detail
-                                                      </Typography>
-                                                      <Box display='flex' justifyContent='space-between' my={1}>
-                                                        <Typography variant='body2' color='textSecondary'>
-                                                          Base Fare
-                                                        </Typography>
-                                                        <Typography variant='body2' color='textSecondary'>
-                                                          {faresGroupData?.price?.currency}{' '}
-                                                          {faresGroupData?.price?.base_fare}
-                                                        </Typography>
-                                                      </Box>
-                                                      <Box display='flex' justifyContent='space-between' my={1}>
-                                                        <Typography variant='body2' color='textSecondary'>
-                                                          Tax
-                                                        </Typography>
-                                                        <Typography variant='body2' color='textSecondary'>
-                                                          {faresGroupData?.price?.currency} {faresGroupData?.price?.tax}
-                                                        </Typography>
-                                                      </Box>
-                                                      <Box display='flex' justifyContent='space-between' my={1}>
-                                                        <Typography variant='body2' color='textSecondary'>
-                                                          Gross Fare
-                                                        </Typography>
-                                                        <Typography variant='body2' color='textSecondary'>
-                                                          {faresGroupData?.price?.currency}{' '}
-                                                          {faresGroupData?.price?.gross_amount}
-                                                        </Typography>
-                                                      </Box>
-                                                      <Divider sx={{ my: 1 }} />
-                                                      <Box display='flex' justifyContent='space-between' mt={1}>
-                                                        <Typography variant='body2' color='textSecondary'>
-                                                          Total
-                                                        </Typography>
-                                                        <Typography variant='body2' color='textSecondary'>
-                                                          {faresGroupData?.price?.currency} {formattedTotalFare}
-                                                        </Typography>
-                                                      </Box>
-                                                    </Box>
-                                                  </ClickAwayListener>
-                                                </Paper>
-                                              </Fade>
-                                            )}
-                                          </Popper>
-                                        </div>
-                                      </div>
-                                      <Button
-                                        variant='contained'
-                                        className='max-sm:is-full is-auto'
-                                        onClick={() => {
-                                          initiateBookFareHandler(faresGroupData?.booking_id)
-                                        }}
-                                      >
-                                        Book Fare
-                                      </Button>
-                                    </div>
-                                  </div>
-                                </div>
-                              </>
-                            )
-                          })} */}
                         </CardContent>
                       </Card>
                     )
