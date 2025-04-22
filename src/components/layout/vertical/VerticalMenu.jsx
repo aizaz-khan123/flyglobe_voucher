@@ -114,6 +114,15 @@ const VerticalMenu = ({ dictionary, scrollMenu }) => {
             {dictionary['navigation'].myRefundRequest}
           </MenuItem>
 
+          <SubMenu label={dictionary['navigation'].Sell} icon={<i className='ri-organization-chart'></i>}>
+            <MenuItem href={`/${locale}/apps/Sell/flight`}>{dictionary['navigation'].flight}</MenuItem>
+            <MenuItem href={`/${locale}/apps/Sell/group-flights`}>{dictionary['navigation'].groupFlight}</MenuItem>
+            <MenuItem href={`/${locale}/apps/Sell/umrah-hotels`}>{dictionary['navigation'].umrahHotels}</MenuItem>
+            <MenuItem href={`/${locale}/apps/Sell/bookings`}>{dictionary['navigation'].bookings}</MenuItem>
+          
+          </SubMenu>
+
+
           <SubMenu label={dictionary['navigation'].organization} icon={<i className='ri-organization-chart'></i>}>
             <MenuItem href={`/${locale}/apps/organization/branches`}>{dictionary['navigation'].branches}</MenuItem>
             <MenuItem href={`/${locale}/apps/organization/agencies`}>{dictionary['navigation'].agencies}</MenuItem>
