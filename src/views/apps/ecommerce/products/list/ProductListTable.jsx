@@ -271,7 +271,7 @@ const ProductListTable = ({ productData }) => {
             <Button
               variant='contained'
               component={Link}
-              href={getLocalizedUrl('/apps/ecommerce/products/add', locale)}
+              href={getLocalizedUrl('/ecommerce/products/add', locale)}
               startIcon={<i className='ri-add-line' />}
               className='max-sm:is-full is-auto'
             >

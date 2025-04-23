@@ -140,7 +140,7 @@ const ManageReviewsTable = ({ reviewsData }) => {
             <div className='flex flex-col items-start gap-0.5'>
               <Typography
                 component={Link}
-                href={getLocalizedUrl('/apps/ecommerce/customers/details/879861', locale)}
+                href={getLocalizedUrl('/ecommerce/customers/details/879861', locale)}
                 color='primary.main'
                 className='font-medium'
               >
@@ -212,7 +212,7 @@ const ManageReviewsTable = ({ reviewsData }) => {
               {
                 text: 'View',
                 icon: 'ri-eye-line',
-                href: getLocalizedUrl('/apps/ecommerce/orders/details/5434', locale),
+                href: getLocalizedUrl('/ecommerce/orders/details/5434', locale),
                 linkProps: { className: 'flex items-center is-full gap-2 plb-1.5 pli-4' }
               },
               {

@@ -120,7 +120,7 @@ const CourseTable = ({ courseData }) => {
             <div className='flex flex-col gap-0.5'>
               <Typography
                 component={Link}
-                href={getLocalizedUrl('/apps/academy/course-details', locale)}
+                href={getLocalizedUrl('/academy/course-details', locale)}
                 className='font-medium hover:text-primary'
                 color='text.primary'
               >

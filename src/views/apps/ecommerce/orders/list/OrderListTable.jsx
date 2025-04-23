@@ -132,7 +132,7 @@ const OrderListTable = ({ orderData }) => {
         cell: ({ row }) => (
           <Typography
             component={Link}
-            href={getLocalizedUrl(`/apps/ecommerce/orders/details/${row.original.order}`, locale)}
+            href={getLocalizedUrl(`/ecommerce/orders/details/${row.original.order}`, locale)}
             color='primary.main'
           >{`#${row.original.order}`}</Typography>
         )
@@ -151,7 +151,7 @@ const OrderListTable = ({ orderData }) => {
             <div className='flex flex-col'>
               <Typography
                 component={Link}
-                href={getLocalizedUrl('/apps/ecommerce/customers/details/879861', locale)}
+                href={getLocalizedUrl('/ecommerce/customers/details/879861', locale)}
                 color='text.primary'
                 className='font-medium hover:text-primary'
               >
@@ -213,7 +213,7 @@ const OrderListTable = ({ orderData }) => {
                 {
                   text: 'View',
                   icon: 'ri-eye-line',
-                  href: getLocalizedUrl(`/apps/ecommerce/orders/details/${row.original.order}`, locale),
+                  href: getLocalizedUrl(`/ecommerce/orders/details/${row.original.order}`, locale),
                   linkProps: { className: 'flex items-center is-full gap-2 plb-2 pli-4' }
                 },
                 {

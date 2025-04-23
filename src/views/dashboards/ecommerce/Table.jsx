@@ -44,7 +44,7 @@ const columns = [
     cell: ({ row }) => (
       <Typography
         component={Link}
-        href={`/apps/invoice/preview/${row.original.id}`}
+        href={`/invoice/preview/${row.original.id}`}
         color='primary.main'
       >{`#${row.original.id}`}</Typography>
     )

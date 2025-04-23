@@ -29,7 +29,7 @@ const defaultSuggestions = [
       },
       {
         label: 'User List',
-        href: '/apps/user/list',
+        href: '/user/list',
         icon: 'ri-file-user-line'
       }
     ]
@@ -39,22 +39,22 @@ const defaultSuggestions = [
     items: [
       {
         label: 'Calendar',
-        href: '/apps/calendar',
+        href: '/calendar',
         icon: 'ri-calendar-line'
       },
       {
         label: 'Invoice List',
-        href: '/apps/invoice/list',
+        href: '/invoice/list',
         icon: 'ri-file-list-3-line'
       },
       {
         label: 'User List',
-        href: '/apps/user/list',
+        href: '/user/list',
         icon: 'ri-file-user-line'
       },
       {
         label: 'Roles & Permissions',
-        href: '/apps/roles',
+        href: '/roles',
         icon: 'ri-lock-unlock-line'
       }
     ]
