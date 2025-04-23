@@ -77,196 +77,196 @@ const data = [
   {
     id: '11',
     name: 'eCommerce - Dashboard',
-    url: '/apps/ecommerce/dashboard',
+    url: '/ecommerce/dashboard',
     icon: 'ri-shopping-cart-2-line',
     section: 'Apps'
   },
   {
     id: '12',
     name: 'eCommerce - Product List',
-    url: '/apps/ecommerce/products/list',
+    url: '/ecommerce/products/list',
     icon: 'ri-file-list-line',
     section: 'Apps'
   },
   {
     id: '13',
     name: 'eCommerce - Add New Product',
-    url: '/apps/ecommerce/products/add',
+    url: '/ecommerce/products/add',
     icon: 'ri-add-line',
     section: 'Apps'
   },
   {
     id: '14',
     name: 'eCommerce - Product Category',
-    url: '/apps/ecommerce/products/category',
+    url: '/ecommerce/products/category',
     icon: 'ri-list-unordered',
     section: 'Apps'
   },
   {
     id: '15',
     name: 'eCommerce - Order List',
-    url: '/apps/ecommerce/orders/list',
+    url: '/ecommerce/orders/list',
     icon: 'ri-list-unordered',
     section: 'Apps'
   },
   {
     id: '16',
     name: 'eCommerce - Order Details',
-    url: '/apps/ecommerce/orders/details/5434',
+    url: '/ecommerce/orders/details/5434',
     icon: 'ri-play-list-line',
     section: 'Apps'
   },
   {
     id: '17',
     name: 'eCommerce - Customer List',
-    url: '/apps/ecommerce/customers/list',
+    url: '/ecommerce/customers/list',
     icon: 'ri-user-line',
     section: 'Apps'
   },
   {
     id: '18',
     name: 'eCommerce - Customer Details',
-    url: '/apps/ecommerce/customers/details/879861',
+    url: '/ecommerce/customers/details/879861',
     icon: 'ri-list-unordered',
     section: 'Apps'
   },
   {
     id: '19',
     name: 'eCommerce - Manage Reviews',
-    url: '/apps/ecommerce/manage-reviews',
+    url: '/ecommerce/manage-reviews',
     icon: 'ri-message-line',
     section: 'Apps'
   },
   {
     id: '20',
     name: 'eCommerce - Referrals',
-    url: '/apps/ecommerce/referrals',
+    url: '/ecommerce/referrals',
     icon: 'ri-group-line',
     section: 'Apps'
   },
   {
     id: '21',
     name: 'eCommerce - Settings',
-    url: '/apps/ecommerce/settings',
+    url: '/ecommerce/settings',
     icon: 'ri-settings-2-line',
     section: 'Apps'
   },
   {
     id: '22',
     name: 'Academy - Dashboard',
-    url: '/apps/academy/dashboard',
+    url: '/academy/dashboard',
     icon: 'ri-book-open-line',
     section: 'Apps'
   },
   {
     id: '23',
     name: 'Academy - My Courses',
-    url: '/apps/academy/my-courses',
+    url: '/academy/my-courses',
     icon: 'ri-list-unordered',
     section: 'Apps'
   },
   {
     id: '24',
     name: 'Academy - Course Details',
-    url: '/apps/academy/course-details',
+    url: '/academy/course-details',
     icon: 'ri-play-circle-line',
     section: 'Apps'
   },
   {
     id: '25',
     name: 'Logistics - Dashboard',
-    url: '/apps/logistics/dashboard',
+    url: '/logistics/dashboard',
     icon: 'ri-truck-line',
     section: 'Apps'
   },
   {
     id: '26',
     name: 'Logistics - Fleet',
-    url: '/apps/logistics/fleet',
+    url: '/logistics/fleet',
     icon: 'ri-car-line',
     section: 'Apps'
   },
   {
     id: '27',
     name: 'Email',
-    url: '/apps/email',
+    url: '/email',
     icon: 'ri-mail-line',
     section: 'Apps'
   },
   {
     id: '28',
     name: 'Chat',
-    url: '/apps/chat',
+    url: '/chat',
     icon: 'ri-wechat-line',
     section: 'Apps'
   },
   {
     id: '29',
     name: 'Calendar',
-    url: '/apps/calendar',
+    url: '/calendar',
     icon: 'ri-calendar-line',
     section: 'Apps'
   },
   {
     id: '30',
     name: 'Kanban',
-    url: '/apps/kanban',
+    url: '/kanban',
     icon: 'ri-drag-drop-line',
     section: 'Apps'
   },
   {
     id: '31',
     name: 'Invoice List',
-    url: '/apps/invoice/list',
+    url: '/invoice/list',
     icon: 'ri-file-list-3-line',
     section: 'Apps'
   },
   {
     id: '32',
     name: 'Invoice Preview',
-    url: '/apps/invoice/preview/4987',
+    url: '/invoice/preview/4987',
     icon: 'ri-file-list-line',
     section: 'Apps'
   },
   {
     id: '33',
     name: 'Invoice Edit',
-    url: '/apps/invoice/edit/4987',
+    url: '/invoice/edit/4987',
     icon: 'ri-file-edit-line',
     section: 'Apps'
   },
   {
     id: '34',
     name: 'Invoice Add',
-    url: '/apps/invoice/add',
+    url: '/invoice/add',
     icon: 'ri-file-add-line',
     section: 'Apps'
   },
   {
     id: '35',
     name: 'User List',
-    url: '/apps/user/list',
+    url: '/user/list',
     icon: 'ri-file-user-line',
     section: 'Apps'
   },
   {
     id: '36',
     name: 'User View',
-    url: '/apps/user/view',
+    url: '/user/view',
     icon: 'ri-file-list-2-line',
     section: 'Apps'
   },
   {
     id: '37',
     name: 'Roles',
-    url: '/apps/roles',
+    url: '/roles',
     icon: 'ri-shield-user-line',
     section: 'Apps'
   },
   {
     id: '38',
     name: 'Permissions',
-    url: '/apps/permissions',
+    url: '/permissions',
     icon: 'ri-lock-unlock-line',
     section: 'Apps'
   },

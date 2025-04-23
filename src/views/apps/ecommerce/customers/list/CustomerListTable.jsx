@@ -134,7 +134,7 @@ const CustomerListTable = ({ customerData }) => {
               <Typography
                 component={Link}
                 color='text.primary'
-                href={getLocalizedUrl(`/apps/ecommerce/customers/details/${row.original.customerId}`, locale)}
+                href={getLocalizedUrl(`/ecommerce/customers/details/${row.original.customerId}`, locale)}
                 className='font-medium hover:text-primary'
               >
                 {row.original.customer}

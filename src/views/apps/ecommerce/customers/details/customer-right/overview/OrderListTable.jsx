@@ -104,7 +104,7 @@ const OrderListTable = ({ orderData }) => {
         cell: ({ row }) => (
           <Typography
             component={Link}
-            href={getLocalizedUrl(`/apps/ecommerce/orders/details/${row.original.order}`, locale)}
+            href={getLocalizedUrl(`/ecommerce/orders/details/${row.original.order}`, locale)}
             color='primary.main'
           >{`#${row.original.order}`}</Typography>
         )
@@ -139,7 +139,7 @@ const OrderListTable = ({ orderData }) => {
                 {
                   text: 'View',
                   icon: 'ri-eye-line',
-                  href: getLocalizedUrl(`/apps/ecommerce/orders/details/${row.original.order}`, locale),
+                  href: getLocalizedUrl(`/ecommerce/orders/details/${row.original.order}`, locale),
                   linkProps: { className: 'flex items-center gap-2 is-full plb-1.5 pli-4' }
                 },
                 {

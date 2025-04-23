@@ -199,7 +199,7 @@ const UserListTable = ({ tableData }) => {
               <i className='ri-delete-bin-7-line text-textSecondary' />
             </IconButton>
             <IconButton>
-              <Link href={getLocalizedUrl('/apps/user/view', locale)} className='flex'>
+              <Link href={getLocalizedUrl('/user/view', locale)} className='flex'>
                 <i className='ri-eye-line text-textSecondary' />
               </Link>
             </IconButton>

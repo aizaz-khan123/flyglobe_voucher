@@ -87,7 +87,7 @@ export const RecentSearch = () => {
     ).toString()
 
     setPayloadValues(queryString)
-    router.push(`/en/apps/flight/search/result?${queryString}`)
+    router.push(`/en/flight/search/result?${queryString}`)
   }
 
   return (

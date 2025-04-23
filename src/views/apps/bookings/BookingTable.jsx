@@ -138,7 +138,7 @@ const BookingTable = ({ hidePagination }) => {
       columnHelper.accessor('booking_id', {
         header: 'Booking ID',
         cell: ({ row }) => (
-          <Link href={`/apps/bookings/${row.original.booking_id}`} className='font-medium text-primary'>
+          <Link href={`/bookings/${row.original.booking_id}`} className='font-medium text-primary'>
             {row.original.booking_id}
           </Link>
         )
