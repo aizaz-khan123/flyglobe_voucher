@@ -788,16 +788,6 @@ const FlightFound = () => {
                     </span>
                   </div>
                   <div className='flex flex-col md:flex-row items-center gap-2'>
-                    <Button
-                      variant='contained'
-                      color='primary'
-                      // disabled={
-                      //   Object.values(selectedFares).filter(fare => fare?.sector).length < 2
-                      // }
-                      onClick={handleCombinedBooking}
-                    >
-                      Book Combined Flight
-                    </Button>
                     <div className='relative'>
                       <div className='relative inline-block'>
                         <AddCommission filteredFlights={filteredFlights} setFilteredFlights={setFilteredFlights} />
