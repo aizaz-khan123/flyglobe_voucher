@@ -12,7 +12,7 @@ import {
 } from '@mui/material'
 import InfoIcon from '@mui/icons-material/Info'
 
-const FareOptionCard = ({ faresGroupData, legIndex, sectorKey, data, isSelected, handleFareSelect, initiateBookFareHandler, handleClick, anchorRef, openFlightInfo, anchorEl }) => {
+const FareOptionCard = ({ faresGroupData, legIndex, sectorKey, data, isSelected, handleFareSelect, initiateBookFareHandler, handleClick, anchorRef, openFlightInfo, anchorEl, allLegs }) => {
     const baseFare = Number(faresGroupData?.price?.base_fare.replace(/,/g, '')) || 0;
     const tax = Number(faresGroupData?.price?.tax.replace(/,/g, '')) || 0;
     const grossAmount = Number(faresGroupData?.price?.gross_amount.replace(/,/g, '')) || 0;
@@ -20,7 +20,7 @@ const FareOptionCard = ({ faresGroupData, legIndex, sectorKey, data, isSelected,
     const formattedTotalFare = totalFare.toLocaleString();
 
     return (
-        <div className='col-span-12 md:col-span-6 lg:col-span-4 border rounded-lg pb-4 bg-[#F5F6FF]'>
+        <div className='col-span-12 md:col-span-6 lg:col-span-4 border rounded-lg pb-4 bg-[#F5F6FF] mb-3'>
             <div className='px-4 py-2 bg-[#8A9DC2] rounded-tl-lg rounded-tr-lg'>
                 <p className='font-bold text-white text-center rounded-lg text-md'>
                     {faresGroupData?.rbd}
@@ -175,7 +175,7 @@ const FareOptionCard = ({ faresGroupData, legIndex, sectorKey, data, isSelected,
                                     ...faresGroupData,
                                     sector: sectorKey,
                                     airline: data.airline,
-                                });
+                                }, data, data.legs);
                             }}
                         >
                             {isSelected ? 'Selected' : `${faresGroupData?.price?.currency} ${faresGroupData?.price?.gross_amount}`}

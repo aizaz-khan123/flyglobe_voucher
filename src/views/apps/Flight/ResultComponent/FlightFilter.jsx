@@ -7,6 +7,7 @@ import { GoClock } from 'react-icons/go'
 import { formatTime } from '@/utils/formatTime'
 import DateSelector from './DateSelector'
 import { Slider } from "@mui/material";
+import { FaPencil } from 'react-icons/fa6'
 
 const FlightFilter = ({
   time,
@@ -27,7 +28,9 @@ const FlightFilter = ({
   handleSelectAllDepartureTimes,
   handleDepartureTimeChange,
   queryParamss,
-  handleInputChange
+  handleInputChange,
+  handleClearSelectedFares,
+  selectedFares
 }) => {
   const queryParams = queryParamss;
   const formatPrice = (price) => {
@@ -36,6 +39,9 @@ const FlightFilter = ({
       minimumFractionDigits: 2
     });
   };
+
+  const normalizeSelectedFares = Object.entries(selectedFares)
+
   return (
     <div className='col-span-12 md:col-span-4 lg:col-span-3 md:sticky top-2 '>
       {/* <div className='hidden lg:block'>
@@ -46,6 +52,42 @@ const FlightFilter = ({
         <p className='text-sm text-center my-2'>Book before the search expires!</p>
       </div> */}
 
+      {normalizeSelectedFares.length > 0 && (
+        <Card className='bg-white mb-5'>
+          <CardContent className='p-3 border rounded-lg'>
+            <div className='flex justify-between items-center mb-2'>
+              <h3 className='text-lg font-semibold'>Selected Flights</h3>
+              <Button
+                size='sm'
+                onClick={handleClearSelectedFares}
+                className='text-primary flex items-center gap-1 bg-transparent outline-none border-none underline'
+              >
+                Clear All
+              </Button>
+            </div>
+            <div>
+              {normalizeSelectedFares.map(([sector, fare]) => (
+                <div
+                  key={sector}
+                  className='flex items-center justify-between border rounded p-2 gap-2'
+                >
+                  <div>
+                    <p className='font-medium'>{sector} - {fare.airline}</p>
+                    <p className='text-sm text-gray-500'>
+                      {`PKR ${fare.price.gross_amount}`}
+                    </p>
+                    <p className='text-xs text-gray-400'>{fare.booking_res_code}</p>
+                  </div>
+                  <FaPencil
+                    onClick={handleClearSelectedFares}
+                    className='cursor-pointer text-gray-600 hover:text-primary'
+                  />
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
       <Card className='w-70 p-4 h-screen lg:h-auto lg:shadow-lg rounded-none lg:rounded-lg lg:mb-3 md:sticky md:top-2'>
         {/* <div className='block lg:hidden'>
           <div className='flex items-center justify-center gap-2'>

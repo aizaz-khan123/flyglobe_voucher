@@ -252,42 +252,17 @@ const FlightFound = () => {
   const [selectedFares, setSelectedFares] = useState({});
   console.log('selectedFares', selectedFares);
   const [selectedAirlinesBySector, setSelectedAirlinesBySector] = useState({});
-  // console.log('selectedFares', selectedFares);
-  // console.log('selectedAirlinesBySector', selectedAirlinesBySector);
   const [activeSectorIndex, setActiveSectorIndex] = useState(1);
-
+  const [legsLength, setLegsLength] = useState([]);
 
   const handleCloseBookingFareModal = () => setBookingFareModal(false)
 
-  // const initiateBookFareHandler = async booking_id => {
-  //   try {
-  //     const response = await initiateBookFareTrigger({
-  //       booking_id
-  //     }).unwrap()
+  const handleClearSelectedFares = () => {
+    setSelectedFares({});
+    setSelectedAirlinesBySector({});
+    setActiveSectorIndex(1);
+  };
 
-  //     setBookingFareModal(true)
-
-  //     if (response?.status === true) {
-  //       router.push(`/en/apps/flight/new-booking/${response?.data?.confirmation_id}`)
-  //     }
-  //   } catch (error) {
-  //     console.error('Mutation failed:', error)
-  //     let errorMessage = 'Something went wrong. Please try again.'
-
-  //     if (
-  //       error &&
-  //       typeof error === 'object' &&
-  //       'data' in error &&
-  //       error.data &&
-  //       typeof error.data === 'object' &&
-  //       'message' in error.data
-  //     ) {
-  //       errorMessage = error.data.message
-  //     }
-
-  //     toaster.error(errorMessage)
-  //   }
-  // }
   const initiateBookFareHandler = async (bookingIds) => {
     try {
       const response = await initiateBookFareTrigger({
@@ -304,46 +279,45 @@ const FlightFound = () => {
     }
   };
 
-  const handleFareSelect = (legIndex, fareData) => {
+  const handleFareSelect = (legIndex, fareData, flightData, allLegs) => {
     const sectorKey = fareData.sector;
     const airline = fareData.airline.name;
-    // // Check for existing selection in the same sector
-    // const existingSelection = Object.entries(selectedFares).find(
-    //   ([_, fare]) => fare.sector === sectorKey
-    // );
 
-    // if (existingSelection) {
-    //   // Remove existing selection for this sector
-    //   const [existingKey] = existingSelection;
-    //   const updatedFares = { ...selectedFares };
-    //   delete updatedFares[existingKey];
-    //   setSelectedFares(updatedFares);
-    // }
+    // Convert allLegs object to array of sector keys
+    const sectorKeys = Object.keys(allLegs || {});
+    const totalSectors = sectorKeys.length;
 
-    // Add/update the new selection
-    setSelectedFares(prev => ({
-      ...prev,
-      [sectorKey]: fareData
-    }));
+    setSelectedFares(prev => {
+      const newFares = {
+        ...prev,
+        [sectorKey]: { ...fareData, airline }
+      };
 
-    // Update selected airlines by sector
+      // Check if all sectors are selected using actual leg count
+      if (Object.keys(newFares).length === totalSectors) {
+        handleCombinedBooking(newFares, totalSectors);
+      }
+      return newFares;
+    });
+
     setSelectedAirlinesBySector(prev => ({
       ...prev,
       [sectorKey]: airline
     }));
-    // Go to next sector
-    setActiveSectorIndex(prev => prev + 1);
+
+    setActiveSectorIndex(prev => {
+      // Ensure we don't exceed actual sector count
+      return Math.min(prev + 1, totalSectors);
+    });
   };
 
-  // Modified handleCombinedBooking to ensure proper sector handling
-  const handleCombinedBooking = async () => {
+  const handleCombinedBooking = async (fares, totalSectors) => {
     try {
-      let bookingIds = [];
+      const bookingIds = [];
       const sectorsProcessed = new Set();
 
-      Object.values(selectedFares).forEach(fare => {
+      Object.values(fares).forEach(fare => {
         if (!fare?.sector) return;
-
         const sectorKey = fare.sector;
         if (!sectorsProcessed.has(sectorKey)) {
           sectorsProcessed.add(sectorKey);
@@ -351,8 +325,9 @@ const FlightFound = () => {
         }
       });
 
-      if (bookingIds.length === 0) {
-        alert('Please select at least one fare');
+      // Validate against actual sector count from current flight
+      if (bookingIds.length !== totalSectors) {
+        alert(`Missing ${totalSectors - bookingIds.length} sector selections`);
         return;
       }
 
@@ -365,8 +340,8 @@ const FlightFound = () => {
         router.push(`/en/apps/flight/new-booking/${response?.data?.confirmation_id}`);
       }
     } catch (error) {
-      console.error('Mutation failed:', error);
-      // Handle error
+      console.error("Booking failed:", error);
+      alert(error?.data?.message || "Failed to process booking");
     }
   };
 
@@ -584,19 +559,27 @@ const FlightFound = () => {
         return false
       })()
 
-      // Updated airline matching logic
-      const matchesAirline = (() => {
-        const selectedAirline = Object.values(selectedAirlinesBySector || {}).find(airline => airline);
-        return selectedAirline ? flight.airline.name === selectedAirline : true;
-      })();
 
       const matchesStops = selectedStops.length === 0 || selectedStops.includes(stops)
-      const matchesAirlines = selectedAirlines.length === 0 || selectedAirlines.includes(flight?.airline?.name) || matchesAirline
+      const matchesAirlines = selectedAirlines.length === 0 || selectedAirlines.includes(flight?.airline?.name)
+      // Check against sector-specific airline selections
+      // Check against sector-specific airline selections
+      const matchesSelectedSectors = Object.entries(selectedAirlinesBySector).every(([sectorKey, selectedAirline]) => {
+        // Check if the flight has a leg in this sector with the selected airline
+        const hasMatchingSector = normalizedLegs.some(leg => {
+          // Ensure leg.sector is an array before joining
+          const legSector = Array.isArray(leg.sector) ? leg.sector.join('-') : leg.sector;
+          return legSector === sectorKey && flight.airline.name === selectedAirline;
+        });
+
+        return hasMatchingSector;
+      });
+
       const matchesDepartureTime =
         selectedDepartureTimes.length === 0 ||
         selectedDepartureTimes.some(timeRange => isWithinTimeRange(departureTime, timeRange))
 
-      return matchesStops && matchesAirlines && matchesDepartureTime && hasMatchingFare
+      return matchesStops && matchesAirlines && matchesDepartureTime && hasMatchingFare && matchesSelectedSectors
     })
 
     setFilteredFlights(filtered || [])
@@ -774,6 +757,8 @@ const FlightFound = () => {
             handleSelectAllDepartureTimes={handleSelectAllDepartureTimes}
             handleDepartureTimeChange={handleDepartureTimeChange}
             queryParamss={queryParams}
+            selectedFares={selectedFares}
+            handleClearSelectedFares={handleClearSelectedFares}
           />
         </div>
 
@@ -849,6 +834,7 @@ const FlightFound = () => {
                     //   : []; // Fallback to an empty array if legs is undefined or empty
 
                     const allLegs = data?.legs || {};
+
                     const keys = Object.keys(allLegs);
                     const filteredKeys = keys.filter(key => Number(key) === activeSectorIndex);
                     const normalizedLegs = filteredKeys
@@ -973,13 +959,38 @@ const FlightFound = () => {
                               </div>
                             </div>
                           </div>
+                          <div className='border rounded-lg bg-[#F5F6FF] p-2 mb-3 text-center'>
+                            {normalizedLegs?.[0]?.sector?.join(' → ')}
+                          </div>
                           {normalizedLegs.map((leg, legIndex) => {
-
                             const sectorKey = leg.sector.join('-');
                             return (
                               <div key={legIndex} className='grid grid-cols-12 gap-4'>
+                                {/* <div className="col-span-12">
+                                  {leg?.sector?.join(' → ') || 'Sector information not available'}
+                                </div> */}
+                                {([
+                                  ...(Array.isArray(leg?.fare_option) ? leg.fare_option : []),
+                                  ...(Array.isArray(data?.fare_option) ? data.fare_option : [])
+                                ]).map((faresGroupData, faresGroupIndex) => (
+                                  <FareOptionCard
+                                    key={faresGroupIndex}
+                                    faresGroupData={faresGroupData}
+                                    legIndex={legIndex}
+                                    sectorKey={sectorKey}
+                                    data={data}
+                                    isSelected={selectedFares[sectorKey]?.booking_id === faresGroupData.booking_id}
+                                    handleFareSelect={handleFareSelect}
+                                    initiateBookFareHandler={initiateBookFareHandler}
+                                    handleClick={handleClick}
+                                    anchorRef={anchorRef}
+                                    openFlightInfo={openFlightInfo}
+                                    anchorEl={anchorEl}
+                                    allLegs={allLegs}
+                                  />
+                                ))}
                                 {/* Sector Header */}
-                                <Accordion className='col-span-12 mb-3'>
+                                {/* <Accordion className='col-span-12 mb-3'>
                                   <AccordionSummary
                                     expandIcon={<IoIosArrowDown />}
                                     aria-controls={`panel${legIndex}-content`}
@@ -1012,7 +1023,7 @@ const FlightFound = () => {
                                       />
                                     ))}
                                   </AccordionDetails>
-                                </Accordion>
+                                </Accordion> */}
                               </div>
                             )
                           }
@@ -1280,6 +1291,9 @@ const FlightFound = () => {
             selectedDepartureTimes={selectedDepartureTimes}
             handleSelectAllDepartureTimes={handleSelectAllDepartureTimes}
             handleDepartureTimeChange={handleDepartureTimeChange}
+            selectedFares={selectedFares}
+            queryParamss={queryParams}
+            handleClearSelectedFares={handleClearSelectedFares}
           />
         </div>
       </Drawer>
