@@ -42,22 +42,22 @@ const horizontalMenuData = dictionary => [
         children: [
           {
             label: dictionary['navigation'].dashboard,
-            href: '/apps/ecommerce/dashboard'
+            href: '/ecommerce/dashboard'
           },
           {
             label: dictionary['navigation'].products,
             children: [
               {
                 label: dictionary['navigation'].list,
-                href: '/apps/ecommerce/products/list'
+                href: '/ecommerce/products/list'
               },
               {
                 label: dictionary['navigation'].add,
-                href: '/apps/ecommerce/products/add'
+                href: '/ecommerce/products/add'
               },
               {
                 label: dictionary['navigation'].category,
-                href: '/apps/ecommerce/products/category'
+                href: '/ecommerce/products/category'
               }
             ]
           },
@@ -66,13 +66,13 @@ const horizontalMenuData = dictionary => [
             children: [
               {
                 label: dictionary['navigation'].list,
-                href: '/apps/ecommerce/orders/list'
+                href: '/ecommerce/orders/list'
               },
               {
                 label: dictionary['navigation'].details,
-                href: '/apps/ecommerce/orders/details/5434',
+                href: '/ecommerce/orders/details/5434',
                 exactMatch: false,
-                activeUrl: '/apps/ecommerce/orders/details'
+                activeUrl: '/ecommerce/orders/details'
               }
             ]
           },
@@ -81,27 +81,27 @@ const horizontalMenuData = dictionary => [
             children: [
               {
                 label: dictionary['navigation'].list,
-                href: '/apps/ecommerce/customers/list'
+                href: '/ecommerce/customers/list'
               },
               {
                 label: dictionary['navigation'].details,
-                href: '/apps/ecommerce/customers/details/879861',
+                href: '/ecommerce/customers/details/879861',
                 exactMatch: false,
-                activeUrl: '/apps/ecommerce/customers/details'
+                activeUrl: '/ecommerce/customers/details'
               }
             ]
           },
           {
             label: dictionary['navigation'].manageReviews,
-            href: '/apps/ecommerce/manage-reviews'
+            href: '/ecommerce/manage-reviews'
           },
           {
             label: dictionary['navigation'].referrals,
-            href: '/apps/ecommerce/referrals'
+            href: '/ecommerce/referrals'
           },
           {
             label: dictionary['navigation'].settings,
-            href: '/apps/ecommerce/settings'
+            href: '/ecommerce/settings'
           }
         ]
       },
@@ -111,15 +111,15 @@ const horizontalMenuData = dictionary => [
         children: [
           {
             label: dictionary['navigation'].dashboard,
-            href: '/apps/academy/dashboard'
+            href: '/academy/dashboard'
           },
           {
             label: dictionary['navigation'].myCourses,
-            href: '/apps/academy/my-courses'
+            href: '/academy/my-courses'
           },
           {
             label: dictionary['navigation'].courseDetails,
-            href: '/apps/academy/course-details'
+            href: '/academy/course-details'
           }
         ]
       },
@@ -129,35 +129,35 @@ const horizontalMenuData = dictionary => [
         children: [
           {
             label: dictionary['navigation'].dashboard,
-            href: '/apps/logistics/dashboard'
+            href: '/logistics/dashboard'
           },
           {
             label: dictionary['navigation'].fleet,
-            href: '/apps/logistics/fleet'
+            href: '/logistics/fleet'
           }
         ]
       },
       {
         label: dictionary['navigation'].email,
         icon: 'ri-mail-open-line',
-        href: '/apps/email',
+        href: '/email',
         exactMatch: false,
-        activeUrl: '/apps/email'
+        activeUrl: '/email'
       },
       {
         label: dictionary['navigation'].chat,
         icon: 'ri-wechat-line',
-        href: '/apps/chat'
+        href: '/chat'
       },
       {
         label: dictionary['navigation'].calendar,
-        href: '/apps/calendar',
+        href: '/calendar',
         icon: 'ri-calendar-line'
       },
       {
         label: dictionary['navigation'].kanban,
         icon: 'ri-drag-drop-line',
-        href: '/apps/kanban'
+        href: '/kanban'
       },
       {
         label: dictionary['navigation'].invoice,
@@ -165,23 +165,23 @@ const horizontalMenuData = dictionary => [
         children: [
           {
             label: dictionary['navigation'].list,
-            href: '/apps/invoice/list'
+            href: '/invoice/list'
           },
           {
             label: dictionary['navigation'].preview,
-            href: '/apps/invoice/preview/4987',
+            href: '/invoice/preview/4987',
             exactMatch: false,
-            activeUrl: '/apps/invoice/preview'
+            activeUrl: '/invoice/preview'
           },
           {
             label: dictionary['navigation'].edit,
-            href: '/apps/invoice/edit/4987',
+            href: '/invoice/edit/4987',
             exactMatch: false,
-            activeUrl: '/apps/invoice/edit'
+            activeUrl: '/invoice/edit'
           },
           {
             label: dictionary['navigation'].add,
-            href: '/apps/invoice/add'
+            href: '/invoice/add'
           }
         ]
       },
@@ -191,11 +191,11 @@ const horizontalMenuData = dictionary => [
         children: [
           {
             label: dictionary['navigation'].list,
-            href: '/apps/user/list'
+            href: '/user/list'
           },
           {
             label: dictionary['navigation'].view,
-            href: '/apps/user/view'
+            href: '/user/view'
           }
         ]
       },
@@ -205,11 +205,11 @@ const horizontalMenuData = dictionary => [
         children: [
           {
             label: dictionary['navigation'].roles,
-            href: '/apps/roles'
+            href: '/roles'
           },
           {
             label: dictionary['navigation'].permissions,
-            href: '/apps/permissions'
+            href: '/permissions'
           }
         ]
       }

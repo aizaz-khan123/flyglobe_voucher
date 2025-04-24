@@ -40,8 +40,7 @@ const VerticalMenu = ({ dictionary, scrollMenu }) => {
   const ScrollWrapper = isBreakpointReached ? 'div' : PerfectScrollbar
 
   return (
-    // eslint-disable-next-line lines-around-comment
-    /* Custom scrollbar instead of browser scroll, remove if you want browser scroll only */
+
     <ScrollWrapper
       {...(isBreakpointReached
         ? {
@@ -53,8 +52,6 @@ const VerticalMenu = ({ dictionary, scrollMenu }) => {
           onScrollY: container => scrollMenu(container, true)
         })}
     >
-      {/* Incase you also want to scroll NavHeader to scroll with Vertical Menu, remove NavHeader from above and paste it below this comment */}
-      {/* Vertical Menu */}
 
       <Menu
         popoutMenuOffset={{ mainAxis: 10 }}
@@ -72,148 +69,106 @@ const VerticalMenu = ({ dictionary, scrollMenu }) => {
           {dictionary['navigation'].dashboard}
         </MenuItem>
 
-        <MenuSection label={dictionary['navigation'].appsPages}>
-          <MenuItem
-            href={`/${locale}/apps/flight`}
+        <MenuSection label={dictionary['navigation'].sales}>
+
+          <SubMenu label={dictionary['navigation'].Sell} icon={<i className='ri-organization-chart'></i>}>
+            <MenuItem href={`/${locale}/book-flights`}>{dictionary['navigation'].flight}</MenuItem>
+            <MenuItem href={`/${locale}/group-flights`}>{dictionary['navigation'].groupFlight}</MenuItem>
+            <MenuItem href={`/${locale}/umrah-hotels`}>{dictionary['navigation'].umrahHotels}</MenuItem>
+            <MenuItem href={`/${locale}/umrah-visa`}>{dictionary['navigation'].umrahVisa}</MenuItem>
+            <MenuItem href={`/${locale}/bookings`}>{dictionary['navigation'].bookings}</MenuItem>
+          </SubMenu>
+
+          <SubMenu label={dictionary['navigation'].Requests} icon={<i className='ri-organization-chart'></i>}>
+            <MenuItem
+              href={`/${locale}/refund-request`}
+              exactMatch={false}
+              activeUrl='/refund-request'
+              icon={<i className='ri-calendar-line'></i>}
+            >
+              {dictionary['navigation'].refundRequest}
+            </MenuItem>
+          </SubMenu>
+          {/* For Agencies */}
+          {/* <MenuItem
+            href={`/${locale}/my-refund-request`}
             exactMatch={false}
-            activeUrl='/apps/flight'
-            icon={<i className='ri-mail-open-line' />}
-          >
-            {dictionary['navigation'].flight}
-          </MenuItem>
-          <MenuItem
-            href={`/${locale}/apps/import-pnr`}
-            exactMatch={false}
-            activeUrl='/apps/import-pnr'
-            icon={<i className='ri-import-line' />}
-          >
-            {dictionary['navigation'].importPnr}
-          </MenuItem>
-          <MenuItem
-            href={`/${locale}/apps/bookings`}
-            exactMatch={false}
-            activeUrl='/apps/bookings'
-            icon={<i className='ri-calendar-line'></i>}
-          >
-            {dictionary['navigation'].bookings}
-          </MenuItem>
-          <MenuItem
-            href={`/${locale}/apps/refund-request`}
-            exactMatch={false}
-            activeUrl='/apps/refund-request'
-            icon={<i className='ri-calendar-line'></i>}
-          >
-            {dictionary['navigation'].refundRequest}
-          </MenuItem>
-          <MenuItem
-            href={`/${locale}/apps/my-refund-request`}
-            exactMatch={false}
-            activeUrl='/apps/my-refund-request'
+            activeUrl='/my-refund-request'
             icon={<i className='ri-calendar-line'></i>}
           >
             {dictionary['navigation'].myRefundRequest}
-          </MenuItem>
-
-          <SubMenu label={dictionary['navigation'].Sell} icon={<i className='ri-organization-chart'></i>}>
-            <MenuItem href={`/${locale}/apps/sell/flight`}>{dictionary['navigation'].flight}</MenuItem>
-            <MenuItem href={`/${locale}/apps/sell/group-flights`}>{dictionary['navigation'].groupFlight}</MenuItem>
-            <MenuItem href={`/${locale}/apps/sell/umrah-hotels`}>{dictionary['navigation'].umrahHotels}</MenuItem>
-            <MenuItem href={`/${locale}/apps/sell/bookings`}>{dictionary['navigation'].bookings}</MenuItem>
-          
-          </SubMenu>
+          </MenuItem> */}
 
 
-          <SubMenu label={dictionary['navigation'].organization} icon={<i className='ri-organization-chart'></i>}>
-            <MenuItem href={`/${locale}/apps/organization/branches`}>{dictionary['navigation'].branches}</MenuItem>
-            <MenuItem href={`/${locale}/apps/organization/agencies`}>{dictionary['navigation'].agencies}</MenuItem>
-            <MenuItem href={`/${locale}/apps/organization/employees`}>{dictionary['navigation'].employees}</MenuItem>
+
+
+          <SubMenu label={dictionary['navigation'].organization} icon={<i class="ri-group-line"></i>}>
+            <MenuItem href={`/${locale}/organization/branches`}>{dictionary['navigation'].branches}</MenuItem>
+            <MenuItem href={`/${locale}/organization/agencies`}>{dictionary['navigation'].agencies}</MenuItem>
+            <MenuItem href={`/${locale}/organization/employees`}>{dictionary['navigation'].employees}</MenuItem>
           </SubMenu>
 
           <SubMenu label={dictionary['navigation'].accounts} icon={<i className='ri-calculator-line'></i>}>
-            <MenuItem href={`/${locale}/apps/accounts/chart-of-account`}>
+            <MenuItem href={`/${locale}/accounts/chart-of-account`}>
               {dictionary['navigation'].chartOfAccount}
             </MenuItem>
-            <MenuItem href={`/${locale}/apps/accounts/general-legder`}>
+            <MenuItem href={`/${locale}/accounts/general-legder`}>
               {dictionary['navigation'].generalLegder}
             </MenuItem>
-            <MenuItem href={`/${locale}/apps/accounts/journal-entries`}>
+            <MenuItem href={`/${locale}/accounts/journal-entries`}>
               {dictionary['navigation'].journalEntries}
             </MenuItem>
-            <MenuItem href={`/${locale}/apps/accounts/account-statement`}>
+            <MenuItem href={`/${locale}/accounts/account-statement`}>
               {dictionary['navigation'].accountStatement}
             </MenuItem>
-            <MenuItem href={`/${locale}/apps/accounts/trail-balance`}>{dictionary['navigation'].trailBalance}</MenuItem>
+            <MenuItem href={`/${locale}/accounts/trail-balance`}>{dictionary['navigation'].trailBalance}</MenuItem>
           </SubMenu>
 
           <SubMenu label={dictionary['navigation'].deposites} icon={<i className='ri-luggage-deposit-line'></i>}>
-            <MenuItem href={`/${locale}/apps/deposites/agency-deposite`}>
+            <MenuItem href={`/${locale}/deposites/agency-deposite`}>
               {dictionary['navigation'].agencyDeposite}
             </MenuItem>
-            <MenuItem href={`/${locale}/apps/deposites/branch-deposite`}>
+            <MenuItem href={`/${locale}/deposites/branch-deposite`}>
               {dictionary['navigation'].branchDeposite}
             </MenuItem>
           </SubMenu>
 
-          <SubMenu label={dictionary['navigation'].reports} icon={<i className='ri-file-chart-line'></i>}>
-            <MenuItem href={`/${locale}/apps/reports/sales-reports`}>{dictionary['navigation'].salesReports}</MenuItem>
-            <MenuItem href={`/${locale}/apps/reports/refund-reports`}>
+          <SubMenu label={dictionary['navigation'].reports} icon={<i class="ri-file-chart-fill"></i>}>
+            <MenuItem href={`/${locale}/reports/sales-reports`}>{dictionary['navigation'].salesReports}</MenuItem>
+            <MenuItem href={`/${locale}/reports/refund-reports`}>
               {dictionary['navigation'].refundReports}
             </MenuItem>
-            <MenuItem href={`/${locale}/apps/reports/supplier-reports`}>
+            <MenuItem href={`/${locale}/reports/supplier-reports`}>
               {dictionary['navigation'].supplierReports}
             </MenuItem>
-            <MenuItem href={`/${locale}/apps/reports/un-used-tickets`}>
+            <MenuItem href={`/${locale}/reports/un-used-tickets`}>
               {dictionary['navigation'].unUsedTickets}
             </MenuItem>
           </SubMenu>
 
-          <SubMenu label={dictionary['navigation'].settings} icon={<i className='ri-file-settings-line'></i>}>
-            <MenuItem href={`/${locale}/apps/settings/bank-accounts`}>{dictionary['navigation'].bankAccounts}</MenuItem>
-            <MenuItem href={`/${locale}/apps/settings/airline-margins`}>
+          <SubMenu label={dictionary['navigation'].settings} icon={<i class="ri-settings-2-line"></i>}>
+            <MenuItem href={`/${locale}/settings/bank-accounts`}>{dictionary['navigation'].bankAccounts}</MenuItem>
+            <MenuItem href={`/${locale}/settings/airline-margins`}>
               {dictionary['navigation'].airlineMargins}
             </MenuItem>
-            <MenuItem href={`/${locale}/apps/settings/connectors`}>{dictionary['navigation'].connectors}</MenuItem>
-            <MenuItem href={`/${locale}/apps/settings/suppliers`}>{dictionary['navigation'].suppliers}</MenuItem>
+            <MenuItem href={`/${locale}/settings/connectors`}>{dictionary['navigation'].connectors}</MenuItem>
+            <MenuItem href={`/${locale}/settings/suppliers`}>{dictionary['navigation'].suppliers}</MenuItem>
 
-            <MenuItem href={`/${locale}/apps/settings/airlines`}>{dictionary['navigation'].airlines}</MenuItem>
-            <MenuItem href={`/${locale}/apps/settings/airpots`}>{dictionary['navigation'].airpots}</MenuItem>
-            <MenuItem href={`/${locale}/apps/settings/countries`}>{dictionary['navigation'].countries}</MenuItem>
-            <MenuItem href={`/${locale}/apps/settings/news-alerts`}>{dictionary['navigation'].newsAlerts}</MenuItem>
+            <MenuItem href={`/${locale}/settings/airlines`}>{dictionary['navigation'].airlines}</MenuItem>
+            <MenuItem href={`/${locale}/settings/airpots`}>{dictionary['navigation'].airpots}</MenuItem>
+            <MenuItem href={`/${locale}/settings/countries`}>{dictionary['navigation'].countries}</MenuItem>
+            <MenuItem href={`/${locale}/settings/news-alerts`}>{dictionary['navigation'].newsAlerts}</MenuItem>
           </SubMenu>
+
+
           <MenuItem
-            href={`/${locale}/apps/notifications`}
+            href={`/${locale}/notifications`}
             exactMatch={false}
-            activeUrl='/apps/notifications'
+            activeUrl='/notifications'
             icon={<i className='ri-calendar-line'></i>}
           >
             {dictionary['navigation'].notifications}
           </MenuItem>
-
-          {/* <SubMenu label={dictionary['navigation'].eCommerce} icon={<i className='ri-shopping-bag-3-line' />}>
-            <MenuItem href={`/${locale}/apps/ecommerce/dashboard`}>{dictionary['navigation'].dashboard}</MenuItem>
-            <SubMenu label={dictionary['navigation'].products}>
-              <MenuItem href={`/${locale}/apps/ecommerce/products/list`}>{dictionary['navigation'].list}</MenuItem>
-              <MenuItem href={`/${locale}/apps/ecommerce/products/add`}>{dictionary['navigation'].add}</MenuItem>
-              <MenuItem href={`/${locale}/apps/ecommerce/products/category`}>
-                {dictionary['navigation'].category}
-              </MenuItem>
-            </SubMenu>
-            <SubMenu label={dictionary['navigation'].orders}>
-              <MenuItem href={`/${locale}/apps/ecommerce/orders/list`}>{dictionary['navigation'].list}</MenuItem>
-              <MenuItem
-                href={`/${locale}/apps/ecommerce/orders/details/5434`}
-                exactMatch={false}
-                activeUrl='/apps/ecommerce/orders/details'
-              >
-                {dictionary['navigation'].details}
-              </MenuItem>
-            </SubMenu>
-            <MenuItem href={`/${locale}/apps/ecommerce/settings`}>{dictionary['navigation'].settings}</MenuItem>
-          </SubMenu>
-          <SubMenu label={dictionary['navigation'].logistics} icon={<i className='ri-car-line' />}>
-            <MenuItem href={`/${locale}/apps/logistics/dashboard`}>{dictionary['navigation'].dashboard}</MenuItem>
-            <MenuItem href={`/${locale}/apps/logistics/fleet`}>{dictionary['navigation'].fleet}</MenuItem>
-          </SubMenu> */}
         </MenuSection>
       </Menu>
     </ScrollWrapper>

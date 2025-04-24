@@ -16,25 +16,25 @@ import { verticalLayoutClasses } from '@layouts/utils/layoutClasses'
 // Vars
 const shortcuts = [
   {
-    url: '/apps/calendar',
+    url: '/calendar',
     icon: 'ri-calendar-line',
     title: 'Calendar',
     subtitle: 'Appointments'
   },
   {
-    url: '/apps/invoice/list',
+    url: '/invoice/list',
     icon: 'ri-file-list-3-line',
     title: 'Invoice App',
     subtitle: 'Manage Accounts'
   },
   {
-    url: '/apps/user/list',
+    url: '/user/list',
     icon: 'ri-user-3-line',
     title: 'Users',
     subtitle: 'Manage Users'
   },
   {
-    url: '/apps/roles',
+    url: '/roles',
     icon: 'ri-computer-line',
     title: 'Role Management',
     subtitle: 'Permissions'

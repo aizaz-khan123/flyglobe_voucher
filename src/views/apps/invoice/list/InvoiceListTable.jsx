@@ -135,7 +135,7 @@ const InvoiceListTable = ({ invoiceData }) => {
         cell: ({ row }) => (
           <Typography
             component={Link}
-            href={getLocalizedUrl(`/apps/invoice/preview/${row.original.id}`, locale)}
+            href={getLocalizedUrl(`/invoice/preview/${row.original.id}`, locale)}
             color='primary.main'
           >{`#${row.original.id}`}</Typography>
         )
@@ -208,7 +208,7 @@ const InvoiceListTable = ({ invoiceData }) => {
               <i className='ri-delete-bin-7-line text-textSecondary' />
             </IconButton>
             <IconButton>
-              <Link href={getLocalizedUrl(`/apps/invoice/preview/${row.original.id}`, locale)} className='flex'>
+              <Link href={getLocalizedUrl(`/invoice/preview/${row.original.id}`, locale)} className='flex'>
                 <i className='ri-eye-line text-textSecondary' />
               </Link>
             </IconButton>
@@ -224,7 +224,7 @@ const InvoiceListTable = ({ invoiceData }) => {
                 {
                   text: 'Edit',
                   icon: 'ri-pencil-line',
-                  href: getLocalizedUrl(`/apps/invoice/edit/${row.original.id}`, locale),
+                  href: getLocalizedUrl(`/invoice/edit/${row.original.id}`, locale),
                   linkProps: {
                     className: 'flex items-center is-full plb-2 pli-4 gap-2 text-textSecondary'
                   }
@@ -305,7 +305,7 @@ const InvoiceListTable = ({ invoiceData }) => {
           variant='contained'
           component={Link}
           startIcon={<i className='ri-add-line' />}
-          href={getLocalizedUrl('apps/invoice/add', locale)}
+          href={getLocalizedUrl('invoice/add', locale)}
           className='max-sm:is-full'
         >
           Create Invoice

@@ -109,7 +109,7 @@ const SidebarLeft = props => {
             {Object.entries(icons).map(([key, value]) => (
               <Link
                 key={key}
-                href={getLocalizedUrl(`/apps/email/${key}`, locale)}
+                href={getLocalizedUrl(`/email/${key}`, locale)}
                 prefetch
                 className={classnames(
                   'flex items-center justify-between plb-1 pli-5 gap-2.5 min-bs-8 bs-[32px] cursor-pointer',
@@ -145,7 +145,7 @@ const SidebarLeft = props => {
               {uniqueLabels.map(labelName => (
                 <Link
                   key={labelName}
-                  href={getLocalizedUrl(`/apps/email/label/${labelName}`, locale)}
+                  href={getLocalizedUrl(`/email/label/${labelName}`, locale)}
                   prefetch
                   className={classnames('flex items-center gap-x-2 pli-5 cursor-pointer', {
                     [styles.activeSidebarListItem]: labelName === label

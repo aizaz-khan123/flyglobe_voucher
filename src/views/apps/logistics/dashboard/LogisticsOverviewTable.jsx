@@ -107,7 +107,7 @@ const LogisticsOverviewTable = ({ vehicleData }) => {
             </CustomAvatar>
             <Typography
               component={Link}
-              href={getLocalizedUrl('/apps/logistics/fleet', locale)}
+              href={getLocalizedUrl('/logistics/fleet', locale)}
               className='font-medium hover:text-primary'
               color='text.primary'
             >
