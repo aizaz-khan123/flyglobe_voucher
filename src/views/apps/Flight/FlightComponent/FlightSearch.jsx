@@ -373,7 +373,7 @@ const FlightSearch = ({ initialValues, flightSearchOpen }) => {
     ).toString()
 
     setPayloadValues(queryString)
-    router.push(`flight/search/result/?${queryString}`)
+    router.push(`/en/flight/search/result/?${queryString}`)
 
     // if (flightSearchHandleClose) {
     //   flightSearchHandleClose();
@@ -531,7 +531,7 @@ const FlightSearch = ({ initialValues, flightSearchOpen }) => {
                 </div>
                 {route_type !== 'MULTICITY' ? (
                   <div className='grid grid-cols-12 gap-6 items-end'>
-                    <div className='relative col-span-12 md:col-span-6 lg:col-span-6 mb-5'>
+                    <div className='relative col-span-12 md:col-span-6 lg:col-span-6'>
                       <MuiAutocomplete
                         control={control}
                         name='origin'
@@ -579,7 +579,7 @@ const FlightSearch = ({ initialValues, flightSearchOpen }) => {
                         </button>
                       </div>
                     </div>
-                    <div className='col-span-12 md:col-span-6 lg:col-span-6 mb-5'>
+                    <div className='col-span-12 md:col-span-6 lg:col-span-6'>
                       <MuiAutocomplete
                         control={control}
                         selectIcon={<FaPlaneArrival className='!text-primary' />}

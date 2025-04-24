@@ -12,7 +12,7 @@ import {
 } from '@mui/material'
 import InfoIcon from '@mui/icons-material/Info'
 
-const FareOptionCard = ({ faresGroupData, legIndex, sectorKey, data, isSelected, handleFareSelect, initiateBookFareHandler, handleClick, anchorRef, openFlightInfo, anchorEl, allLegs }) => {
+const FareOptionCard = ({ faresGroupData, legIndex, sectorKey, data, isSelected, handleFareSelect, initiateBookFareHandler, handleClick, anchorRef, openFlightInfo, anchorEl, allLegs, handleCloseFlightInfo }) => {
     const baseFare = Number(faresGroupData?.price?.base_fare.replace(/,/g, '')) || 0;
     const tax = Number(faresGroupData?.price?.tax.replace(/,/g, '')) || 0;
     const grossAmount = Number(faresGroupData?.price?.gross_amount.replace(/,/g, '')) || 0;

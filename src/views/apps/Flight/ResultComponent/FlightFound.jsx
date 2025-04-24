@@ -137,7 +137,6 @@ const FlightFound = () => {
   // Prevent duplicate API calls
   const isFetching = useRef(false)
   const [mergeFlightResponse, setMergeFlightResponse] = useState([])
-  // console.log('mergeFlightResponse', mergeFlightResponse);
 
   const searchApiPayload = async () => {
     if (isFetching.current) return
@@ -250,7 +249,6 @@ const FlightFound = () => {
   const searchResultExpireModalHandleOpen = () => setsearchResultExpireModal(true)
   const [bookingFareModal, setBookingFareModal] = useState(false)
   const [selectedFares, setSelectedFares] = useState({});
-  console.log('selectedFares', selectedFares);
   const [selectedAirlinesBySector, setSelectedAirlinesBySector] = useState({});
   const [activeSectorIndex, setActiveSectorIndex] = useState(1);
   const [legsLength, setLegsLength] = useState([]);
@@ -381,11 +379,15 @@ const FlightFound = () => {
   const [selectedDepartureTimes, setSelectedDepartureTimes] = useState([])
   const [selectAllDepartureTimes, setSelectAllDepartureTimes] = useState(false)
   // const [priceRange, setPriceRange] = useState({ min: 0, max: 5000000 })
+  const [fareMaxPrice, setFareMaxPrice] = useState(0)
+  const [fareMinPrice, setFareMinPrice] = useState(0)
+
   const [priceRange, setPriceRange] = useState({
-    min: 0,
-    max: 5000000,
-    value: [0, 5000000] // Explicit tuple type
+    min: fareMinPrice,
+    max: fareMaxPrice,
+    value: [fareMinPrice, fareMaxPrice] // Explicit tuple type
   })
+
   const [viewFlightDetailModal, setViewFlightDetail] = useState(false)
   const [flightData, setFlightData] = useState()
 
@@ -506,6 +508,8 @@ const FlightFound = () => {
       if (allPrices.length > 0) {
         const minPrice = Math.min(...allPrices)
         const maxPrice = Math.max(...allPrices)
+        setFareMaxPrice(maxPrice)
+        setFareMinPrice(minPrice)
         setPriceRange({
           min: minPrice,
           max: maxPrice,
@@ -588,9 +592,9 @@ const FlightFound = () => {
   const resetAllFilterHandler = () => {
     // Reset local state filters
     setPriceRange({
-      min: 0,
-      max: 5000000,
-      value: [0, 5000000]
+      min: fareMinPrice,
+      max: fareMaxPrice,
+      value: [fareMinPrice, fareMaxPrice]
     })
     setSelectedStops([])
     setSelectedAirlines([])
@@ -708,7 +712,6 @@ const FlightFound = () => {
     const firstLeg = legs[0]
     return Array.isArray(firstLeg) ? firstLeg[0] : firstLeg
   }
-  // console.log('sortedFlights', sortedFlights);
 
 
   return (
@@ -841,7 +844,6 @@ const FlightFound = () => {
                         ? normalizedLegs.flatMap(leg => (Array.isArray(leg?.fare_option) ? leg.fare_option : []))
                         : [])
                     ]
-                    // console.log('normalizedLegs', normalizedLegs);
 
                     return (
                       <Card key={index} className='mb-5 static'>
@@ -870,7 +872,8 @@ const FlightFound = () => {
                             <div className='flex items-center gap-2'>
                               <div className='text-center'>
                                 <h3 className='font-semibold text-base mb-0 h-4'>
-                                  {/* {data?.legs[0]?.segments[0]?.origin?.iata_code} */}
+                                  {normalizedLegs?.[0]?.segments[normalizedLegs?.[0]?.segments.length - 1]?.origin
+                                    ?.iata_code || 'N/A'}
                                 </h3>
                                 <span className='text-gray-500 text-xs'>
                                   {dayjs(normalizedLegs?.[0]?.segments?.[0]?.departure_datetime).format('hh:mm A')}
@@ -949,11 +952,30 @@ const FlightFound = () => {
                               </div>
                             </div>
                           </div>
-                          <div className='border rounded-lg bg-[#F5F6FF] p-2 mb-3 text-center'>
-                            {normalizedLegs?.[0]?.sector?.join(' → ')}
+                          {normalizedLegs?.[0]?.sector > 0 &&
+                            <div className='border rounded-lg bg-[#F5F6FF] p-2 mb-3 text-center'>
+                              {normalizedLegs?.[0]?.sector?.join(' → ')}
+                            </div>
+                          }
+                          <div className='grid grid-cols-12 gap-4'>
+                            {([...(Array.isArray(data?.fare_option) ? data.fare_option : [])]).map((faresGroupData, faresGroupIndex) => (
+                              <FareOptionCard
+                                key={faresGroupIndex}
+                                faresGroupData={faresGroupData}
+                                data={data}
+                                initiateBookFareHandler={initiateBookFareHandler}
+                                handleClick={handleClick}
+                                anchorRef={anchorRef}
+                                openFlightInfo={openFlightInfo}
+                                anchorEl={anchorEl}
+                                allLegs={allLegs}
+                                handleCloseFlightInfo={handleCloseFlightInfo}
+                              />
+                            ))}
                           </div>
                           {normalizedLegs.map((leg, legIndex) => {
                             const sectorKey = leg.sector.join('-');
+
                             return (
                               <div key={legIndex} className='grid grid-cols-12 gap-4'>
                                 {/* <div className="col-span-12">
@@ -961,7 +983,7 @@ const FlightFound = () => {
                                 </div> */}
                                 {([
                                   ...(Array.isArray(leg?.fare_option) ? leg.fare_option : []),
-                                  ...(Array.isArray(data?.fare_option) ? data.fare_option : [])
+                                  // ...(Array.isArray(data?.fare_option) ? data.fare_option : [])
                                 ]).map((faresGroupData, faresGroupIndex) => (
                                   <FareOptionCard
                                     key={faresGroupIndex}
@@ -977,6 +999,7 @@ const FlightFound = () => {
                                     openFlightInfo={openFlightInfo}
                                     anchorEl={anchorEl}
                                     allLegs={allLegs}
+                                    handleCloseFlightInfo={handleCloseFlightInfo}
                                   />
                                 ))}
                                 {/* Sector Header */}
@@ -1229,7 +1252,11 @@ const FlightFound = () => {
                   })}
                 </div> */}
               </div>
-              {mergeFlightResponse === false && <p className='text-gray-500 text-center'>No flight options found.</p>}
+              {!flightSreachIsloading && !isFetching.current && filteredFlights?.length === 0 ? (
+                <p className="text-gray-500 text-center">
+                  No flight options found.
+                </p>
+              ) : null}
             </>
           )}
         </div>
