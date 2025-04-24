@@ -819,12 +819,6 @@ const FlightFound = () => {
               <div>
                 <div>
                   {sortedFlights.map((data, index) => {
-                    // Normalize legs to handle both PIA and Airblue structures
-                    // const normalizedLegs = Array.isArray(data?.legs) && data?.legs.length > 0
-                    //   ? Array.isArray(data?.legs[0])
-                    //     ? data?.legs.flat() // Airblue: Flatten the nested arrays
-                    //     : data?.legs // PIA: Use as-is
-                    //   : []; // Fallback to an empty array if legs is undefined or empty
 
                     const allLegs = data?.legs || {};
 
@@ -836,6 +830,16 @@ const FlightFound = () => {
                     // const normalizedLegs = data?.legs
                     //   ? Object.values(data.legs).flat() // Convert object to array of arrays and flatten
                     //   : []
+
+
+
+                    // Normalize legs to handle both PIA and Airblue structures
+                    const normalizedLegsData = Array.isArray(data?.legs) && data?.legs.length > 0
+                      ? Array.isArray(data?.legs[0])
+                        ? data?.legs.flat() // Airblue: Flatten the nested arrays
+                        : data?.legs // PIA: Use as-is
+                      : []; // Fallback to an empty array if legs is undefined or empty
+
 
                     // Combine fare options from both the root and legs
                     const combinedFareOptions = [
@@ -858,7 +862,7 @@ const FlightFound = () => {
                               <div>
                                 <h3 className='font-semibold text-base mb-1'>{data?.airline?.name}</h3>
                                 <p className='text-gray-500 text-xs'>
-                                  {normalizedLegs
+                                  {normalizedLegsData
                                     ?.map(leg =>
                                       Array.isArray(leg?.flight_number)
                                         ? leg?.flight_number.join(', ')
@@ -872,17 +876,16 @@ const FlightFound = () => {
                             <div className='flex items-center gap-2'>
                               <div className='text-center'>
                                 <h3 className='font-semibold text-base mb-0 h-4'>
-                                  {normalizedLegs?.[0]?.segments[normalizedLegs?.[0]?.segments.length - 1]?.origin
-                                    ?.iata_code || 'N/A'}
+                                  {normalizedLegsData?.[0]?.segments[0]?.origin?.iata_code || 'N/A'}
                                 </h3>
                                 <span className='text-gray-500 text-xs'>
-                                  {dayjs(normalizedLegs?.[0]?.segments?.[0]?.departure_datetime).format('hh:mm A')}
+                                  {dayjs(normalizedLegsData?.[0]?.segments?.[0]?.departure_datetime).format('hh:mm A')}
                                 </span>
                               </div>
                               <div className='text-center'>
                                 <h3 className='text-gray text-xs mb-0'>
-                                  {normalizedLegs?.[0]?.journey_duration
-                                    ? formatDuration(normalizedLegs?.[0]?.journey_duration)
+                                  {normalizedLegsData?.[0]?.journey_duration
+                                    ? formatDuration(normalizedLegsData?.[0]?.journey_duration)
                                     : 'N/A'}
                                 </h3>
                                 {/* <span className="text-gray-500 flex">
@@ -896,23 +899,23 @@ const FlightFound = () => {
                                 </div>
                                 {/* </span> */}
                                 <h3 className='text-gray text-xs mb-0'>
-                                  {normalizedLegs?.[0]?.segments?.length === 1
+                                  {normalizedLegsData?.[0]?.segments?.length === 1
                                     ? 'Non-Stop'
-                                    : normalizedLegs?.[0]?.segments?.length === 2
-                                      ? `1 Stop (${normalizedLegs?.[0]?.segments[1]?.origin?.iata_code})`
-                                      : `1+ Stops (${normalizedLegs?.[0]?.segments
+                                    : normalizedLegsData?.[0]?.segments?.length === 2
+                                      ? `1 Stop (${normalizedLegsData?.[0]?.segments[1]?.origin?.iata_code})`
+                                      : `1+ Stops (${normalizedLegsData?.[0]?.segments
                                         ?.map(segment => segment?.origin?.iata_code)
                                         .join('-')})`}
                                 </h3>
                               </div>
                               <div className='text-center'>
                                 <h3 className='font-semibold text-base mb-0 h-4'>
-                                  {normalizedLegs?.[0]?.segments[normalizedLegs?.[0]?.segments.length - 1]?.destination
+                                  {normalizedLegsData?.[0]?.segments[normalizedLegsData?.[0]?.segments.length - 1]?.destination
                                     ?.iata_code || 'N/A'}
                                 </h3>
                                 <span className='text-gray-500 text-xs'>
                                   {dayjs(
-                                    normalizedLegs?.[0]?.segments[normalizedLegs?.[0]?.segments.length - 1]
+                                    normalizedLegsData?.[0]?.segments[normalizedLegsData?.[0]?.segments.length - 1]
                                       ?.arrival_datetime
                                   ).format('hh:mm A')}
                                 </span>
@@ -952,9 +955,9 @@ const FlightFound = () => {
                               </div>
                             </div>
                           </div>
-                          {normalizedLegs?.[0]?.sector > 0 &&
+                          {normalizedLegs[0]?.sector.length > 0 &&
                             <div className='border rounded-lg bg-[#F5F6FF] p-2 mb-3 text-center'>
-                              {normalizedLegs?.[0]?.sector?.join(' → ')}
+                              {normalizedLegs[0]?.sector?.join(' → ')}
                             </div>
                           }
                           <div className='grid grid-cols-12 gap-4'>
