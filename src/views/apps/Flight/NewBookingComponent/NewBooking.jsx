@@ -45,6 +45,8 @@ import MuiAutocomplete from '@/components/mui-form-inputs/MuiAutoComplete'
 import { formattedDate, formatDate } from '@/utils/formatDate'
 import { nationalities } from '@/data/dropdowns/nationalities'
 import { gender, genderTitle } from '@/data/dropdowns/DropdownValues'
+import AirbluePricingSummary from './AirbluePricingSummary'
+import FlightRouteDisplay from '../ResultComponent/FlightRouteDisplay'
 
 const passengerSchema = yup.object().shape({
   title: yup.string().required('Title is required'),
@@ -164,10 +166,7 @@ const NewBooking = () => {
   const infant_count = travelerCount?.infant_count || 0
 
   const segmentData = bookingAvailabilityConfirmationData?.segment_data || []
-
-  console.log('first', bookingAvailabilityConfirmationData)
-
-
+  const API = bookingAvailabilityConfirmationData?.API || []
 
   if (isLoading) return <Typography>Loading Booking Confirmation details...</Typography>
   if (error) return <Typography color='error'>Booking Time Expired. Please try again.</Typography>
@@ -189,8 +188,7 @@ const NewBooking = () => {
                     <div className='flex justify-between items-cente'>
                       <div>
                         <div className=' mb-2 ml-1'>
-                          Flight Route Display component
-                          {/* <FlightRouteDisplay queryParams={bookingAvailabilityConfirmationData?.request} legs={bookingAvailabilityConfirmationData?.request?.legs} /> */}
+                          <FlightRouteDisplay queryParams={bookingAvailabilityConfirmationData?.request} legs={bookingAvailabilityConfirmationData?.request?.legs} />
                         </div>
                         <div className='flex gap-3'>
                           <div className='flex gap-2'>
@@ -223,7 +221,7 @@ const NewBooking = () => {
                         </div>
                       </div>
                       <div>
-                        <h2 className='text-md font-semibold text-primary'>Booking Confirmation</h2>
+                        <h4 className='text-md font-semibold text-primary'>Booking Confirmation</h4>
 
                         <h2 className='text-xl font-semibold ml-3'>{bookingId}</h2>
                       </div>
@@ -454,81 +452,187 @@ const NewBooking = () => {
                   </CardContent>
                 </Card>
                 <div>
-                  {bookingAvailabilityConfirmationData?.fareInfoList?.length > 0 && (
-                    <Card className='bg-base-100 mb-5'>
-                      <CardContent>
-                        <Typography variant='h6' fontWeight='600' mb={2}>
-                          Price Summary
-                        </Typography>
 
-                        {bookingAvailabilityConfirmationData?.fareInfoList[0]?.price?.fare_break_down &&
-                          Object.entries(bookingAvailabilityConfirmationData?.fareInfoList[0]?.price?.fare_break_down)
-                            .length > 0 && (
-                            <div>
-                              {Object.entries(
-                                bookingAvailabilityConfirmationData?.fareInfoList[0]?.price?.fare_break_down
-                              ).map(([key, data], index) => {
-                                const passengerType =
-                                  key === 'ADT' ? 'Adult' : key === 'CNN' ? 'Child' : key === 'INF' ? 'Infant' : key
 
-                                return (
-                                  <div key={index} className='flex justify-between border-b pb-2'>
-                                    <p className='font-semibold'>
-                                      {bookingAvailabilityConfirmationData?.airline?.iata_code} ({passengerType}) x{' '}
-                                      {data?.quantity}:
-                                    </p>
-                                    <p className='text-gray-400'>
-                                      {data?.prices?.currency} {data?.prices?.gross_amount}
-                                    </p>
+                  {API === 'AIRBLUE_API' ? (
+                    <>
+                      <AirbluePricingSummary bookingAvailabilityConfirmationData={bookingAvailabilityConfirmationData} />
+                    </>
+                  ) : (
+                    <>
+                      {bookingAvailabilityConfirmationData?.fareInfoList?.length > 0 && (
+                        <Card className='bg-base-100 mb-5'>
+                          <CardContent>
+                            <Typography variant='h6' fontWeight='600' mb={2}>
+                              Price Summary
+                            </Typography>
+
+                            {bookingAvailabilityConfirmationData?.fareInfoList[0]?.price?.fare_break_down &&
+                              Object.entries(bookingAvailabilityConfirmationData?.fareInfoList[0]?.price?.fare_break_down)
+                                .length > 0 && (
+                                <div>
+                                  {Object.entries(
+                                    bookingAvailabilityConfirmationData?.fareInfoList[0]?.price?.fare_break_down
+                                  ).map(([key, data], index) => {
+                                    const passengerType =
+                                      key === 'ADT' ? 'Adult' : key === 'CNN' ? 'Child' : key === 'INF' ? 'Infant' : key
+
+                                    return (
+                                      <div key={index} className='flex justify-between border-b pb-2'>
+                                        <p className='font-semibold'>
+                                          {bookingAvailabilityConfirmationData?.airline?.iata_code} ({passengerType}) x{' '}
+                                          {data?.quantity}:
+                                        </p>
+                                        <p className='text-gray-400'>
+                                          {data?.prices?.currency} {data?.prices?.gross_amount}
+                                        </p>
+                                      </div>
+                                    )
+                                  })}
+
+                                  <div className='flex mt-4 border-b pb-2'>
+                                    <h4 className='font-semibold'>Price you Pay:</h4>
+                                    <h4 className='text-primary font-bold ml-[55px]'>
+                                      {bookingAvailabilityConfirmationData?.fareInfoList[0]?.price?.currency}{' '}
+                                      {bookingAvailabilityConfirmationData?.fareInfoList[0]?.price?.gross_amount}
+                                    </h4>
                                   </div>
-                                )
-                              })}
+                                </div>
+                              )}
 
-                              <div className='flex mt-4 border-b pb-2'>
-                                <h4 className='font-semibold'>Price you Pay:</h4>
-                                <h4 className='text-primary font-bold ml-[55px]'>
-                                  {bookingAvailabilityConfirmationData?.fareInfoList[0]?.price?.currency}{' '}
-                                  {bookingAvailabilityConfirmationData?.fareInfoList[0]?.price?.gross_amount}
-                                </h4>
-                              </div>
+                            <Accordion className="p-0"
+                              disableGutters
+                              elevation={0}
+                              square
+                              sx={{
+                                boxShadow: 'none',
+                                '&:before': { display: 'none' },
+                                '&.Mui-expanded': {
+                                  margin: 0,
+                                  boxShadow: 'none',
+                                },
+                              }}
+                            >
+                              <AccordionSummary
+                                expandIcon={
+                                  <div className=' text-black rounded-full w-8 flex items-center justify-center'>
+                                    <ExpandMoreIcon />
+                                  </div>
+                                }
+                                className='text-lg font-bold !px-0'
+                              >
+                                <h1 className='text-lg font-bold'>Fare Breakdown</h1>
+                              </AccordionSummary>
+
+                              <AccordionDetails className='!p-0'>
+                                <div className='space-y-5'>
+                                  {bookingAvailabilityConfirmationData?.fareInfoList[0]?.price?.fare_break_down &&
+                                    Object.entries(
+                                      bookingAvailabilityConfirmationData?.fareInfoList[0]?.price?.fare_break_down
+                                    ).map(([key, data], index) => {
+                                      const passengerType =
+                                        key === 'ADT' ? 'Adult' : key === 'CHILD' ? 'Child' : key === 'INF' ? 'Infant' : key
+
+                                      return (
+                                        <div key={index} className=''>
+                                          <Typography className='px-0'>
+                                            <h2 className='font-semibold text-lg py-3'>{passengerType}</h2>
+                                          </Typography>
+                                          <hr className='mb-2 mt-0' />
+                                          <div>
+                                            <div className='flex justify-between items-center mb-1'>
+                                              <p className='text-gray-800 text-sm font-semibold'>Base Fare:</p>
+                                              <p className='text-gray text-sm font-semibold text-end'>
+                                                {data?.prices?.currency} {data?.prices?.base_fare}
+                                              </p>
+                                            </div>
+                                            <div className='flex justify-between items-center mb-1'>
+                                              <p className='text-gray-800 text-sm font-semibold'>Tax:</p>
+                                              <p className='text-gray text-sm font-semibold text-end'>
+                                                {data?.prices?.currency} {data?.prices?.tax}
+                                              </p>
+                                            </div>
+                                            <div className='flex justify-between items-center mb-1'>
+                                              <p className='text-gray-800 text-sm font-semibold'>Gross Fare:</p>
+                                              <p className='text-gray text-sm font-semibold text-end'>
+                                                {data?.prices?.currency} {data?.prices?.gross_amount}
+                                              </p>
+                                            </div>
+                                            <hr className='border mt-3' />
+                                            <div className='flex justify-between mt-4'>
+                                              <h4 className='font-semibold text-lg'>Total to Pay:</h4>
+                                              <h4 className='text-blue-600 font-bold text-lg'>
+                                                {data?.prices?.currency} {data?.prices?.gross_amount}
+                                              </h4>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      )
+                                    })}
+                                </div>
+                              </AccordionDetails>
+                            </Accordion>
+                          </CardContent>
+                        </Card>
+                      )}
+
+                      <Card className='bg-base-100 mb-5'>
+                        <CardContent>
+                          <Typography variant='h6' fontWeight='600' mb={2}>
+                            Price Summary
+                          </Typography>
+                          <div>
+                            {Object.entries(
+                              bookingAvailabilityConfirmationData?.fare_info_list[0]?.price?.fare_break_down || {}
+                            ).map(([key, data], index) => {
+                              const passengerType =
+                                key === 'ADT' ? 'Adult' : key === 'CNN' ? 'Child' : key === 'INF' ? 'Infant' : key
+                              return (
+                                <div key={index} className='flex justify-between border-b pb-2'>
+                                  <p className='font-semibold'>
+                                    {bookingAvailabilityConfirmationData?.airline?.iata_code} ({passengerType}) x{' '}
+                                    {data?.quantity}:
+                                  </p>
+                                  <p className='text-gray-400'>
+                                    {data?.prices?.currency} {data?.prices?.gross_amount}
+                                  </p>
+                                </div>
+                              )
+                            })}
+
+                            <div className='flex mt-4 border-b pb-2'>
+                              <h4 className='font-semibold'>Price you Pay:</h4>
+                              <h4 className='text-blue-600 font-bold ml-[55px]'>
+                                {bookingAvailabilityConfirmationData?.fare_info_list[0]?.price.currency}{' '}
+                                {bookingAvailabilityConfirmationData?.fare_info_list[0]?.price.gross_amount}
+                              </h4>
                             </div>
-                          )}
-
-                        <Accordion className="p-0"
-                          disableGutters
-                          elevation={0}
-                          square
-                          sx={{
-                            boxShadow: 'none',
-                            '&:before': { display: 'none' },
-                            '&.Mui-expanded': {
-                              margin: 0,
-                              boxShadow: 'none',
-                            },
-                          }}
-                        >
-                          <AccordionSummary
-                            expandIcon={
-                              <div className=' text-black rounded-full w-8 flex items-center justify-center'>
-                                <ExpandMoreIcon />
-                              </div>
-                            }
-                            className='text-lg font-bold !px-0'
+                          </div>
+                          <Accordion
+                            className='p-0 '
+                            disableGutters
+                            sx={{ boxShadow: 'none', '&:before': { display: 'none' } }}
                           >
-                            <h1 className='text-lg font-bold'>Fare Breakdown</h1>
-                          </AccordionSummary>
+                            <AccordionSummary
+                              expandIcon={
+                                <div className='bg-blue-500 text-white rounded-full w-8 h-8 flex items-center justify-center'>
+                                  <ExpandMoreIcon />
+                                </div>
+                              }
+                              className='text-lg font-bold mb-3 !px-0'
+                            >
+                              <h1 className='text-lg font-bold'>Fare Breakdown</h1>
+                            </AccordionSummary>
 
-                          <AccordionDetails className='!p-0'>
-                            <div className='space-y-5'>
-                              {bookingAvailabilityConfirmationData?.fareInfoList[0]?.price?.fare_break_down &&
-                                Object.entries(
-                                  bookingAvailabilityConfirmationData?.fareInfoList[0]?.price?.fare_break_down
+                            <AccordionDetails className='!p-0'>
+                              <div className='space-y-5'>
+                                {Object.entries(
+                                  bookingAvailabilityConfirmationData?.fare_info_list[0]?.price?.fare_break_down || {}
                                 ).map(([key, data], index) => {
                                   const passengerType =
                                     key === 'ADT' ? 'Adult' : key === 'CHILD' ? 'Child' : key === 'INF' ? 'Infant' : key
-
                                   return (
-                                    <div key={index} className=''>
+                                    <div key={index} className='border p-2 rounded-md'>
                                       <Typography className='px-0'>
                                         <h2 className='font-semibold text-lg py-3'>{passengerType}</h2>
                                       </Typography>
@@ -563,117 +667,21 @@ const NewBooking = () => {
                                     </div>
                                   )
                                 })}
-                            </div>
-                          </AccordionDetails>
-                        </Accordion>
-                      </CardContent>
-                    </Card>
+                              </div>
+                            </AccordionDetails>
+                          </Accordion>
+                        </CardContent>
+                      </Card>
+                    </>
                   )}
-
-
-                  {/* <Card className='bg-base-100 mb-5'>
-                    <CardContent>
-                      <Typography variant='h6' fontWeight='600' mb={2}>
-                        Price Summary
-                      </Typography>
-                      <div>
-                        {Object.entries(
-                          bookingAvailabilityConfirmationData?.fare_info_list[0]?.price?.fare_break_down || {}
-                        ).map(([key, data], index) => {
-                          const passengerType =
-                            key === 'ADT' ? 'Adult' : key === 'CNN' ? 'Child' : key === 'INF' ? 'Infant' : key
-                          return (
-                            <div key={index} className='flex justify-between border-b pb-2'>
-                              <p className='font-semibold'>
-                                {bookingAvailabilityConfirmationData?.airline?.iata_code} ({passengerType}) x{' '}
-                                {data?.quantity}:
-                              </p>
-                              <p className='text-gray-400'>
-                                {data?.prices?.currency} {data?.prices?.gross_amount}
-                              </p>
-                            </div>
-                          )
-                        })}
-
-                        <div className='flex mt-4 border-b pb-2'>
-                          <h4 className='font-semibold'>Price you Pay:</h4>
-                          <h4 className='text-blue-600 font-bold ml-[55px]'>
-                            {bookingAvailabilityConfirmationData?.fare_info_list[0]?.price.currency}{' '}
-                            {bookingAvailabilityConfirmationData?.fare_info_list[0]?.price.gross_amount}
-                          </h4>
-                        </div>
-                      </div>
-                      <Accordion
-                        className='p-0 '
-                        disableGutters
-                        sx={{ boxShadow: 'none', '&:before': { display: 'none' } }}
-                      >
-                        <AccordionSummary
-                          expandIcon={
-                            <div className='bg-blue-500 text-white rounded-full w-8 h-8 flex items-center justify-center'>
-                              <ExpandMoreIcon />
-                            </div>
-                          }
-                          className='text-lg font-bold mb-3 !px-0'
-                        >
-                          <h1 className='text-lg font-bold'>Fare Breakdown</h1>
-                        </AccordionSummary>
-
-                        <AccordionDetails className='!p-0'>
-                          <div className='space-y-5'>
-                            {Object.entries(
-                              bookingAvailabilityConfirmationData?.fare_info_list[0]?.price?.fare_break_down || {}
-                            ).map(([key, data], index) => {
-                              const passengerType =
-                                key === 'ADT' ? 'Adult' : key === 'CHILD' ? 'Child' : key === 'INF' ? 'Infant' : key
-                              return (
-                                <div key={index} className='border p-2 rounded-md'>
-                                  <Typography className='px-0'>
-                                    <h2 className='font-semibold text-lg py-3'>{passengerType}</h2>
-                                  </Typography>
-                                  <hr className='mb-2 mt-0' />
-                                  <div>
-                                    <div className='flex justify-between items-center mb-1'>
-                                      <p className='text-gray-800 text-sm font-semibold'>Base Fare:</p>
-                                      <p className='text-gray text-sm font-semibold text-end'>
-                                        {data?.prices?.currency} {data?.prices?.base_fare}
-                                      </p>
-                                    </div>
-                                    <div className='flex justify-between items-center mb-1'>
-                                      <p className='text-gray-800 text-sm font-semibold'>Tax:</p>
-                                      <p className='text-gray text-sm font-semibold text-end'>
-                                        {data?.prices?.currency} {data?.prices?.tax}
-                                      </p>
-                                    </div>
-                                    <div className='flex justify-between items-center mb-1'>
-                                      <p className='text-gray-800 text-sm font-semibold'>Gross Fare:</p>
-                                      <p className='text-gray text-sm font-semibold text-end'>
-                                        {data?.prices?.currency} {data?.prices?.gross_amount}
-                                      </p>
-                                    </div>
-                                    <hr className='border mt-3' />
-                                    <div className='flex justify-between mt-4'>
-                                      <h4 className='font-semibold text-lg'>Total to Pay:</h4>
-                                      <h4 className='text-blue-600 font-bold text-lg'>
-                                        {data?.prices?.currency} {data?.prices?.gross_amount}
-                                      </h4>
-                                    </div>
-                                  </div>
-                                </div>
-                              )
-                            })}
-                          </div>
-                        </AccordionDetails>
-                      </Accordion>
-                    </CardContent>
-                  </Card> */}
                 </div>
                 <div>
                   {segmentData.map((sector, sectorIndex) => {
-                    const firstSegment = sector.segments[0]
-                    const lastSegment = sector.segments[sector.segments.length - 1]
-                    const totalStops = sector.segments.length - 1
-                    const layoverAirports = sector.segments.slice(0, -1).map(seg => seg.destination.iata_code)
+
+                    const firstSegment = API !== 'AIRBLUE_API' ? sector.segments[0] : sector[0];
+                    const lastSegment = API !== 'AIRBLUE_API' ? sector.segments[sector.segments.length - 1] : sector[sector.length - 1];
+                    const totalStops = sector.length - 1
+                    const layoverAirports = API !== 'AIRBLUE_API' ? sector.segments.slice(0, -1).map(seg => seg.destination.iata_code) : sector.slice(0, -1).map(seg => seg.destination.iata_code)
 
                     return (
                       <Card key={sectorIndex} className='bg-base-100 mb-5'>
@@ -687,8 +695,8 @@ const NewBooking = () => {
                             {/* Total Journey Duration */}
                             <div className='mt-3'>
                               <p className='text-gray-500 text-sm'>
-                                Total Flight Duration: {Math.floor(sector.journey_duration / 60)}h{' '}
-                                {sector.journey_duration % 60}m
+                                Total Flight Duration: {Math.floor(firstSegment.duration_minutes / 60)}h{' '}
+                                {firstSegment.duration_minutes % 60}m
                               </p>
                             </div>
 

@@ -50,7 +50,7 @@ const ForgotPassword = ({ mode }) => {
                 Send reset link
               </Button>
               <Typography className='flex justify-center items-center' color='primary.main'>
-                <Link href={getLocalizedUrl('/login', locale)} className='flex items-center'>
+                <Link href={getLocalizedUrl('/', locale)} className='flex items-center'>
                   <DirectionalIcon ltrIconClass='ri-arrow-left-s-line' rtlIconClass='ri-arrow-right-s-line' />
                   <span>Back to Login</span>
                 </Link>

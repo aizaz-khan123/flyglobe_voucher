@@ -72,7 +72,7 @@ const VerticalMenu = ({ dictionary, scrollMenu }) => {
         <MenuSection label={dictionary['navigation'].sales}>
 
           <SubMenu label={dictionary['navigation'].Sell} icon={<i className='ri-organization-chart'></i>}>
-            <MenuItem href={`/${locale}/book-flights`}>{dictionary['navigation'].flight}</MenuItem>
+            <MenuItem href={`/${locale}/book-flights`} icon={<i className='ri-plane-fill'></i>}>{dictionary['navigation'].flight}</MenuItem>
             <MenuItem href={`/${locale}/group-flights`}>{dictionary['navigation'].groupFlight}</MenuItem>
             <MenuItem href={`/${locale}/umrah-hotels`}>{dictionary['navigation'].umrahHotels}</MenuItem>
             <MenuItem href={`/${locale}/umrah-visa`}>{dictionary['navigation'].umrahVisa}</MenuItem>
@@ -102,7 +102,7 @@ const VerticalMenu = ({ dictionary, scrollMenu }) => {
 
 
 
-          <SubMenu label={dictionary['navigation'].organization} icon={<i class="ri-group-line"></i>}>
+          <SubMenu label={dictionary['navigation'].organization} icon={<i className="ri-group-line"></i>}>
             <MenuItem href={`/${locale}/organization/branches`}>{dictionary['navigation'].branches}</MenuItem>
             <MenuItem href={`/${locale}/organization/agencies`}>{dictionary['navigation'].agencies}</MenuItem>
             <MenuItem href={`/${locale}/organization/employees`}>{dictionary['navigation'].employees}</MenuItem>
@@ -133,7 +133,7 @@ const VerticalMenu = ({ dictionary, scrollMenu }) => {
             </MenuItem>
           </SubMenu>
 
-          <SubMenu label={dictionary['navigation'].reports} icon={<i class="ri-file-chart-fill"></i>}>
+          <SubMenu label={dictionary['navigation'].reports} icon={<i className="ri-file-chart-fill"></i>}>
             <MenuItem href={`/${locale}/reports/sales-reports`}>{dictionary['navigation'].salesReports}</MenuItem>
             <MenuItem href={`/${locale}/reports/refund-reports`}>
               {dictionary['navigation'].refundReports}
@@ -146,7 +146,7 @@ const VerticalMenu = ({ dictionary, scrollMenu }) => {
             </MenuItem>
           </SubMenu>
 
-          <SubMenu label={dictionary['navigation'].settings} icon={<i class="ri-settings-2-line"></i>}>
+          <SubMenu label={dictionary['navigation'].settings} icon={<i className="ri-settings-2-line"></i>}>
             <MenuItem href={`/${locale}/settings/bank-accounts`}>{dictionary['navigation'].bankAccounts}</MenuItem>
             <MenuItem href={`/${locale}/settings/airline-margins`}>
               {dictionary['navigation'].airlineMargins}

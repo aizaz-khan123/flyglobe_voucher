@@ -44,14 +44,14 @@ export const db = {
       title: 'Hotel Booking',
       stats: 27,
       trendNumber: 4.3,
-      avatarIcon: 'ri-route-line',
+      avatarIcon: 'ri-hotel-bed-fill',
       color: 'error'
     },
     {
       title: 'Flight Booking',
       stats: 13,
       trendNumber: 2.5,
-      avatarIcon: 'ri-time-line',
+      avatarIcon: 'ri-plane-fill',
       color: 'info'
     }
   ],

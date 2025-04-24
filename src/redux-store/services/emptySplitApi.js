@@ -33,7 +33,7 @@ const baseQueryWithReAuth = async (args, api, extraOptions) => {
       toast.error('Session out please login again...')
       api.dispatch(userLogout())
 
-      window.location.href = '/en/login'
+      window.location.href = '/'
     }
   }
 

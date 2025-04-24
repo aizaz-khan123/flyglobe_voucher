@@ -123,13 +123,13 @@ export const API_END_POINTS = {
   bookingList: BASE_URL_V1 + '/booking/bookings-list',
   downloadBooking: BASE_URL_V1 + '/booking/download-booking',
 
- //// Refund Request /////
- refundRequestGenerate: BASE_URL_V1 + '/refund-request/generate',
- refundRequest: BASE_URL_V1 + '/refund-request/refund-request',
- myRefundRequest: BASE_URL_V1 + '/refund-request/my-refund-request',
- refundRequestShowFareRule: BASE_URL_V1 + '/refund-request/show-fare-rule',
- makeRefund: BASE_URL_V1 + '/refund-request/make-refund',
- rejectReFund: BASE_URL_V1 + '/refund-request/reject',
+  //// Refund Request /////
+  refundRequestGenerate: BASE_URL_V1 + '/refund-request/generate',
+  refundRequest: BASE_URL_V1 + '/refund-request/refund-request',
+  myRefundRequest: BASE_URL_V1 + '/refund-request/my-refund-request',
+  refundRequestShowFareRule: BASE_URL_V1 + '/refund-request/show-fare-rule',
+  makeRefund: BASE_URL_V1 + '/refund-request/make-refund',
+  rejectReFund: BASE_URL_V1 + '/refund-request/reject',
 
 
   //// settings //////

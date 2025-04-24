@@ -269,8 +269,9 @@ const FlightFound = () => {
       }).unwrap();
 
       setBookingFareModal(true);
+      console.log(response);
       if (response?.status === true) {
-        router.push(`/en/flight/new-booking/${response?.data?.confirmation_id}`);
+        router.push(`/en/flight/new-booking/${response?.data}`);
       }
     } catch (error) {
       console.error('Mutation failed:', error);
@@ -339,7 +340,7 @@ const FlightFound = () => {
 
       setBookingFareModal(true);
       if (response?.status === true) {
-        router.push(`/en/flight/new-booking/${response?.data?.confirmation_id}`);
+        router.push(`/en/flight/new-booking/${response?.data}`);
       }
     } catch (error) {
       console.error("Booking failed:", error);
