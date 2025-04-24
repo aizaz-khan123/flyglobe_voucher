@@ -57,7 +57,9 @@ const Navbar = props => {
         [verticalLayoutClasses.headerContentCompact]: headerContentCompact,
         [verticalLayoutClasses.headerContentWide]: headerContentWide,
         scrolled: trigger
-      })}
+
+
+      },'bg-white')}
     >
       <div className={classnames(verticalLayoutClasses.navbar, 'flex bs-full')}>{children}</div>
     </StyledHeader>
