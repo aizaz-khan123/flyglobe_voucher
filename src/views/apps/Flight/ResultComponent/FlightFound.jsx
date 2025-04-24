@@ -58,7 +58,6 @@ import BookingFareModal from './BookingFareModal'
 import FlightSearch from '../FlightComponent/FlightSearch'
 import { IoIosArrowDown, IoMdClose } from 'react-icons/io'
 import FareOptionCard from './FareOptionCard'
-import CollapseExample from './CollapseExample'
 import FlightAccordianFilters from './FlightAccordianFilters'
 
 const stopsOptions = ['Non Stop', '1 Stop', '1+ Stops']
