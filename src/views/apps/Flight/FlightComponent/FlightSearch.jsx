@@ -510,7 +510,7 @@ const FlightSearch = ({ initialValues, flightSearchOpen }) => {
                     rules={{ required: true }}
                     render={({ field }) => (
                       <FormControl>
-                        <FormLabel id='travel-type-group-label'>Travel Type</FormLabel>
+                        {/* <FormLabel id='travel-type-group-label'>Travel Type</FormLabel> */}
                         <RadioGroup
                           row
                           aria-labelledby='travel-type-group-label'
