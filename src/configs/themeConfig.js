@@ -29,7 +29,7 @@ const themeConfig = {
     type: 'fixed', // 'fixed', 'static'
     contentWidth: 'wide', // 'compact', 'wide'
     floating: false, //! true, false (This will not work in the Horizontal Layout)
-    detached: true, //! true, false (This will not work in the Horizontal Layout or floating navbar is enabled)
+    detached: false, //! true, false (This will not work in the Horizontal Layout or floating navbar is enabled)
     blur: true // true, false
   },
   contentWidth: 'wide', // 'compact', 'wide'
