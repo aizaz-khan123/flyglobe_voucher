@@ -40,7 +40,7 @@ import InfoIcon from '@mui/icons-material/Info'
 
 import { GoClock, GoTypography } from 'react-icons/go'
 
-import { FaPersonWalkingDashedLineArrowRight, FaPlane } from 'react-icons/fa6'
+import { FaAngleDown, FaAngleUp, FaArrowDownAZ, FaPersonWalkingDashedLineArrowRight, FaPlane } from 'react-icons/fa6'
 
 import AddCommission from './AddCommission'
 import FlightFilter from './FlightFilter'
@@ -58,6 +58,8 @@ import BookingFareModal from './BookingFareModal'
 import FlightSearch from '../FlightComponent/FlightSearch'
 import { IoIosArrowDown, IoMdClose } from 'react-icons/io'
 import FareOptionCard from './FareOptionCard'
+import CollapseExample from './CollapseExample'
+import FlightAccordianFilters from './FlightAccordianFilters'
 
 const stopsOptions = ['Non Stop', '1 Stop', '1+ Stops']
 
@@ -277,11 +279,11 @@ const FlightFound = () => {
     }
   };
 
+  const hasSubmittedRef = useRef(false);
+
   const handleFareSelect = (legIndex, fareData, flightData, allLegs) => {
     const sectorKey = fareData.sector;
     const airline = fareData.airline.name;
-
-    // Convert allLegs object to array of sector keys
     const sectorKeys = Object.keys(allLegs || {});
     const totalSectors = sectorKeys.length;
 
@@ -291,10 +293,11 @@ const FlightFound = () => {
         [sectorKey]: { ...fareData, airline }
       };
 
-      // Check if all sectors are selected using actual leg count
-      if (Object.keys(newFares).length === totalSectors) {
+      if (Object.keys(newFares).length === totalSectors && !hasSubmittedRef.current) {
+        hasSubmittedRef.current = true;
         handleCombinedBooking(newFares, totalSectors);
       }
+
       return newFares;
     });
 
@@ -303,11 +306,13 @@ const FlightFound = () => {
       [sectorKey]: airline
     }));
 
-    setActiveSectorIndex(prev => {
-      // Ensure we don't exceed actual sector count
-      return Math.min(prev + 1, totalSectors);
-    });
+    setActiveSectorIndex(prev => Math.min(prev + 1, totalSectors));
   };
+  useEffect(() => {
+    return () => {
+      hasSubmittedRef.current = false;
+    };
+  }, []);
 
   const handleCombinedBooking = async (fares, totalSectors) => {
     try {
@@ -713,6 +718,7 @@ const FlightFound = () => {
     return Array.isArray(firstLeg) ? firstLeg[0] : firstLeg
   }
 
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   return (
     <div className='p-4 min-h-screen'>
@@ -736,9 +742,10 @@ const FlightFound = () => {
         )}
       </h3>
 
-      <div className='grid grid-cols-12 gap-6'>
+
+      <div className='grid grid-cols-12 gap-6 justify-center'>
         {/* Filters Section */}
-        <div className='col-span-12 hidden lg:block md:col-span-4 lg:col-span-3 md:sticky top-2'>
+        {/* <div className='col-span-12 hidden lg:block md:col-span-4 lg:col-span-3 md:sticky top-2'>
           <FlightFilter
             time={time}
             formatTime={formatTime}
@@ -763,10 +770,10 @@ const FlightFound = () => {
             selectedFares={selectedFares}
             handleClearSelectedFares={handleClearSelectedFares}
           />
-        </div>
+        </div> */}
 
         {/* Flight Results */}
-        <div className='col-span-12 md:col-span-12 lg:col-span-9'>
+        <div className='col-span-12 md:col-span-12 lg:col-span-12'>
           <Card className='flex justify-between items-center rounded-4xl shadow-md p-2'>
             <div className='text-xl pl-4 font-bold'>
               <span>{filteredFlights?.length} </span>
@@ -781,7 +788,7 @@ const FlightFound = () => {
           </Card>
 
           <div className=' p-1 rounded z-10'>
-            <div className='bg-base-100/80 py-4 mb-5'>
+            <div className='bg-base-100/80 py-2'>
               <div>
                 <div className='lg:flex justify-between items-center'>
                   <div>
@@ -804,11 +811,50 @@ const FlightFound = () => {
                 </div>
               </div>
             </div>
+
             <DateSelector
               departure_date={queryParams?.departure_date}
               return_date={queryParams?.return_date}
               route_type={queryParams?.route_type}
             />
+            <div>
+              <div
+                onClick={() => setIsFilterOpen(!isFilterOpen)}
+                className="text-sm text-primary bg-transparent transition-all cursor-pointer flex items-center gap-2 justify-end"
+              >
+                {isFilterOpen ? "Close" : "Open"} Filters {isFilterOpen ? <FaAngleUp /> : <FaAngleDown />}
+              </div>
+              <div
+                className={`transition-all duration-300 ease-in-out overflow-hidden bg-white ${isFilterOpen ? "h-auto max-h-[500px]" : "h-0"
+                  }`}
+              >
+                <FlightAccordianFilters
+                  time={time}
+                  formatTime={formatTime}
+                  priceRange={priceRange}
+                  handlePriceChange={handlePriceChange}
+                  handleInputChange={handleInputChange}
+                  resetAllFilterHandler={resetAllFilterHandler}
+                  selectAllStops={selectAllStops}
+                  stopsOptions={stopsOptions}
+                  selectedStops={selectedStops}
+                  handleSelectAllToggle={handleSelectAllToggle}
+                  handleStopChange={handleStopChange}
+                  airlines={airlines}
+                  selectedAirlines={selectedAirlines}
+                  handleAirlineChange={handleAirlineChange}
+                  selectAllDepartureTimes={selectAllDepartureTimes}
+                  departureTimes={departureTimes}
+                  selectedDepartureTimes={selectedDepartureTimes}
+                  handleSelectAllDepartureTimes={handleSelectAllDepartureTimes}
+                  handleDepartureTimeChange={handleDepartureTimeChange}
+                  queryParamss={queryParams}
+                  selectedFares={selectedFares}
+                  handleClearSelectedFares={handleClearSelectedFares}
+                />
+              </div>
+            </div>
+
           </div>
           {flightSreachIsloading ? (
             <div className='flex justify-center items-center h-[50%]'>
