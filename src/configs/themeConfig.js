@@ -20,7 +20,7 @@ const themeConfig = {
   homePageUrl: '/dashboards/crm',
   settingsCookieName: 'materio-mui-next-demo-1',
   mode: 'light', // 'system', 'light', 'dark'
-  skin: 'default', // 'default', 'bordered'
+  // skin: 'bordered', // 'default', 'bordered'
   semiDark: false, // true, false
   layout: 'vertical', // 'vertical', 'collapsed', 'horizontal'
   layoutPadding: 24, // Common padding for header, content, footer layout components (in px)
