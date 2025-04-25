@@ -76,7 +76,7 @@ const FlightDetailModal = ({ viewFlightDetailModal, handleCloseViewFlightDetail,
                       </div>
                       <div className='flex items-center justify-between gap-2 mt-3'>
                         <div className='text-center'>
-                          <h3 className='font-bold mb-0 text-xl md:text-3xl lg:text-5xl text-blue-600'>
+                          <h3 className='font-bold mb-0 text-xl md:text-3xl lg:text-5xl text-primary'>
                             {dayjs(segment.departure_datetime).format('HH:mm')}
                           </h3>
                         </div>
@@ -88,7 +88,7 @@ const FlightDetailModal = ({ viewFlightDetailModal, handleCloseViewFlightDetail,
                           <hr className='w-[30px] md:w-[100px] xl:w-[200px] border-2' />
                         </div>
                         <div className='text-center'>
-                          <h3 className='font-bold mb-0 text-xl md:text-3xl lg:text-5xl text-blue-600'>
+                          <h3 className='font-bold mb-0 text-xl md:text-3xl lg:text-5xl text-primary'>
                             {dayjs(segment.arrival_datetime).format('HH:mm')}
                           </h3>
                         </div>

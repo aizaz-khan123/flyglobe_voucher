@@ -825,9 +825,9 @@ const FlightFound = () => {
               >
                 {isFilterOpen ? "Close" : "Open"} Filters {isFilterOpen ? <FaAngleUp /> : <FaAngleDown />}
               </div>
+
               <div
-                className={`transition-all duration-300 ease-in-out overflow-hidden bg-white ${isFilterOpen ? "h-auto max-h-[500px]" : "h-0"
-                  }`}
+                className={`transition-all duration-1000 ease-in-out overflow-hidden bg-white ${isFilterOpen ? "max-h-[1000px]" : "max-h-0"}`}
               >
                 <FlightAccordianFilters
                   time={time}
@@ -855,6 +855,7 @@ const FlightFound = () => {
                 />
               </div>
             </div>
+
 
           </div>
           {flightSreachIsloading ? (
@@ -897,142 +898,166 @@ const FlightFound = () => {
                     ]
 
                     return (
-                      <Card key={index} className='mb-5 static'>
-                        <CardContent>
-                          <div className='flex flex-col lg:flex-row gap-4 lg:gap-0 justify-between items-center'>
-                            <div className='flex items-center gap-2 mb-2'>
-                              <img
-                                src={data?.airline?.thumbnail || ''}
-                                alt='img'
-                                className='h-14 w-14 object-contain'
-                              />
-                              <div>
-                                <h3 className='font-semibold text-base mb-1'>{data?.airline?.name}</h3>
-                                <p className='text-gray-500 text-xs'>
-                                  {data.provider === 'AIRBLUE_API' ?
-                                    (normalizedLegs
-                                      ?.map(leg =>
-                                        Array.isArray(leg?.flight_number)
-                                          ? leg?.flight_number.join(', ')
-                                          : leg?.flight_number
-                                      )
-                                      .join(' -> ') || 'No Flight Numbers')
-                                    : (normalizedLegsData
-                                      ?.map(leg =>
-                                        Array.isArray(leg?.flight_number)
-                                          ? leg?.flight_number.join(', ')
-                                          : leg?.flight_number
-                                      )
-                                      .join(' -> ') || 'No Flight Numbers')}
-                                  • {dayjs(flightSearchData?.journey_legs?.departure_date).format('ddd, MMM D, YYYY')}
-                                </p>
+
+
+                      <Accordion className='mb-2' sx={{
+                        marginBottom: '2rem', border: 'none', borderRadius: '10px', backgroundColor: 'white', '&::before': {
+                          display: 'none',
+                        },
+                      }}>
+                        <AccordionSummary
+                          expandIcon={''}
+                          // aria-controls={`panel${legIndex}-content`}
+                          // id={`panel${legIndex}-header`}
+                          className='rounded-lg '
+                        >
+                          <div>
+                            <div className='flex flex-col lg:flex-row gap-4 lg:gap-0 justify-between items-center'>
+                              <div className='flex items-center gap-2 mb-2'>
+                                <img
+                                  src={data?.airline?.thumbnail || ''}
+                                  alt='img'
+                                  className='h-14 w-14 object-contain'
+                                />
+                                <div>
+                                  <h3 className='font-semibold text-base mb-1'>{data?.airline?.name}</h3>
+                                  <p className='text-gray-500 text-xs'>
+                                    {data.provider === 'AIRBLUE_API' ?
+                                      (normalizedLegs
+                                        ?.map(leg =>
+                                          Array.isArray(leg?.flight_number)
+                                            ? leg?.flight_number.join(', ')
+                                            : leg?.flight_number
+                                        )
+                                        .join(' -> ') || 'No Flight Numbers')
+                                      : (normalizedLegsData
+                                        ?.map(leg =>
+                                          Array.isArray(leg?.flight_number)
+                                            ? leg?.flight_number.join(', ')
+                                            : leg?.flight_number
+                                        )
+                                        .join(' -> ') || 'No Flight Numbers')}
+                                    • {dayjs(flightSearchData?.journey_legs?.departure_date).format('ddd, MMM D, YYYY')}
+                                  </p>
+                                </div>
                               </div>
-                            </div>
-                            <div className='flex items-center gap-2'>
-                              <div className='text-center'>
-                                <h3 className='font-semibold text-base mb-0 h-4'>
-                                  {
-                                    data.provider === 'AIRBLUE_API' ?
-                                      normalizedLegs?.[0]?.segments[0]?.origin?.iata_code || 'N/A'
-                                      : normalizedLegsData?.[0]?.segments[0]?.origin?.iata_code || 'N/A'}
-                                </h3>
-                                <span className='text-gray-500 text-xs'>
-                                  {dayjs(normalizedLegsData?.[0]?.segments?.[0]?.departure_datetime).format('hh:mm A')}
-                                </span>
-                              </div>
-                              <div className='text-center'>
-                                <h3 className='text-gray text-xs mb-0'>
-                                  {data.provider === 'AIRBLUE_API' ?
-                                    normalizedLegs?.[0]?.journey_duration
-                                      ? formatDuration(normalizedLegs?.[0]?.journey_duration)
-                                      : 'N/A' :
-                                    normalizedLegsData?.[0]?.journey_duration
-                                      ? formatDuration(normalizedLegsData?.[0]?.journey_duration)
-                                      : 'N/A'}
-                                </h3>
-                                {/* <span className="text-gray-500 flex">
+                              <div className='flex items-center gap-2'>
+                                <div className='text-center'>
+                                  <h3 className='font-semibold text-base mb-0 h-4'>
+                                    {
+                                      data.provider === 'AIRBLUE_API' ?
+                                        normalizedLegs?.[0]?.segments[0]?.origin?.iata_code || 'N/A'
+                                        : normalizedLegsData?.[0]?.segments[0]?.origin?.iata_code || 'N/A'}
+                                  </h3>
+                                  <span className='text-gray-500 text-xs'>
+                                    {dayjs(normalizedLegsData?.[0]?.segments?.[0]?.departure_datetime).format('hh:mm A')}
+                                  </span>
+                                </div>
+                                <div className='text-center'>
+                                  <h3 className='text-gray text-xs mb-0'>
+                                    {data.provider === 'AIRBLUE_API' ?
+                                      normalizedLegs?.[0]?.journey_duration
+                                        ? formatDuration(normalizedLegs?.[0]?.journey_duration)
+                                        : 'N/A' :
+                                      normalizedLegsData?.[0]?.journey_duration
+                                        ? formatDuration(normalizedLegsData?.[0]?.journey_duration)
+                                        : 'N/A'}
+                                  </h3>
+                                  {/* <span className="text-gray-500 flex">
                               ----------{" "}
                               <img src="/media/icons/plane.svg" alt="" />{" "}
                               ---------- */}
-                                <div className='flex text-center items-center justify-center'>
-                                  <hr className='w-[30px] md:w-[50px] xl:w-[150px] border-2' />
-                                  <FaPlane fontSize={30} className='text-primary' />
-                                  <hr className='w-[30px] md:w-[50px] xl:w-[150px] border-2' />
+                                  <div className='flex text-center items-center justify-center'>
+                                    <hr className='w-[30px] md:w-[50px] xl:w-[150px] border-2' />
+                                    <FaPlane fontSize={30} className='text-primary' />
+                                    <hr className='w-[30px] md:w-[50px] xl:w-[150px] border-2' />
+                                  </div>
+                                  {/* </span> */}
+                                  <h3 className='text-gray text-xs mb-0'>
+                                    {data.provider === 'AIRBLUE_API' ?
+                                      normalizedLegs?.[0]?.segments?.length === 1
+                                        ? 'Non-Stop'
+                                        : normalizedLegs?.[0]?.segments?.length === 2
+                                          ? `1 Stop (${normalizedLegs?.[0]?.segments[1]?.origin?.iata_code})`
+                                          : `1+ Stops (${normalizedLegs?.[0]?.segments
+                                            ?.map(segment => segment?.origin?.iata_code)
+                                            .join('-')})` :
+
+                                      normalizedLegsData?.[0]?.segments?.length === 1
+                                        ? 'Non-Stop'
+                                        : normalizedLegsData?.[0]?.segments?.length === 2
+                                          ? `1 Stop (${normalizedLegsData?.[0]?.segments[1]?.origin?.iata_code})`
+                                          : `1+ Stops (${normalizedLegsData?.[0]?.segments
+                                            ?.map(segment => segment?.origin?.iata_code)
+                                            .join('-')})`}
+                                  </h3>
                                 </div>
-                                {/* </span> */}
-                                <h3 className='text-gray text-xs mb-0'>
-                                  {data.provider === 'AIRBLUE_API' ?
-                                    normalizedLegs?.[0]?.segments?.length === 1
-                                      ? 'Non-Stop'
-                                      : normalizedLegs?.[0]?.segments?.length === 2
-                                        ? `1 Stop (${normalizedLegs?.[0]?.segments[1]?.origin?.iata_code})`
-                                        : `1+ Stops (${normalizedLegs?.[0]?.segments
-                                          ?.map(segment => segment?.origin?.iata_code)
-                                          .join('-')})` :
+                                <div className='text-center'>
+                                  <h3 className='font-semibold text-base mb-0 h-4'>
 
-                                    normalizedLegsData?.[0]?.segments?.length === 1
-                                      ? 'Non-Stop'
-                                      : normalizedLegsData?.[0]?.segments?.length === 2
-                                        ? `1 Stop (${normalizedLegsData?.[0]?.segments[1]?.origin?.iata_code})`
-                                        : `1+ Stops (${normalizedLegsData?.[0]?.segments
-                                          ?.map(segment => segment?.origin?.iata_code)
-                                          .join('-')})`}
-                                </h3>
-                              </div>
-                              <div className='text-center'>
-                                <h3 className='font-semibold text-base mb-0 h-4'>
-
-                                  {data.provider === 'AIRBLUE_API' ?
-                                    normalizedLegs?.[0]?.segments[normalizedLegs?.[0]?.segments.length - 1]?.destination
-                                      ?.iata_code || 'N/A' :
-                                    normalizedLegsData?.[0]?.segments[normalizedLegsData?.[0]?.segments.length - 1]?.destination
-                                      ?.iata_code || 'N/A'}
-                                </h3>
-                                <span className='text-gray-500 text-xs'>
-                                  {dayjs(
-                                    data.provider === 'AIRBLUE_API' ?
-                                      normalizedLegs?.[0]?.segments[normalizedLegs?.[0]?.segments.length - 1]
-                                        ?.arrival_datetime :
-                                      normalizedLegsData?.[0]?.segments[normalizedLegsData?.[0]?.segments.length - 1]
-                                        ?.arrival_datetime
-                                  ).format('hh:mm A')}
-                                </span>
+                                    {data.provider === 'AIRBLUE_API' ?
+                                      normalizedLegs?.[0]?.segments[normalizedLegs?.[0]?.segments.length - 1]?.destination
+                                        ?.iata_code || 'N/A' :
+                                      normalizedLegsData?.[0]?.segments[normalizedLegsData?.[0]?.segments.length - 1]?.destination
+                                        ?.iata_code || 'N/A'}
+                                  </h3>
+                                  <span className='text-gray-500 text-xs'>
+                                    {dayjs(
+                                      data.provider === 'AIRBLUE_API' ?
+                                        normalizedLegs?.[0]?.segments[normalizedLegs?.[0]?.segments.length - 1]
+                                          ?.arrival_datetime :
+                                        normalizedLegsData?.[0]?.segments[normalizedLegsData?.[0]?.segments.length - 1]
+                                          ?.arrival_datetime
+                                    ).format('hh:mm A')}
+                                  </span>
+                                </div>
                               </div>
                             </div>
-                          </div>
-                          <div>
                             <div>
-                              <div className='flex items-center justify-between gap-2 py-2'>
-                                <h1 className='bg-primary text-white font-semibold w-fit px-5 rounded-md text-sm py-3'>
-                                  {data?.provider}
-                                </h1>
-                                <Button
-                                  variant='contained'
-                                  className='border-2 font-semibold text-sm bg-transparent text-gray-400 py-3'
-                                  size='large'
-                                  onClick={() => handleOpenViewFlightDetail(data)}
-                                >
-                                  {/* <img
+                              <div>
+                                <div className='flex items-center justify-between gap-2 py-2'>
+                                  <h1 className='bg-primary text-white font-semibold w-fit px-5 rounded-md text-sm py-3'>
+                                    {data?.provider}
+                                  </h1>
+                                  <Button
+                                    variant='contained'
+                                    className='border-2 font-semibold text-sm bg-transparent text-gray-400 py-3'
+                                    size='large'
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      handleOpenViewFlightDetail(data);
+                                    }}
+                                  >
+                                    {/* <img
                                   src="/media/icons/view-detail-icon.svg"
                                   alt=""
                                   className="h-4 w-4"
                                 /> */}
-                                  View Flight Detail
-                                </Button>
-                                <Button
-                                  variant='contained'
-                                  className='border-2 font-semibold text-sm bg-transparent text-gray-400 py-3'
-                                  size='large'
-                                  onClick={() => {
-                                    toggleVisible(1), setFlightFearOptionsData(data)
-                                  }}
-                                >
-                                  <img src='/media/icons/view-detail-icon.svg' alt='' />
-                                  View Detail
-                                </Button>
+                                    View Flight Detail
+                                  </Button>
+                                  <Button
+                                    variant='contained'
+                                    className='border-2 font-semibold text-sm bg-transparent text-gray-400 py-3'
+                                    size='large'
+                                    onClick={() => {
+                                      toggleVisible(1);
+                                      setFlightFearOptionsData(data);
+
+                                    }}
+                                  >
+
+                                    <img src='/media/icons/view-detail-icon.svg' alt='' />
+                                    View Detail
+                                  </Button>
+                                </div>
                               </div>
                             </div>
                           </div>
+
+                        </AccordionSummary>
+
+
+                        <AccordionDetails>
                           {normalizedLegs[0]?.sector.length > 0 &&
                             <div className='border rounded-lg bg-[#F5F6FF] p-2 mb-3 text-center'>
                               {normalizedLegs[0]?.sector?.join(' → ')}
@@ -1122,8 +1147,14 @@ const FlightFound = () => {
                             )
                           }
                           )}
-                        </CardContent>
-                      </Card>
+
+                        </AccordionDetails>
+
+
+                      </Accordion>
+
+
+
                     )
                   })}
                 </div>
