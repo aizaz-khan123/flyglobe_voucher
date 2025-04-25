@@ -3,10 +3,9 @@ import React from 'react'
 
 const page = () => {
   return (
-<>
-<GroupFlights/>
-
-</>  )
+    <>
+      <GroupFlights />
+    </>)
 }
 
 export default page
