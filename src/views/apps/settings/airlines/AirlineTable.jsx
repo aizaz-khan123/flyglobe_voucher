@@ -2,9 +2,6 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react'
 
-import { useForm } from 'react-hook-form'
-import { FaPencil, FaPlus, FaTrash } from 'react-icons/fa6'
-import { IoMdClose } from 'react-icons/io'
 import { rankItem } from '@tanstack/match-sorter-utils'
 import {
   createColumnHelper,
@@ -18,6 +15,9 @@ import {
   getSortedRowModel,
   useReactTable
 } from '@tanstack/react-table'
+import { useForm } from 'react-hook-form'
+import { FaPencil, FaPlus, FaTrash } from 'react-icons/fa6'
+import { IoMdClose } from 'react-icons/io'
 
 import {
   Button,
@@ -37,9 +37,10 @@ import {
 import { toast } from 'react-toastify'
 
 import { useDeleteAirlineMutation, useGetAirlinesQuery } from '@/redux-store/services/api'
-import SearchInput from '@/components/searchInput/SearchInput'
 
 // import product1Img from "@/assets/images/apps/ecommerce/products/1.jpg"
+import tableStyles from '@core/styles/table.module.css'
+import classNames from 'classnames'
 import { CreateEditAirline } from './CreateEditAirline'
 
 
@@ -56,8 +57,8 @@ const AirlineTable = () => {
     const itemRank = rankItem(row.getValue(columnId), value)
 
     addMeta({ itemRank })
-    
-return itemRank.passed
+
+    return itemRank.passed
   }
 
   const { data: detail_data, isFetching, refetch } = useGetAirlinesQuery({
@@ -240,8 +241,8 @@ return itemRank.passed
     return <TextField {...props} value={value} onChange={e => setValue(e.target.value)} size='small' />
   }
 
-  
-return (
+
+  return (
     <>
       <Card className='mt-5 bg-base-100'>
         <CardContent className={'p-0'}>
@@ -263,7 +264,7 @@ return (
             </div>
           </div>
           <div className='overflow-x-auto p-5'>
-            <table className='w-full border-collapse'>
+            <table className={tableStyles.table}>
               <thead>
                 {table.getHeaderGroups().map(headerGroup => (
                   <tr key={headerGroup.id}>
@@ -271,13 +272,16 @@ return (
                       <th key={header.id} className='text-left p-3 border-b'>
                         {header.isPlaceholder ? null : (
                           <div
-                            className={header.column.getCanSort() ? 'cursor-pointer select-none' : ''}
+                            className={classNames({
+                              'flex items-center': header.column.getIsSorted(),
+                              'cursor-pointer select-none': header.column.getCanSort()
+                            })}
                             onClick={header.column.getToggleSortingHandler()}
                           >
                             {flexRender(header.column.columnDef.header, header.getContext())}
                             {{
-                              asc: ' 🔼',
-                              desc: ' 🔽'
+                              asc: <i className='ri-arrow-up-s-line text-xl' />,
+                              desc: <i className='ri-arrow-down-s-line text-xl' />
                             }[header.column.getIsSorted()] ?? null}
                           </div>
                         )}
@@ -356,3 +360,4 @@ return (
 }
 
 export { AirlineTable }
+

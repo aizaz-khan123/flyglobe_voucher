@@ -39,14 +39,16 @@ import {
 
 // Redux & Components
 import { useDeleteCountryMutation, useGetCountriesQuery } from '@/redux-store/services/api'
+import tableStyles from '@core/styles/table.module.css'
+import classNames from 'classnames'
 import CountryForm from './CountryForm'
 
 const fuzzyFilter = (row, columnId, value, addMeta) => {
   const itemRank = rankItem(row.getValue(columnId), value)
 
   addMeta({ itemRank })
-  
-return itemRank.passed
+
+  return itemRank.passed
 }
 
 const CountryTable = () => {
@@ -249,7 +251,7 @@ const CountryTable = () => {
           </div>
 
           <div className='overflow-x-auto p-5'>
-            <table className='w-full border-collapse'>
+            <table className={tableStyles.table}>
               <thead>
                 {table.getHeaderGroups().map(headerGroup => (
                   <tr key={headerGroup.id}>
@@ -257,13 +259,16 @@ const CountryTable = () => {
                       <th key={header.id} className='text-left p-3 border-b'>
                         {header.isPlaceholder ? null : (
                           <div
-                            className={header.column.getCanSort() ? 'cursor-pointer select-none' : ''}
+                            className={classNames({
+                              'flex items-center': header.column.getIsSorted(),
+                              'cursor-pointer select-none': header.column.getCanSort()
+                            })}
                             onClick={header.column.getToggleSortingHandler()}
                           >
                             {flexRender(header.column.columnDef.header, header.getContext())}
                             {{
-                              asc: ' 🔼',
-                              desc: ' 🔽'
+                              asc: <i className='ri-arrow-up-s-line text-xl' />,
+                              desc: <i className='ri-arrow-down-s-line text-xl' />
                             }[header.column.getIsSorted()] ?? null}
                           </div>
                         )}
@@ -353,3 +358,4 @@ const CountryTable = () => {
 }
 
 export { CountryTable }
+

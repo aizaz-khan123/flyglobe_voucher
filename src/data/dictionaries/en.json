@@ -139,6 +139,8 @@
         "airpots": "Airpots",
         "countries": "Countries",
         "newsAlerts": "News Alerts",
-        "notifications": "Notifications"
+        "notifications": "Notifications",
+        "management": "Management",
+        "group": "Group"
     }
 }

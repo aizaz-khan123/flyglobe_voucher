@@ -1,23 +1,24 @@
 "use client";
 
-import {
-    Box, Button, Card, CardContent, CircularProgress, IconButton, Menu, MenuItem, Pagination, Tooltip, Typography
-} from "@mui/material";
-import SettingsIcon from "@mui/icons-material/Settings";
 import StatusRefund from "@/components/booking/StatusRefund";
+import DateTimeComp from "@/components/date/DateTimeComp";
+import {
+    Box,
+    Card, CardContent, CircularProgress,
+    Pagination, Tooltip, Typography
+} from "@mui/material";
 import { useEffect, useMemo, useState } from "react";
 import AcceptRefundModal from "./AcceptRefundModal";
-import RejectRefundModal from "./RejectRefundModal";
-import DateTimeComp from "@/components/date/DateTimeComp";
 import FareRuleModal from "./FareRuleModal";
-import CheckIcon from '@mui/icons-material/Check';
-import ClearIcon from '@mui/icons-material/Clear';
+import RejectRefundModal from "./RejectRefundModal";
 
-import {
-    ColumnDef, flexRender, getCoreRowModel, useReactTable
-} from "@tanstack/react-table";
-import { useRefundRequestQuery } from "@/redux-store/services/api";
 import OptionMenu from "@/@core/components/option-menu";
+import { useRefundRequestQuery } from "@/redux-store/services/api";
+import tableStyles from '@core/styles/table.module.css';
+import {
+    flexRender, getCoreRowModel, useReactTable
+} from "@tanstack/react-table";
+import classNames from "classnames";
 
 
 //helper function to format the date
@@ -158,7 +159,7 @@ const RefundRequestTable = () => {
                                                 event.stopPropagation();
                                                 setBooking(row.original.booking);
                                                 setRejectRefundModalOpen(true);
-                                                
+
                                             }
                                         }
                                     },
@@ -184,13 +185,27 @@ const RefundRequestTable = () => {
             <Card sx={{ mt: 3 }}>
                 <CardContent sx={{ p: 0 }}>
                     <div className='overflow-x-auto p-5'>
-                        <table className='w-full border-collapse'>
+                        <table className={tableStyles.table}>
                             <thead>
                                 {table.getHeaderGroups().map(headerGroup => (
-                                    <tr key={headerGroup.id} className='bg-gray-100 whitespace-nowrap'>
+                                    <tr key={headerGroup.id}>
                                         {headerGroup.headers.map(header => (
                                             <th key={header.id} className='text-left p-3 border-b'>
-                                                {flexRender(header.column.columnDef.header, header.getContext())}
+                                                {header.isPlaceholder ? null : (
+                                                    <div
+                                                        className={classNames({
+                                                            'flex items-center': header.column.getIsSorted(),
+                                                            'cursor-pointer select-none': header.column.getCanSort()
+                                                        })}
+                                                        onClick={header.column.getToggleSortingHandler()}
+                                                    >
+                                                        {flexRender(header.column.columnDef.header, header.getContext())}
+                                                        {{
+                                                            asc: <i className='ri-arrow-up-s-line text-xl' />,
+                                                            desc: <i className='ri-arrow-down-s-line text-xl' />
+                                                        }[header.column.getIsSorted()] ?? null}
+                                                    </div>
+                                                )}
                                             </th>
                                         ))}
                                     </tr>
@@ -248,3 +263,4 @@ const RefundRequestTable = () => {
 };
 
 export { RefundRequestTable };
+
