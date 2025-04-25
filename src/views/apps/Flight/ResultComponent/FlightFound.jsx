@@ -271,7 +271,7 @@ const FlightFound = () => {
       setBookingFareModal(true);
       console.log(response);
       if (response?.status === true) {
-        router.push(`/en/flight/new-booking/${response?.data}`);
+        router.push(`/en/flight/new-booking/${response?.data?.confirmation_id}`);
       }
     } catch (error) {
       console.error('Mutation failed:', error);
@@ -340,7 +340,7 @@ const FlightFound = () => {
 
       setBookingFareModal(true);
       if (response?.status === true) {
-        router.push(`/en/flight/new-booking/${response?.data}`);
+        router.push(`/en/flight/new-booking/${response?.data?.confirmation_id}`);
       }
     } catch (error) {
       console.error("Booking failed:", error);
@@ -773,7 +773,8 @@ const FlightFound = () => {
         </div> */}
 
         {/* Flight Results */}
-        <div className='col-span-12 md:col-span-12 lg:col-span-12'>
+        <div className="col-span-2"></div>
+        <div className='col-span-12 md:col-span-12 lg:col-span-8'>
           <Card className='flex justify-between items-center rounded-4xl shadow-md p-2'>
             <div className='text-xl pl-4 font-bold'>
               <span>{filteredFlights?.length} </span>
@@ -908,13 +909,21 @@ const FlightFound = () => {
                               <div>
                                 <h3 className='font-semibold text-base mb-1'>{data?.airline?.name}</h3>
                                 <p className='text-gray-500 text-xs'>
-                                  {normalizedLegsData
-                                    ?.map(leg =>
-                                      Array.isArray(leg?.flight_number)
-                                        ? leg?.flight_number.join(', ')
-                                        : leg?.flight_number
-                                    )
-                                    .join(' -> ') || 'No Flight Numbers'}{' '}
+                                  {data.provider === 'AIRBLUE_API' ?
+                                    (normalizedLegs
+                                      ?.map(leg =>
+                                        Array.isArray(leg?.flight_number)
+                                          ? leg?.flight_number.join(', ')
+                                          : leg?.flight_number
+                                      )
+                                      .join(' -> ') || 'No Flight Numbers')
+                                    : (normalizedLegsData
+                                      ?.map(leg =>
+                                        Array.isArray(leg?.flight_number)
+                                          ? leg?.flight_number.join(', ')
+                                          : leg?.flight_number
+                                      )
+                                      .join(' -> ') || 'No Flight Numbers')}
                                   • {dayjs(flightSearchData?.journey_legs?.departure_date).format('ddd, MMM D, YYYY')}
                                 </p>
                               </div>
@@ -922,7 +931,10 @@ const FlightFound = () => {
                             <div className='flex items-center gap-2'>
                               <div className='text-center'>
                                 <h3 className='font-semibold text-base mb-0 h-4'>
-                                  {normalizedLegsData?.[0]?.segments[0]?.origin?.iata_code || 'N/A'}
+                                  {
+                                    data.provider === 'AIRBLUE_API' ?
+                                      normalizedLegs?.[0]?.segments[0]?.origin?.iata_code || 'N/A'
+                                      : normalizedLegsData?.[0]?.segments[0]?.origin?.iata_code || 'N/A'}
                                 </h3>
                                 <span className='text-gray-500 text-xs'>
                                   {dayjs(normalizedLegsData?.[0]?.segments?.[0]?.departure_datetime).format('hh:mm A')}
@@ -930,9 +942,13 @@ const FlightFound = () => {
                               </div>
                               <div className='text-center'>
                                 <h3 className='text-gray text-xs mb-0'>
-                                  {normalizedLegsData?.[0]?.journey_duration
-                                    ? formatDuration(normalizedLegsData?.[0]?.journey_duration)
-                                    : 'N/A'}
+                                  {data.provider === 'AIRBLUE_API' ?
+                                    normalizedLegs?.[0]?.journey_duration
+                                      ? formatDuration(normalizedLegs?.[0]?.journey_duration)
+                                      : 'N/A' :
+                                    normalizedLegsData?.[0]?.journey_duration
+                                      ? formatDuration(normalizedLegsData?.[0]?.journey_duration)
+                                      : 'N/A'}
                                 </h3>
                                 {/* <span className="text-gray-500 flex">
                               ----------{" "}
@@ -945,24 +961,40 @@ const FlightFound = () => {
                                 </div>
                                 {/* </span> */}
                                 <h3 className='text-gray text-xs mb-0'>
-                                  {normalizedLegsData?.[0]?.segments?.length === 1
-                                    ? 'Non-Stop'
-                                    : normalizedLegsData?.[0]?.segments?.length === 2
-                                      ? `1 Stop (${normalizedLegsData?.[0]?.segments[1]?.origin?.iata_code})`
-                                      : `1+ Stops (${normalizedLegsData?.[0]?.segments
-                                        ?.map(segment => segment?.origin?.iata_code)
-                                        .join('-')})`}
+                                  {data.provider === 'AIRBLUE_API' ?
+                                    normalizedLegs?.[0]?.segments?.length === 1
+                                      ? 'Non-Stop'
+                                      : normalizedLegs?.[0]?.segments?.length === 2
+                                        ? `1 Stop (${normalizedLegs?.[0]?.segments[1]?.origin?.iata_code})`
+                                        : `1+ Stops (${normalizedLegs?.[0]?.segments
+                                          ?.map(segment => segment?.origin?.iata_code)
+                                          .join('-')})` :
+
+                                    normalizedLegsData?.[0]?.segments?.length === 1
+                                      ? 'Non-Stop'
+                                      : normalizedLegsData?.[0]?.segments?.length === 2
+                                        ? `1 Stop (${normalizedLegsData?.[0]?.segments[1]?.origin?.iata_code})`
+                                        : `1+ Stops (${normalizedLegsData?.[0]?.segments
+                                          ?.map(segment => segment?.origin?.iata_code)
+                                          .join('-')})`}
                                 </h3>
                               </div>
                               <div className='text-center'>
                                 <h3 className='font-semibold text-base mb-0 h-4'>
-                                  {normalizedLegsData?.[0]?.segments[normalizedLegsData?.[0]?.segments.length - 1]?.destination
-                                    ?.iata_code || 'N/A'}
+
+                                  {data.provider === 'AIRBLUE_API' ?
+                                    normalizedLegs?.[0]?.segments[normalizedLegs?.[0]?.segments.length - 1]?.destination
+                                      ?.iata_code || 'N/A' :
+                                    normalizedLegsData?.[0]?.segments[normalizedLegsData?.[0]?.segments.length - 1]?.destination
+                                      ?.iata_code || 'N/A'}
                                 </h3>
                                 <span className='text-gray-500 text-xs'>
                                   {dayjs(
-                                    normalizedLegsData?.[0]?.segments[normalizedLegsData?.[0]?.segments.length - 1]
-                                      ?.arrival_datetime
+                                    data.provider === 'AIRBLUE_API' ?
+                                      normalizedLegs?.[0]?.segments[normalizedLegs?.[0]?.segments.length - 1]
+                                        ?.arrival_datetime :
+                                      normalizedLegsData?.[0]?.segments[normalizedLegsData?.[0]?.segments.length - 1]
+                                        ?.arrival_datetime
                                   ).format('hh:mm A')}
                                 </span>
                               </div>

@@ -1,4 +1,5 @@
 import { Fragment } from 'react'
+import { IoAirplaneSharp  } from 'react-icons/io5'
 
 const FlightRouteDisplay = ({ queryParams, legs }) => {
   if (queryParams?.route_type === 'MULTICITY') {
@@ -7,7 +8,7 @@ const FlightRouteDisplay = ({ queryParams, legs }) => {
         {legs?.map((leg, index) => (
           <Fragment key={index}>
             <h3 className='font-semibold text-lg mb-0'>{leg.origin}</h3>
-            <img src='/media/icons/plane.svg' alt='' />
+            <IoAirplaneSharp  />
             <h3 className='font-semibold text-lg mb-0'>{leg.destination}</h3>
             {index < legs.length - 1 && <span>|</span>}
           </Fragment>
@@ -21,13 +22,13 @@ const FlightRouteDisplay = ({ queryParams, legs }) => {
       <div className='flex items-center gap-2'>
         <div className='flex items-center gap-2'>
           <h3 className='font-semibold text-lg mb-0'>{queryParams?.origin}</h3>
-          <img src='/media/icons/plane.svg' alt='' />
+          <IoAirplaneSharp  />
           <h3 className='font-semibold text-lg mb-0'>{queryParams?.destination}</h3>
         </div>
         <span>|</span>
         <div className='flex items-center gap-2'>
           <h3 className='font-semibold text-lg mb-0'>{queryParams?.destination}</h3>
-          <img src='/media/icons/plane.svg' alt='' />
+          <IoAirplaneSharp  />
           <h3 className='font-semibold text-lg mb-0'>{queryParams?.origin}</h3>
         </div>
       </div>
@@ -37,7 +38,7 @@ const FlightRouteDisplay = ({ queryParams, legs }) => {
   return (
     <div className='flex items-center gap-2'>
       <h3 className='font-semibold text-lg mb-0'>{queryParams?.origin}</h3>
-      <img src='/media/icons/plane.svg' alt='' />
+      <IoAirplaneSharp  />
       <h3 className='font-semibold text-lg mb-0'>{queryParams?.destination}</h3>
     </div>
   )

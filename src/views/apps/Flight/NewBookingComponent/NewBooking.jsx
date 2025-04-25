@@ -603,8 +603,8 @@ const NewBooking = () => {
                             <div className='flex mt-4 border-b pb-2'>
                               <h4 className='font-semibold'>Price you Pay:</h4>
                               <h4 className='text-blue-600 font-bold ml-[55px]'>
-                                {bookingAvailabilityConfirmationData?.fare_info_list[0]?.price.currency}{' '}
-                                {bookingAvailabilityConfirmationData?.fare_info_list[0]?.price.gross_amount}
+                                {bookingAvailabilityConfirmationData?.fare_info_list[0]?.price?.currency}{' '}
+                                {bookingAvailabilityConfirmationData?.fare_info_list[0]?.price?.gross_amount}
                               </h4>
                             </div>
                           </div>

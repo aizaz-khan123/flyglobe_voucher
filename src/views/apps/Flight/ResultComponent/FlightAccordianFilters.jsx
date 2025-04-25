@@ -59,7 +59,7 @@ const FlightAccordianFilters = ({
                         <Button
                             size='sm'
                             onClick={handleClearSelectedFares}
-                            className='text-primary flex items-center py-0 gap-1 bg-transparent outline-none border-none underline'
+                            className='text-primary text-xs flex items-center py-0 gap-1 bg-transparent outline-none border-none underline'
                         >
                             Clear All
                         </Button>
