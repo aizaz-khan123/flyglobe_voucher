@@ -2,7 +2,6 @@
 
 import { useEffect, useMemo, useState } from 'react'
 
-import Image from 'next/image'
 
 // MUI Imports
 import {
@@ -39,20 +38,13 @@ import {
   getSortedRowModel,
   useReactTable
 } from '@tanstack/react-table'
-import { useForm } from 'react-hook-form'
-
-import { zodResolver } from '@hookform/resolvers/zod'
-
-import { z } from 'zod'
-
 import {
-  useCreateBankAccountMutation,
   useDeleteBankAccountMutation,
   useGetBankAccountsQuery
 } from '@/redux-store/services/api'
-import MuiTextField from '@/components/mui-form-inputs/MuiTextField'
-
+import tableStyles from '@core/styles/table.module.css'
 import BankAccountForm from './BankAccountForm'
+import classNames from 'classnames'
 
 const fuzzyFilter = (row, columnId, value, addMeta) => {
   const itemRank = rankItem(row.getValue(columnId), value)
@@ -273,7 +265,7 @@ const BankAccountTable = () => {
           </div>
 
           <div className='overflow-x-auto p-5'>
-            <table className='w-full border-collapse'>
+            <table className={tableStyles.table}>
               <thead>
                 {table.getHeaderGroups().map(headerGroup => (
                   <tr key={headerGroup.id}>
@@ -281,13 +273,16 @@ const BankAccountTable = () => {
                       <th key={header.id} className='text-left p-3 border-b'>
                         {header.isPlaceholder ? null : (
                           <div
-                            className={header.column.getCanSort() ? 'cursor-pointer select-none' : ''}
+                            className={classNames({
+                              'flex items-center': header.column.getIsSorted(),
+                              'cursor-pointer select-none': header.column.getCanSort()
+                            })}
                             onClick={header.column.getToggleSortingHandler()}
                           >
                             {flexRender(header.column.columnDef.header, header.getContext())}
                             {{
-                              asc: ' 🔼',
-                              desc: ' 🔽'
+                              asc: <i className='ri-arrow-up-s-line text-xl' />,
+                              desc: <i className='ri-arrow-down-s-line text-xl' />
                             }[header.column.getIsSorted()] ?? null}
                           </div>
                         )}
@@ -369,3 +364,4 @@ const BankAccountTable = () => {
 }
 
 export { BankAccountTable }
+

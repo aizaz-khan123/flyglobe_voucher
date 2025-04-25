@@ -1,44 +1,43 @@
 'use client'
 
-import { useState, useMemo, useEffect } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
-import { useForm } from 'react-hook-form'
 import { rankItem } from '@tanstack/match-sorter-utils'
 import {
   createColumnHelper,
   flexRender,
   getCoreRowModel,
-  useReactTable,
-  getFilteredRowModel,
+  getFacetedMinMaxValues,
   getFacetedRowModel,
   getFacetedUniqueValues,
-  getFacetedMinMaxValues,
+  getFilteredRowModel,
   getPaginationRowModel,
-  getSortedRowModel
+  getSortedRowModel,
+  useReactTable
 } from '@tanstack/react-table'
+import { useForm } from 'react-hook-form'
 
 // MUI Imports
+import { zodResolver } from '@hookform/resolvers/zod'
 import {
   Button,
   Card,
   CardContent,
-  TablePagination,
-  TextField,
-  Tooltip,
+  CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
-  FormLabel,
-  Switch,
-  CircularProgress,
   DialogTitle,
-  IconButton
+  IconButton,
+  Switch,
+  TablePagination,
+  TextField,
+  Tooltip
 } from '@mui/material'
-import { FaLock, FaPencil, FaPlus, FaTrash } from 'react-icons/fa6'
-import { toast } from 'react-toastify'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { z } from 'zod'
+import { FaPencil, FaPlus, FaTrash } from 'react-icons/fa6'
 import { IoMdClose } from 'react-icons/io'
+import { toast } from 'react-toastify'
+import { z } from 'zod'
 
 // Component Imports
 import { LoadingButton } from '@mui/lab'
@@ -48,12 +47,14 @@ import PhoneNumberInput from '@/components/reactPhoneInput/PhoneNumberInput'
 import {
   useCreateEmployeeMutation,
   useDeleteEmployeeMutation,
-  useGetEmployeesQuery,
   useEmployeeStatusUpdateMutation,
+  useGetEmployeesQuery,
   usePermissionListByTypeMutation,
-  useUpdateEmployeeMutation,
-  usePermissionUpdateMutation
+  usePermissionUpdateMutation,
+  useUpdateEmployeeMutation
 } from '@/redux-store/services/api'
+import tableStyles from '@core/styles/table.module.css'
+import classNames from 'classnames'
 import PermissionModal from '../PermissionModal'
 
 const fuzzyFilter = (row, columnId, value, addMeta) => {
@@ -413,7 +414,7 @@ const EmployeeTable = () => {
           </div>
 
           <div className='overflow-x-auto p-5'>
-            <table className='w-full border-collapse'>
+            <table className={tableStyles.table}>
               <thead>
                 {table.getHeaderGroups().map(headerGroup => (
                   <tr key={headerGroup.id}>
@@ -421,13 +422,16 @@ const EmployeeTable = () => {
                       <th key={header.id} className='text-left p-3 border-b'>
                         {header.isPlaceholder ? null : (
                           <div
-                            className={header.column.getCanSort() ? 'cursor-pointer select-none' : ''}
+                            className={classNames({
+                              'flex items-center': header.column.getIsSorted(),
+                              'cursor-pointer select-none': header.column.getCanSort()
+                            })}
                             onClick={header.column.getToggleSortingHandler()}
                           >
                             {flexRender(header.column.columnDef.header, header.getContext())}
                             {{
-                              asc: ' 🔼',
-                              desc: ' 🔽'
+                              asc: <i className='ri-arrow-up-s-line text-xl' />,
+                              desc: <i className='ri-arrow-down-s-line text-xl' />
                             }[header.column.getIsSorted()] ?? null}
                           </div>
                         )}
@@ -442,14 +446,14 @@ const EmployeeTable = () => {
                     {table.rows?.length > 0
                       ? 'No Record Found'
                       : table.getRowModel().rows.map(row => (
-                          <tr key={row.id} className='hover:bg-gray-50'>
-                            {row.getVisibleCells().map(cell => (
-                              <td key={cell.id} className='p-3 border-b'>
-                                {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                              </td>
-                            ))}
-                          </tr>
-                        ))}
+                        <tr key={row.id} className='hover:bg-gray-50'>
+                          {row.getVisibleCells().map(cell => (
+                            <td key={cell.id} className='p-3 border-b'>
+                              {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                            </td>
+                          ))}
+                        </tr>
+                      ))}
                   </>
                 ) : (
                   <td colSpan={table.getAllColumns().length}>
@@ -563,3 +567,4 @@ const EmployeeTable = () => {
 }
 
 export { EmployeeTable }
+

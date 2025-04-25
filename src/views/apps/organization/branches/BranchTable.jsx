@@ -35,7 +35,7 @@ import {
   TextField,
   Tooltip
 } from '@mui/material'
-import { FaLock, FaPencil, FaPlus, FaTrash } from 'react-icons/fa6'
+import { FaPencil, FaPlus, FaTrash } from 'react-icons/fa6'
 import { toast } from 'react-toastify'
 import { z } from 'zod'
 
@@ -44,6 +44,7 @@ import { IoMdClose } from 'react-icons/io'
 
 import MuiDropdown from '@/components/mui-form-inputs/MuiDropdown'
 
+import OptionMenu from '@/@core/components/option-menu'
 import MuiTextField from '@/components/mui-form-inputs/MuiTextField'
 import PhoneNumberInput from '@/components/reactPhoneInput/PhoneNumberInput'
 import { cities } from '@/data/dropdowns/cities'
@@ -56,10 +57,11 @@ import {
   useStatusUpdateMutation,
   useUpdateBranchMutation
 } from '@/redux-store/services/api'
+import tableStyles from '@core/styles/table.module.css'
+import classNames from 'classnames'
 import PermissionModal from '../PermissionModal'
-import ChangePasswordModal from './settings/ChangePasswordModal'
-import OptionMenu from '@/@core/components/option-menu'
 import AssignedMarginModal from './settings/AssignedMarginModal'
+import ChangePasswordModal from './settings/ChangePasswordModal'
 
 const fuzzyFilter = (row, columnId, value, addMeta) => {
   const itemRank = rankItem(row.getValue(columnId), value)
@@ -483,7 +485,7 @@ const BranchTable = () => {
           </div>
 
           <div className='overflow-x-auto p-5'>
-            <table className='w-full border-collapse'>
+            <table className={tableStyles.table}>
               <thead>
                 {table.getHeaderGroups().map(headerGroup => (
                   <tr key={headerGroup.id}>
@@ -491,13 +493,16 @@ const BranchTable = () => {
                       <th key={header.id} className='text-left p-3 border-b'>
                         {header.isPlaceholder ? null : (
                           <div
-                            className={header.column.getCanSort() ? 'cursor-pointer select-none' : ''}
+                            className={classNames({
+                              'flex items-center': header.column.getIsSorted(),
+                              'cursor-pointer select-none': header.column.getCanSort()
+                            })}
                             onClick={header.column.getToggleSortingHandler()}
                           >
                             {flexRender(header.column.columnDef.header, header.getContext())}
                             {{
-                              asc: ' 🔼',
-                              desc: ' 🔽'
+                              asc: <i className='ri-arrow-up-s-line text-xl' />,
+                              desc: <i className='ri-arrow-down-s-line text-xl' />
                             }[header.column.getIsSorted()] ?? null}
                           </div>
                         )}
@@ -684,3 +689,4 @@ const BranchTable = () => {
 }
 
 export { BranchTable }
+

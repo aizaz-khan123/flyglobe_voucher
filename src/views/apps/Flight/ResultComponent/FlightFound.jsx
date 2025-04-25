@@ -721,9 +721,9 @@ const FlightFound = () => {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   return (
-    <div className='p-4 min-h-screen'>
+    <div className='min-h-screen'>
       {/* Flight Filters & Results */}
-      <h3 className='text-xl mb-5 font-bold space-x-2'>
+      <h3 className='text-xl font-bold space-x-2'>
         {flightSreachIsloading ? (
           <>{/* <h1>Loading...</h1> */}</>
         ) : (
@@ -775,7 +775,7 @@ const FlightFound = () => {
         {/* Flight Results */}
         <div className="col-span-2"></div>
         <div className='col-span-12 md:col-span-12 lg:col-span-8'>
-          <Card className='flex justify-between items-center rounded-4xl shadow-md p-2'>
+          <Card className='flex justify-between items-center rounded shadow-md p-2'>
             <div className='text-xl pl-4 font-bold'>
               <span>{filteredFlights?.length} </span>
               <span>Flights Found</span>

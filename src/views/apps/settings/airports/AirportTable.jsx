@@ -1,26 +1,24 @@
 'use client'
 
-import { useState, useEffect, useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
-import { Edit, Delete, Add, Search } from '@mui/icons-material'
+import { Add } from '@mui/icons-material'
 import {
   Button,
   Card,
   CardContent,
+  CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
-  CircularProgress,
-  TextField,
-  InputAdornment,
-  TablePagination,
   IconButton,
+  TablePagination,
+  TextField,
   Tooltip
 } from '@mui/material'
 import { useForm } from 'react-hook-form'
 
-import { toast } from 'react-toastify'
 import { rankItem } from '@tanstack/match-sorter-utils'
 import {
   createColumnHelper,
@@ -35,19 +33,21 @@ import {
   useReactTable
 } from '@tanstack/react-table'
 import { IoMdClose } from 'react-icons/io'
+import { toast } from 'react-toastify'
 
 import { FaPencil, FaTrash } from 'react-icons/fa6'
 
-import { CreateAirport, CreateEditAirport } from './CreateEditAirport'
-import { EditAirport } from './EditAiport'
 import { useDeleteAirportMutation, useGetAirportsQuery } from '@/redux-store/services/api'
+import tableStyles from '@core/styles/table.module.css'
+import classNames from 'classnames'
+import { CreateEditAirport } from './CreateEditAirport'
 
 const fuzzyFilter = (row, columnId, value, addMeta) => {
   const itemRank = rankItem(row.getValue(columnId), value)
 
   addMeta({ itemRank })
-  
-return itemRank.passed
+
+  return itemRank.passed
 }
 
 const AirportTable = () => {
@@ -226,8 +226,8 @@ const AirportTable = () => {
     return <TextField {...props} value={value} onChange={e => setValue(e.target.value)} size='small' />
   }
 
-  
-return (
+
+  return (
     <>
       <Card className='mt-5 bg-white'>
         <CardContent className='p-0'>
@@ -243,7 +243,7 @@ return (
             </Button>
           </div>
           <div className='overflow-x-auto p-5'>
-            <table className='w-full border-collapse'>
+            <table className={tableStyles.table}>
               <thead>
                 {table.getHeaderGroups().map(headerGroup => (
                   <tr key={headerGroup.id}>
@@ -251,13 +251,16 @@ return (
                       <th key={header.id} className='text-left p-3 border-b'>
                         {header.isPlaceholder ? null : (
                           <div
-                            className={header.column.getCanSort() ? 'cursor-pointer select-none' : ''}
+                            className={classNames({
+                              'flex items-center': header.column.getIsSorted(),
+                              'cursor-pointer select-none': header.column.getCanSort()
+                            })}
                             onClick={header.column.getToggleSortingHandler()}
                           >
                             {flexRender(header.column.columnDef.header, header.getContext())}
                             {{
-                              asc: ' 🔼',
-                              desc: ' 🔽'
+                              asc: <i className='ri-arrow-up-s-line text-xl' />,
+                              desc: <i className='ri-arrow-down-s-line text-xl' />
                             }[header.column.getIsSorted()] ?? null}
                           </div>
                         )}
@@ -335,3 +338,4 @@ return (
 }
 
 export { AirportTable }
+
