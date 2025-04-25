@@ -131,6 +131,12 @@ const VerticalMenu = ({ dictionary, scrollMenu }) => {
             <MenuItem href={`/${locale}/deposites/branch-deposite`}>
               {dictionary['navigation'].branchDeposite}
             </MenuItem>
+            <MenuItem href={`/${locale}/deposites/my-deposite`}>
+              {dictionary['navigation'].myDeposite}
+            </MenuItem>
+            <MenuItem href={`/${locale}/deposites/bank-deposite`}>
+              {dictionary['navigation'].bankDeposite}
+            </MenuItem>
           </SubMenu>
 
           <SubMenu label={dictionary['navigation'].reports} icon={<i className="ri-file-chart-fill"></i>}>

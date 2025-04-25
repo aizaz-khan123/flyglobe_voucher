@@ -1,10 +1,9 @@
-import AgencyDeposit from '@/views/apps/deposits/agency-deposites/AgencyDeposit'
 import React from 'react'
 
 const page = () => {
     return (
         <div>
-            <AgencyDeposit />
+            Bank Deposite
         </div>
     )
 }

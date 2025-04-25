@@ -748,6 +748,13 @@ export const api = emptySplitApi.injectEndpoints({
         body: formData,
       }),
     }),
+    depositsOrgList: builder.query({
+      query: () => ({
+        url: `${API_END_POINTS.depositsOrgList}`,
+        method: "GET",
+      }),
+      transformResponse: (response) => response.data,
+    }),
     depositsAgencyList: builder.query({
       query: () => ({
         url: `${API_END_POINTS.depositsAgencyList}`,
@@ -755,6 +762,20 @@ export const api = emptySplitApi.injectEndpoints({
       }),
       transformResponse: (response) => response.data,
     }),
+
+    depositsReject: builder.mutation({
+      query: (uuid) => ({
+        url: `${API_END_POINTS.depositsReject}/${uuid}`,
+        method: "POST",
+      }),
+    }),
+    depositsAccept: builder.mutation({
+      query: (uuid) => ({
+        url: `${API_END_POINTS.depositsAccept}/${uuid}`,
+        method: "POST",
+      }),
+    }),
+
     //refund-request
 
     refundRequest: builder.query({
@@ -868,7 +889,6 @@ export const {
   useUpdateAirlineMarginMutation,
   useBankDropdownQuery,
   useGetBranchesQuery,
-  useDepositsRequestMutation,
   useCreateBranchMutation,
   useDeleteBranchMutation,
   useUpdateBranchMutation,
@@ -916,7 +936,6 @@ export const {
   useBookingListQuery,
   useDownloadBookingMutation,
   useLazyFinanicalProfileQuery,
-  useDepositsAgencyListQuery,
 
   ///settings
   useTemporaryLimitMutation,
@@ -926,11 +945,17 @@ export const {
   useLazyDashboardSaleStaticsQuery,
   useDashboardSaleStaticsQuery,
   useLazyDashboardStatsQuery,
-
   useMyRefundRequestQuery,
   //refund-request
   useRefundRequestQuery,
   useMakeRefundMutation,
   useRejectReFundMutation,
-  useLazyRefundRequestShowFareRuleQuery
+  useLazyRefundRequestShowFareRuleQuery,
+
+
+  useDepositsOrgListQuery,
+  useDepositsAgencyListQuery,
+  useDepositsRequestMutation,
+  useDepositsRejectMutation,
+  useDepositsAcceptMutation,
 } = api
