@@ -1,12 +1,13 @@
+import { AirblueConnector } from './AirblueConnector'
 import { PIAConnector } from './PIAConnector'
 import { SABREConnector } from './SABREConnector'
 
 const Connectors = () => {
   return (
     <>
-      PIA Connectors
       <PIAConnector />
       <SABREConnector />
+      <AirblueConnector />
     </>
   )
 }
