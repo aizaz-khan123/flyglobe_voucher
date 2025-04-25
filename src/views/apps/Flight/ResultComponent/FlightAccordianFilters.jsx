@@ -111,7 +111,7 @@ const FlightAccordianFilters = ({
                     <FormLabel className='flex justify-start items-start p-0'>Airlines</FormLabel>
                     <div className='flex flex-col gap-2 mt-2'>
                         {airlines.map((airline, index) => (
-                            <label key={index} className='flex items-center gap-2 cursor-pointer'>
+                            <label key={index} className='flex items-center gap-2 cursor-pointer text-xs'>
                                 <input
                                     type='checkbox'
                                     value={airline}
@@ -139,7 +139,7 @@ const FlightAccordianFilters = ({
                 />
                 <div className='flex flex-col gap-2'>
                     {stopsOptions.map((stop, index) => (
-                        <label key={index} className='flex items-center gap-2 cursor-pointer'>
+                        <label key={index} className='flex items-center gap-2 cursor-pointer text-xs'>
                             <input
                                 type='checkbox'
                                 value={stop}
@@ -160,14 +160,14 @@ const FlightAccordianFilters = ({
                     <div className="flex gap-2 mb-3 mt-2">
                         <input
                             type="text"
-                            className="w-1/2 border p-1 rounded text-center"
+                            className="w-1/2 border p-1 rounded text-center text-xs"
                             value={formatPrice(priceRange.value[0])}
                             onChange={(e) => handleInputChange(e, 0)}
                         />
                         <span className="text-gray-500">-</span>
                         <input
                             type="text"
-                            className="w-1/2 border p-1 rounded text-center"
+                            className="w-1/2 border p-1 rounded text-center text-xs"
                             value={formatPrice(priceRange.value[1])}
                             onChange={(e) => handleInputChange(e, 1)}
                         />

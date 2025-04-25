@@ -799,11 +799,11 @@ const FlightFound = () => {
                     </span>
                   </div>
                   <div className='flex flex-col md:flex-row items-center gap-2'>
-                    <div className='relative'>
+                    {/* <div className='relative'>
                       <div className='relative inline-block'>
                         <AddCommission filteredFlights={filteredFlights} setFilteredFlights={setFilteredFlights} />
                       </div>
-                    </div>
+                    </div> */}
 
                     <Button variant='contained' className='max-sm:is-full is-auto' onClick={handleOpen}>
                       Change Search
@@ -955,9 +955,9 @@ const FlightFound = () => {
                               <img src="/media/icons/plane.svg" alt="" />{" "}
                               ---------- */}
                                 <div className='flex text-center items-center justify-center'>
-                                  <hr className='w-[30px] md:w-[50px] xl:w-[200px] border-2' />
+                                  <hr className='w-[30px] md:w-[50px] xl:w-[150px] border-2' />
                                   <FaPlane fontSize={30} className='text-primary' />
-                                  <hr className='w-[30px] md:w-[50px] xl:w-[200px] border-2' />
+                                  <hr className='w-[30px] md:w-[50px] xl:w-[150px] border-2' />
                                 </div>
                                 {/* </span> */}
                                 <h3 className='text-gray text-xs mb-0'>
