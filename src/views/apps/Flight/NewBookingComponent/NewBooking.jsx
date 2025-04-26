@@ -611,11 +611,11 @@ const NewBooking = () => {
                           <Accordion
                             className='p-0 '
                             disableGutters
-                            sx={{ boxShadow: 'none', '&:before': { display: 'none' } }}
+                            sx={{ boxShadow: 'none', border:'none', '&:before': { display: 'none' } }}
                           >
                             <AccordionSummary
                               expandIcon={
-                                <div className='bg-blue-500 text-white rounded-full w-8 h-8 flex items-center justify-center'>
+                                <div className='bg-primary text-white rounded-full w-8 h-8 flex items-center justify-center'>
                                   <ExpandMoreIcon />
                                 </div>
                               }

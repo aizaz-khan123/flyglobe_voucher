@@ -21,7 +21,12 @@ import StyledVerticalNavExpandIcon from '@menu/styles/vertical/StyledVerticalNav
 // Style Imports
 import menuItemStyles from '@core/styles/vertical/menuItemStyles'
 import menuSectionStyles from '@core/styles/vertical/menuSectionStyles'
-
+import { MdGroup } from 'react-icons/md'
+import { RiHotelLine } from 'react-icons/ri'
+import { FaChartBar, FaRegPenToSquare } from 'react-icons/fa6'
+import { LuNotebookPen } from 'react-icons/lu'
+import { FaMoneyCheckAlt } from "react-icons/fa";
+import { PiHandDeposit } from 'react-icons/pi'
 const RenderExpandIcon = ({ open, transitionDuration }) => (
   <StyledVerticalNavExpandIcon open={open} transitionDuration={transitionDuration}>
     <i className='ri-arrow-right-s-line' />
@@ -73,8 +78,8 @@ const VerticalMenu = ({ dictionary, scrollMenu }) => {
 
           <SubMenu label={dictionary['navigation'].Sell} icon={<i className='ri-organization-chart'></i>}>
             <MenuItem href={`/${locale}/book-flights`} icon={<i className='ri-plane-fill'></i>}>{dictionary['navigation'].flight}</MenuItem>
-            <MenuItem href={`/${locale}/group-flights`}>{dictionary['navigation'].groupFlight}</MenuItem>
-            <MenuItem href={`/${locale}/umrah-hotels`}>{dictionary['navigation'].umrahHotels}</MenuItem>
+            <MenuItem href={`/${locale}/group-flights`} icon={<MdGroup/>}>{dictionary['navigation'].groupFlight}</MenuItem>
+            <MenuItem href={`/${locale}/umrah-hotels`} icon={<RiHotelLine/>}>{dictionary['navigation'].umrahHotels}</MenuItem>
             <MenuItem href={`/${locale}/umrah-visa`}>{dictionary['navigation'].umrahVisa}</MenuItem>
             <MenuItem href={`/${locale}/bookings`}>{dictionary['navigation'].bookings}</MenuItem>
           </SubMenu>
@@ -103,32 +108,32 @@ const VerticalMenu = ({ dictionary, scrollMenu }) => {
 
 
           <SubMenu label={dictionary['navigation'].organization} icon={<i className="ri-group-line"></i>}>
-            <MenuItem href={`/${locale}/organization/branches`}>{dictionary['navigation'].branches}</MenuItem>
+            <MenuItem href={`/${locale}/organization/branches`} icon={<i className='ri-organization-chart'></i>}>{dictionary['navigation'].branches}</MenuItem>
             <MenuItem href={`/${locale}/organization/agencies`}>{dictionary['navigation'].agencies}</MenuItem>
-            <MenuItem href={`/${locale}/organization/employees`}>{dictionary['navigation'].employees}</MenuItem>
+            <MenuItem href={`/${locale}/organization/employees`} icon={<MdGroup/>}>{dictionary['navigation'].employees}</MenuItem>
           </SubMenu>
 
           <SubMenu label={dictionary['navigation'].accounts} icon={<i className='ri-calculator-line'></i>}>
-            <MenuItem href={`/${locale}/accounts/chart-of-account`}>
+            <MenuItem href={`/${locale}/accounts/chart-of-account`} icon={<FaChartBar/>}>
               {dictionary['navigation'].chartOfAccount}
             </MenuItem>
-            <MenuItem href={`/${locale}/accounts/general-legder`}>
+            <MenuItem href={`/${locale}/accounts/general-legder`} icon={<LuNotebookPen />}>
               {dictionary['navigation'].generalLegder}
             </MenuItem>
-            <MenuItem href={`/${locale}/accounts/journal-entries`}>
+            <MenuItem href={`/${locale}/accounts/journal-entries`} icon={<FaRegPenToSquare />}>
               {dictionary['navigation'].journalEntries}
             </MenuItem>
             <MenuItem href={`/${locale}/accounts/account-statement`}>
               {dictionary['navigation'].accountStatement}
             </MenuItem>
-            <MenuItem href={`/${locale}/accounts/trail-balance`}>{dictionary['navigation'].trailBalance}</MenuItem>
+            <MenuItem href={`/${locale}/accounts/trail-balance`} icon={<FaMoneyCheckAlt />}>{dictionary['navigation'].trailBalance}</MenuItem>
           </SubMenu>
 
           <SubMenu label={dictionary['navigation'].deposites} icon={<i className='ri-luggage-deposit-line'></i>}>
-            <MenuItem href={`/${locale}/deposites/agency-deposite`}>
+            <MenuItem href={`/${locale}/deposites/agency-deposite`} icon={<PiHandDeposit />}>
               {dictionary['navigation'].agencyDeposite}
             </MenuItem>
-            <MenuItem href={`/${locale}/deposites/branch-deposite`}>
+            <MenuItem href={`/${locale}/deposites/branch-deposite`} icon={<PiHandDeposit />}>
               {dictionary['navigation'].branchDeposite}
             </MenuItem>
           </SubMenu>
