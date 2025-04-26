@@ -1,4 +1,4 @@
-import GroupTable from '@/views/apps/management/group/GroupTable'
+import GroupTable from '@/views/apps/management/groups/GroupTable'
 
 const page = () => {
     return (
