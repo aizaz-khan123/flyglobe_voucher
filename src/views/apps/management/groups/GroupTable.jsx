@@ -26,7 +26,6 @@ import {
     Button,
     Card,
     CardContent,
-    Popover,
     TablePagination,
     TextField
 } from '@mui/material'
@@ -34,17 +33,15 @@ import { FaDownload, FaPlus } from 'react-icons/fa6'
 import { MdExpandMore } from 'react-icons/md'
 
 // Component Imports
-import PopupState, { bindPopover, bindTrigger } from 'material-ui-popup-state'
 
-import DateTimeComp from '@/components/date/DateTimeComp'
 import Link from '@/components/Link'
-import { useBookingListQuery } from '@/redux-store/services/api'
-import MuiTextField from '@/components/mui-form-inputs/MuiTextField'
 import MuiAutocomplete from '@/components/mui-form-inputs/MuiAutoComplete'
 import MuiDatePicker from '@/components/mui-form-inputs/MuiDatePicker'
-import StatusWidget from '../../bookings/StatusWidget'
+import MuiTextField from '@/components/mui-form-inputs/MuiTextField'
+import { useBookingListQuery } from '@/redux-store/services/api'
 import tableStyles from '@core/styles/table.module.css'
 import classNames from 'classnames'
+import StatusWidget from '../../bookings/StatusWidget'
 import AddGroupModal from './AddGroupModal'
 
 const GroupTable = () => {
@@ -55,8 +52,12 @@ const GroupTable = () => {
     const [page, setPage] = useState(0)
     const [rowsPerPage, setRowsPerPage] = useState(10)
     const [showAddGroupModal, setShowAddGroupModal] = useState(false)
+    const [showGroupTypeModal, setShowGroupTypeModal] = useState(false)
     const addGroupModalHandler = () => {
         setShowAddGroupModal((prev) => !prev);
+    };
+    const groupTypeModalHandler = () => {
+        setShowGroupTypeModal((prev) => !prev);
     };
     // Filters state
     const [filters, setFilters] = useState({
@@ -363,9 +364,14 @@ const GroupTable = () => {
                             className='w-full max-w-md'
                         />
                         <div className='inline-flex items-center gap-3'>
+                            <Link href='group-type'>
+                                <Button variant='contained' className='hidden md:flex'>
+                                    <span>Groups Type</span>
+                                </Button>
+                            </Link>
                             <Button onClick={addGroupModalHandler} variant='contained' className='hidden md:flex'>
                                 <FaPlus fontSize={16} />
-                                <span>Add Group Flight</span>
+                                <span>Add Groups Flights</span>
                             </Button>
                         </div>
                     </div>

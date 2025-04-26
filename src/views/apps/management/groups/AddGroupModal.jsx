@@ -1,19 +1,52 @@
+import MuiDatePicker from '@/components/mui-form-inputs/MuiDatePicker'
 import MuiDropdown from '@/components/mui-form-inputs/MuiDropdown'
 import MuiTextField from '@/components/mui-form-inputs/MuiTextField'
 import { gender } from '@/data/dropdowns/DropdownValues'
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material'
 import React from 'react'
-import { useForm } from 'react-hook-form'
+import { useFieldArray, useForm } from 'react-hook-form'
 import { IoMdClose } from 'react-icons/io'
 
 const AddGroupModal = ({ open, isEdit, onClose, }) => {
-    const { control, onSubmit, setError, reset, isLoading } = useForm()
+    const { control, handleSubmit, setError, reset, formState: { isSubmitting }, setValue, watch, isLoading } = useForm({
+        defaultValues: {
+            sector: '',
+            airline: '',
+            status: '',
+            purchase_price: '',
+            price: '',
+            adult_price: '',
+            adt_price_on_call: '',
+            cnn_price: '',
+            cnn_price_on_call: '',
+            infant_price: '',
+            infant_price_on_call: '',
+            baggage: '',
+            meal: '',
+            pnr: '',
+            total_seats: '',
+            flights: [
+                {
+                    flight_no: '',
+                    flight_date: null,
+                    origin: '',
+                    destination: '',
+                    departure_date: null,
+                    arrival_date: null,
+                },
+            ],
+        }
+    })
+    const { fields, append, remove } = useFieldArray({
+        control,
+        name: 'flights',
+    });
 
     return (
         <>
             <Dialog open={open} onClose={onClose} fullWidth maxWidth='lg'>
                 <DialogTitle className='font-bold flex items-center justify-between'>
-                    {isEdit === true ? 'Edit' : 'Create'} Add Group Flight
+                    {isEdit === true ? 'Update' : 'Add'}  Group Flight
                     <IoMdClose className='cursor-pointer' onClick={onClose} />
                 </DialogTitle>
                 <DialogContent>
@@ -202,14 +235,109 @@ const AddGroupModal = ({ open, isEdit, onClose, }) => {
                             />
                         </div>
                     </div>
+
+                    {fields.map((field, index) => (
+                        <div key={field.id}>
+                            <div className='flex justify-between items-center'>
+                                <h3 className='text-primary font-semibold mt-4'>Flight Detail: {index + 1}</h3>
+                                {index > 0 &&
+                                    <h3 className='text-red-600 font-semibold mt-4 cursor-pointer' onClick={() => remove(index)}>Remove Flight: {index + 1}</h3>
+                                }
+                            </div>
+                            <div className="grid grid-cols-3 gap-4 mt-2">
+                                <div>
+                                    <MuiTextField
+                                        type='text'
+                                        className='w-full border-0 focus:outline-0'
+                                        control={control}
+                                        label='Flight NO'
+                                        size='md'
+                                        id={`flights.${index}.flight_no`}
+                                        name={`flights.${index}.flight_no`}
+                                    />
+                                </div>
+                                <div>
+                                    <MuiDatePicker
+                                        className='w-full border-0 focus:outline-0'
+                                        control={control}
+                                        label='Flight Date'
+                                        size='md'
+                                        id={`flights.${index}.flight_date`}
+                                        name={`flights.${index}.flight_date`}
+                                    />
+                                </div>
+                                <div>
+                                    <MuiTextField
+                                        type='text'
+                                        className='w-full border-0 focus:outline-0'
+                                        control={control}
+                                        label='Origin'
+                                        size='md'
+                                        id={`flights.${index}.origin`}
+                                        name={`flights.${index}.origin`}
+                                    />
+                                </div>
+                                <div>
+                                    <MuiTextField
+                                        type='text'
+                                        className='w-full border-0 focus:outline-0'
+                                        control={control}
+                                        label='Destination'
+                                        size='md'
+                                        id={`flights.${index}.destination`}
+                                        name={`flights.${index}.destination`}
+                                    />
+                                </div>
+                                <div>
+                                    <MuiDatePicker
+                                        className='w-full border-0 focus:outline-0'
+                                        control={control}
+                                        label='Departure Date'
+                                        size='md'
+                                        id={`flights.${index}.departure_date`}
+                                        name={`flights.${index}.departure_date`}
+                                    />
+                                </div>
+                                <div>
+                                    <MuiDatePicker
+                                        className='w-full border-0 focus:outline-0'
+                                        control={control}
+                                        label='Arrival Date'
+                                        size='md'
+                                        id={`flights.${index}.arrival_date`}
+                                        name={`flights.${index}.arrival_date`}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+
+                    <div className='text-end'>
+                        <Button
+                            onClick={() =>
+                                append({
+                                    flight_no: '',
+                                    flight_date: null,
+                                    origin: '',
+                                    destination: '',
+                                    departure_date: null,
+                                    arrival_date: null,
+                                })
+                            }
+                        >
+                            Add Flight
+                        </Button>
+                    </div>
+
                 </DialogContent>
                 <DialogActions>
                     <Button variant='outlined' onClick={onClose} disabled={isLoading}>
                         Cancel
                     </Button>
-                    <Button variant='contained' onClick={onSubmit} disabled={isLoading}>
-                        {isLoading ? 'Saving...' : 'Save'}
+                    <Button variant='contained' onClick={handleSubmit(data => console.log(data))} disabled={isSubmitting}>
+                        {isSubmitting ? 'Saving...' : 'Save'}
                     </Button>
+
                 </DialogActions>
             </Dialog>
         </>

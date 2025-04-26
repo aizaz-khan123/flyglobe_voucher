@@ -1,3 +1,4 @@
+'use client'
 // Third-party Imports
 import classnames from 'classnames'
 
@@ -12,6 +13,8 @@ import UserDropdown from '@components/layout/shared/UserDropdown'
 
 // Util Imports
 import { verticalLayoutClasses } from '@layouts/utils/layoutClasses'
+import { Breadcrumbs, Link, TextField, Typography } from '@mui/material'
+import { usePathname } from 'next/navigation'
 
 // Vars
 const shortcuts = [
@@ -101,17 +104,28 @@ const notifications = [
 ]
 
 const NavbarContent = () => {
+  const pathname = usePathname()
+  const getLastSegment = () => {
+    const pathSegments = pathname.split('/').filter((seg) => seg && seg !== 'en')
+    const lastSegment = pathSegments[pathSegments.length - 1] || ''
+    const label = lastSegment.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())
+    return label
+  }
   return (
     <div className={classnames(verticalLayoutClasses.navbarContent, 'flex items-center justify-between gap-4 is-full')}>
       <div className='flex items-center gap-[7px]'>
         <NavToggle />
-        <NavSearch />
+        {/* <NavSearch /> */}
+        <Typography variant="h5">
+          {getLastSegment()}
+        </Typography>
       </div>
       <div className='flex items-center'>
         {/* <LanguageDropdown /> */}
         {/* <ModeDropdown /> */}
         {/* <ShortcutsDropdown shortcuts={shortcuts} /> */}
-        <NotificationsDropdown notifications={notifications} />
+        {/* <NotificationsDropdown notifications={notifications} /> */}
+        <TextField placeholder='search booking' size='small' />
         <UserDropdown />
       </div>
     </div>
