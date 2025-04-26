@@ -126,6 +126,8 @@
         "deposites": "Deposites",
         "agencyDeposite": "Agency Deposite",
         "branchDeposite": "Branch Deposite",
+        "bankDeposite": "Bank Deposite",  
+        "myDeposite": "My Deposites",
         "reports": "Reports",
         "salesReports": "Sales Reports",
         "refundReports": "Refund Reports",

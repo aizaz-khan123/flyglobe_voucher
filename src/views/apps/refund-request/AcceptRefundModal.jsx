@@ -12,11 +12,11 @@ import {
     FormLabel,
     CircularProgress
 } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
-import { useToast } from '@/hooks/use-toast';
 import { useForm } from 'react-hook-form';
 import MuiTextField from '@/components/mui-form-inputs/MuiTextField';
 import { useMakeRefundMutation } from '@/redux-store/services/api';
+import { toast } from 'react-toastify';
+import { IoMdClose } from 'react-icons/io';
 
 export const formatCurrency = (amount) => {
     return `PKR ${amount?.toLocaleString('en-PK', {
@@ -25,7 +25,6 @@ export const formatCurrency = (amount) => {
     })}`;
 };
 const AcceptRefundModal = ({ isOpen, RefundRequestRefetch, booking, handleAcceptRefundTicket }) => {
-    const toaster = useToast();
     const [makeRefund, { isLoading }] = useMakeRefundMutation();
 
     const { control, handleSubmit } = useForm({
@@ -45,14 +44,14 @@ const AcceptRefundModal = ({ isOpen, RefundRequestRefetch, booking, handleAccept
 
             const response = await makeRefund(payload).unwrap();
             if (response?.code === 200) {
-                toaster.success(response?.message || 'Refund processed successfully.');
+                toast.success(response?.message || 'Refund processed successfully.');
                 handleAcceptRefundTicket();
                 RefundRequestRefetch();
             } else {
-                toaster.error(response?.message || 'Failed to process refund.');
+                toast.error(response?.message || 'Failed to process refund.');
             }
         } catch (error) {
-            toaster.error(error?.data?.message || 'Failed to process refund.');
+            toast.error(error?.data?.message || 'Failed to process refund.');
         }
     };
 
@@ -61,7 +60,8 @@ const AcceptRefundModal = ({ isOpen, RefundRequestRefetch, booking, handleAccept
             <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <Typography variant="h6">Accept Refund</Typography>
                 <IconButton size="small" onClick={handleAcceptRefundTicket}>
-                    <CloseIcon />
+                    <IoMdClose />
+
                 </IconButton>
             </DialogTitle>
 

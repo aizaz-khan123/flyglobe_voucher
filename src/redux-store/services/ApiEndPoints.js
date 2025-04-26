@@ -131,6 +131,11 @@ export const API_END_POINTS = {
   makeRefund: BASE_URL_V1 + '/refund-request/make-refund',
   rejectReFund: BASE_URL_V1 + '/refund-request/reject',
 
+  depositsOrgList: BASE_URL_V1 + '/deposits/org-list',
+  depositsAgencyList: BASE_URL_V1 + '/deposits/agency-list',
+  depositsRequest: BASE_URL_V1 + '/deposits/request',
+  depositsReject: BASE_URL_V1 + '/deposits/reject',
+  depositsAccept: BASE_URL_V1 + '/deposits/accept',
 
   //// settings //////
   temporaryLimit: BASE_URL_V1 + '/setting/temporary-limit',

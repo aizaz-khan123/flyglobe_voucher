@@ -1,172 +1,190 @@
-'use client'
+'use client';
 
-import { useEffect, useState } from 'react'
-import Link from 'next/link'
-
-// MUI Imports
+import { useEffect, useState } from 'react';
 import {
-    Card,
-    CardContent,
-    CircularProgress,
-    Table,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableHead,
-    TableRow,
-    TablePagination,
-    TextField,
-    Typography
-} from '@mui/material'
-import { useMyRefundRequestQuery } from '@/redux-store/services/api'
-import DateTimeComp from '@/components/date/DateTimeComp'
-import StatusRefund from '@/components/booking/StatusRefund'
-// import StatusRefund from '@/components/booking/StatusRefund'
-// import DateTimeComp from '@/components/date/DateTimeComp'
+  Card,
+  CardContent,
+  CircularProgress,
+  TextField,
+  Typography,
+  Box,
+  TablePagination,
+} from '@mui/material';
+import { useMyRefundRequestQuery } from '@/redux-store/services/api';
+import tableStyles from '@core/styles/table.module.css';
+
+const formatAmountWithCommas = (amount) =>
+  typeof amount === 'number' ? amount.toLocaleString() : '0';
 
 const MyRefundrequestRow = ({ myRefundData }) => {
-    const { booking, status, created_at, refunded_amount, base_fare, tax, total_amount } = myRefundData
-    const formatAmountWithCommas = (amount) => {
-        if (amount !== 'number') return '0';
-        return amount.toLocaleString();
-    };
+  const {
+    booking,
+    status,
+    created_at,
+    refunded_amount,
+    base_fare,
+    tax,
+    total_amount,
+  } = myRefundData;
 
-
-    return (
-        <TableRow hover sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-            <TableCell>
-
-                <Typography color="primary" sx={{ textDecoration: 'underline' }}>
-                    {booking?.booking_id}
-                </Typography>
-
-            </TableCell>
-            <TableCell>{booking?.booking_pnr}</TableCell>
-            {/* <TableCell><StatusRefund status={status} /></TableCell> */}
-            <TableCell>{booking?.booked_by_user?.name}</TableCell>
-            {/* <TableCell><DateTimeComp formattedDate={booking?.created_at} /></TableCell>
-      <TableCell><DateTimeComp formattedDate={created_at} /></TableCell> */}
-            <TableCell>{booking?.airline?.name}</TableCell>
-            <TableCell>{booking?.supplier?.name}</TableCell>
-            <TableCell>{formatAmountWithCommas(base_fare)}</TableCell>
-            <TableCell>{formatAmountWithCommas(tax)}</TableCell>
-            <TableCell>{formatAmountWithCommas(total_amount)}</TableCell>
-            <TableCell>{refunded_amount || "N/A"}</TableCell>
-        </TableRow>
-    )
-}
+  return (
+    <tr>
+      <td className="p-3 border-b text-primary underline">
+        {booking?.booking_id}
+      </td>
+      <td className="p-3 border-b">{booking?.booking_pnr}</td>
+      <td className="p-3 border-b">{status}</td>
+      <td className="p-3 border-b">{booking?.booked_by_user?.name}</td>
+      <td className="p-3 border-b">{booking?.created_at}</td>
+      <td className="p-3 border-b">{created_at}</td>
+      <td className="p-3 border-b">{booking?.airline?.name}</td>
+      <td className="p-3 border-b">{booking?.supplier?.name}</td>
+      <td className="p-3 border-b">{formatAmountWithCommas(base_fare)}</td>
+      <td className="p-3 border-b">{formatAmountWithCommas(tax)}</td>
+      <td className="p-3 border-b">{formatAmountWithCommas(total_amount)}</td>
+      <td className="p-3 border-b">{refunded_amount || 'N/A'}</td>
+    </tr>
+  );
+};
 
 const MyRefundRequestTable = () => {
-    const [searchText, setSearchText] = useState('')
-    const [pageUrl, setPageUrl] = useState('')
-    const [page, setPage] = useState(0)
-    const [rowsPerPage, setRowsPerPage] = useState(10)
+  const [searchText, setSearchText] = useState('');
+  const [pageUrl, setPageUrl] = useState('');
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
 
-    const { data: detail_data, isFetching, refetch: myRefundRequestRefetch } = useMyRefundRequestQuery({
-        searchText,
-        pageUrl,
-        page: page + 1,
-        pageSize: rowsPerPage
-    })
+  const {
+    data: detail_data,
+    isFetching,
+    refetch: myRefundRequestRefetch,
+  } = useMyRefundRequestQuery({
+    searchText,
+    pageUrl,
+    page: page + 1,
+    pageSize: rowsPerPage,
+  });
 
-    const myRefundDetail = detail_data?.data || []
-    const totalCount = detail_data?.total || 0
+  const myRefundDetail = detail_data?.data || [];
+  const totalCount = detail_data?.total || 0;
+
+  useEffect(() => {
+    myRefundRequestRefetch();
+  }, []);
+
+  const handlePageChange = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleRowsPerPageChange = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
+  const DebouncedInput = ({
+    value: initialValue,
+    onChange,
+    debounce = 500,
+    ...props
+  }) => {
+    const [value, setValue] = useState(initialValue);
 
     useEffect(() => {
-        myRefundRequestRefetch()
-    }, [])
+      setValue(initialValue);
+    }, [initialValue]);
 
-    const handlePageChange = (event, newPage) => {
-        setPage(newPage)
-    }
-
-    const handleRowsPerPageChange = event => {
-        setRowsPerPage(parseInt(event.target.value, 10))
-        setPage(0)
-    }
-
-    const DebouncedInput = ({ value: initialValue, onChange, debounce = 500, ...props }) => {
-        const [value, setValue] = useState(initialValue)
-
-        useEffect(() => {
-            setValue(initialValue)
-        }, [initialValue])
-
-        useEffect(() => {
-            const timeout = setTimeout(() => {
-                onChange(value)
-            }, debounce)
-
-            return () => clearTimeout(timeout)
-        }, [value])
-
-        return <TextField {...props} value={value} onChange={e => setValue(e.target.value)} size='small' />
-    }
+    useEffect(() => {
+      const timeout = setTimeout(() => {
+        onChange(value);
+      }, debounce);
+      return () => clearTimeout(timeout);
+    }, [value]);
 
     return (
-        <Card sx={{ mt: 5 }}>
-            <CardContent>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-                    <DebouncedInput
-                        value={searchText ?? ''}
-                        onChange={value => setSearchText(String(value))}
-                        placeholder='Search refund requests...'
-                        sx={{ width: '100%', maxWidth: 400 }}
-                    />
-                </div>
+      <TextField
+        {...props}
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        size="small"
+      />
+    );
+  };
 
-                <TableContainer>
-                    <Table>
-                        <TableHead>
-                            <TableRow>
-                                <TableCell sx={{ width: '5rem' }}>Booking ID</TableCell>
-                                <TableCell>PNR</TableCell>
-                                <TableCell>Request Status</TableCell>
-                                <TableCell>Booking By</TableCell>
-                                <TableCell>Booked At</TableCell>
-                                <TableCell>Requested DateTime</TableCell>
-                                <TableCell>Airline</TableCell>
-                                <TableCell>Supplier</TableCell>
-                                <TableCell>Base Fare</TableCell>
-                                <TableCell>Tax</TableCell>
-                                <TableCell>Total Amount</TableCell>
-                                <TableCell>Refunded Amount</TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {isFetching ? (
-                                <TableRow>
-                                    <TableCell colSpan={12} align="center">
-                                        <CircularProgress />
-                                    </TableCell>
-                                </TableRow>
-                            ) : myRefundDetail.length > 0 ? (
-                                myRefundDetail.map((myRefundData, index) => (
-                                    <MyRefundrequestRow key={index} myRefundData={myRefundData} />
-                                ))
-                            ) : (
-                                <TableRow>
-                                    <TableCell colSpan={12} align="center">
-                                        No refund requests found
-                                    </TableCell>
-                                </TableRow>
-                            )}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
+  return (
+    <Card sx={{ mt: 5 }}>
+      <CardContent>
+        <Box
+          display="flex"
+          justifyContent="space-between"
+          alignItems="center"
+          mb={2}
+        >
+          <DebouncedInput
+            value={searchText ?? ''}
+            onChange={(value) => setSearchText(String(value))}
+            placeholder="Search refund requests..."
+            sx={{ width: '100%', maxWidth: 400 }}
+          />
+        </Box>
 
-                <TablePagination
-                    rowsPerPageOptions={[10, 25, 50, 100]}
-                    component="div"
-                    count={totalCount}
-                    rowsPerPage={rowsPerPage}
-                    page={page}
-                    onPageChange={handlePageChange}
-                    onRowsPerPageChange={handleRowsPerPageChange}
-                />
-            </CardContent>
-        </Card>
-    )
-}
+        <div className="overflow-x-auto">
+          <table className={tableStyles.table}>
+            <thead>
+              <tr>
+                <th className="text-left p-3 border-b">Booking ID</th>
+                <th className="text-left p-3 border-b">PNR</th>
+                <th className="text-left p-3 border-b">Request Status</th>
+                <th className="text-left p-3 border-b">Booking By</th>
+                <th className="text-left p-3 border-b">Booked At</th>
+                <th className="text-left p-3 border-b">Requested DateTime</th>
+                <th className="text-left p-3 border-b">Airline</th>
+                <th className="text-left p-3 border-b">Supplier</th>
+                <th className="text-left p-3 border-b">Base Fare</th>
+                <th className="text-left p-3 border-b">Tax</th>
+                <th className="text-left p-3 border-b">Total Amount</th>
+                <th className="text-left p-3 border-b">Refunded Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              {isFetching ? (
+                <tr>
+                  <td colSpan={12}>
+                    <Box display="flex" justifyContent="center" py={3}>
+                      <CircularProgress />
+                    </Box>
+                  </td>
+                </tr>
+              ) : myRefundDetail.length > 0 ? (
+                myRefundDetail.map((myRefundData, index) => (
+                  <MyRefundrequestRow
+                    key={index}
+                    myRefundData={myRefundData}
+                  />
+                ))
+              ) : (
+                <tr>
+                  <td colSpan={12}>
+                    <Box display="flex" justifyContent="center" py={3}>
+                      <Typography>No refund requests found</Typography>
+                    </Box>
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
 
-export { MyRefundRequestTable }
+        <TablePagination
+          rowsPerPageOptions={[10, 25, 50, 100]}
+          component="div"
+          count={totalCount}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handlePageChange}
+          onRowsPerPageChange={handleRowsPerPageChange}
+        />
+      </CardContent>
+    </Card>
+  );
+};
+
+export { MyRefundRequestTable };
