@@ -13,7 +13,7 @@ import UserDropdown from '@components/layout/shared/UserDropdown'
 
 // Util Imports
 import { verticalLayoutClasses } from '@layouts/utils/layoutClasses'
-import { Breadcrumbs, Link, TextField, Typography } from '@mui/material'
+import { Breadcrumbs, Button, Link, TextField, Typography } from '@mui/material'
 import { usePathname } from 'next/navigation'
 
 // Vars
@@ -120,12 +120,15 @@ const NavbarContent = () => {
           {getLastSegment()}
         </Typography>
       </div>
+      <div className='flex justify-center gap-2'>
+        <TextField placeholder='search booking' size='small' className='' />
+        <Button size='small' variant='contained' className='bg-primary'>Search</Button>
+      </div>
       <div className='flex items-center'>
         {/* <LanguageDropdown /> */}
         {/* <ModeDropdown /> */}
         {/* <ShortcutsDropdown shortcuts={shortcuts} /> */}
         {/* <NotificationsDropdown notifications={notifications} /> */}
-        <TextField placeholder='search booking' size='small' />
         <UserDropdown />
       </div>
     </div>

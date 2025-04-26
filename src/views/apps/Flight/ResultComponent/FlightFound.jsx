@@ -788,7 +788,7 @@ const FlightFound = () => {
             </div>
           </Card>
 
-          <div className=' p-1 rounded z-10'>
+          <div className='rounded z-10'>
             <div className='bg-base-100/80 py-2'>
               <div>
                 <div className='lg:flex justify-between items-center'>
@@ -911,7 +911,7 @@ const FlightFound = () => {
                           // id={`panel${legIndex}-header`}
                           className='rounded-lg '
                         >
-                          <div>
+                          <div className='w-full'>
                             <div className='flex flex-col lg:flex-row gap-4 lg:gap-0 justify-between items-center'>
                               <div className='flex items-center gap-2 mb-2'>
                                 <img

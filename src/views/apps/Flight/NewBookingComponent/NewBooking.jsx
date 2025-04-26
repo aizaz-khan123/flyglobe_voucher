@@ -383,7 +383,7 @@ const NewBooking = () => {
                             />
                           </div>
                           <div className='col-span-6 mb-5'>
-                            <MuiAutocomplete
+                            <MuiDropdown
                               control={control}
                               name={`passengers.${index}.nationality`}
                               label='Nationality'
@@ -611,7 +611,7 @@ const NewBooking = () => {
                           <Accordion
                             className='p-0 '
                             disableGutters
-                            sx={{ boxShadow: 'none', border:'none', '&:before': { display: 'none' } }}
+                            sx={{ boxShadow: 'none', border: 'none', '&:before': { display: 'none' } }}
                           >
                             <AccordionSummary
                               expandIcon={

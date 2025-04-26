@@ -43,7 +43,7 @@ const FlightAccordianFilters = ({
     const normalizeSelectedFares = Object.entries(selectedFares)
 
     return (
-        <div className='grid grid-cols-12 p-2 relative'>
+        <div className='grid grid-cols-12 p-0 relative'>
             {/* <div className='hidden lg:block'>
         <div className='p-4 rounded-md shadow-md mb-3 flex items-center justify-center gap-2'>
           <GoClock />

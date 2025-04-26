@@ -78,8 +78,8 @@ const VerticalMenu = ({ dictionary, scrollMenu }) => {
 
           <SubMenu label={dictionary['navigation'].Sell} icon={<i className='ri-organization-chart'></i>}>
             <MenuItem href={`/${locale}/book-flights`} icon={<i className='ri-plane-fill'></i>}>{dictionary['navigation'].flight}</MenuItem>
-            <MenuItem href={`/${locale}/group-flights`} icon={<MdGroup/>}>{dictionary['navigation'].groupFlight}</MenuItem>
-            <MenuItem href={`/${locale}/umrah-hotels`} icon={<RiHotelLine/>}>{dictionary['navigation'].umrahHotels}</MenuItem>
+            <MenuItem href={`/${locale}/group-flights`} icon={<MdGroup />}>{dictionary['navigation'].groupFlight}</MenuItem>
+            <MenuItem href={`/${locale}/umrah-hotels`} icon={<RiHotelLine />}>{dictionary['navigation'].umrahHotels}</MenuItem>
             <MenuItem href={`/${locale}/umrah-visa`}>{dictionary['navigation'].umrahVisa}</MenuItem>
             <MenuItem href={`/${locale}/bookings`}>{dictionary['navigation'].bookings}</MenuItem>
           </SubMenu>
@@ -110,11 +110,11 @@ const VerticalMenu = ({ dictionary, scrollMenu }) => {
           <SubMenu label={dictionary['navigation'].organization} icon={<i className="ri-group-line"></i>}>
             <MenuItem href={`/${locale}/organization/branches`} icon={<i className='ri-organization-chart'></i>}>{dictionary['navigation'].branches}</MenuItem>
             <MenuItem href={`/${locale}/organization/agencies`}>{dictionary['navigation'].agencies}</MenuItem>
-            <MenuItem href={`/${locale}/organization/employees`} icon={<MdGroup/>}>{dictionary['navigation'].employees}</MenuItem>
+            <MenuItem href={`/${locale}/organization/employees`} icon={<MdGroup />}>{dictionary['navigation'].employees}</MenuItem>
           </SubMenu>
 
           <SubMenu label={dictionary['navigation'].accounts} icon={<i className='ri-calculator-line'></i>}>
-            <MenuItem href={`/${locale}/accounts/chart-of-account`} icon={<FaChartBar/>}>
+            <MenuItem href={`/${locale}/accounts/chart-of-account`} icon={<FaChartBar />}>
               {dictionary['navigation'].chartOfAccount}
             </MenuItem>
             <MenuItem href={`/${locale}/accounts/general-legder`} icon={<LuNotebookPen />}>
@@ -170,8 +170,7 @@ const VerticalMenu = ({ dictionary, scrollMenu }) => {
             <MenuItem href={`/${locale}/settings/countries`}>{dictionary['navigation'].countries}</MenuItem>
             <MenuItem href={`/${locale}/settings/news-alerts`}>{dictionary['navigation'].newsAlerts}</MenuItem>
           </SubMenu>
-          <SubMenu label={dictionary['navigation'].management} icon={<i className='ri-luggage-deposit-line'></i>}
-            href={`/${locale}/management/groups`}>
+          <SubMenu label={dictionary['navigation'].management} icon={<i className='ri-luggage-deposit-line'></i>}>
             <MenuItem href={`/${locale}/management/groups`}>
               {dictionary['navigation'].groups}
             </MenuItem>
