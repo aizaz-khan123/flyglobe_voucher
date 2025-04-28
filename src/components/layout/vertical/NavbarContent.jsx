@@ -121,7 +121,7 @@ const NavbarContent = () => {
         </Typography>
       </div>
       <div className='flex justify-center gap-2'>
-        <TextField placeholder='search booking' size='small' className='' />
+        <TextField placeholder='PNR or Ticket Number' size='small' className='' />
         <Button size='small' variant='contained' className='bg-primary'>Search</Button>
       </div>
       <div className='flex items-center'>
