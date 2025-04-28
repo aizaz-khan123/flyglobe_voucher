@@ -869,6 +869,15 @@ export const api = emptySplitApi.injectEndpoints({
       }),
       transformResponse: (response) => response.data,
     }),
+
+    // groups
+    groupsStore: builder.mutation({
+      query: body => ({
+        url: API_END_POINTS.groupsStore,
+        method: 'POST',
+        body
+      })
+    }),
   }),
   overrideExisting: false
 })
@@ -1000,5 +1009,8 @@ export const {
   useGroupTypeStoreMutation,
   useGroupTypeUpdateMutation,
   useLazyGroupTypeDeleteQuery,
-  useGroupTypeDropdownQuery
+  useGroupTypeDropdownQuery,
+
+  //// groups ////
+  useGroupsStoreMutation
 } = api

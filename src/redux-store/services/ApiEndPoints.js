@@ -159,6 +159,8 @@ export const API_END_POINTS = {
   groupTypeUpdate: BASE_URL_V1 + '/group/type/update',
   groupTypeDelete: BASE_URL_V1 + '/group/type/delete',
   groupTypeDropdown: BASE_URL_V1 + '/group/type/drop-down',
+  ///// groups /////
+  groupsStore: BASE_URL_V1 + '/group/flight/store',
 
 
 }

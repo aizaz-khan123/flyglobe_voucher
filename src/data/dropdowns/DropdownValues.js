@@ -187,6 +187,11 @@ export const routeTypeLabels = {
   MULTICITY: 'Multi City'
 }
 export const groupTypeStatus = [
-  { value: 'true', label: 'Yes' },
-  { value: 'false', label: 'No' }
+  { value: true, label: 'Yes' },
+  { value: false, label: 'No' }
+]
+export const groupsStatus = [
+  { value: 'pulish', label: 'Pulish' },
+  { value: 'not-pulish', label: 'Not Publish' },
+  { value: 'pending', label: 'Pending' }
 ]

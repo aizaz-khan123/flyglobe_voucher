@@ -41,7 +41,7 @@ import { useBookingAvailabilityConfirmationQuery, useBookingConfirmMutation } fr
 import MuiTextField from '@/components/mui-form-inputs/MuiTextField'
 import MuiDatePicker from '@/components/mui-form-inputs/MuiDatePicker'
 import MuiDropdown from '@/components/mui-form-inputs/MuiDropdown'
-import MuiAutocomplete from '@/components/mui-form-inputs/MuiAutoComplete'
+import MuiAutocomplete from '@/components/mui-form-inputs/MuiFlightSearchAutoComplete'
 import { formattedDate, formatDate } from '@/utils/formatDate'
 import { nationalities } from '@/data/dropdowns/nationalities'
 import { gender, genderTitle } from '@/data/dropdowns/DropdownValues'

@@ -12,7 +12,7 @@ const GroupTypeModal = ({ open, onClose, groupTypeData, refetch }) => {
     const { control, handleSubmit, setError, reset, setValue, watch } = useForm({
         defaultValues: {
             name: '',
-            status: '', // default empty value for status
+            status: true, // default empty value for status
         }
     })
     const uuid = groupTypeData?.uuid
@@ -72,7 +72,7 @@ const GroupTypeModal = ({ open, onClose, groupTypeData, refetch }) => {
         } else {
             reset({
                 name: '',
-                status: '', // reset empty status
+                status: true, // reset empty status
             })
         }
     }, [groupTypeData, reset])
