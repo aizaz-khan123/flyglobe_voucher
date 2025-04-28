@@ -4,14 +4,15 @@ import MuiDropdown from '@/components/mui-form-inputs/MuiDropdown'
 import MuiTextarea from '@/components/mui-form-inputs/MuiTextarea'
 import MuiTextField from '@/components/mui-form-inputs/MuiTextField'
 import MuiTimePicker from '@/components/mui-form-inputs/MuiTimePicker'
-import { gender, groupsStatus } from '@/data/dropdowns/DropdownValues'
+import { gender, groupsStatus, yesNoDropdown } from '@/data/dropdowns/DropdownValues'
 import { useAirlineDropDownQuery, useGroupsStoreMutation, useGroupTypeDropdownQuery } from '@/redux-store/services/api'
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material'
+import dayjs from 'dayjs'
 import React from 'react'
-import { useFieldArray, useForm } from 'react-hook-form'
+import { useFieldArray, useForm, useWatch } from 'react-hook-form'
 import { IoMdClose } from 'react-icons/io'
 
-const AddGroupModal = ({ open, isEdit, onClose, }) => {
+const AddGroupModal = ({ open, isEdit, onClose, refetch }) => {
 
     const [createGroups, { isLoading }] = useGroupsStoreMutation()
     const { data: airlineDropdown } = useAirlineDropDownQuery();
@@ -108,7 +109,7 @@ const AddGroupModal = ({ open, isEdit, onClose, }) => {
                 <DialogContent>
                     <div className='mt-1 grid grid-cols-1 gap-5 gap-y-3 md:grid-cols-3'>
                         <div>
-                            <MuiDropdown
+                            <MuiTextField
                                 control={control}
                                 label='Sector'
                                 name='sector'
@@ -119,7 +120,7 @@ const AddGroupModal = ({ open, isEdit, onClose, }) => {
                                     label: data.label,
                                     value: data.label
                                 }))}
-                                placeholder='Sector'
+                                placeholder='Enter Sector'
                             />
 
                         </div>
@@ -193,13 +194,17 @@ const AddGroupModal = ({ open, isEdit, onClose, }) => {
                         </div>
 
                         <div>
-                            <MuiTextField
+                            <MuiDropdown
                                 control={control}
                                 label={'Adult Price on Call'}
                                 size='md'
                                 id='adult_price_call'
                                 name='adult_price_call'
-                                placeholder='Enter Adult Price Call'
+                                options={yesNoDropdown?.map(data => ({
+                                    label: data.label,
+                                    value: data.value
+                                }))}
+                                placeholder='Adult Price Call'
                             />
                         </div>
                         <div>
@@ -213,13 +218,17 @@ const AddGroupModal = ({ open, isEdit, onClose, }) => {
                             />
                         </div>
                         <div>
-                            <MuiTextField
+                            <MuiDropdown
                                 control={control}
                                 label={'Cnn Price on Call'}
                                 size='md'
                                 id='cnn_price_call'
                                 name='cnn_price_call'
-                                placeholder='Enter Cnn Price Call'
+                                options={yesNoDropdown?.map(data => ({
+                                    label: data.label,
+                                    value: data.value
+                                }))}
+                                placeholder='Cnn Price Call'
                             />
                         </div>
                         <div>
@@ -233,13 +242,17 @@ const AddGroupModal = ({ open, isEdit, onClose, }) => {
                             />
                         </div>
                         <div>
-                            <MuiTextField
+                            <MuiDropdown
                                 control={control}
                                 label={'Infant Price on Call'}
                                 size='md'
                                 id='inf_price_call'
                                 name='inf_price_call'
-                                placeholder='Enter Infant Price Call'
+                                options={yesNoDropdown?.map(data => ({
+                                    label: data.label,
+                                    value: data.value
+                                }))}
+                                placeholder='Infant Price Call'
                             />
                         </div>
                         <div>
@@ -297,68 +310,75 @@ const AddGroupModal = ({ open, isEdit, onClose, }) => {
                         />
                     </div>
 
-                    {fields.map((field, index) => (
-                        <div key={field.id}>
-                            <div className='flex justify-between items-center'>
-                                <h3 className='text-primary font-semibold mt-4'>Flight Detail: {index + 1}</h3>
-                                {index > 0 &&
-                                    <h3 className='text-red-600 font-semibold mt-4 cursor-pointer' onClick={() => remove(index)}>Remove Flight: {index + 1}</h3>
-                                }
-                            </div>
-                            <div className="grid grid-cols-3 gap-4 mt-2">
-                                <MuiTextField
-                                    control={control}
-                                    label="Flight Number"
-                                    name={`flights.${index}.flight_number`}
-                                    id={`flights.${index}.flight_number`}
-                                    size="md"
-                                />
-                                <MuiTextField
-                                    control={control}
-                                    label="Departure City"
-                                    name={`flights.${index}.departure_city`}
-                                    id={`flights.${index}.departure_city`}
-                                    size="md"
-                                />
-                                <MuiTextField
-                                    control={control}
-                                    label="Arrival City"
-                                    name={`flights.${index}.arrival_city`}
-                                    id={`flights.${index}.arrival_city`}
-                                    size="md"
-                                />
-                                <MuiDatePicker
-                                    control={control}
-                                    label="Departure Date"
-                                    name={`flights.${index}.departure_date`}
-                                    id={`flights.${index}.departure_date`}
-                                    size="md"
-                                />
-                                <MuiTimePicker
-                                    control={control}
-                                    label="Departure Time"
-                                    name={`flights.${index}.departure_time`}
-                                    id={`flights.${index}.departure_time`}
-                                    size="md"
-                                />
-                                <MuiDatePicker
-                                    control={control}
-                                    label="Arrival Date"
-                                    name={`flights.${index}.arrival_date`}
-                                    id={`flights.${index}.arrival_date`}
-                                    size="md"
-                                />
-                                <MuiTimePicker
-                                    control={control}
-                                    label="Arrival Time"
-                                    name={`flights.${index}.arrival_time`}
-                                    id={`flights.${index}.arrival_time`}
-                                    size="md"
-                                />
-                            </div>
+                    {fields.map((field, index) => {
+                        const departureDate = useWatch({
+                            control,
+                            name: `flights.${index}.departure_date`,
+                        });
+                        return (
+                            <div key={field.id}>
+                                <div className='flex justify-between items-center'>
+                                    <h3 className='text-primary font-semibold mt-4'>Flight Detail: {index + 1}</h3>
+                                    {index > 0 &&
+                                        <h3 className='text-red-600 font-semibold mt-4 cursor-pointer' onClick={() => remove(index)}>Remove Flight: {index + 1}</h3>
+                                    }
+                                </div>
+                                <div className="grid grid-cols-3 gap-4 mt-2">
+                                    <MuiTextField
+                                        control={control}
+                                        label="Flight Number"
+                                        name={`flights.${index}.flight_number`}
+                                        id={`flights.${index}.flight_number`}
+                                        size="md"
+                                    />
+                                    <MuiTextField
+                                        control={control}
+                                        label="Departure City"
+                                        name={`flights.${index}.departure_city`}
+                                        id={`flights.${index}.departure_city`}
+                                        size="md"
+                                    />
+                                    <MuiTextField
+                                        control={control}
+                                        label="Arrival City"
+                                        name={`flights.${index}.arrival_city`}
+                                        id={`flights.${index}.arrival_city`}
+                                        size="md"
+                                    />
+                                    <MuiDatePicker
+                                        control={control}
+                                        label="Departure Date"
+                                        name={`flights.${index}.departure_date`}
+                                        id={`flights.${index}.departure_date`}
+                                        size="md"
+                                    />
+                                    <MuiTimePicker
+                                        control={control}
+                                        label="Departure Time"
+                                        name={`flights.${index}.departure_time`}
+                                        id={`flights.${index}.departure_time`}
+                                        size="md"
+                                    />
+                                    <MuiDatePicker
+                                        control={control}
+                                        label="Arrival Date"
+                                        name={`flights.${index}.arrival_date`}
+                                        id={`flights.${index}.arrival_date`}
+                                        size="md"
+                                        minDate={departureDate ? dayjs(departureDate) : undefined}
+                                    />
+                                    <MuiTimePicker
+                                        control={control}
+                                        label="Arrival Time"
+                                        name={`flights.${index}.arrival_time`}
+                                        id={`flights.${index}.arrival_time`}
+                                        size="md"
+                                    />
+                                </div>
 
-                        </div>
-                    ))}
+                            </div>
+                        );
+                    })}
 
                     <div className='text-end'>
                         <Button

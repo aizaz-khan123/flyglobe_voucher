@@ -190,6 +190,10 @@ export const groupTypeStatus = [
   { value: true, label: 'Yes' },
   { value: false, label: 'No' }
 ]
+export const yesNoDropdown = [
+  { value: true, label: 'Yes' },
+  { value: false, label: 'No' }
+]
 export const groupsStatus = [
   { value: 'pulish', label: 'Pulish' },
   { value: 'not-pulish', label: 'Not Publish' },

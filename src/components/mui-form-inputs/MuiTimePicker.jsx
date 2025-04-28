@@ -27,9 +27,9 @@ const MuiTimePicker = ({
                         {...field}
                         label={label}
                         className={`${className} mui-custom-time-picker`}
-                        value={field.value ? dayjs(field.value, 'HH:mm') : null}
+                        value={field.value ? dayjs(field.value, 'HH:mm:ss') : null}
                         onChange={(newValue) => {
-                            const formattedTime = newValue ? newValue.format('HH:mm') : null;
+                            const formattedTime = newValue ? newValue.format('HH:mm:ss') : null;
 
                             field.onChange(formattedTime);
                             onChange?.(formattedTime);

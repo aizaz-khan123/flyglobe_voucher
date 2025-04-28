@@ -52,13 +52,11 @@ const GroupTable = () => {
     const [page, setPage] = useState(0)
     const [rowsPerPage, setRowsPerPage] = useState(10)
     const [showAddGroupModal, setShowAddGroupModal] = useState(false)
-    const [showGroupTypeModal, setShowGroupTypeModal] = useState(false)
+    const [groupDataByID, setGroupDataByID] = useState({})
     const addGroupModalHandler = () => {
         setShowAddGroupModal((prev) => !prev);
     };
-    const groupTypeModalHandler = () => {
-        setShowGroupTypeModal((prev) => !prev);
-    };
+
     // Filters state
     const [filters, setFilters] = useState({
         booking_id: '',
@@ -129,12 +127,9 @@ const GroupTable = () => {
             columnHelper.accessor('sector', {
                 header: 'Sector',
                 cell: ({ row }) => (
-                    <Link
-                        // href={`/bookings/${row.original.booking_id}`} 
-                        className='font-medium text-primary'
-                    >
+                    <div className='font-medium text-primary'>
                         {row.getValue('sector')}
-                    </Link>
+                    </div>
                 )
             }),
 
@@ -158,7 +153,6 @@ const GroupTable = () => {
                 cell: ({ row }) => (
                     <div className='flex items-center space-x-3 truncate'>
                         <div className='font-medium'>
-
                             {row.getValue('purchased_price')}
                         </div>
                     </div>
@@ -339,7 +333,7 @@ const GroupTable = () => {
     }
     return (
         <>
-            <AddGroupModal open={showAddGroupModal} onClose={() => setShowAddGroupModal(false)} />
+            <AddGroupModal open={showAddGroupModal} onClose={() => setShowAddGroupModal(false)} refetch={refetch} />
             <Card>
                 <CardContent className='p-0'>
                     <div className='flex items-center justify-between px-5 pt-5'>
