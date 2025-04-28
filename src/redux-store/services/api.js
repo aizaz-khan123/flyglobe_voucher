@@ -831,7 +831,44 @@ export const api = emptySplitApi.injectEndpoints({
         method: 'POST',
         body
       })
-    })
+    }),
+
+    // group-type
+    groupTypeList: builder.query({
+      query: () => ({
+        url: `${API_END_POINTS.groupTypeList}`,
+        method: "GET",
+      }),
+      transformResponse: (response) => response.data,
+    }),
+    groupTypeStore: builder.mutation({
+      query: body => ({
+        url: API_END_POINTS.groupTypeStore,
+        method: 'POST',
+        body
+      })
+    }),
+    groupTypeUpdate: builder.mutation({
+      query: ({ uuid, updated_data }) => ({
+        url: `${API_END_POINTS.groupTypeUpdate}/${uuid}`,
+        method: 'POST',
+        body: updated_data
+      })
+    }),
+    groupTypeDelete: builder.query({
+      query: (uuid) => ({
+        url: `${API_END_POINTS.groupTypeDelete}/${uuid}`,
+        method: "GET",
+      }),
+      transformResponse: (response) => response.data,
+    }),
+    groupTypeDropdown: builder.query({
+      query: () => ({
+        url: `${API_END_POINTS.groupTypeDropdown}`,
+        method: "GET",
+      }),
+      transformResponse: (response) => response.data,
+    }),
   }),
   overrideExisting: false
 })
@@ -958,4 +995,10 @@ export const {
   useDepositsRequestMutation,
   useDepositsRejectMutation,
   useDepositsAcceptMutation,
+  /// group type ////
+  useGroupTypeListQuery,
+  useGroupTypeStoreMutation,
+  useGroupTypeUpdateMutation,
+  useLazyGroupTypeDeleteQuery,
+  useGroupTypeDropdownQuery
 } = api
