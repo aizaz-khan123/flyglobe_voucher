@@ -11,6 +11,12 @@ const StatusWidget = ({ status }) => {
         Confirmed
       </div>
     )
+  }else if (status == 'publish') {
+    return (
+      <div className='inline rounded-badge border border-success/50 bg-success/5 px-3 py-1 text-xs font-medium text-success'>
+      publish
+      </div>
+    )
   } else if (status == 'cancelled') {
     return (
       <div className='inline rounded-badge border border-error/50 bg-error/5 px-3 py-1 text-xs font-medium text-error'>
