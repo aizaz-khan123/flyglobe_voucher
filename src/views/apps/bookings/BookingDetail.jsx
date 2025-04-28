@@ -13,6 +13,7 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
+  DialogTitle,
   Table,
   TableBody,
   TableHead,
@@ -67,7 +68,6 @@ const BookingDetail = ({ bookingId }) => {
   const [isVoidModalOpen, setIsVoidModalOpen] = useState(false)
   const [emailType, setEmailType] = useState('')
   const user = useSelector(user => user?.auth?.userDetail)
-
   const email = user?.email
   const role = user?.role
   const setting = user?.setting
@@ -106,6 +106,7 @@ const BookingDetail = ({ bookingId }) => {
     baggage,
     issued_at
   } = booking
+
 
   const isPNRValid = !pnr_expiry || dayjs(pnr_expiry).isAfter(dayjs())
   const isConfirmed = status?.toLowerCase() === 'confirmed'
@@ -331,28 +332,28 @@ const BookingDetail = ({ bookingId }) => {
               <h2 className='font-semibold text-lg'>Pricing Summary</h2>
               {Object.entries(fare_break_down || {}).map(([key, data], index) => {
                 const passengerType = key === 'ADT' ? 'Adult' : key === 'CNN' ? 'Child' : key === 'INF' ? 'Infant' : key
-
+                // Safe access whether prices are nested or at root
+                const prices = data?.prices || data;
                 return (
                   <div key={index} className='flex justify-between border-b pb-2'>
                     <p className='font-semibold'>
                       {airline?.iata_code} ({passengerType}) x {data?.quantity}:
                     </p>
                     <p className='text-gray-400'>
-                      {data?.prices?.currency} {data?.prices?.gross_amount}
+                      {prices?.currency} {prices?.gross_amount ?? prices?.gross_fare}
                     </p>
                   </div>
                 )
               })}
 
-              <div className='flex mt-4 border-b pb-2'>
+              <div className='flex justify-between mt-4 border-b pb-2'>
                 <h4 className='font-semibold'>Price you Pay:</h4>
-                <h4 className='text-primary font-bold ml-[55px]'>{formatCurrency(gross_fare)}</h4>
+                <h4 className='text-primary font-bold'>{formatCurrency(gross_fare)}</h4>
               </div>
 
               <Accordion
-                className='p-0 shadow-none before:hidden'
+                className='p-0 shadow-none before:hidden border-0'
                 disableGutters
-
               // sx={{ boxShadow: "none", "&:before": { display: "none" } }}
               >
                 <AccordionSummary
@@ -361,7 +362,7 @@ const BookingDetail = ({ bookingId }) => {
                       <ExpandMoreIcon />
                     </div>
                   }
-                  className='text-lg font-bold mb-3 !px-0'
+                  className='text-lg font-bold !px-0'
                 >
                   <h1 className='text-lg font-bold'>Fare Breakdown</h1>
                 </AccordionSummary>
@@ -371,7 +372,7 @@ const BookingDetail = ({ bookingId }) => {
                     {Object.entries(fare_break_down || {}).map(([key, data], index) => {
                       const passengerType =
                         key === 'ADT' ? 'Adult' : key === 'CNN' ? 'Child' : key === 'INF' ? 'Infant' : key
-
+                      const prices = data?.prices || data;
                       return (
                         <div key={index} className='border p-2 rounded-md'>
                           <h2 className='font-semibold text-lg py-3'>{passengerType}</h2>
@@ -380,26 +381,26 @@ const BookingDetail = ({ bookingId }) => {
                             <div className='flex justify-between items-center mb-1'>
                               <p className='text-gray-800 text-sm font-semibold'>Base Fare:</p>
                               <p className='text-gray text-sm font-semibold text-end'>
-                                {data?.prices?.currency} {data?.prices?.base_fare}
+                                {prices?.currency} {prices?.base_fare}
                               </p>
                             </div>
                             <div className='flex justify-between items-center mb-1'>
                               <p className='text-gray-800 text-sm font-semibold'>Tax:</p>
                               <p className='text-gray text-sm font-semibold text-end'>
-                                {data?.prices?.currency} {data?.prices?.tax}
+                                {prices?.currency} {prices?.tax}
                               </p>
                             </div>
                             <div className='flex justify-between items-center mb-1'>
                               <p className='text-gray-800 text-sm font-semibold'>Gross Fare:</p>
                               <p className='text-gray text-sm font-semibold text-end'>
-                                {data?.prices?.currency} {data?.prices?.gross_amount}
+                                {prices?.currency} {prices?.gross_amount ?? prices?.gross_fare}
                               </p>
                             </div>
                             <hr className='border mt-3' />
                             <div className='flex justify-between mt-4'>
                               <h4 className='font-semibold text-lg'>Total to Pay:</h4>
                               <h4 className='text-primary font-bold text-lg'>
-                                {data?.prices?.currency} {data?.prices?.gross_amount}
+                                {prices?.currency} {prices?.gross_amount ?? prices?.gross_fare}
                               </h4>
                             </div>
                           </div>
@@ -504,19 +505,10 @@ const BookingDetail = ({ bookingId }) => {
           </Card>
 
           <Dialog open={openCancelModal}>
-            <form method='dialog'>
-              <Button
-                onClick={handleSetModalOpen}
-                size='sm'
-                color='ghost'
-                shape='circle'
-                className='absolute right-2 top-2'
-                aria-label='Close modal'
-              >
-                <IoMdClose />
-              </Button>
-            </form>
-            <h2 className='font-bold'>Confirm Cancel Booking</h2>
+            <DialogTitle className='flex justify-between items-center'>
+              <h3 className='font-bold'>Confirm Cancel Booking</h3>
+              <IoMdClose onClick={handleSetModalOpen} className='cursor-pointer' />
+            </DialogTitle>
             <DialogContent>
               You are about to cancel this Booking <b>{booking_pnr}</b>. Would you like to proceed further ?
             </DialogContent>

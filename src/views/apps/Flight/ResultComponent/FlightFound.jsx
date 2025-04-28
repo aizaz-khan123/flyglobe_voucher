@@ -59,6 +59,7 @@ import FlightSearch from '../FlightComponent/FlightSearch'
 import { IoIosArrowDown, IoMdClose } from 'react-icons/io'
 import FareOptionCard from './FareOptionCard'
 import FlightAccordianFilters from './FlightAccordianFilters'
+import { FaPlaneDeparture } from 'react-icons/fa'
 
 const stopsOptions = ['Non Stop', '1 Stop', '1+ Stops']
 
@@ -805,7 +806,7 @@ const FlightFound = () => {
                       </div>
                     </div> */}
 
-                    <Button variant='contained' className='max-sm:is-full is-auto' onClick={handleOpen}>
+                    <Button variant='contained' size='small' className='max-sm:is-full is-auto' onClick={handleOpen}>
                       Change Search
                     </Button>
                   </div>
@@ -914,11 +915,14 @@ const FlightFound = () => {
                           <div className='w-full'>
                             <div className='flex flex-col lg:flex-row gap-4 lg:gap-0 justify-between items-center'>
                               <div className='flex items-center gap-2 mb-2'>
-                                <img
-                                  src={data?.airline?.thumbnail || ''}
-                                  alt='img'
-                                  className='h-14 w-14 object-contain'
-                                />
+                                {data?.airline?.thumbnail && Object.keys(data.airline.thumbnail).length === 0 ?
+                                  <img
+                                    src={data?.airline?.thumbnail || ''}
+                                    alt='img'
+                                    className='h-14 w-14 object-contain'
+                                  />
+                                  : <FaPlaneDeparture fontSize={30} className='text primary' />
+                                }
                                 <div>
                                   <h3 className='font-semibold text-base mb-1'>{data?.airline?.name}</h3>
                                   <p className='text-gray-500 text-xs'>
@@ -1015,14 +1019,14 @@ const FlightFound = () => {
                             </div>
                             <div>
                               <div>
-                                <div className='flex items-center justify-between gap-2 py-2'>
-                                  <h1 className='bg-primary text-white font-semibold w-fit px-5 rounded-md text-sm py-3'>
+                                <div className='flex items-center justify-between gap-2'>
+                                  <Button className='bg-primary text-white w-fit rounded-md'>
                                     {data?.provider}
-                                  </h1>
+                                  </Button>
                                   <Button
                                     variant='contained'
                                     className='border-2 font-semibold text-sm bg-transparent text-gray-400 py-3'
-                                    size='large'
+                                    size='small'
                                     onClick={(e) => {
                                       e.stopPropagation();
                                       handleOpenViewFlightDetail(data);
@@ -1038,7 +1042,7 @@ const FlightFound = () => {
                                   <Button
                                     variant='contained'
                                     className='border-2 font-semibold text-sm bg-transparent text-gray-400 py-3'
-                                    size='large'
+                                    size='small'
                                     onClick={() => {
                                       toggleVisible(1);
                                       setFlightFearOptionsData(data);
