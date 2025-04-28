@@ -416,6 +416,8 @@ const BookingDetail = ({ bookingId }) => {
               {status == 'expired' && <h3 className='font-bold text-2xl text-primary'> Booking Expired</h3>}
               {isConfirmed && (
                 <div className='flex justify-center flex-col space-y-4 mt-4'>
+
+                  {console.log(isPNRValid, role)}
                   {isPNRValid && (
                     <>
                       {(role === 'head-office' ||
@@ -423,8 +425,7 @@ const BookingDetail = ({ bookingId }) => {
                         role === 'branch' ||
                         role === 'branch-employee' ||
                         ((role === 'agency' || role === 'a-employee' || role === 'sub-agent') &&
-                          setting?.can_issue_ticket))
-                        && (
+                          setting?.can_issue_ticket)) && (
                           <Button
                             variant='contained'
                             startIcon={<FaTicket />}

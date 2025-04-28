@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useMemo, useEffect } from 'react'
+import { useParams } from 'next/navigation'
 
 import Image from 'next/image'
 
@@ -54,6 +55,8 @@ const BookingTable = ({ hidePagination }) => {
   const [status, setStatus] = useState('')
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(10)
+
+  const { lang: locale } = useParams()
 
   // Filters state
   const [filters, setFilters] = useState({
@@ -138,7 +141,7 @@ const BookingTable = ({ hidePagination }) => {
       columnHelper.accessor('booking_id', {
         header: 'Booking ID',
         cell: ({ row }) => (
-          <Link href={`/en/bookings/${row.original.booking_id}`} className='font-medium text-primary'>
+          <Link href={`/${locale}/bookings/${row.original.booking_id}`} className='font-medium text-primary'>
             {row.original.booking_id}
           </Link>
         )
