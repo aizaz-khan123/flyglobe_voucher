@@ -162,5 +162,8 @@ export const API_END_POINTS = {
   ///// groups /////
   groupsStore: BASE_URL_V1 + '/group/flight/store',
 
+  managementGroupList: BASE_URL_V1 + '/group/flight/index',
+
+
 
 }

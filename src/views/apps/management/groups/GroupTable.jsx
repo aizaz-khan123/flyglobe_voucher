@@ -38,7 +38,7 @@ import Link from '@/components/Link'
 import MuiAutocomplete from '@/components/mui-form-inputs/MuiFlightSearchAutoComplete'
 import MuiDatePicker from '@/components/mui-form-inputs/MuiDatePicker'
 import MuiTextField from '@/components/mui-form-inputs/MuiTextField'
-import { useBookingListQuery } from '@/redux-store/services/api'
+import { useBookingListQuery, useManagementGroupListQuery } from '@/redux-store/services/api'
 import tableStyles from '@core/styles/table.module.css'
 import classNames from 'classnames'
 import StatusWidget from '../../bookings/StatusWidget'
@@ -74,7 +74,7 @@ const GroupTable = () => {
         data: detail_data,
         refetch,
         isFetching
-    } = useBookingListQuery({
+    } = useManagementGroupListQuery({
         page: page + 1,
         pageSize: rowsPerPage,
         searchText: globalFilter,
@@ -83,7 +83,7 @@ const GroupTable = () => {
 
     const bookings = detail_data?.data || []
     const totalCount = detail_data?.total || 0
-
+    console.log(bookings, 'bookings')
     // Form control
     const { control, handleSubmit, reset } = useForm({
         defaultValues: filters
@@ -117,19 +117,23 @@ const GroupTable = () => {
 
     const columns = useMemo(
         () => [
-            columnHelper.accessor('booking_pnr', {
+            columnHelper.accessor('pnr', {
                 header: 'PNR',
                 cell: ({ row }) => (
                     <div className='flex items-center space-x-3 truncate'>
-                        <div className='font-medium'>{row.original.booking_pnr}</div>
+                        <div className='font-medium'>{row.getValue('pnr') || '---'}</div>
+
                     </div>
                 )
             }),
-            columnHelper.accessor('booking_id', {
+            columnHelper.accessor('sector', {
                 header: 'Sector',
                 cell: ({ row }) => (
-                    <Link href={`/bookings/${row.original.booking_id}`} className='font-medium text-primary'>
-                        {row.original.booking_id}
+                    <Link
+                        // href={`/bookings/${row.original.booking_id}`} 
+                        className='font-medium text-primary'
+                    >
+                        {row.getValue('sector')}
                     </Link>
                 )
             }),
@@ -149,100 +153,117 @@ const GroupTable = () => {
                     </div>
                 )
             }),
-            columnHelper.accessor('booking_pnr', {
+            columnHelper.accessor('purchased_price', {
                 header: 'Purchase Price',
                 cell: ({ row }) => (
                     <div className='flex items-center space-x-3 truncate'>
-                        <div className='font-medium'>{row.original.booking_pnr}</div>
+                        <div className='font-medium'>
+
+                            {row.getValue('purchased_price')}
+                        </div>
                     </div>
                 )
             }),
-            columnHelper.accessor('booking_pnr', {
+            columnHelper.accessor('price', {
                 header: 'Price',
                 cell: ({ row }) => (
                     <div className='flex items-center space-x-3 truncate'>
-                        <div className='font-medium'>{row.original.booking_pnr}</div>
+                        <div className='font-medium'>{row.original.price}</div>
                     </div>
                 )
             }),
-            columnHelper.accessor('booking_pnr', {
+            columnHelper.accessor('adult_price', {
                 header: 'ADT Price',
                 cell: ({ row }) => (
                     <div className='flex items-center space-x-3 truncate'>
-                        <div className='font-medium'>{row.original.booking_pnr}</div>
+                        <div className='font-medium'>
+                            {row.getValue('adult_price')}
+                        </div>
                     </div>
                 )
             }),
-            columnHelper.accessor('booking_pnr', {
+            columnHelper.accessor('adult_price_call', {
                 header: 'ADT Price Call',
                 cell: ({ row }) => (
                     <div className='flex items-center space-x-3 truncate'>
-                        <div className='font-medium'>{row.original.booking_pnr}</div>
+                        <div className='font-medium'>
+                            {row.getValue('adult_price_call')}
+
+
+                        </div>
                     </div>
                 )
             }),
-            columnHelper.accessor('booking_pnr', {
+            columnHelper.accessor('cnn_price', {
                 header: 'CNN Price',
                 cell: ({ row }) => (
                     <div className='flex items-center space-x-3 truncate'>
-                        <div className='font-medium'>{row.original.booking_pnr}</div>
+                        <div className='font-medium'>  {row.getValue('cnn_price')}</div>
                     </div>
                 )
             }),
-            columnHelper.accessor('booking_pnr', {
+            columnHelper.accessor('cnn_price_call', {
                 header: 'CNN Price Call',
                 cell: ({ row }) => (
                     <div className='flex items-center space-x-3 truncate'>
-                        <div className='font-medium'>{row.original.booking_pnr}</div>
+                        <div className='font-medium'>{row.getValue('cnn_price_call')}</div>
                     </div>
                 )
             }),
-            columnHelper.accessor('booking_pnr', {
+            columnHelper.accessor('inf_price', {
                 header: 'Infant Price',
                 cell: ({ row }) => (
                     <div className='flex items-center space-x-3 truncate'>
-                        <div className='font-medium'>{row.original.booking_pnr}</div>
+                        <div className='font-medium'>{row.getValue('inf_price')}</div>
                     </div>
                 )
             }),
-            columnHelper.accessor('booking_pnr', {
+            columnHelper.accessor('inf_price_call', {
                 header: 'Infant Price Call',
                 cell: ({ row }) => (
                     <div className='flex items-center space-x-3 truncate'>
-                        <div className='font-medium'>{row.original.booking_pnr}</div>
+                        <div className='font-medium'>{row.getValue('inf_price_call')}</div>
                     </div>
                 )
             }),
-            columnHelper.accessor('booking_pnr', {
+            columnHelper.accessor('baggage', {
                 header: 'Baggage',
                 cell: ({ row }) => (
                     <div className='flex items-center space-x-3 truncate'>
-                        <div className='font-medium'>{row.original.booking_pnr}</div>
+                        <div className='font-medium'>{row.getValue('baggage')}</div>
                     </div>
                 )
             }),
-            columnHelper.accessor('booking_pnr', {
+            columnHelper.accessor('meal', {
                 header: 'Meal',
                 cell: ({ row }) => (
                     <div className='flex items-center space-x-3 truncate'>
-                        <div className='font-medium'>{row.original.booking_pnr}</div>
+                        <div className='font-medium'>{row.getValue('meal')}</div>
+                    </div>
+                )
+            }),
+            columnHelper.accessor('total_seats', {
+                header: 'Total Seats',
+                cell: ({ row }) => (
+                    <div className='flex items-center space-x-3 truncate'>
+                        <div className='font-medium'>{row.getValue('total_seats')}</div>
                     </div>
                 )
             }),
 
             columnHelper.accessor('status', {
                 header: 'Booking Status',
-                cell: ({ row }) => <StatusWidget status={row.original.status} />
+                cell: ({ row }) => <StatusWidget status={row.getValue('status')} />
             }),
-            {
-                id: 'actions',
-                header: 'Action',
-                cell: () => (
-                    <Button variant='contained'>
-                        <FaDownload />
-                    </Button>
-                )
-            }
+            // {
+            //     id: 'actions',
+            //     header: 'Action',
+            //     cell: () => (
+            //         <Button variant='contained'>
+            //             <FaDownload />
+            //         </Button>
+            //     )
+            // }
         ],
         [columnHelper]
     )

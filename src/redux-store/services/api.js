@@ -878,6 +878,19 @@ export const api = emptySplitApi.injectEndpoints({
         body
       })
     }),
+    managementGroupList: builder.query({
+      query: ({ pageUrl, searchText, ...filters }) => ({
+        url: pageUrl || API_END_POINTS.managementGroupList,
+        method: 'GET',
+        params: {
+          q: searchText,
+          ...filters
+        }
+      }),
+      transformResponse: response => response.data
+    }),
+
+
   }),
   overrideExisting: false
 })
@@ -1012,5 +1025,7 @@ export const {
   useGroupTypeDropdownQuery,
 
   //// groups ////
-  useGroupsStoreMutation
+  useGroupsStoreMutation,
+  useManagementGroupListQuery,
+  
 } = api
