@@ -28,7 +28,6 @@ const AddGroupModal = ({ open, isEdit, onClose, }) => {
             flights: [
                 {
                     flight_no: '',
-                    flight_date: null,
                     origin: '',
                     destination: '',
                     departure_date: null,
@@ -257,16 +256,6 @@ const AddGroupModal = ({ open, isEdit, onClose, }) => {
                                     />
                                 </div>
                                 <div>
-                                    <MuiDatePicker
-                                        className='w-full border-0 focus:outline-0'
-                                        control={control}
-                                        label='Flight Date'
-                                        size='md'
-                                        id={`flights.${index}.flight_date`}
-                                        name={`flights.${index}.flight_date`}
-                                    />
-                                </div>
-                                <div>
                                     <MuiTextField
                                         type='text'
                                         className='w-full border-0 focus:outline-0'
@@ -317,7 +306,6 @@ const AddGroupModal = ({ open, isEdit, onClose, }) => {
                             onClick={() =>
                                 append({
                                     flight_no: '',
-                                    flight_date: null,
                                     origin: '',
                                     destination: '',
                                     departure_date: null,

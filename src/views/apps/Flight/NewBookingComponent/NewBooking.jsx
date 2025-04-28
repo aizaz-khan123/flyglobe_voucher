@@ -155,7 +155,7 @@ const NewBooking = () => {
 
       toaster.success('Booking has been Created Successfully.')
       setTimeout(() => {
-        router.push(`/booking/${response?.data?.data?.booking_id || ''}`)
+        router.push(`/en/booking/${response?.data?.data?.booking_id || ''}`)
       }, 500)
     })
   }

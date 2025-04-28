@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 
-import { Button, Card, CardContent, Dialog, DialogActions, DialogContent, FormLabel, Select } from '@mui/material'
+import { Button, Card, CardContent, Dialog, DialogActions, DialogContent, DialogTitle, FormLabel, IconButton, Select, Typography } from '@mui/material'
 import { IoMdClose } from 'react-icons/io'
 import { toast } from 'react-toastify'
 
@@ -59,28 +59,19 @@ const TicketIssuanceModal = ({ isModalOpen, handleIssueTicketModal, bookingPnr, 
   }
 
   return (
-    <Dialog open={isModalOpen} className='w-1/2 max-w-5xl h-11/5'>
-      <form method='dialog'>
-        <Button
-          size='sm'
-          color='ghost'
-          shape='circle'
-          className='absolute right-2 top-[20px]'
-          aria-label='Close modal'
-          onClick={handleIssueTicketModal}
-        >
+    <Dialog open={isModalOpen} fullWidth maxWidth="md">
+      <DialogTitle className="flex justify-between items-center">
+        <Typography variant="h5">Ticket Issuance Confirmation</Typography>
+        <IconButton onClick={handleIssueTicketModal} size="small">
           <IoMdClose />
-        </Button>
-      </form>
-
-      <h3 className='text-md font-semibold mb-2'>Ticket Issuance Confirmation</h3>
-
+        </IconButton>
+      </DialogTitle>
       <DialogContent>
         <Card className='bg-base-100 mt-5'>
           <CardContent className='gap-0'>
             {step === 1 && (
               <div className='flex flex-col gap-5 items-center'>
-                <h3 className='mb-5 text-lg font-medium text-gray-900 dark:text-white'>
+                <h3 className='mb-5 text-lg font-medium'>
                   Are you issuing a ticket for yourself or for others?
                 </h3>
                 <ul className='grid w-full gap-6 md:grid-cols-2'>
@@ -162,36 +153,23 @@ const TicketIssuanceModal = ({ isModalOpen, handleIssueTicketModal, bookingPnr, 
 
             {step === 1 && issueFor === 'others' && (
               <div>
-                <MuiDropdown
-                  control={control}
-                  label='Select Branch'
+                <select
                   value={branch}
-                  onChange={e => {
-                    handleBranchChange(e)
-                    setStep(1)
+                  onChange={(e) => {
+                    handleBranchChange(e);
+                    setStep(1);
                   }}
-                  options={branchesDropDown?.map((value, index) => ({
-                    value: value?.id,
-                    label: value?.name
-                  }))}
-                />
-                {/* <Select
-                                    value={branch}
-                                    onChange={(e) => {
-                                        handleBranchChange(e);
-                                        setStep(1);
-                                    }}
-                                    className="w-full"
-                                >
-                                    <SelectOption value="" disabled>
-                                        Select Branch
-                                    </SelectOption>
-                                    {branchesDropDown.map((value, index) => (
-                                        <SelectOption key={index} value={value?.id}>
-                                            {value?.name}
-                                        </SelectOption>
-                                    ))}
-                                </Select> */}
+                  className="w-full  bg-slate-200 p-4 text-black mt-5"
+                >
+                  <option value="" disabled>
+                    Select Branch
+                  </option>
+                  {branchesDropDown.map((value, index) => (
+                    <option key={index} value={value?.id}>
+                      {value?.name}
+                    </option>
+                  ))}
+                </select>
               </div>
             )}
 
@@ -286,71 +264,45 @@ const TicketIssuanceModal = ({ isModalOpen, handleIssueTicketModal, bookingPnr, 
               <div>
                 {roleType === 'agencies' && (
                   <div>
-                    <MuiDropdown
-                      control={control}
-                      label='Select Agency'
+                    <select
                       value={selectedAgency}
-                      onChange={e => {
-                        setSelectedAgency(e.target.value)
-                        setStep(1)
+                      onChange={(e) => {
+                        setSelectedAgency(e.target.value);
+                        setStep(1);
                       }}
-                      options={typeDropDown?.map((value, index) => ({
-                        value: value?.id,
-                        label: value?.name
-                      }))}
-                    />
-                    {/* <Select
-                                            value={selectedAgency}
-                                            onChange={(e) => {
-                                                setSelectedAgency(e.target.value);
-                                                setStep(1);
-                                            }}
-                                            className="w-full"
-                                        >
-                                            <SelectOption value="" disabled>Select Agency</SelectOption>
-                                            {typeDropDown.length > 0 &&
-                                                typeDropDown.map((value, index) => (
-                                                    <SelectOption key={index} value={value?.id}>
-                                                        {value?.name}
-                                                    </SelectOption>
-                                                ))
-                                            }
-                                        </Select> */}
+                      className="w-full form-select bg-slate-200 p-4 text-black mt-5"
+                    >
+                      <option value="" disabled>Select Agency</option>
+                      {typeDropDown.data.length > 0 &&
+                        typeDropDown.data.map((value, index) => (
+                          <option key={index} value={value?.id}>
+                            {value?.name}
+                          </option>
+                        ))
+                      }
+                    </select>
                   </div>
                 )}
 
                 {roleType === 'employees' && issueFor === 'others' && (
                   <div>
-                    <MuiDropdown
-                      control={control}
-                      label='Select Employee'
+                    <select
                       value={selectedEmployee}
-                      onChange={e => {
-                        setSelectedEmployee(e.target.value)
-                        setStep(1)
+                      onChange={(e) => {
+                        setSelectedEmployee(e.target.value);
+                        setStep(1);
                       }}
-                      options={typeDropDown?.map((value, index) => ({
-                        value: value?.id,
-                        label: value?.name
-                      }))}
-                    />
-                    {/* <Select
-                                            value={selectedEmployee}
-                                            onChange={(e) => {
-                                                setSelectedEmployee(e.target.value);
-                                                setStep(1);
-                                            }}
-                                            className="w-full"
-                                        >
-                                            <SelectOption value="" disabled>Select Employee</SelectOption>
-                                            {typeDropDown.length > 0 &&
-                                                typeDropDown.map((value, index) => (
-                                                    <SelectOption key={index} value={value?.id}>
-                                                        {value?.name}
-                                                    </SelectOption>
-                                                ))
-                                            }
-                                        </Select> */}
+                      className="w-full bg-slate-200 p-4 text-black mt-5"
+                    >
+                      <option value="" disabled>Select Employee</option>
+                      {typeDropDown.data.length > 0 &&
+                        typeDropDown.data.map((value, index) => (
+                          <option key={index} value={value?.id}>
+                            {value?.name}
+                          </option>
+                        ))
+                      }
+                    </select>
                   </div>
                 )}
               </div>

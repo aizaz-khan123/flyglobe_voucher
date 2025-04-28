@@ -46,6 +46,7 @@ const AirbluePricingSummary = ({ bookingAvailabilityConfirmationData }) => {
                             "&:before": { display: "none" },
                             backgroundColor: "background.paper",
                         }}
+                        className="border-0"
                     >
                         <AccordionSummary
                             expandIcon={
