@@ -186,3 +186,7 @@ export const routeTypeLabels = {
   RETURN: 'Round Trip',
   MULTICITY: 'Multi City'
 }
+export const groupTypeStatus = [
+  { value: 'true', label: 'Yes' },
+  { value: 'false', label: 'No' }
+]

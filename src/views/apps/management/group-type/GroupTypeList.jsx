@@ -15,31 +15,25 @@ import {
     getSortedRowModel,
     useReactTable
 } from '@tanstack/react-table'
-import { useForm } from 'react-hook-form'
 
 // MUI Imports
 import {
-    Accordion,
-    AccordionDetails,
-    AccordionSummary,
     Button,
     Card,
     CardContent,
+    IconButton,
     TablePagination,
-    TextField
+    TextField,
+    Tooltip
 } from '@mui/material'
-import { FaDownload, FaPlus } from 'react-icons/fa6'
-import { MdExpandMore } from 'react-icons/md'
+import { FaPencil, FaPlus, FaTrash } from 'react-icons/fa6'
 
 // Component Imports
 
-import MuiAutocomplete from '@/components/mui-form-inputs/MuiAutoComplete'
-import MuiDatePicker from '@/components/mui-form-inputs/MuiDatePicker'
-import MuiTextField from '@/components/mui-form-inputs/MuiTextField'
-import { useBookingListQuery } from '@/redux-store/services/api'
+import { useGroupTypeListQuery } from '@/redux-store/services/api'
 import tableStyles from '@core/styles/table.module.css'
 import classNames from 'classnames'
-import StatusWidget from '../../bookings/StatusWidget'
+import GroupTypeDeleteModal from './GroupTypeDeleteModal'
 import GroupTypeModal from './GroupTypeModal'
 
 const GroupTypeList = () => {
@@ -48,23 +42,27 @@ const GroupTypeList = () => {
     const [page, setPage] = useState(0)
     const [rowsPerPage, setRowsPerPage] = useState(10)
     const [showGroupTypeModal, setShowGroupTypeModal] = useState(false)
+    const [showGroupTypeDeleteModal, setShowGroupTypeDeleteModal] = useState(false)
+    const [groupTypeData, setGroupTypeData] = useState({})
 
     const groupTypeModalHandler = () => {
         setShowGroupTypeModal((prev) => !prev);
     };
-
+    const groupTypeDeleteModalHandler = () => {
+        setShowGroupTypeDeleteModal((prev) => !prev);
+    };
     // RTK Query
     const {
         data: detail_data,
         refetch,
         isFetching
-    } = useBookingListQuery({
+    } = useGroupTypeListQuery({
         page: page + 1,
         pageSize: rowsPerPage,
         searchText: globalFilter,
     })
 
-    const bookings = detail_data?.data || []
+    const groupTypes = detail_data?.data || []
     const totalCount = detail_data?.total || 0
 
 
@@ -86,25 +84,44 @@ const GroupTypeList = () => {
 
     const columns = useMemo(
         () => [
-            columnHelper.accessor('group_type', {
-                header: 'PNR',
+            columnHelper.accessor('name', {
+                header: 'Name',
                 cell: ({ row }) => (
                     <div className='flex items-center space-x-3 truncate'>
-                        <div className='font-medium'>{row.original.booking_pnr}</div>
+                        <div className='font-medium'>{row.original.name}</div>
                     </div>
                 )
             }),
             columnHelper.accessor('status', {
-                header: 'Booking Status',
-                cell: ({ row }) => <StatusWidget status={row.original.status} />
+                header: 'Status',
+                cell: ({ row }) => { row.original.status === true ? "Yes" : "No" }
             }),
             {
                 id: 'actions',
                 header: 'Action',
-                cell: () => (
-                    <Button variant='contained'>
-                        <FaDownload />
-                    </Button>
+                cell: ({ row }) => (
+                    <div className='flex items-center w-fit gap-2'>
+                        <Tooltip title='Edit Airports' placement='top'>
+                            <IconButton size='small' onClick={() => {
+                                groupTypeModalHandler();
+                                setGroupTypeData(row.original)
+                            }}>
+                                <FaPencil className='cursor-pointer text-base text-primary' />
+                            </IconButton>
+                        </Tooltip>
+                        <Tooltip title='Delete Airports' placement='top'>
+                            <IconButton size='small'>
+                                <FaTrash
+                                    className='cursor-pointer text-base text-red-600'
+                                    onClick={e => {
+                                        // e.stopPropagation()
+                                        setGroupTypeData(row.original)
+                                        groupTypeDeleteModalHandler()
+                                    }}
+                                />
+                            </IconButton>
+                        </Tooltip>
+                    </div>
                 )
             }
         ],
@@ -112,7 +129,7 @@ const GroupTypeList = () => {
     )
 
     const table = useReactTable({
-        data: bookings,
+        data: groupTypes,
         columns,
         filterFns: { fuzzy: fuzzyFilter },
         state: { rowSelection, globalFilter },
@@ -160,7 +177,12 @@ const GroupTypeList = () => {
     }
     return (
         <>
-            <GroupTypeModal open={showGroupTypeModal} onClose={() => setShowGroupTypeModal(false)} />
+            {showGroupTypeModal &&
+                <GroupTypeModal open={showGroupTypeModal} onClose={() => setShowGroupTypeModal(false)} refetch={refetch} groupTypeData={groupTypeData} />
+            }
+            {showGroupTypeDeleteModal &&
+                <GroupTypeDeleteModal open={showGroupTypeDeleteModal} onClose={() => setShowGroupTypeDeleteModal(false)} refetch={refetch} groupTypeData={groupTypeData} />
+            }
 
             <Card>
                 <CardContent className='p-0'>
