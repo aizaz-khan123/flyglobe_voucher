@@ -1,45 +1,102 @@
+import MuiAutocomplete from '@/components/mui-form-inputs/MuiAutoComplete'
 import MuiDatePicker from '@/components/mui-form-inputs/MuiDatePicker'
 import MuiDropdown from '@/components/mui-form-inputs/MuiDropdown'
+import MuiTextarea from '@/components/mui-form-inputs/MuiTextarea'
 import MuiTextField from '@/components/mui-form-inputs/MuiTextField'
-import { gender } from '@/data/dropdowns/DropdownValues'
+import MuiTimePicker from '@/components/mui-form-inputs/MuiTimePicker'
+import { gender, groupsStatus } from '@/data/dropdowns/DropdownValues'
+import { useAirlineDropDownQuery, useGroupsStoreMutation, useGroupTypeDropdownQuery } from '@/redux-store/services/api'
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material'
 import React from 'react'
 import { useFieldArray, useForm } from 'react-hook-form'
 import { IoMdClose } from 'react-icons/io'
 
 const AddGroupModal = ({ open, isEdit, onClose, }) => {
-    const { control, handleSubmit, setError, reset, formState: { isSubmitting }, setValue, watch, isLoading } = useForm({
+
+    const [createGroups, { isLoading }] = useGroupsStoreMutation()
+    const { data: airlineDropdown } = useAirlineDropDownQuery();
+    const { data: groupTypeDropdown } = useGroupTypeDropdownQuery();
+
+    const { control, handleSubmit, setError, reset, } = useForm({
         defaultValues: {
             sector: '',
-            airline: '',
+            airline_id: '',
+            group_type_id: '',
             status: '',
-            purchase_price: '',
-            price: '',
+            purchased_price: '',
             adult_price: '',
-            adt_price_on_call: '',
+            adult_price_call: false,
             cnn_price: '',
-            cnn_price_on_call: '',
-            infant_price: '',
-            infant_price_on_call: '',
+            cnn_price_call: false,
+            inf_price: '',
+            inf_price_call: false,
             baggage: '',
             meal: '',
             pnr: '',
             total_seats: '',
+            rules: '',
             flights: [
                 {
-                    flight_no: '',
-                    origin: '',
-                    destination: '',
+                    flight_number: '',
                     departure_date: null,
+                    departure_time: '',
+                    departure_city: '',
                     arrival_date: null,
-                },
+                    arrival_time: '',
+                    arrival_city: '',
+                }
             ],
         }
     })
+
     const { fields, append, remove } = useFieldArray({
         control,
         name: 'flights',
     });
+    const setErrors = (errors) => {
+        Object.entries(errors).forEach(([key, value]) => setError(key, { message: value }))
+    }
+
+    const onSubmit = handleSubmit(async (data) => {
+        // if (!uuid) {
+        await createGroups(data).then((response) => {
+            if ('error' in response) {
+                setErrors(response?.error.data?.errors)
+                return
+            }
+            const { status, data: responseData } = response?.data
+            if (status) {
+                toast.success(`${responseData.name} has been created`)
+                onClose()
+                refetch()
+            } else {
+                setErrors(response?.data?.errors)
+            }
+        })
+        // } else {
+        //     const updated_data = {
+        //         _method: 'put',
+        //         ...data,
+        //     }
+
+        //     await UpdateGroupType({ uuid, updated_data }).then((response) => {
+        //         if ('error' in response) {
+        //             setErrors(response?.error.data?.errors)
+        //             return
+        //         }
+
+        //         if (response.data?.code == 200) {
+        //             toast.success(response?.data?.message)
+        //             refetch()
+        //             onClose()
+        //         } else {
+        //             setErrors(response?.data?.errors)
+        //         }
+        //     })
+        // }
+    })
+
+    console.log('airlineDropdown', airlineDropdown);
 
     return (
         <>
@@ -62,23 +119,38 @@ const AddGroupModal = ({ open, isEdit, onClose, }) => {
                                     label: data.label,
                                     value: data.label
                                 }))}
-                                placeholder='Select Sectoe'
+                                placeholder='Sector'
                             />
 
                         </div>
                         <div>
-                            <MuiDropdown
+                            <MuiAutocomplete
                                 control={control}
                                 label='Airline'
-                                name='airline'
+                                name='airline_id'
                                 size='md'
-                                id='airline'
+                                id='airline_id'
                                 className='w-full border-0 text-base'
-                                options={gender.map(data => ({
-                                    label: data.label,
-                                    value: data.label
+                                options={airlineDropdown?.map(data => ({
+                                    value: data.id,
+                                    label: data.name,
                                 }))}
-                                placeholder='Select Sectoe'
+                                placeholder='Airline'
+                            />
+                        </div>
+                        <div>
+                            <MuiDropdown
+                                control={control}
+                                label='Group Type'
+                                name='group_type_id'
+                                size='md'
+                                id='group_type_id'
+                                className='w-full border-0 text-base'
+                                options={groupTypeDropdown?.map(data => ({
+                                    label: data.name,
+                                    value: data.id
+                                }))}
+                                placeholder='Group Type'
                             />
                         </div>
                         <div>
@@ -89,150 +161,140 @@ const AddGroupModal = ({ open, isEdit, onClose, }) => {
                                 size='md'
                                 id='status'
                                 className='w-full border-0 text-base'
-                                options={gender.map(data => ({
+                                options={groupsStatus.map(data => ({
                                     label: data.label,
-                                    value: data.label
+                                    value: data.value
                                 }))}
-                                placeholder='Select Sectoe'
+                                placeholder='Status'
                             />
                         </div>
 
                         <div>
                             <MuiTextField
                                 type='text'
-                                className='w-full border-0 focus:outline-0'
                                 control={control}
-                                label={'Purchase Price'}
+                                label={'Purchased Price'}
                                 size='md'
-                                id='purchase_price'
-                                name='purchase_price'
+                                id='purchased_price'
+                                name='purchased_price'
+                                placeholder='Enter Purchased Price'
                             />
                         </div>
-
                         <div>
                             <MuiTextField
                                 type='text'
-                                className='w-full border-0 focus:outline-0'
-                                control={control}
-                                label={'Price'}
-                                size='md'
-                                id='price'
-                                name='price'
-                            />
-                        </div>
-
-                        <div>
-                            <MuiTextField
-                                type='text'
-                                className='w-full border-0 focus:outline-0'
                                 control={control}
                                 label={'Adult Price'}
                                 size='md'
                                 id='adult_price'
                                 name='adult_price'
+                                placeholder='Enter Adult Price'
                             />
                         </div>
 
                         <div>
                             <MuiTextField
-                                className='w-full border-0 focus:outline-0'
                                 control={control}
                                 label={'Adult Price on Call'}
                                 size='md'
-                                id='adt_price_on_call'
-                                name='adt_price_on_call'
-                                placeholder='Enter Rbds'
+                                id='adult_price_call'
+                                name='adult_price_call'
+                                placeholder='Enter Adult Price Call'
                             />
                         </div>
                         <div>
                             <MuiTextField
-                                className='w-full border-0 focus:outline-0'
                                 control={control}
                                 label={'CNN Price'}
                                 size='md'
                                 id='cnn_price'
                                 name='cnn_price'
-                                placeholder='Enter Rbds'
+                                placeholder='Enter CNN Price'
                             />
                         </div>
                         <div>
                             <MuiTextField
-                                className='w-full border-0 focus:outline-0'
                                 control={control}
                                 label={'Cnn Price on Call'}
                                 size='md'
-                                id='cnn_price_on_call'
-                                name='cnn_price_on_call'
-                                placeholder='Enter Rbds'
+                                id='cnn_price_call'
+                                name='cnn_price_call'
+                                placeholder='Enter Cnn Price Call'
                             />
                         </div>
                         <div>
                             <MuiTextField
-                                className='w-full border-0 focus:outline-0'
                                 control={control}
                                 label={'Infant Price'}
                                 size='md'
-                                id='infant_price'
-                                name='infant_price'
-                                placeholder='Enter Rbds'
+                                id='inf_price'
+                                name='inf_price'
+                                placeholder='Enter Infant Price'
                             />
                         </div>
                         <div>
                             <MuiTextField
-                                className='w-full border-0 focus:outline-0'
                                 control={control}
                                 label={'Infant Price on Call'}
                                 size='md'
-                                id='infant_price_on_call'
-                                name='infant_price_on_call'
-                                placeholder='Enter Rbds'
+                                id='inf_price_call'
+                                name='inf_price_call'
+                                placeholder='Enter Infant Price Call'
                             />
                         </div>
                         <div>
                             <MuiTextField
-                                className='w-full border-0 focus:outline-0'
                                 control={control}
                                 label={'Baggage'}
                                 size='md'
                                 id='baggage'
                                 name='baggage'
-                                placeholder='Enter Rbds'
+                                placeholder='Enter Baggage'
                             />
                         </div>
 
                         <div>
                             <MuiTextField
-                                className='w-full border-0 focus:outline-0'
                                 control={control}
                                 label={'Meal'}
                                 size='md'
                                 id='meal'
                                 name='meal'
-                                placeholder='Enter Rbds'
+                                placeholder='Enter Meal'
                             />
                         </div>
                         <div>
                             <MuiTextField
-                                className='w-full border-0 focus:outline-0'
                                 control={control}
                                 label={'Pnr'}
                                 size='md'
                                 id='pnr'
                                 name='pnr'
-                                placeholder='Enter Rbds'
+                                placeholder='Enter Pnr'
                             />
                         </div>
                         <div>
                             <MuiTextField
-                                className='w-full border-0 focus:outline-0'
                                 control={control}
                                 label={'Total Seats'}
                                 size='md'
                                 id='total_seats'
                                 name='total_seats'
-                                placeholder='Enter Rbds'
+                                placeholder='Enter Total Seats'
                             />
+
                         </div>
+                    </div>
+                    <div className="grid grid-cols-1">
+                        <MuiTextarea
+                            className='mt-5'
+                            control={control}
+                            label={'Rules'}
+                            size='md'
+                            id='rules'
+                            name='rules'
+                            placeholder='Enter Rules'
+                        />
                     </div>
 
                     {fields.map((field, index) => (
@@ -244,60 +306,57 @@ const AddGroupModal = ({ open, isEdit, onClose, }) => {
                                 }
                             </div>
                             <div className="grid grid-cols-3 gap-4 mt-2">
-                                <div>
-                                    <MuiTextField
-                                        type='text'
-                                        className='w-full border-0 focus:outline-0'
-                                        control={control}
-                                        label='Flight NO'
-                                        size='md'
-                                        id={`flights.${index}.flight_no`}
-                                        name={`flights.${index}.flight_no`}
-                                    />
-                                </div>
-                                <div>
-                                    <MuiTextField
-                                        type='text'
-                                        className='w-full border-0 focus:outline-0'
-                                        control={control}
-                                        label='Origin'
-                                        size='md'
-                                        id={`flights.${index}.origin`}
-                                        name={`flights.${index}.origin`}
-                                    />
-                                </div>
-                                <div>
-                                    <MuiTextField
-                                        type='text'
-                                        className='w-full border-0 focus:outline-0'
-                                        control={control}
-                                        label='Destination'
-                                        size='md'
-                                        id={`flights.${index}.destination`}
-                                        name={`flights.${index}.destination`}
-                                    />
-                                </div>
-                                <div>
-                                    <MuiDatePicker
-                                        className='w-full border-0 focus:outline-0'
-                                        control={control}
-                                        label='Departure Date'
-                                        size='md'
-                                        id={`flights.${index}.departure_date`}
-                                        name={`flights.${index}.departure_date`}
-                                    />
-                                </div>
-                                <div>
-                                    <MuiDatePicker
-                                        className='w-full border-0 focus:outline-0'
-                                        control={control}
-                                        label='Arrival Date'
-                                        size='md'
-                                        id={`flights.${index}.arrival_date`}
-                                        name={`flights.${index}.arrival_date`}
-                                    />
-                                </div>
+                                <MuiTextField
+                                    control={control}
+                                    label="Flight Number"
+                                    name={`flights.${index}.flight_number`}
+                                    id={`flights.${index}.flight_number`}
+                                    size="md"
+                                />
+                                <MuiTextField
+                                    control={control}
+                                    label="Departure City"
+                                    name={`flights.${index}.departure_city`}
+                                    id={`flights.${index}.departure_city`}
+                                    size="md"
+                                />
+                                <MuiTextField
+                                    control={control}
+                                    label="Arrival City"
+                                    name={`flights.${index}.arrival_city`}
+                                    id={`flights.${index}.arrival_city`}
+                                    size="md"
+                                />
+                                <MuiDatePicker
+                                    control={control}
+                                    label="Departure Date"
+                                    name={`flights.${index}.departure_date`}
+                                    id={`flights.${index}.departure_date`}
+                                    size="md"
+                                />
+                                <MuiTimePicker
+                                    control={control}
+                                    label="Departure Time"
+                                    name={`flights.${index}.departure_time`}
+                                    id={`flights.${index}.departure_time`}
+                                    size="md"
+                                />
+                                <MuiDatePicker
+                                    control={control}
+                                    label="Arrival Date"
+                                    name={`flights.${index}.arrival_date`}
+                                    id={`flights.${index}.arrival_date`}
+                                    size="md"
+                                />
+                                <MuiTimePicker
+                                    control={control}
+                                    label="Arrival Time"
+                                    name={`flights.${index}.arrival_time`}
+                                    id={`flights.${index}.arrival_time`}
+                                    size="md"
+                                />
                             </div>
+
                         </div>
                     ))}
 
@@ -322,8 +381,8 @@ const AddGroupModal = ({ open, isEdit, onClose, }) => {
                     <Button variant='outlined' onClick={onClose} disabled={isLoading}>
                         Cancel
                     </Button>
-                    <Button variant='contained' onClick={handleSubmit(data => console.log(data))} disabled={isSubmitting}>
-                        {isSubmitting ? 'Saving...' : 'Save'}
+                    <Button variant='contained' onClick={onSubmit}>
+                        {isLoading ? 'Saving...' : 'Save'}
                     </Button>
 
                 </DialogActions>

@@ -35,7 +35,7 @@ import { MdExpandMore } from 'react-icons/md'
 // Component Imports
 
 import Link from '@/components/Link'
-import MuiAutocomplete from '@/components/mui-form-inputs/MuiAutoComplete'
+import MuiAutocomplete from '@/components/mui-form-inputs/MuiFlightSearchAutoComplete'
 import MuiDatePicker from '@/components/mui-form-inputs/MuiDatePicker'
 import MuiTextField from '@/components/mui-form-inputs/MuiTextField'
 import { useBookingListQuery } from '@/redux-store/services/api'

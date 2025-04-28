@@ -28,7 +28,7 @@ import { toast } from 'react-toastify'
 
 import CryptoJS from 'crypto-js'
 
-import MuiAutocomplete from '@/components/mui-form-inputs/MuiAutoComplete'
+import MuiFlightSearchAutoComplete from '@/components/mui-form-inputs/MuiFlightSearchAutoComplete'
 import MuiDatePicker from '@/components/mui-form-inputs/MuiDatePicker'
 import MuiDateRangePicker from '@/components/mui-form-inputs/MuiDateRangePicker'
 import { airportsNames, cabin_class } from '@/data/dropdowns/DropdownValues'
@@ -532,7 +532,7 @@ const FlightSearch = ({ initialValues, flightSearchOpen }) => {
                 {route_type !== 'MULTICITY' ? (
                   <div className='grid grid-cols-12 gap-6 items-end'>
                     <div className='relative col-span-12 md:col-span-6 lg:col-span-6'>
-                      <MuiAutocomplete
+                      <MuiFlightSearchAutoComplete
                         control={control}
                         name='origin'
                         label='From'
@@ -580,7 +580,7 @@ const FlightSearch = ({ initialValues, flightSearchOpen }) => {
                       </div>
                     </div>
                     <div className='col-span-12 md:col-span-6 lg:col-span-6'>
-                      <MuiAutocomplete
+                      <MuiFlightSearchAutoComplete
                         control={control}
                         selectIcon={<FaPlaneArrival className='!text-primary' />}
                         name='destination'
@@ -727,7 +727,7 @@ const FlightSearch = ({ initialValues, flightSearchOpen }) => {
                             <p className='text-blue-500'>Flight {index + 1}</p>
                           </div>
                           <div className='relative col-span-12 md:col-span-6 lg:col-span-6  pt-[5px]'>
-                            <MuiAutocomplete
+                            <MuiFlightSearchAutoComplete
                               control={control}
                               // name={`origin`}
                               name={`legs[${index}].origin`}
@@ -774,7 +774,7 @@ const FlightSearch = ({ initialValues, flightSearchOpen }) => {
                             </div>
                           </div>
                           <div className='col-span-12 md:col-span-6 lg:col-span-6 '>
-                            <MuiAutocomplete
+                            <MuiFlightSearchAutoComplete
                               control={control}
                               selectIcon={<FaPlaneArrival />}
                               // name={`destination`}

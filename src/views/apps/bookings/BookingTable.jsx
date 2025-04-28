@@ -43,10 +43,11 @@ import PopupState, { bindTrigger, bindPopover } from 'material-ui-popup-state'
 import DateTimeComp from '@/components/date/DateTimeComp'
 import StatusWidget from './StatusWidget'
 import MuiTextField from '@/components/mui-form-inputs/MuiTextField'
-import MuiAutocomplete from '@/components/mui-form-inputs/MuiAutoComplete'
+import MuiAutocomplete from '@/components/mui-form-inputs/MuiFlightSearchAutoComplete'
 import MuiDatePicker from '@/components/mui-form-inputs/MuiDatePicker'
 import Link from '@/components/Link'
 import { useBookingListQuery } from '@/redux-store/services/api'
+import MuiFlightSearchAutoComplete from '@/components/mui-form-inputs/MuiFlightSearchAutoComplete'
 
 const BookingTable = ({ hidePagination }) => {
   // States
@@ -334,7 +335,7 @@ const BookingTable = ({ hidePagination }) => {
                   <MuiTextField control={control} name='booking_id' placeholder='Enter Booking ID' />
                   <MuiTextField control={control} name='pnr' placeholder='Enter PNR' />
                   <MuiTextField control={control} name='email' placeholder='Enter Email' />
-                  <MuiAutocomplete
+                  <MuiFlightSearchAutoComplete
                     control={control}
                     name='status'
                     label='Status'
