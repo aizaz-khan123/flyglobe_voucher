@@ -94,8 +94,13 @@ const GroupTypeList = () => {
             }),
             columnHelper.accessor('status', {
                 header: 'Status',
-                cell: ({ row }) => { row.original.status === true ? "Yes" : "No" }
+                cell: ({ row }) => (
+                    <div className='flex items-center space-x-3 truncate'>
+                        <div className='font-medium'>{ row.original.status == 1 ? "Yes" : "No" }</div>
+                    </div>
+                )
             }),
+        
             {
                 id: 'actions',
                 header: 'Action',
