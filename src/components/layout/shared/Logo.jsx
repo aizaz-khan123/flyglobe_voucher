@@ -3,11 +3,11 @@
 // React Imports
 import { useEffect, useRef } from 'react'
 
+// Next.js Imports
+import Image from 'next/image'
+
 // Third-party Imports
 import styled from '@emotion/styled'
-
-// Component Imports
-import MaterioLogo from '@core/svg/Logo'
 
 // Config Imports
 import themeConfig from '@configs/themeConfig'
@@ -34,7 +34,7 @@ const LogoText = styled.span`
 
 const Logo = ({ color }) => {
   // Refs
-  const logoTextRef = useRef(null)
+  const logoTextRef = useRef < HTMLSpanElement > (null)
 
   // Hooks
   const { isHovered, transitionDuration, isBreakpointReached } = useVerticalNav()
@@ -59,18 +59,14 @@ const Logo = ({ color }) => {
   }, [isHovered, layout, isBreakpointReached])
 
   return (
-    <div className='flex items-center min-bs-[24px]'>
-      <MaterioLogo className='text-[22px] text-primary' />
-      <LogoText
-        color={color}
-        ref={logoTextRef}
-        isHovered={isHovered}
-        isCollapsed={layout === 'collapsed'}
-        transitionDuration={transitionDuration}
-        isBreakpointReached={isBreakpointReached}
-      >
-        {themeConfig.templateName}
-      </LogoText>
+    <div className='flex items-center min-bs-[24px] ml-[30px]'>
+      <Image
+        src="/images/project_logo.png"
+        alt="Project Logo"
+        width={100}  // You can adjust the width
+        height={100} // You can adjust the height
+        priority
+      />
     </div>
   )
 }
