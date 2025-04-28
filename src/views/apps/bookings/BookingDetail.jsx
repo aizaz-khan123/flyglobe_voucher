@@ -66,7 +66,8 @@ const BookingDetail = ({ bookingId }) => {
   const [isEmailTktOpen, setIsEmailTktOpen] = useState(false)
   const [isVoidModalOpen, setIsVoidModalOpen] = useState(false)
   const [emailType, setEmailType] = useState('')
-  const user = useSelector(user => user?.persistedReducer?.authSlice?.userDetail)
+  const user = useSelector(user => user?.auth?.userDetail)
+
   const email = user?.email
   const role = user?.role
   const setting = user?.setting
@@ -168,7 +169,7 @@ const BookingDetail = ({ bookingId }) => {
     })
   }
 
-  const handleRefundTicket = () => {}
+  const handleRefundTicket = () => { }
 
   const handleEmailTicketModal = () => {
     setEmailType('send_ticket_email')
@@ -352,7 +353,7 @@ const BookingDetail = ({ bookingId }) => {
                 className='p-0 shadow-none before:hidden'
                 disableGutters
 
-                // sx={{ boxShadow: "none", "&:before": { display: "none" } }}
+              // sx={{ boxShadow: "none", "&:before": { display: "none" } }}
               >
                 <AccordionSummary
                   expandIcon={
@@ -414,6 +415,8 @@ const BookingDetail = ({ bookingId }) => {
               {status == 'expired' && <h3 className='font-bold text-2xl text-primary'> Booking Expired</h3>}
               {isConfirmed && (
                 <div className='flex justify-center flex-col space-y-4 mt-4'>
+
+                  {console.log(isPNRValid, role)}
                   {isPNRValid && (
                     <>
                       {(role === 'head-office' ||
@@ -422,16 +425,16 @@ const BookingDetail = ({ bookingId }) => {
                         role === 'branch-employee' ||
                         ((role === 'agency' || role === 'a-employee' || role === 'sub-agent') &&
                           setting?.can_issue_ticket)) && (
-                        <Button
-                          variant='contained'
-                          startIcon={<FaTicket />}
-                          onClick={handleIssueTicketModal}
-                          disabled={ticketOtpLoading}
-                          loading={ticketOtpLoading}
-                        >
-                          {'Issue Ticket'}
-                        </Button>
-                      )}
+                          <Button
+                            variant='contained'
+                            startIcon={<FaTicket />}
+                            onClick={handleIssueTicketModal}
+                            disabled={ticketOtpLoading}
+                            loading={ticketOtpLoading}
+                          >
+                            {'Issue Ticket'}
+                          </Button>
+                        )}
 
                       <Button
                         variant='contained'

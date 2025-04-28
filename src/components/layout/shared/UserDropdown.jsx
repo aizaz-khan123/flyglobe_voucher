@@ -86,7 +86,7 @@ const UserDropdown = () => {
         updateAuthCookie({ user: undefined }),
         dispatch(userLogout()),
       ]);
-      window.location.href = "/";
+      window.location.href = "/login";
     } catch (error) {
       toast.success("Logout successfully...");
       dispatch(userLogout());

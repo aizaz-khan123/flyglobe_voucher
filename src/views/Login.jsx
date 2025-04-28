@@ -108,7 +108,7 @@ const Login = ({ mode }) => {
 
     if (response.data.code === 200) {
       toast.success(response?.data?.message)
-      router.push(`/verification/${encodeURIComponent(response?.data?.data)}?q=${searchParams.get('redirectTo') || ''}`)
+      router.push(`/${locale}/verification/${encodeURIComponent(response?.data?.data)}?q=${searchParams.get('redirectTo') || ''}`)
     }
   }
 

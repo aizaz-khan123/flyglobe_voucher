@@ -133,13 +133,13 @@ const VerticalMenu = ({ dictionary, scrollMenu }) => {
             <MenuItem href={`/${locale}/deposites/agency-deposite`} icon={<PiHandDeposit />}>
               {dictionary['navigation'].agencyDeposite}
             </MenuItem>
-            <MenuItem href={`/${locale}/deposites/branch-deposite`} icon={<PiHandDeposit />}>
+            {/* <MenuItem href={`/${locale}/deposites/branch-deposite`} icon={<PiHandDeposit />}>
               {dictionary['navigation'].branchDeposite}
-            </MenuItem>
+            </MenuItem> */}
             <MenuItem href={`/${locale}/deposites/my-deposite`}>
               {dictionary['navigation'].myDeposite}
             </MenuItem>
-            <MenuItem href={`/${locale}/deposites/bank-deposite`}>
+            <MenuItem href={`/${locale}/deposites/bank-accounts`}>
               {dictionary['navigation'].bankDeposite}
             </MenuItem>
           </SubMenu>
@@ -152,9 +152,9 @@ const VerticalMenu = ({ dictionary, scrollMenu }) => {
             <MenuItem href={`/${locale}/reports/supplier-reports`}>
               {dictionary['navigation'].supplierReports}
             </MenuItem>
-            <MenuItem href={`/${locale}/reports/un-used-tickets`}>
+            {/* <MenuItem href={`/${locale}/reports/un-used-tickets`}>
               {dictionary['navigation'].unUsedTickets}
-            </MenuItem>
+            </MenuItem> */}
           </SubMenu>
 
           <SubMenu label={dictionary['navigation'].settings} icon={<i className="ri-settings-2-line"></i>}>

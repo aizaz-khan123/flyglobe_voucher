@@ -59,12 +59,12 @@ const Logo = ({ color }) => {
   }, [isHovered, layout, isBreakpointReached])
 
   return (
-    <div className='flex items-center min-bs-[24px] ml-[30px]'>
+    <div className='flex items-center min-bs-[24px]'>
       <Image
         src="/images/project_logo.png"
         alt="Project Logo"
-        width={100}  // You can adjust the width
-        height={100} // You can adjust the height
+        width={150}  // You can adjust the width
+        height={120} // You can adjust the height
         priority
       />
     </div>
