@@ -1,4 +1,5 @@
 const StatusWidget = ({ status }) => {
+  console.log(status, 'status')
   if (status == 'issued') {
     return (
       <div className='inline rounded-badge border border-success/50 bg-success/5 px-3 py-1 text-xs font-medium text-success'>
@@ -11,13 +12,26 @@ const StatusWidget = ({ status }) => {
         Confirmed
       </div>
     )
-  }else if (status == 'publish') {
+  } else if (status == 'publish') {
     return (
       <div className='inline rounded-badge border border-success/50 bg-success/5 px-3 py-1 text-xs font-medium text-success'>
-      publish
+        publish
       </div>
     )
-  } else if (status == 'cancelled') {
+  } else if (status == 'Yes') {
+    return (
+      <div className='inline rounded-badge border border-success/50 bg-success/5 px-3 py-1 text-xs font-medium text-success'>
+        Yes
+      </div>
+    )
+  } else if (status == 'No') {
+    return (
+      <div className='inline rounded-badge border border-error/50 bg-error/5 px-3 py-1 text-xs font-medium text-error'>
+        No
+      </div>
+    )
+  }
+  else if (status == 'cancelled') {
     return (
       <div className='inline rounded-badge border border-error/50 bg-error/5 px-3 py-1 text-xs font-medium text-error'>
         Cancelled

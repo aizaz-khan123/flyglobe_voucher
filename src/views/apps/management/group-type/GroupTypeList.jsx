@@ -35,6 +35,7 @@ import tableStyles from '@core/styles/table.module.css'
 import classNames from 'classnames'
 import GroupTypeDeleteModal from './GroupTypeDeleteModal'
 import GroupTypeModal from './GroupTypeModal'
+import StatusWidget from '../../bookings/StatusWidget'
 
 const GroupTypeList = () => {
     const [rowSelection, setRowSelection] = useState({})
@@ -92,10 +93,12 @@ const GroupTypeList = () => {
                     </div>
                 )
             }),
-            columnHelper.accessor('status', {
-                header: 'Status',
-                cell: ({ row }) => { row.original.status === true ? "Yes" : "No" }
-            }),
+           
+              columnHelper.accessor('status', {
+                            header: 'Status',
+                            cell: ({ row }) => <StatusWidget status={ row.original.status == 1 ? "Yes" : "No"} />
+                        }),
+        
             {
                 id: 'actions',
                 header: 'Action',
