@@ -828,7 +828,7 @@ const FlightFound = () => {
               </div>
 
               <div
-                className={`transition-all duration-1000 ease-in-out overflow-hidden bg-white ${isFilterOpen ? "max-h-[1000px]" : "max-h-0"}`}
+                className={`transition-all duration-1000 ease-in-out mb-[15px] overflow-hidden bg-white ${isFilterOpen ? "max-h-[1000px]" : "max-h-0"}`}
               >
                 <FlightAccordianFilters
                   time={time}
@@ -867,6 +867,8 @@ const FlightFound = () => {
             <>
               <div>
                 <div>
+
+                  {console.log(sortedFlights)}
                   {sortedFlights.map((data, index) => {
 
                     const allLegs = data?.legs || {};
@@ -910,7 +912,7 @@ const FlightFound = () => {
                           expandIcon={''}
                           // aria-controls={`panel${legIndex}-content`}
                           // id={`panel${legIndex}-header`}
-                          className='rounded-lg '
+                          className='rounded-lg'
                         >
                           <div className='w-full'>
                             <div className='flex flex-col lg:flex-row gap-4 lg:gap-0 justify-between items-center'>
