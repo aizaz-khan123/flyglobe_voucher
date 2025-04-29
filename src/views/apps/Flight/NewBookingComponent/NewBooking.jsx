@@ -69,11 +69,11 @@ const validationSchema = yup.object().shape({
 
 const NewBooking = () => {
   const { id } = useParams()
+
   const bookingId = id
   const [travelers, setTravelers] = useState([])
   const [expandedIndex, setExpandedIndex] = useState([])
   const [bookingConfirmTrigger, { isLoading: bookingConfirmationLoading }] = useBookingConfirmMutation()
-  const toaster = toast()
   const router = useRouter()
 
   const {
@@ -153,9 +153,9 @@ const NewBooking = () => {
         return
       }
 
-      toaster.success('Booking has been Created Successfully.')
+      toast.success('Booking has been Created Successfully.')
       setTimeout(() => {
-        router.push(`/en/booking/${response?.data?.data?.booking_id || ''}`)
+        router.push(`/en/bookings/${response?.data?.data?.booking_id || ''}`)
       }, 500)
     })
   }
@@ -332,13 +332,13 @@ const NewBooking = () => {
                               Scan Passport
                             </Button>
                           </div>
-                          <div className='col-span-12 mb-5'>
+                          {/* <div className='col-span-12 mb-5'>
                             <MuiTextField
                               control={control}
                               name={`passengers.${index}.passenger_type`}
                               label='Passenger Type'
                             />
-                          </div>
+                          </div> */}
                           <div className='col-span-2 mb-5'>
                             <MuiDropdown
                               control={control}
