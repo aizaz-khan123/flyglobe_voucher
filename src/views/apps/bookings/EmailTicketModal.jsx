@@ -84,6 +84,7 @@ const EmailTicketModal = ({ isModalOpen, handleEmailTicketModal, userEmail, book
           onClick={handleSend}
           loading={isLoading}
           disabled={isLoading}
+          variant='contained'
         >
           Send Email
         </Button>

@@ -6,16 +6,7 @@ export const metadata = {
 
 const AirPorts = async () => {
   return (
-    <div>
-      Airpots
-      {/* <PageTitle
-                title={"Airports"}
-                breadCrumbItems={[{ label: "Settings" }, { label: "Airports", active: true }]}
-            /> */}
-      <div className='mt-5'>
-        <AirportTable />
-      </div>
-    </div>
+    <AirportTable />
   )
 }
 

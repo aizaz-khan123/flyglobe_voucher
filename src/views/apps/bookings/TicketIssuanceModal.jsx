@@ -344,6 +344,7 @@ const TicketIssuanceModal = ({ isModalOpen, handleIssueTicketModal, bookingPnr, 
                 onClick={handleSelfProceed}
                 loading={ticketOtpLoading}
                 disabled={ticketOtpLoading}
+                variant='contained'
               >
                 Proceed
               </Button>
@@ -355,24 +356,15 @@ const TicketIssuanceModal = ({ isModalOpen, handleIssueTicketModal, bookingPnr, 
               <Button
                 color='primary'
                 size='md'
-
-                // onClick={() => {
-                //   setStep(2);
-                //   handleSelfProceed()
-                // }}
                 onClick={handleSelfProceed}
                 loading={ticketOtpLoading}
                 disabled={ticketOtpLoading}
+                variant='contained'
               >
                 Proceed
               </Button>
             </div>
           )}
-          {/* {(selectedAgency || selectedEmployee) && (
-            <Button color="primary" size="md" onClick={handleSubmit}>
-              Proceed
-            </Button>
-          )} */}
         </div>
       </DialogActions>
     </Dialog>
