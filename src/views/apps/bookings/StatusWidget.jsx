@@ -1,5 +1,4 @@
 const StatusWidget = ({ status }) => {
-  console.log(status, 'status')
   if (status == 'issued') {
     return (
       <div className='inline rounded-badge border border-success/50 bg-success/5 px-3 py-1 text-xs font-medium text-success'>

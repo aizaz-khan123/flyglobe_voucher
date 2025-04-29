@@ -26,10 +26,12 @@ import {
     Button,
     Card,
     CardContent,
+    IconButton,
     TablePagination,
-    TextField
+    TextField,
+    Tooltip
 } from '@mui/material'
-import { FaDownload, FaPlus } from 'react-icons/fa6'
+import { FaDownload, FaPencil, FaPlus, FaTrash } from 'react-icons/fa6'
 import { MdExpandMore } from 'react-icons/md'
 
 // Component Imports
@@ -43,6 +45,7 @@ import tableStyles from '@core/styles/table.module.css'
 import classNames from 'classnames'
 import StatusWidget from '../../bookings/StatusWidget'
 import AddGroupModal from './AddGroupModal'
+import GroupDeleteModal from './GroupDeleteModal'
 
 const GroupTable = () => {
     // States
@@ -52,9 +55,13 @@ const GroupTable = () => {
     const [page, setPage] = useState(0)
     const [rowsPerPage, setRowsPerPage] = useState(10)
     const [showAddGroupModal, setShowAddGroupModal] = useState(false)
+    const [showGroupDeleteModal, setShowGroupDeleteModal] = useState(false)
     const [groupDataByID, setGroupDataByID] = useState({})
     const addGroupModalHandler = () => {
         setShowAddGroupModal((prev) => !prev);
+    };
+    const groupDeleteModalHandler = () => {
+        setShowGroupDeleteModal((prev) => !prev);
     };
 
     // Filters state
@@ -81,7 +88,6 @@ const GroupTable = () => {
 
     const bookings = detail_data?.data || []
     const totalCount = detail_data?.total || 0
-    console.log(bookings, 'bookings')
     // Form control
     const { control, handleSubmit, reset } = useForm({
         defaultValues: filters
@@ -249,15 +255,34 @@ const GroupTable = () => {
                 header: 'Booking Status',
                 cell: ({ row }) => <StatusWidget status={row.getValue('status')} />
             }),
-            // {
-            //     id: 'actions',
-            //     header: 'Action',
-            //     cell: () => (
-            //         <Button variant='contained'>
-            //             <FaDownload />
-            //         </Button>
-            //     )
-            // }
+            {
+                id: 'actions',
+                header: 'Action',
+                cell: ({ row }) => (
+                    <div className='flex items-center w-fit gap-2'>
+                        <Tooltip title='Edit Airports' placement='top'>
+                            <IconButton size='small' onClick={() => {
+                                addGroupModalHandler();
+                                setGroupDataByID(row.original)
+                            }}>
+                                <FaPencil className='cursor-pointer text-base text-primary' />
+                            </IconButton>
+                        </Tooltip>
+                        <Tooltip title='Delete Airports' placement='top'>
+                            <IconButton size='small'>
+                                <FaTrash
+                                    className='cursor-pointer text-base text-red-600'
+                                    onClick={e => {
+                                        // e.stopPropagation()
+                                        setGroupDataByID(row.original)
+                                        groupDeleteModalHandler()
+                                    }}
+                                />
+                            </IconButton>
+                        </Tooltip>
+                    </div>
+                )
+            }
         ],
         [columnHelper]
     )
@@ -333,7 +358,10 @@ const GroupTable = () => {
     }
     return (
         <>
-            <AddGroupModal open={showAddGroupModal} onClose={() => setShowAddGroupModal(false)} refetch={refetch} />
+            <AddGroupModal open={showAddGroupModal} onClose={() => { setShowAddGroupModal(false); setGroupDataByID({}) }} refetch={refetch} groupDataByID={groupDataByID} />
+            {showGroupDeleteModal &&
+                <GroupDeleteModal open={showGroupDeleteModal} onClose={() => setShowGroupDeleteModal(false)} refetch={refetch} groupDataByID={groupDataByID} />
+            }
             <Card>
                 <CardContent className='p-0'>
                     <div className='flex items-center justify-between px-5 pt-5'>

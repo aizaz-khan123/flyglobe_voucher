@@ -1,3 +1,4 @@
+import MuiAutocomplete from '@/components/mui-form-inputs/MuiAutoComplete'
 import MuiDropdown from '@/components/mui-form-inputs/MuiDropdown'
 import MuiTextField from '@/components/mui-form-inputs/MuiTextField'
 import { groupTypeStatus } from '@/data/dropdowns/DropdownValues'
@@ -97,7 +98,7 @@ const GroupTypeModal = ({ open, onClose, groupTypeData, refetch }) => {
                         />
                     </div>
                     <div>
-                        <MuiDropdown
+                        <MuiAutocomplete
                             control={control}
                             label='Status'
                             name='status'

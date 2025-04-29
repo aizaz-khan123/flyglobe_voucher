@@ -4,17 +4,21 @@ import MuiDropdown from '@/components/mui-form-inputs/MuiDropdown'
 import MuiTextarea from '@/components/mui-form-inputs/MuiTextarea'
 import MuiTextField from '@/components/mui-form-inputs/MuiTextField'
 import MuiTimePicker from '@/components/mui-form-inputs/MuiTimePicker'
-import { gender, groupsStatus, yesNoDropdown } from '@/data/dropdowns/DropdownValues'
-import { useAirlineDropDownQuery, useGroupsStoreMutation, useGroupTypeDropdownQuery } from '@/redux-store/services/api'
+import { gender, groupsStatus } from '@/data/dropdowns/DropdownValues'
+import { useAirlineDropDownQuery, useGroupsStoreMutation, useGroupTypeDropdownQuery, useManagementGroupStoreMutation, useManagementGroupUpdateMutation } from '@/redux-store/services/api'
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material'
 import dayjs from 'dayjs'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useFieldArray, useForm, useWatch } from 'react-hook-form'
 import { IoMdClose } from 'react-icons/io'
+import { toast } from 'react-toastify'
 
-const AddGroupModal = ({ open, isEdit, onClose, refetch }) => {
+const AddGroupModal = ({ open, isEdit, onClose, refetch, groupDataByID }) => {
+    console.log('groupDataByID', groupDataByID);
 
-    const [createGroups, { isLoading }] = useGroupsStoreMutation()
+    const [createGroups, { isLoading }] = useManagementGroupStoreMutation()
+    const [updateGroups, { isLoading: isLoadingAirport }] = useManagementGroupUpdateMutation()
+
     const { data: airlineDropdown } = useAirlineDropDownQuery();
     const { data: groupTypeDropdown } = useGroupTypeDropdownQuery();
 
@@ -57,53 +61,127 @@ const AddGroupModal = ({ open, isEdit, onClose, refetch }) => {
     const setErrors = (errors) => {
         Object.entries(errors).forEach(([key, value]) => setError(key, { message: value }))
     }
+    const uuid = groupDataByID?.uuid
 
     const onSubmit = handleSubmit(async (data) => {
-        // if (!uuid) {
-        await createGroups(data).then((response) => {
-            if ('error' in response) {
-                setErrors(response?.error.data?.errors)
-                return
+        if (!uuid) {
+            await createGroups(data).then((response) => {
+                if ('error' in response) {
+                    setErrors(response?.error.data?.errors)
+                    return
+                }
+                const { status, data: responseData } = response?.data
+                if (status) {
+                    toast.success(`${responseData.name} has been created`)
+                    onClose()
+                    refetch()
+                } else {
+                    setErrors(response?.data?.errors)
+                }
+            })
+        } else {
+            const updated_data = {
+                _method: 'put',
+                ...data,
             }
-            const { status, data: responseData } = response?.data
-            if (status) {
-                toast.success(`${responseData.name} has been created`)
-                onClose()
-                refetch()
-            } else {
-                setErrors(response?.data?.errors)
-            }
-        })
-        // } else {
-        //     const updated_data = {
-        //         _method: 'put',
-        //         ...data,
-        //     }
 
-        //     await UpdateGroupType({ uuid, updated_data }).then((response) => {
-        //         if ('error' in response) {
-        //             setErrors(response?.error.data?.errors)
-        //             return
-        //         }
+            await updateGroups({ uuid, updated_data }).then((response) => {
+                if ('error' in response) {
+                    setErrors(response?.error.data?.errors)
+                    return
+                }
 
-        //         if (response.data?.code == 200) {
-        //             toast.success(response?.data?.message)
-        //             refetch()
-        //             onClose()
-        //         } else {
-        //             setErrors(response?.data?.errors)
-        //         }
-        //     })
-        // }
+                if (response.data?.code == 200) {
+                    toast.success(response?.data?.message)
+                    refetch()
+                    onClose()
+                } else {
+                    setErrors(response?.data?.errors)
+                }
+            })
+        }
     })
+    useEffect(() => {
+        if (groupDataByID) {
+            reset({
+                sector: groupDataByID?.sector || '',
+                airline_id: groupDataByID?.airline_id || '',
+                group_type_id: groupDataByID?.group_type_id || '',
+                status: groupDataByID?.status ?? '',
+                purchased_price: groupDataByID?.purchased_price || '',
+                adult_price: groupDataByID?.adult_price || '',
+                adult_price_call: !!groupDataByID?.adult_price_call,
+                cnn_price: groupDataByID?.cnn_price || '',
+                cnn_price_call: !!groupDataByID?.cnn_price_call,
+                inf_price: groupDataByID?.inf_price || '',
+                inf_price_call: !!groupDataByID?.inf_price_call,
+                baggage: groupDataByID?.baggage || '',
+                meal: groupDataByID?.meal || '',
+                pnr: groupDataByID?.pnr || '',
+                total_seats: groupDataByID?.total_seats || '',
+                rules: groupDataByID?.rules || '',
+                flights: groupDataByID?.flights?.map(flight => ({
+                    flight_number: flight.flight_number || '',
+                    departure_date: flight.departure_date ? dayjs(flight.departure_date) : null,
+                    departure_time: flight.departure_time || '',
+                    departure_city: flight.departure_city || '',
+                    arrival_date: flight.arrival_date ? dayjs(flight.arrival_date) : null,
+                    arrival_time: flight.arrival_time || '',
+                    arrival_city: flight.arrival_city || '',
+                })) || [
+                        {
+                            flight_number: '',
+                            departure_date: null,
+                            departure_time: '',
+                            departure_city: '',
+                            arrival_date: null,
+                            arrival_time: '',
+                            arrival_city: '',
+                        }
+                    ]
+            });
+        } else {
+            reset({
+                sector: '',
+                airline_id: '',
+                group_type_id: '',
+                status: '',
+                purchased_price: '',
+                adult_price: '',
+                adult_price_call: false,
+                cnn_price: '',
+                cnn_price_call: false,
+                inf_price: '',
+                inf_price_call: false,
+                baggage: '',
+                meal: '',
+                pnr: '',
+                total_seats: '',
+                rules: '',
+                flights: [
+                    {
+                        flight_number: '',
+                        departure_date: null,
+                        departure_time: '',
+                        departure_city: '',
+                        arrival_date: null,
+                        arrival_time: '',
+                        arrival_city: '',
+                    }
+                ]
+            });
+        }
+    }, [groupDataByID, reset]);
 
-    console.log('airlineDropdown', airlineDropdown);
-
+    const yesNoDropdown = [
+        { value: 0, label: 'No' },
+        { value: 1, label: 'Yes' },
+    ]
     return (
         <>
             <Dialog open={open} onClose={onClose} fullWidth maxWidth='lg'>
                 <DialogTitle className='font-bold flex items-center justify-between'>
-                    {isEdit === true ? 'Update' : 'Add'}  Group Flight
+                    {uuid ? 'Update' : 'Add'}  Group Flight
                     <IoMdClose className='cursor-pointer' onClick={onClose} />
                 </DialogTitle>
                 <DialogContent>
@@ -146,7 +224,6 @@ const AddGroupModal = ({ open, isEdit, onClose, refetch }) => {
                                 name='group_type_id'
                                 size='md'
                                 id='group_type_id'
-                                className='w-full border-0 text-base'
                                 options={groupTypeDropdown?.map(data => ({
                                     label: data.name,
                                     value: data.id
@@ -194,7 +271,7 @@ const AddGroupModal = ({ open, isEdit, onClose, refetch }) => {
                         </div>
 
                         <div>
-                            <MuiDropdown
+                            <MuiAutocomplete
                                 control={control}
                                 label={'Adult Price on Call'}
                                 size='md'
@@ -218,7 +295,7 @@ const AddGroupModal = ({ open, isEdit, onClose, refetch }) => {
                             />
                         </div>
                         <div>
-                            <MuiDropdown
+                            <MuiAutocomplete
                                 control={control}
                                 label={'Cnn Price on Call'}
                                 size='md'
@@ -242,7 +319,7 @@ const AddGroupModal = ({ open, isEdit, onClose, refetch }) => {
                             />
                         </div>
                         <div>
-                            <MuiDropdown
+                            <MuiAutocomplete
                                 control={control}
                                 label={'Infant Price on Call'}
                                 size='md'

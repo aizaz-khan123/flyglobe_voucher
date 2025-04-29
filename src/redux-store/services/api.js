@@ -860,7 +860,6 @@ export const api = emptySplitApi.injectEndpoints({
         url: `${API_END_POINTS.groupTypeDelete}/${uuid}`,
         method: "GET",
       }),
-      transformResponse: (response) => response.data,
     }),
     groupTypeDropdown: builder.query({
       query: () => ({
@@ -871,11 +870,18 @@ export const api = emptySplitApi.injectEndpoints({
     }),
 
     // groups
-    groupsStore: builder.mutation({
+    managementGroupStore: builder.mutation({
       query: body => ({
-        url: API_END_POINTS.groupsStore,
+        url: API_END_POINTS.managementGroupStore,
         method: 'POST',
         body
+      })
+    }),
+    managementGroupUpdate: builder.mutation({
+      query: ({ uuid, updated_data }) => ({
+        url: `${API_END_POINTS.managementGroupUpdate}/${uuid}`,
+        method: 'POST',
+        body: updated_data
       })
     }),
     managementGroupList: builder.query({
@@ -889,7 +895,12 @@ export const api = emptySplitApi.injectEndpoints({
       }),
       transformResponse: response => response.data
     }),
-
+    managementGroupDelete: builder.query({
+      query: (uuid) => ({
+        url: `${API_END_POINTS.managementGroupDelete}/${uuid}`,
+        method: "GET",
+      }),
+    }),
 
   }),
   overrideExisting: false
@@ -1025,7 +1036,9 @@ export const {
   useGroupTypeDropdownQuery,
 
   //// groups ////
-  useGroupsStoreMutation,
   useManagementGroupListQuery,
-  
+  useManagementGroupStoreMutation,
+  useManagementGroupUpdateMutation,
+  useLazyManagementGroupDeleteQuery
+
 } = api
