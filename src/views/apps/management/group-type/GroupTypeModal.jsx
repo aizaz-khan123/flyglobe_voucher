@@ -1,7 +1,7 @@
 import MuiAutocomplete from '@/components/mui-form-inputs/MuiAutoComplete'
 import MuiDropdown from '@/components/mui-form-inputs/MuiDropdown'
 import MuiTextField from '@/components/mui-form-inputs/MuiTextField'
-import { groupTypeStatus } from '@/data/dropdowns/DropdownValues'
+import { groupTypeStatus, yesNoDropdown } from '@/data/dropdowns/DropdownValues'
 import { useGroupTypeStoreMutation, useGroupTypeUpdateMutation } from '@/redux-store/services/api'
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material'
 import { useEffect } from 'react'
@@ -13,7 +13,7 @@ const GroupTypeModal = ({ open, onClose, groupTypeData, refetch }) => {
     const { control, handleSubmit, setError, reset, setValue, watch } = useForm({
         defaultValues: {
             name: '',
-            status: true, // default empty value for status
+            status: 1, // default empty value for status
         }
     })
     const uuid = groupTypeData?.uuid
@@ -73,7 +73,7 @@ const GroupTypeModal = ({ open, onClose, groupTypeData, refetch }) => {
         } else {
             reset({
                 name: '',
-                status: true, // reset empty status
+                status: 1, // reset empty status
             })
         }
     }, [groupTypeData, reset])
@@ -98,16 +98,16 @@ const GroupTypeModal = ({ open, onClose, groupTypeData, refetch }) => {
                         />
                     </div>
                     <div>
-                        <MuiAutocomplete
+                        <MuiDropdown
                             control={control}
                             label='Status'
                             name='status'
                             size='md'
                             id='status'
                             className='w-full border-0 text-base'
-                            options={groupTypeStatus.map(data => ({
+                            options={yesNoDropdown.map(data => ({
                                 label: data.label,
-                                value: data.value // use 'value' for correct value assignment
+                                value: data.value
                             }))}
                             placeholder='Status'
                         />

@@ -16,7 +16,8 @@ const MuiDatePicker = ({
   disabled = false,
   size = 'medium',
   width,
-  defaultDate
+  defaultDate,
+  dateFormat = 'YYYY-MM-DD',
 }) => {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -31,7 +32,7 @@ const MuiDatePicker = ({
             className={`${className} mui-custom-date-picker`}
             value={field.value ? dayjs(field.value) : null}
             onChange={newValue => {
-              const formattedDate = newValue ? newValue.format('YYYY-MM-DD') : null
+              const formattedDate = newValue ? newValue.format(dateFormat) : null
 
               field.onChange(formattedDate)
               onChange?.(formattedDate)

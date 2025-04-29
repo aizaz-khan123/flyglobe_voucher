@@ -93,12 +93,12 @@ const GroupTypeList = () => {
                     </div>
                 )
             }),
-           
-              columnHelper.accessor('status', {
-                            header: 'Status',
-                            cell: ({ row }) => <StatusWidget status={ row.original.status == 1 ? "Yes" : "No"} />
-                        }),
-        
+
+            columnHelper.accessor('status', {
+                header: 'Status',
+                cell: ({ row }) => <StatusWidget status={row.original.status == 1 ? "Yes" : "No"} />
+            }),
+
             {
                 id: 'actions',
                 header: 'Action',
@@ -181,10 +181,10 @@ const GroupTypeList = () => {
     return (
         <>
             {showGroupTypeModal &&
-                <GroupTypeModal open={showGroupTypeModal} onClose={() => setShowGroupTypeModal(false)} refetch={refetch} groupTypeData={groupTypeData} />
+                <GroupTypeModal open={showGroupTypeModal} onClose={() => { setShowGroupTypeModal(false); setGroupTypeData({}) }} refetch={refetch} groupTypeData={groupTypeData} />
             }
             {showGroupTypeDeleteModal &&
-                <GroupTypeDeleteModal open={showGroupTypeDeleteModal} onClose={() => setShowGroupTypeDeleteModal(false)} refetch={refetch} groupTypeData={groupTypeData} />
+                <GroupTypeDeleteModal open={showGroupTypeDeleteModal} onClose={() => { setShowGroupTypeDeleteModal(false); setGroupTypeData({}) }} refetch={refetch} groupTypeData={groupTypeData} />
             }
 
             <Card>

@@ -162,7 +162,7 @@ export const API_END_POINTS = {
   ///// groups /////
   managementGroupStore: BASE_URL_V1 + '/group/flight/store',
   managementGroupList: BASE_URL_V1 + '/group/flight/index',
-  managementGroupUpdate: BASE_URL_V1 + '/group/flight/index',
+  managementGroupUpdate: BASE_URL_V1 + '/group/flight/update',
   managementGroupDelete: BASE_URL_V1 + '/group/flight/delete',
 
 

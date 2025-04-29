@@ -46,6 +46,7 @@ import classNames from 'classnames'
 import StatusWidget from '../../bookings/StatusWidget'
 import AddGroupModal from './AddGroupModal'
 import GroupDeleteModal from './GroupDeleteModal'
+import GroupStatusWidget from './GroupStatusWidget'
 
 const GroupTable = () => {
     // States
@@ -164,14 +165,6 @@ const GroupTable = () => {
                     </div>
                 )
             }),
-            columnHelper.accessor('price', {
-                header: 'Price',
-                cell: ({ row }) => (
-                    <div className='flex items-center space-x-3 truncate'>
-                        <div className='font-medium'>{row.original.price}</div>
-                    </div>
-                )
-            }),
             columnHelper.accessor('adult_price', {
                 header: 'ADT Price',
                 cell: ({ row }) => (
@@ -253,7 +246,7 @@ const GroupTable = () => {
 
             columnHelper.accessor('status', {
                 header: 'Booking Status',
-                cell: ({ row }) => <StatusWidget status={row.getValue('status')} />
+                cell: ({ row }) => <GroupStatusWidget status={row.getValue('status')} />
             }),
             {
                 id: 'actions',
@@ -358,9 +351,11 @@ const GroupTable = () => {
     }
     return (
         <>
-            <AddGroupModal open={showAddGroupModal} onClose={() => { setShowAddGroupModal(false); setGroupDataByID({}) }} refetch={refetch} groupDataByID={groupDataByID} />
+            {showAddGroupModal &&
+                <AddGroupModal open={showAddGroupModal} onClose={() => { setShowAddGroupModal(false); setGroupDataByID({}) }} refetch={refetch} groupDataByID={groupDataByID} />
+            }
             {showGroupDeleteModal &&
-                <GroupDeleteModal open={showGroupDeleteModal} onClose={() => setShowGroupDeleteModal(false)} refetch={refetch} groupDataByID={groupDataByID} />
+                <GroupDeleteModal open={showGroupDeleteModal} onClose={() => { setShowGroupDeleteModal(false); setGroupDataByID({}) }} refetch={refetch} groupDataByID={groupDataByID} />
             }
             <Card>
                 <CardContent className='p-0'>

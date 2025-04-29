@@ -7,7 +7,7 @@ const MuiAutocomplete = ({
     control,
     name,
     label,
-    options,
+    options = [],
     onChange,
     onInputChange,
     className,
@@ -41,8 +41,8 @@ const MuiAutocomplete = ({
                         }
                         value={
                             selectLabelInsteadOfValue
-                                ? options.find(opt => opt.label === selectedValue) || null
-                                : options.find(opt => opt.value === selectedValue) || null
+                                ? (options ?? []).find(opt => opt.label === selectedValue) || null
+                                : (options ?? []).find(opt => opt.value === selectedValue) || null
                         }
                         onChange={(_, newValue) => {
                             const output = selectLabelInsteadOfValue ? newValue?.label ?? '' : newValue?.value ?? '';
