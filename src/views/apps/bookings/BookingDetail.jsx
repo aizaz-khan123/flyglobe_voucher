@@ -104,9 +104,9 @@ const BookingDetail = ({ bookingId }) => {
     status,
     booked_segments,
     baggage,
-    issued_at
+    issued_at,
+    provider_name
   } = booking
-
 
   const isPNRValid = !pnr_expiry || dayjs(pnr_expiry).isAfter(dayjs())
   const isConfirmed = status?.toLowerCase() === 'confirmed'
@@ -170,7 +170,9 @@ const BookingDetail = ({ bookingId }) => {
     })
   }
 
-  const handleRefundTicket = () => { }
+  const handleRefundTicket = () => {
+
+  }
 
   const handleEmailTicketModal = () => {
     setEmailType('send_ticket_email')
@@ -199,7 +201,7 @@ const BookingDetail = ({ bookingId }) => {
                     <p className='text-gray-600'>Booking ID:</p>
                     <h2 className='text-lg font-semibold'>{bookingId}</h2>
                   </div>
-                  <Button color='primary' className='text-base font-semibold cursor-default'>
+                  <Button color='primary' variant='contained' className='text-base font-semibold cursor-default'>
                     {stringHelper.capitalizedWord(status)}
                   </Button>
                 </div>
@@ -477,7 +479,7 @@ const BookingDetail = ({ bookingId }) => {
                   >
                     Download Ticket
                   </Button>
-                  {isWithin24Hours ? (
+                  {(provider_name != 'AIRBLUE_API') && isWithin24Hours ? (
                     <Button
                       variant='contained'
                       startIcon={<FaTicket />}
@@ -514,7 +516,7 @@ const BookingDetail = ({ bookingId }) => {
             </DialogContent>
             <DialogActions>
               <form method='dialog'>
-                <Button color='error' disabled={isBookingCancelLoading} size='sm' onClick={handleSetModalOpen}>
+                <Button color='error' disabled={isBookingCancelLoading} size='sm' variant='contained' onClick={handleSetModalOpen}>
                   No
                 </Button>
               </form>
@@ -524,6 +526,7 @@ const BookingDetail = ({ bookingId }) => {
                   disabled={isBookingCancelLoading}
                   color='primary'
                   size='sm'
+                  variant='contained'
                   onClick={() => handleCancelBooking()}
                 >
                   Yes
