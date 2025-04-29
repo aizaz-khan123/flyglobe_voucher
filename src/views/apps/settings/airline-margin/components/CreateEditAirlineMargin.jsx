@@ -32,6 +32,8 @@ import {
 
 import MuiTextField from '@/components/mui-form-inputs/MuiTextField'
 import MuiDropdown from '@/components/mui-form-inputs/MuiDropdown'
+import MuiDatePicker from '@/components/mui-form-inputs/MuiDatePicker'
+import MuiAutocomplete from '@/components/mui-form-inputs/MuiAutoComplete'
 
 
 const regionOptions = [
@@ -74,8 +76,8 @@ const CreateEditAirlineMargin = ({ open, isEdit, onClose, airlineMarginId, refet
       await createAirlineMargin(data).then(response => {
         if ('error' in response) {
           setErrors(response?.error.data?.errors)
-          
-return
+
+          return
         }
 
         const { status } = response?.data
@@ -98,8 +100,8 @@ return
       await updateAirlineMargin({ airlineMarginId, updated_data }).then(response => {
         if ('error' in response) {
           setErrors(response?.error.data?.errors)
-          
-return
+
+          return
         }
 
         if (response.data?.code == 200) {
@@ -169,7 +171,6 @@ return
                     name='sales_channel'
                     size='md'
                     id='sales_channel'
-                    className='w-full border-0 text-base'
                     options={connectorDropDown.map(connector => ({
                       label: connector.name,
                       value: connector.name
@@ -183,12 +184,11 @@ return
               <div>
                 <FormLabel title={'Airline'} htmlFor='airline_id'></FormLabel>
                 {airlineDropDown ? (
-                  <MuiDropdown
+                  <MuiAutocomplete
                     control={control}
                     name='airline_id'
                     size='md'
                     id='airline_id'
-                    className='w-full border-0 text-base'
                     options={airlineDropDown.map(airline => ({
                       label: airline.name,
                       value: airline.id
@@ -226,7 +226,6 @@ return
                 <div className='flex items-center gap-4 w-full'>
                   <div className='flex-1'>
                     <MuiTextField
-                      className='w-full border-0 focus:outline-0'
                       control={control}
                       label={'Margin'}
                       size='md'
@@ -244,7 +243,6 @@ return
                       label={'Margin Type'}
                       size='md'
                       id='margin_type'
-                      className='w-full border-0 text-base'
                       options={[
                         { id: 'amount', name: 'Amount' },
                         { id: 'percentage', name: 'Percentage' }
@@ -258,9 +256,7 @@ return
               </div>
 
               <div>
-                <MuiTextField
-                  type='date'
-                  className='w-full border-0 focus:outline-0'
+                <MuiDatePicker
                   control={control}
                   label={'Sale starts and Continues'}
                   size='md'
@@ -270,9 +266,7 @@ return
               </div>
 
               <div>
-                <MuiTextField
-                  type='date'
-                  className='w-full border-0 focus:outline-0'
+                <MuiDatePicker
                   control={control}
                   label={'Sale ends on this date'}
                   size='md'
@@ -282,9 +276,7 @@ return
               </div>
 
               <div>
-                <MuiTextField
-                  type='date'
-                  className='w-full border-0 focus:outline-0'
+                <MuiDatePicker
                   control={control}
                   label={'Travel starts and Continues'}
                   size='md'
@@ -294,9 +286,7 @@ return
               </div>
 
               <div>
-                <MuiTextField
-                  type='date'
-                  className='w-full border-0 focus:outline-0'
+                <MuiDatePicker
                   control={control}
                   label={'Travel ends on this date'}
                   size='md'
@@ -307,7 +297,6 @@ return
 
               <div>
                 <MuiTextField
-                  className='w-full border-0 focus:outline-0'
                   control={control}
                   label={'Rbds'}
                   size='md'

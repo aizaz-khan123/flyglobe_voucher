@@ -217,7 +217,6 @@ const AgencyTable = () => {
           <Button
             className='whitespace-nowrap'
             onClick={event => {
-              event.stopPropagation()
               showUpdatePermissionModal(row.original.main_user?.uuid)
             }}
           >
@@ -231,25 +230,21 @@ const AgencyTable = () => {
         cell: ({ row }) => (
           <div className='flex items-center w-fit gap-2'>
             <Tooltip title='Delete Agency' placement='top'>
-              <IconButton size='small'>
+              <IconButton size='small'
+                onClick={event => {
+                  showDeleteAgencyConfirmation(row.original.uuid)
+                }}>
                 <FaTrash
-                  className=' text-red-600 text-base'
-                  onClick={event => {
-                    event.stopPropagation()
-                    showDeleteAgencyConfirmation(row.original.uuid)
-                  }}
-                />
+                  className=' text-red-600 text-base' />
               </IconButton>
             </Tooltip>
             <Tooltip title='Update Agency' placement='top'>
-              <IconButton size='small'>
+              <IconButton size='small'
+                onClick={event => {
+                  showUpdateAgencyConfirmation(row.original)
+                }}>
                 <FaPencil
-                  className='cursor-pointer text-primary text-base'
-                  onClick={event => {
-                    event.stopPropagation()
-                    showUpdateAgencyConfirmation(row.original)
-                  }}
-                />
+                  className='cursor-pointer text-primary text-base' />
               </IconButton>
             </Tooltip>
             <Tooltip title='Settings' placement='top'>
@@ -342,6 +337,7 @@ const AgencyTable = () => {
       deleteAgency(AgencyToBeDelete.uuid).then(response => {
         if (response?.data.code == 200) {
           toast.success(response?.data.message)
+          setAgencyToBeDelete(null);
         } else {
           toast.error(response?.data.message)
         }

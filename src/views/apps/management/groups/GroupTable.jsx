@@ -151,7 +151,7 @@ const GroupTable = () => {
                             className='size-10 rounded-box object-contain'
                             alt='Airline'
                         />
-                        <div className='font-medium'>{row.original.airline?.iata_code}</div>
+                        <div className='font-medium'>{row.original.airline?.name}</div>
                     </div>
                 )
             }),

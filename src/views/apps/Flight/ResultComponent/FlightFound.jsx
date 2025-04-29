@@ -1447,7 +1447,7 @@ const FlightFound = () => {
           <IoMdClose className='text-2xl cursor-pointer' onClick={handleClose} />
         </div>
 
-        <DialogContent>
+        <DialogContent className='p-0'>
           <FlightSearch initialValues={initialValues} flightSearchOpen={open} flightSearchHandleClose={handleClose} />
         </DialogContent>
       </Dialog>

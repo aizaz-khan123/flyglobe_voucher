@@ -158,7 +158,9 @@ export const RecentSearch = () => {
                       ) : (
                         <>
                           <span>{formatDate(search.departure_date)}</span>{' '}
-                          {search.route_type !== 'ONEWAY' && -(<span>{formatDate(search.return_date)}</span>)}
+                          {search.route_type !== "ONEWAY" && (
+                            <span> - {formatDate(search.return_date)}</span>
+                          )}
                         </>
                       )}
                     </div>

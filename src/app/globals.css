@@ -16,9 +16,11 @@
   --backdrop-color: rgb(var(--mui-mainColorChannels-light) / 0.5);
   --mui-mainColorChannels-shadow: var(--mui-mainColorChannels-lightShadow);
 }
-body{
+
+body {
   background-color: #f4f5fa;
 }
+
 [data-dark] {
   --backdrop-color: rgb(21 16 43 / 0.6);
   --mui-mainColorChannels-shadow: var(--mui-mainColorChannels-darkShadow);
@@ -140,12 +142,4 @@ code {
   color: var(--mui-palette-info-main);
   background-color: rgb(var(--mui-palette-info-mainChannel) / 0.08);
   border: 0;
-}
-
-.customMultiselect .mui-13cymwt-control{
-  min-height: 58px !important;
-}
-
-.customMultiselect .mui-t3ipsp-control{
-  min-height: 58px !important;
 }

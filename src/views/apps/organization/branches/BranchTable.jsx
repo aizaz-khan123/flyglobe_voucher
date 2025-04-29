@@ -62,6 +62,7 @@ import classNames from 'classnames'
 import PermissionModal from '../PermissionModal'
 import AssignedMarginModal from './settings/AssignedMarginModal'
 import ChangePasswordModal from './settings/ChangePasswordModal'
+import MuiAutocomplete from '@/components/mui-form-inputs/MuiAutoComplete'
 
 const fuzzyFilter = (row, columnId, value, addMeta) => {
   const itemRank = rankItem(row.getValue(columnId), value)
@@ -85,6 +86,7 @@ const BranchTable = () => {
   const [userUUid, setuserUUid] = useState()
   const [permissionListByTypeLoading, setPermissionListByTypeLoading] = useState(null)
   const [BranchToBeDelete, setBranchToBeDelete] = useState()
+  const [showBranchToBeDelete, setShowBranchToBeDelete] = useState(false)
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(10)
   const [isAssignMarginModal, setIsAssignMarginModal] = useState(false);
@@ -209,7 +211,6 @@ const BranchTable = () => {
           <Button
             className='whitespace-nowrap'
             onClick={event => {
-              event.stopPropagation()
               showUpdatePermissionModal(row.original.main_user?.uuid)
             }}
           >
@@ -223,25 +224,18 @@ const BranchTable = () => {
         cell: ({ row }) => (
           <div className='flex items-center w-fit gap-2'>
             <Tooltip title='Delete Branch' placement='top'>
-              <IconButton size='small'>
+              <IconButton size='small' onClick={() => showDeleteBranchConfirmation(row.original.uuid)}>
                 <FaTrash
-                  className='cursor-pointer text-base text-red-600'
-                  onClick={event => {
-                    event.stopPropagation()
-                    showDeleteBranchConfirmation(row.original.uuid)
-                  }}
-                />
+                  className='cursor-pointer text-base text-red-600' />
               </IconButton>
             </Tooltip>
             <Tooltip title='Update Branch' placement='top'>
-              <IconButton>
+              <IconButton
+                onClick={event => {
+                  showUpdateBranchConfirmation(row.original)
+                }}>
                 <FaPencil
-                  className='cursor-pointer text-base text-primary'
-                  onClick={event => {
-                    event.stopPropagation()
-                    showUpdateBranchConfirmation(row.original)
-                  }}
-                />
+                  className='cursor-pointer text-base text-primary' />
               </IconButton>
             </Tooltip>
             <Tooltip title='Settings' placement='top'>
@@ -306,6 +300,7 @@ const BranchTable = () => {
   }
 
   const showDeleteBranchConfirmation = uuid => {
+    setShowBranchToBeDelete(true);
     setBranchToBeDelete(branches.find(b => uuid === b.uuid))
   }
 
@@ -314,6 +309,7 @@ const BranchTable = () => {
       deleteBranch(BranchToBeDelete.uuid).then(response => {
         if (response?.data.code == 200) {
           toast.success(response?.data.message)
+          setShowBranchToBeDelete(false);
         } else {
           toast.error(response?.data.message)
         }
@@ -550,16 +546,16 @@ const BranchTable = () => {
       </Card>
 
       {/* Modals remain the same as in your original code */}
-      <Dialog open={!!BranchToBeDelete} onClose={() => setBranchToBeDelete(null)}>
+      <Dialog open={showBranchToBeDelete} onClose={() => setShowBranchToBeDelete(false)}>
         <DialogTitle className='font-bold flex items-center justify-between'>
           Confirm Delete
-          <IoMdClose className='cursor-pointer' onClick={() => setBranchToBeDelete(null)} />
+          <IoMdClose className='cursor-pointer' onClick={() => setShowBranchToBeDelete(false)} />
         </DialogTitle>
         <DialogContent>
           You are about to delete <b>{BranchToBeDelete?.name}</b>. Would you like to proceed further ?
         </DialogContent>
         <DialogActions>
-          <Button color='error' onClick={() => setBranchToBeDelete(null)}>
+          <Button color='error' onClick={() => setShowBranchToBeDelete(false)}>
             No
           </Button>
           <Button loading={deleteBranchLoading} variant='contained' onClick={() => handleDeleteBranch()}>
@@ -622,7 +618,7 @@ const BranchTable = () => {
               />
             </div>
             <div>
-              <MuiDropdown
+              <MuiAutocomplete
                 control={control}
                 name='city'
                 size='md'

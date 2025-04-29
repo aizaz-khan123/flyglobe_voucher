@@ -410,7 +410,7 @@ const BookingDetail = ({ bookingId }) => {
                   </div>
                 </AccordionDetails>
               </Accordion>
-              {status == 'cancelled' && <h3 className='font-bold text-2xl text-primary'> Booking Canceled</h3>}
+              {status == 'cancelled' && <h3 className='font-bold text-2xl text-primary'> Booking Cancelled</h3>}
               {status == 'voided' && <h3 className='font-bold text-2xl text-primary'> Booking Voided</h3>}
               {status == 'refunded' && <h3 className='font-bold text-2xl text-primary'> Booking Refunded</h3>}
               {status == 'expired' && <h3 className='font-bold text-2xl text-primary'> Booking Expired</h3>}

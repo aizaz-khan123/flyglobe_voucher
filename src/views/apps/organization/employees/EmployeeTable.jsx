@@ -118,7 +118,6 @@ const EmployeeTable = () => {
     phone_number: z
       .string({ required_error: 'Phone Number is Required!' })
       .regex(/^\+?\d{1,4}?[\d\s\-\(\)]{7,15}$/, 'Invalid phone number!'),
-    address: z.string({ required_error: 'Address is required!' }).min(1, 'Address cannot be empty!'),
     email: z
       .string({ required_error: 'Email Required!' })
       .email({ message: 'Invalid email address!' })
@@ -176,7 +175,6 @@ const EmployeeTable = () => {
           <Button
             className='whitespace-nowrap'
             onClick={event => {
-              event.stopPropagation()
               showUpdatePermissionModal(row.original.uuid)
             }}
           >
@@ -190,25 +188,21 @@ const EmployeeTable = () => {
         cell: ({ row }) => (
           <div className='flex items-center w-fit gap-2'>
             <Tooltip title='Delete Employee' placement='top'>
-              <IconButton size='small'>
+              <IconButton size='small'
+                onClick={event => {
+                  showDeleteEmployeeConfirmation(row.original.uuid)
+                }}>
                 <FaTrash
-                  className=' text-red-600 text-base'
-                  onClick={event => {
-                    event.stopPropagation()
-                    showDeleteEmployeeConfirmation(row.original.uuid)
-                  }}
-                />
+                  className=' text-red-600 text-base' />
               </IconButton>
             </Tooltip>
             <Tooltip title='Update Employee' placement='top'>
-              <IconButton size='small'>
+              <IconButton size='small'
+                onClick={event => {
+                  showUpdateEmployeeConfirmation(row.original)
+                }}>
                 <FaPencil
-                  className='cursor-pointer text-primary text-base'
-                  onClick={event => {
-                    event.stopPropagation()
-                    showUpdateEmployeeConfirmation(row.original)
-                  }}
-                />
+                  className='cursor-pointer text-primary text-base' />
               </IconButton>
             </Tooltip>
           </div>
@@ -257,6 +251,7 @@ const EmployeeTable = () => {
       deleteEmployee(EmployeeToBeDelete.uuid).then(response => {
         if (response?.data.code == 200) {
           toast.success(response?.data.message)
+          setEmployeeToBeDelete(null)
         } else {
           toast.error(response?.data.message)
         }
@@ -496,13 +491,13 @@ const EmployeeTable = () => {
         </DialogActions>
       </Dialog>
 
-      <Dialog open={isModalOpen} onClose={handleClose} fullWidth maxWidth='md'>
+      <Dialog open={isModalOpen} onClose={handleClose} fullWidth maxWidth='sm'>
         <DialogTitle className='font-bold flex items-center justify-between'>
           {isEditMode ? 'Edit Employee' : 'Add Employee'}
           <IoMdClose className='cursor-pointer' onClick={handleClose} />
         </DialogTitle>
         <DialogContent>
-          <div className='grid grid-cols-1 gap-5 gap-y-3 md:grid-cols-2 mt-5'>
+          <div className='grid grid-cols-1 gap-5 gap-y-3 mt-5'>
             <div>
               <MuiTextField
                 control={control}
@@ -513,7 +508,7 @@ const EmployeeTable = () => {
                 placeholder='Enter Employee Name'
               />
             </div>
-            <div>
+            <div className='mb-2'>
               <PhoneNumberInput control={control} name='phone_number' label='Phone Number' />
             </div>
             <div>
@@ -525,16 +520,6 @@ const EmployeeTable = () => {
                 id='email'
                 name='email'
                 placeholder='employee@example.com'
-              />
-            </div>
-            <div>
-              <MuiTextField
-                control={control}
-                size='md'
-                label='Address'
-                id='address'
-                name='address'
-                placeholder='Enter Address'
               />
             </div>
           </div>
