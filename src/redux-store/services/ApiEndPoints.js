@@ -165,6 +165,9 @@ export const API_END_POINTS = {
   managementGroupUpdate: BASE_URL_V1 + '/group/flight/update',
   managementGroupDelete: BASE_URL_V1 + '/group/flight/delete',
 
+  passportInfo: BASE_URL_V1 + '/passport-info',
+
+
 
 
 

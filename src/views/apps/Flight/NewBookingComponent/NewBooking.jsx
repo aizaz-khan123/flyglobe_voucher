@@ -37,7 +37,7 @@ import PhoneInput from 'react-phone-input-2'
 import 'react-phone-input-2/lib/style.css'
 import { toast } from 'react-toastify'
 
-import { useBookingAvailabilityConfirmationQuery, useBookingConfirmMutation } from '@/redux-store/services/api'
+import { useBookingAvailabilityConfirmationQuery, useBookingConfirmMutation, usePassportInfoMutation } from '@/redux-store/services/api'
 import MuiTextField from '@/components/mui-form-inputs/MuiTextField'
 import MuiDatePicker from '@/components/mui-form-inputs/MuiDatePicker'
 import MuiDropdown from '@/components/mui-form-inputs/MuiDropdown'
@@ -75,6 +75,8 @@ const NewBooking = () => {
   const [bookingConfirmTrigger, { isLoading: bookingConfirmationLoading }] = useBookingConfirmMutation()
   const toaster = toast()
   const router = useRouter()
+  const [passportInfoTrigger, { isLoading: passInfoIsLoading }] = usePassportInfoMutation();
+  const [passportFiles, setPassportFiles] = useState({});
 
   const {
     data: bookingAvailabilityConfirmationData,
@@ -144,6 +146,40 @@ const NewBooking = () => {
   const handleAccordionChange = index => {
     setExpandedIndex(prev => (prev.includes(index) ? prev.filter(i => i !== index) : [...prev, index]))
   }
+  const handlePassportScan = async (index) => {
+    const file = passportFiles[index];
+    if (!file) {
+      toaster.error('Please upload a passport image first');
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('passport_image', file);
+
+    try {
+      const response = await passportInfoTrigger(formData).unwrap();
+      console.log('response', response);
+
+      const updatedFields = {
+        [`passengers.${index}.first_name`]: response.data.first_name,
+        [`passengers.${index}.last_name`]: response.data.last_name,
+        [`passengers.${index}.date_of_birth`]: response.data.date_of_birth,
+        [`passengers.${index}.gender`]: response.data.sex,
+        [`passengers.${index}.d_number`]: response.data.passport_number,
+        [`passengers.${index}.nationality`]: response.data.nationality,
+        [`passengers.${index}.d_expiry`]: response.data.expiry_date,
+
+      };
+
+      for (const key in updatedFields) {
+        setValue(key, updatedFields[key]);
+      }
+
+      toaster.success('Passport scanned successfully');
+    } catch (err) {
+      toaster.error('Failed to scan passport');
+    }
+  };
 
   const onSubmit = async data => {
     await bookingConfirmTrigger(data).then(response => {
@@ -322,14 +358,20 @@ const NewBooking = () => {
                                 <Input
                                   className='absolute inset-0 w-full h-full opacity-0 cursor-pointer'
                                   type='file'
+                                  onChange={(e) => {
+                                    const file = e.target.files?.[0];
+                                    if (file) {
+                                      setPassportFiles(prev => ({ ...prev, [index]: file }));
+                                    }
+                                  }}
                                 />
                                 <GrCloudUpload className='text-4xl' />
                                 <p className='text-gray-500 text-sm'>Click to upload file</p>
                               </div>
                             </div>
 
-                            <Button className='text-md font-normal px-5 mt-8' variant='contained'>
-                              Scan Passport
+                            <Button className='text-md font-normal px-5 mt-8' variant='contained' onClick={() => handlePassportScan(index)}>
+                              {passInfoIsLoading ? "Scaning..." : "Scan Passport"}
                             </Button>
                           </div>
                           <div className='col-span-12 mb-5'>
