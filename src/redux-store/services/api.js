@@ -902,6 +902,14 @@ export const api = emptySplitApi.injectEndpoints({
       }),
     }),
 
+    passportInfo: builder.mutation({
+      query: body => ({
+        url: API_END_POINTS.passportInfo,
+        method: 'POST',
+        body
+      })
+    }),
+
   }),
   overrideExisting: false
 })
@@ -1039,6 +1047,8 @@ export const {
   useManagementGroupListQuery,
   useManagementGroupStoreMutation,
   useManagementGroupUpdateMutation,
-  useLazyManagementGroupDeleteQuery
+  useLazyManagementGroupDeleteQuery,
+
+  usePassportInfoMutation
 
 } = api
