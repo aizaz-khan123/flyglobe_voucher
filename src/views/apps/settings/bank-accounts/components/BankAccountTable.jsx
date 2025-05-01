@@ -151,11 +151,9 @@ const BankAccountTable = () => {
         cell: ({ row }) => (
           <div className='flex items-center w-fit gap-2'>
             <Tooltip title='Edit Bank Account' placement='top'>
-              {/* <Link href={`/settings/bank-accounts/${row.original.uuid}`} aria-label='Edit bank account'> */}
               <IconButton size='small' onClick={() => handleEdit(row.original.uuid)}>
                 <FaPencil className='cursor-pointer text-base text-primary' />
               </IconButton>
-              {/* </Link> */}
             </Tooltip>
             <Tooltip title='Delete Bank Account' placement='top'>
               <IconButton size='small'>

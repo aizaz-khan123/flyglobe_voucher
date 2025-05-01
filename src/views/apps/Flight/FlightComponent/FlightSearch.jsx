@@ -41,7 +41,7 @@ import TravelersDropdown from './TravelersDropdown'
 import MuiDropdown from '@/components/mui-form-inputs/MuiDropdown'
 import { useSelectChain } from '@/hooks/useSelectChain'
 
-const FlightSearch = ({ initialValues, flightSearchOpen }) => {
+const FlightSearch = ({ initialValues, flightSearchOpen, flightSearchHandleClose }) => {
   const [furnishingDetails, setFurnishingDetails] = useState(['Fridge', 'AC', 'TV'])
 
   const furnishingArray = [
@@ -375,9 +375,9 @@ const FlightSearch = ({ initialValues, flightSearchOpen }) => {
     setPayloadValues(queryString)
     router.push(`/en/flight/search/result/?${queryString}`)
 
-    // if (flightSearchHandleClose) {
-    //   flightSearchHandleClose();
-    // }
+    if (flightSearchHandleClose) {
+      flightSearchHandleClose();
+    }
 
     const SECRET_KEY = 'my_random_secret_key_12345'
 
@@ -468,7 +468,7 @@ const FlightSearch = ({ initialValues, flightSearchOpen }) => {
     setValue(`legs[${index}].destination`, value)
 
     if (index < flights.length - 1 && value) {
-      const allLocations = [...(locationNames?.data || []), ...airportsNames]
+      const allLocations = [...(locationNames?.data || [])]
       const destinationLabel = allLocations.find(loc => loc.iata_code === value)
 
       if (destinationLabel) {
@@ -538,7 +538,7 @@ const FlightSearch = ({ initialValues, flightSearchOpen }) => {
                         label='From'
                         placeholder='From'
                         selectIcon={<FaPlaneDeparture className='!text-primary' />}
-                        options={[...(locationNames?.data || []), ...airportsNames].map(location => ({
+                        options={[...(locationNames?.data || [])].map(location => ({
                           value: location.iata_code,
                           label: `${location.municipality} (${location.iata_code})`,
                           subLabel: location.name,
@@ -586,7 +586,7 @@ const FlightSearch = ({ initialValues, flightSearchOpen }) => {
                         name='destination'
                         label='To'
                         placeholder='To'
-                        options={[...(locationNames?.data || []), ...airportsNames].map(location => ({
+                        options={[...(locationNames?.data || [])].map(location => ({
                           value: location.iata_code,
                           label: `${location.municipality} (${location.iata_code})`,
                           subLabel: location.name,
@@ -734,7 +734,7 @@ const FlightSearch = ({ initialValues, flightSearchOpen }) => {
                               label='From'
                               placeholder='From'
                               selectIcon={<FaPlaneDeparture />}
-                              options={[...(locationNames?.data || []), ...airportsNames].map(location => ({
+                              options={[...(locationNames?.data || [])].map(location => ({
                                 value: location.iata_code,
                                 label: `${location.municipality} (${location.iata_code})`,
                                 subLabel: location.name,
@@ -781,7 +781,7 @@ const FlightSearch = ({ initialValues, flightSearchOpen }) => {
                               name={`legs[${index}].destination`}
                               label='To'
                               placeholder='To'
-                              options={[...(locationNames?.data || []), ...airportsNames].map(location => ({
+                              options={[...(locationNames?.data || [])].map(location => ({
                                 value: location.iata_code,
                                 label: `${location.municipality} (${location.iata_code})`,
                                 subLabel: location.name,

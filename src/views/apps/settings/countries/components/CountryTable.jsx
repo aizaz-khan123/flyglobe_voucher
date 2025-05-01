@@ -76,7 +76,7 @@ const CountryTable = () => {
   })
 
   const countries = countryData?.data || []
-  const totalCount = countryData?.meta?.total || 0
+  const totalCount = countryData?.total || 0
 
   // Mutations
   const [deleteCountry, { isLoading: isDeleting }] = useDeleteCountryMutation()
@@ -165,12 +165,12 @@ const CountryTable = () => {
         header: 'Actions',
         cell: ({ row }) => (
           <div className='flex items-center gap-2'>
-            <Tooltip title='Edit Country'>
+            <Tooltip title='Edit Country' placement='top'>
               <IconButton size='small' onClick={() => handleEdit(row.original.uuid)}>
-                <FaPencil className='text-primary' />
+                <FaPencil className='cursor-pointer text-base text-primary' />
               </IconButton>
             </Tooltip>
-            <Tooltip title='Delete Country'>
+            <Tooltip title='Delete Country' placement='top'>
               <IconButton
                 size='small'
                 onClick={(e) => {
@@ -178,7 +178,7 @@ const CountryTable = () => {
                   setCountryToDelete(row.original)
                 }}
               >
-                <FaTrash className='text-error' />
+                <FaTrash className='cursor-pointer text-base text-red-600' />
               </IconButton>
             </Tooltip>
           </div>
@@ -208,7 +208,6 @@ const CountryTable = () => {
     getFacetedMinMaxValues: getFacetedMinMaxValues(),
     getPaginationRowModel: getPaginationRowModel()
   })
-
   // Debounced search input
   const DebouncedInput = ({ value: initialValue, onChange, debounce = 500, ...props }) => {
     const [value, setValue] = useState(initialValue)

@@ -43,9 +43,11 @@ const FlightDetailModal = ({ viewFlightDetailModal, handleCloseViewFlightDetail,
                       Total duration: {totalHours}h {totalMinutes}m
                     </p>
                   </div>
-                  <div>
-                    <IoMdClose className='text-2xl cursor-pointer' onClick={handleCloseViewFlightDetail} />
-                  </div>
+                  {legIndex === 0 &&
+                    <div>
+                      <IoMdClose className='text-2xl cursor-pointer' onClick={handleCloseViewFlightDetail} />
+                    </div>
+                  }
                 </div>
 
                 {segments.map((segment, segmentIndex) => (
@@ -97,10 +99,10 @@ const FlightDetailModal = ({ viewFlightDetailModal, handleCloseViewFlightDetail,
                         <p className=' font-bold text-md lg:text-lg'>{segment.origin.iata_code}</p>
                         <p className=' font-bold text-md lg:text-lg'>{segment.destination.iata_code}</p>
                       </div>
-                      <div className='flex items-center justify-between mt-2'>
+                      {/* <div className='flex items-center justify-between mt-2'>
                         <p className=' text-base'>{dayjs(segment.departure_datetime).format('DD MMMM YYYY')}</p>
                         <p className=' text-base'>{dayjs(segment.arrival_datetime).format('DD MMMM YYYY')}</p>
-                      </div>
+                      </div> */}
                     </div>
                   </React.Fragment>
                 ))}

@@ -50,7 +50,6 @@ const AirlineTable = () => {
   const [globalFilter, setGlobalFilter] = useState('')
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(10)
-  const [searchText, setSearchText] = useState('')
   const [pageUrl, setPageUrl] = useState('')
 
   const fuzzyFilter = (row, columnId, value, addMeta) => {
@@ -81,7 +80,7 @@ const AirlineTable = () => {
 
   useEffect(() => {
     refetch()
-  }, [searchText, pageUrl])
+  }, [pageUrl])
 
   const [airlineToBeDelete, setAirlineToBeDelete] = useState(null)
   const airlineDeleteConfirmationRef = useRef(null)
@@ -182,13 +181,13 @@ const AirlineTable = () => {
     ],
     []
   )
-
   const table = useReactTable({
-    data: airlines || [],
+    data: airlines,
     columns,
-    getCoreRowModel: getCoreRowModel(),
+    filterFns: { fuzzy: fuzzyFilter },
+    state: { rowSelection, globalFilter },
     manualPagination: true,
-    pageCount: Math.ceil(totalCount / rowsPerPage),
+    pageCount: Math.ceil(totalCount / 10),
     enableRowSelection: true,
     globalFilterFn: fuzzyFilter,
     onRowSelectionChange: setRowSelection,
@@ -249,8 +248,8 @@ const AirlineTable = () => {
           <div className='flex items-center justify-between px-5 pt-5'>
             <div className='inline-flex items-center gap-3'>
               <DebouncedInput
-                value={searchText ?? ''}
-                onChange={value => setSearchText(String(value))}
+                value={globalFilter ?? ''}
+                onChange={value => setGlobalFilter(String(value))}
                 placeholder='Search Airline Margin...'
                 className='w-full max-w-md'
               />

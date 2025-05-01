@@ -146,13 +146,12 @@ const CreateEditAirline = ({ open, onClose, airlineId, isEdit, refetch }) => {
     <div>
       <Dialog open={open} onClose={onClose} fullWidth maxWidth='md'>
         <DialogTitle className='font-bold flex items-center justify-between'>
-          {isEdit === true ? 'Edit' : "Create"} Airline Margin
+          {isEdit === true ? 'Edit' : "Create"} Airline
           <IoMdClose className='cursor-pointer' onClick={onClose} />
         </DialogTitle>
         <DialogContent>
           <div className='grid grid-cols-1 gap-6 xl:grid-cols-2'>
             <div>
-              <h2 className='text-xl font-bold mb-4'>Airline Information</h2>
               <div className='mt-1 grid grid-cols-1 gap-5 gap-y-3 md:grid-cols-2'>
                 <div>
                   <MuiTextField
@@ -250,9 +249,9 @@ const CreateEditAirline = ({ open, onClose, airlineId, isEdit, refetch }) => {
               </div>
             </div>
             <div>
-              <h2 className='text-xl font-bold mb-4'>Upload Airline Logo</h2>
               <div className='mt-1'>
                 {/* <MUIFileUploader onFileChange={handleChangeImage} files={airlineImage} /> */}
+                <FormLabel>Logo</FormLabel>
                 <MUIFileUploader
                   onFileChange={handleChangeImage}
                   preview={airlineImage?.[0]?.preview || airlineImage?.[0]?.source}
