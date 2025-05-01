@@ -1,53 +1,50 @@
 'use client'
 
-import { useState, useMemo, useEffect } from 'react'
 import { useParams } from 'next/navigation'
+import { useEffect, useMemo, useState } from 'react'
 
 import Image from 'next/image'
 
-import { useForm } from 'react-hook-form'
 import { rankItem } from '@tanstack/match-sorter-utils'
 import {
   createColumnHelper,
   flexRender,
   getCoreRowModel,
-  useReactTable,
-  getFilteredRowModel,
+  getFacetedMinMaxValues,
   getFacetedRowModel,
   getFacetedUniqueValues,
-  getFacetedMinMaxValues,
-  getPaginationRowModel,
-  getSortedRowModel
+  getFilteredRowModel,
+  getSortedRowModel,
+  useReactTable
 } from '@tanstack/react-table'
+import { useForm } from 'react-hook-form'
 
 // MUI Imports
 import {
   Accordion,
-  AccordionSummary,
   AccordionDetails,
+  AccordionSummary,
   Button,
   Card,
   CardContent,
+  Popover,
   TablePagination,
-  Checkbox,
-  TextField,
-  Typography,
-  Popover
+  TextField
 } from '@mui/material'
-import { MdExpandMore } from 'react-icons/md'
 import { FaDownload } from 'react-icons/fa6'
+import { MdExpandMore } from 'react-icons/md'
 
 // Component Imports
-import PopupState, { bindTrigger, bindPopover } from 'material-ui-popup-state'
+import PopupState, { bindPopover, bindTrigger } from 'material-ui-popup-state'
 
 import DateTimeComp from '@/components/date/DateTimeComp'
-import StatusWidget from './StatusWidget'
-import MuiTextField from '@/components/mui-form-inputs/MuiTextField'
-import MuiAutocomplete from '@/components/mui-form-inputs/MuiFlightSearchAutoComplete'
-import MuiDatePicker from '@/components/mui-form-inputs/MuiDatePicker'
 import Link from '@/components/Link'
-import { useBookingListQuery } from '@/redux-store/services/api'
+import MuiDatePicker from '@/components/mui-form-inputs/MuiDatePicker'
 import MuiFlightSearchAutoComplete from '@/components/mui-form-inputs/MuiFlightSearchAutoComplete'
+import MuiTextField from '@/components/mui-form-inputs/MuiTextField'
+import { useBookingListQuery } from '@/redux-store/services/api'
+import tableStyles from '@core/styles/table.module.css'
+import StatusWidget from './StatusWidget'
 
 const BookingTable = ({ hidePagination }) => {
   // States
@@ -117,28 +114,6 @@ const BookingTable = ({ hidePagination }) => {
 
   const columns = useMemo(
     () => [
-      // {
-      //     id: 'select',
-      //     header: ({ table }) => (
-      //         <Checkbox
-      //             {...{
-      //                 checked: table.getIsAllRowsSelected(),
-      //                 indeterminate: table.getIsSomeRowsSelected(),
-      //                 onChange: table.getToggleAllRowsSelectedHandler()
-      //             }}
-      //         />
-      //     ),
-      //     cell: ({ row }) => (
-      //         <Checkbox
-      //             {...{
-      //                 checked: row.getIsSelected(),
-      //                 disabled: !row.getCanSelect(),
-      //                 indeterminate: row.getIsSomeSelected(),
-      //                 onChange: row.getToggleSelectedHandler()
-      //             }}
-      //         />
-      //     )
-      // },
       columnHelper.accessor('booking_id', {
         header: 'Booking ID',
         cell: ({ row }) => (
@@ -346,7 +321,7 @@ const BookingTable = ({ hidePagination }) => {
                     setInputValue={setStatus}
                   />
                   <MuiDatePicker control={control} name='from' label='Booking From' />
-                  <MuiDatePicker control={control} name='to' label='Booking to' />
+                  <MuiDatePicker control={control} name='to' label='Booking to'  />
                   <div className='flex gap-1 items-center'>
                     <Button variant='contained' onClick={handleSubmit(applyFilters)}>
                       Search
@@ -371,7 +346,7 @@ const BookingTable = ({ hidePagination }) => {
         </div>
 
         <div className='overflow-x-auto p-5'>
-          <table className='w-full border-collapse'>
+          <table className={tableStyles.table}>
             <thead>
               {table.getHeaderGroups().map(headerGroup => (
                 <tr key={headerGroup.id}>
@@ -395,7 +370,7 @@ const BookingTable = ({ hidePagination }) => {
               ))}
             </thead>
             <tbody>
-              {table.getRowModel().rows.map(row => (
+              {table.getRowModel().rows.length > 0 ? (table.getRowModel().rows.map(row => (
                 <tr key={row.id} className='hover:bg-gray-50'>
                   {row.getVisibleCells().map(cell => (
                     <td key={cell.id} className='p-3 border-b'>
@@ -403,7 +378,13 @@ const BookingTable = ({ hidePagination }) => {
                     </td>
                   ))}
                 </tr>
-              ))}
+              ))) : (
+                <tr>
+                  <td colSpan={columns.length} className='p-5 text-center text-gray-500'>
+                    No record found
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>

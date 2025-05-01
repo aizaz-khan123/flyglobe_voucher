@@ -11,7 +11,7 @@ const MuiDatePicker = ({
   label,
   onChange,
   className,
-  minDate = dayjs(),
+  minDate = dayjs().subtract(50, 'year'),
   maxDate,
   disabled = false,
   size = 'medium',

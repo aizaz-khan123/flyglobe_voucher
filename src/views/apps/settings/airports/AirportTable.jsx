@@ -55,7 +55,6 @@ const AirportTable = () => {
   const [globalFilter, setGlobalFilter] = useState('')
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(10)
-  const [searchText, setSearchText] = useState('')
   const [pageUrl, setPageUrl] = useState('')
 
   const { data: detail_data, isFetching, refetch } = useGetAirportsQuery({
@@ -78,7 +77,7 @@ const AirportTable = () => {
 
   useEffect(() => {
     refetch()
-  }, [searchText, pageUrl, globalFilter])
+  }, [pageUrl, globalFilter])
 
   const showDeleteAirportConfirmation = uuid => {
     setAirportToBeDelete(airports?.find(b => uuid === b.uuid))
@@ -166,16 +165,17 @@ const AirportTable = () => {
     ],
     []
   )
-
   const table = useReactTable({
-    data: airports || [],
+    data: airports,
     columns,
-    getCoreRowModel: getCoreRowModel(),
+    filterFns: { fuzzy: fuzzyFilter },
+    state: { rowSelection, globalFilter },
     manualPagination: true,
-    pageCount: Math.ceil(totalCount / rowsPerPage),
+    pageCount: Math.ceil(totalCount / 10),
     enableRowSelection: true,
     globalFilterFn: fuzzyFilter,
     onRowSelectionChange: setRowSelection,
+    getCoreRowModel: getCoreRowModel(),
     onGlobalFilterChange: setGlobalFilter,
     getFilteredRowModel: getFilteredRowModel(),
     getSortedRowModel: getSortedRowModel(),
@@ -233,8 +233,8 @@ const AirportTable = () => {
         <CardContent className='p-0'>
           <div className='flex items-center justify-between px-5 pt-5'>
             <DebouncedInput
-              value={searchText ?? ''}
-              onChange={value => setSearchText(String(value))}
+              value={globalFilter ?? ''}
+              onChange={value => setGlobalFilter(String(value))}
               placeholder='Search Airports...'
               className='w-full max-w-md'
             />
