@@ -1,9 +1,6 @@
 'use client'
 
 import { useEffect, useMemo, useState } from 'react'
-
-import Image from 'next/image'
-
 import { rankItem } from '@tanstack/match-sorter-utils'
 import {
   createColumnHelper,
@@ -16,231 +13,121 @@ import {
   getSortedRowModel,
   useReactTable
 } from '@tanstack/react-table'
-import { useForm } from 'react-hook-form'
-
-// MUI Imports
 import {
   Button,
   Card,
   CardContent,
   TablePagination,
-  TextField
+  TextField,
+  Typography,
+  Tabs,
+  Tab,
+  Box
 } from '@mui/material'
-import { FaDownload, FaPlus } from 'react-icons/fa6'
+import { FaDownload } from 'react-icons/fa'
+import { useRouter } from 'next/navigation'
 
-// Component Imports
+const flightDataByCountry = {
+  All_Types: {
+    "ISB-BAH": [
+      { date: "06 May 2025", flightNumber: "997A4", time: "19:35-21:15", baggage: "20-07 KG", meal: "No", currency: "PKR", price: "98,000" },
+      { date: "08 May 2025", flightNumber: "997A4", time: "19:35-21:15", baggage: "20-07 KG", meal: "No", currency: "PKR", price: "98,000" },
+    ],
+    "SKT-SHJ": [
+      { date: "06 May 2025", flightNumber: "09553", time: "03:30-05:55", baggage: "20-07 KG", meal: "No", currency: "PKR", price: "96,000" },
+    ]
+  },
+  Behrain: {
+    "ISB-BAH": [
+      { date: "06 May 2025", flightNumber: "997A4", time: "19:35-21:15", baggage: "20-07 KG", meal: "No", currency: "PKR", price: "98,000" },
+      { date: "08 May 2025", flightNumber: "997A4", time: "19:35-21:15", baggage: "20-07 KG", meal: "No", currency: "PKR", price: "98,000" },
+    ],
 
-import Link from '@/components/Link'
-import { useBookingListQuery } from '@/redux-store/services/api'
-import tableStyles from '@core/styles/table.module.css'
-import classNames from 'classnames'
-import StatusWidget from '../../bookings/StatusWidget'
+  },
+}
 
 const GroupFlights = () => {
-  const [rowSelection, setRowSelection] = useState({})
+  const router = useRouter()
+  const [activeTab, setActiveTab] = useState('All_Types')
   const [globalFilter, setGlobalFilter] = useState('')
-  const [status, setStatus] = useState('')
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(10)
-  const [showAddGroupModal, setShowAddGroupModal] = useState(false)
-  const addGroupModalHandler = () => {
-    setShowAddGroupModal((prev) => !prev);
-  };
-  // Filters state
-  const [filters, setFilters] = useState({
-    booking_id: '',
-    pnr: '',
-    email: '',
-    status: '',
-    from: '',
-    to: ''
-  })
-
-  // RTK Query
-  const {
-    data: detail_data,
-    refetch,
-    isFetching
-  } = useBookingListQuery({
-    page: page + 1,
-    pageSize: rowsPerPage,
-    searchText: globalFilter,
-    ...filters
-  })
-
-  const bookings = detail_data?.data || []
-  const totalCount = detail_data?.total || 0
-
-  // Form control
-  const { control, handleSubmit, reset } = useForm({
-    defaultValues: filters
-  })
-
-  // Status options
-  const orderStatuses = [
-    { value: 'expired', label: 'Expired' },
-    { value: 'confirmed', label: 'Confirmed' },
-    { value: 'issued', label: 'Issued' },
-    { value: 'voided', label: 'Voided' },
-    { value: 'refunded', label: 'Refunded' },
-    { value: 'cancelled', label: 'Cancelled' }
-  ]
-
-  const fuzzyFilter = (row, columnId, value, addMeta) => {
-    // Rank the item
-    const itemRank = rankItem(row.getValue(columnId), value)
-
-    // Store the itemRank info
-    addMeta({
-      itemRank
-    })
-
-    // Return if the item should be filtered in/out
-    return itemRank.passed
-  }
-
-  // Column Definitions
+  const [rowSelection, setRowSelection] = useState({})
+  const currentFlights = flightDataByCountry[activeTab] || {}
+  const routes = Object.keys(currentFlights)
+  const combinedData = routes.flatMap(route =>
+    currentFlights[route].map(flight => ({ ...flight, route }))
+  )
   const columnHelper = createColumnHelper()
-
   const columns = useMemo(
     () => [
-      columnHelper.accessor('booking_pnr', {
-        header: 'PNR',
+      columnHelper.accessor('date', {
+        header: 'Date',
         cell: ({ row }) => (
-          <div className='flex items-center space-x-3 truncate'>
-            <div className='font-medium'>{row.original.booking_pnr}</div>
-          </div>
+          <div className='font-medium'>{row.original.date}</div>
         )
       }),
-      columnHelper.accessor('booking_id', {
-        header: 'Sector',
+      columnHelper.accessor('flightNumber', {
+        header: 'Flight Number',
         cell: ({ row }) => (
-          <Link href={`/bookings/${row.original.booking_id}`} className='font-medium text-primary'>
-            {row.original.booking_id}
-          </Link>
+          <div className='font-medium'>{row.original.flightNumber}</div>
         )
       }),
-
-      columnHelper.accessor('airline', {
-        header: 'Airline',
+      columnHelper.accessor('route', {
+        header: 'Route',
         cell: ({ row }) => (
-          <div className='flex items-center space-x-3'>
-            <Image
-              src={row.original.airline?.thumbnail}
-              height={30}
-              width={30}
-              className='size-10 rounded-box object-contain'
-              alt='Airline'
-            />
-            <div className='font-medium'>{row.original.airline?.iata_code}</div>
-          </div>
+          <div className='font-medium'>{row.original.route}</div>
         )
       }),
-      columnHelper.accessor('booking_pnr', {
-        header: 'Purchase Price',
+      columnHelper.accessor('time', {
+        header: 'Time',
         cell: ({ row }) => (
-          <div className='flex items-center space-x-3 truncate'>
-            <div className='font-medium'>{row.original.booking_pnr}</div>
-          </div>
+          <div className='font-medium'>{row.original.time}</div>
         )
       }),
-      columnHelper.accessor('booking_pnr', {
-        header: 'Price',
-        cell: ({ row }) => (
-          <div className='flex items-center space-x-3 truncate'>
-            <div className='font-medium'>{row.original.booking_pnr}</div>
-          </div>
-        )
-      }),
-      columnHelper.accessor('booking_pnr', {
-        header: 'ADT Price',
-        cell: ({ row }) => (
-          <div className='flex items-center space-x-3 truncate'>
-            <div className='font-medium'>{row.original.booking_pnr}</div>
-          </div>
-        )
-      }),
-      columnHelper.accessor('booking_pnr', {
-        header: 'ADT Price Call',
-        cell: ({ row }) => (
-          <div className='flex items-center space-x-3 truncate'>
-            <div className='font-medium'>{row.original.booking_pnr}</div>
-          </div>
-        )
-      }),
-      columnHelper.accessor('booking_pnr', {
-        header: 'CNN Price',
-        cell: ({ row }) => (
-          <div className='flex items-center space-x-3 truncate'>
-            <div className='font-medium'>{row.original.booking_pnr}</div>
-          </div>
-        )
-      }),
-      columnHelper.accessor('booking_pnr', {
-        header: 'CNN Price Call',
-        cell: ({ row }) => (
-          <div className='flex items-center space-x-3 truncate'>
-            <div className='font-medium'>{row.original.booking_pnr}</div>
-          </div>
-        )
-      }),
-      columnHelper.accessor('booking_pnr', {
-        header: 'Infant Price',
-        cell: ({ row }) => (
-          <div className='flex items-center space-x-3 truncate'>
-            <div className='font-medium'>{row.original.booking_pnr}</div>
-          </div>
-        )
-      }),
-      columnHelper.accessor('booking_pnr', {
-        header: 'Infant Price Call',
-        cell: ({ row }) => (
-          <div className='flex items-center space-x-3 truncate'>
-            <div className='font-medium'>{row.original.booking_pnr}</div>
-          </div>
-        )
-      }),
-      columnHelper.accessor('booking_pnr', {
+      columnHelper.accessor('baggage', {
         header: 'Baggage',
         cell: ({ row }) => (
-          <div className='flex items-center space-x-3 truncate'>
-            <div className='font-medium'>{row.original.booking_pnr}</div>
-          </div>
+          <div className='font-medium'>{row.original.baggage}</div>
         )
       }),
-      columnHelper.accessor('booking_pnr', {
+      columnHelper.accessor('meal', {
         header: 'Meal',
         cell: ({ row }) => (
-          <div className='flex items-center space-x-3 truncate'>
-            <div className='font-medium'>{row.original.booking_pnr}</div>
-          </div>
+          <div className='font-medium'>{row.original.meal}</div>
         )
       }),
-
-      columnHelper.accessor('status', {
-        header: 'Booking Status',
-        cell: ({ row }) => <StatusWidget status={row.original.status} />
+      columnHelper.accessor('price', {
+        header: 'Price',
+        cell: ({ row }) => (
+          <div className='font-medium'>{row.original.currency} {row.original.price}</div>
+        )
       }),
       {
         id: 'actions',
         header: 'Action',
         cell: () => (
-          <Button variant='contained'>
-            <FaDownload />
-          </Button>
+
+             <Button variant='contained' size='small' onClick={()=>router.push(`/group-flights/booking`)} >
+                    Book Now
+                    </Button>
         )
       }
     ],
     [columnHelper]
   )
 
+  const fuzzyFilter = (row, columnId, value, addMeta) => {
+    const itemRank = rankItem(row.getValue(columnId), value)
+    addMeta({ itemRank })
+    return itemRank.passed
+  }
+
   const table = useReactTable({
-    data: bookings,
+    data: combinedData,
     columns,
     filterFns: { fuzzy: fuzzyFilter },
     state: { rowSelection, globalFilter },
-    manualPagination: true,
-    pageCount: Math.ceil(totalCount / rowsPerPage),
     enableRowSelection: true,
     globalFilterFn: fuzzyFilter,
     onRowSelectionChange: setRowSelection,
@@ -250,125 +137,121 @@ const GroupFlights = () => {
     getSortedRowModel: getSortedRowModel(),
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
-    getFacetedMinMaxValues: getFacetedMinMaxValues()
+    getFacetedMinMaxValues: getFacetedMinMaxValues(),
+    manualPagination: true,
+    pageCount: Math.ceil(combinedData.length / rowsPerPage),
   })
 
-  const applyFilters = data => {
-    setFilters({
-      booking_id: data.booking_id || '',
-      pnr: data.pnr || '',
-      email: data.email || '',
-      status: data.status || '',
-      from: data.from ? new Date(data.from).toISOString().split('T')[0] : '',
-      to: data.to ? new Date(data.to).toISOString().split('T')[0] : ''
+  const groupedData = useMemo(() => {
+    const groups = {}
+    table.getRowModel().rows.forEach(row => {
+      const route = row.original.route
+      if (!groups[route]) groups[route] = []
+      groups[route].push(row)
     })
-  }
+    return groups
+  }, [table.getRowModel().rows])
 
-  const clearFilters = () => {
-    reset()
-    setFilters({
-      booking_id: '',
-      pnr: '',
-      email: '',
-      status: '',
-      from: '',
-      to: ''
-    })
-  }
+  const DebouncedInput = ({ value, onChange, ...props }) => {
+    const [inputValue, setInputValue] = useState(value)
 
-  const handlePageChange = (event, newPage) => {
-    setPage(newPage)
-  }
-
-  const handleRowsPerPageChange = event => {
-    setRowsPerPage(parseInt(event.target.value, 10))
-    setPage(0)
-  }
-
-  const DebouncedInput = ({ value: initialValue, onChange, debounce = 500, ...props }) => {
-    // States
-    const [value, setValue] = useState(initialValue)
-
-    useEffect(() => {
-      setValue(initialValue)
-    }, [initialValue])
     useEffect(() => {
       const timeout = setTimeout(() => {
-        onChange(value)
-      }, debounce)
-
+        onChange(inputValue)
+      }, 500)
       return () => clearTimeout(timeout)
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [value])
+    }, [inputValue, onChange])
 
-    return <TextField {...props} value={value} onChange={e => setValue(e.target.value)} size='small' />
+    return (
+      <TextField
+        {...props}
+        value={inputValue}
+        onChange={(e) => setInputValue(e.target.value)}
+        size='small'
+      />
+    )
   }
+
   return (
-    <>
-      <Card>
-        <CardContent className='p-0'>
-          <div className='px-5 mt-8 flex justify-between w-full'>
-            <DebouncedInput
-              value={globalFilter ?? ''}
-              onChange={value => setGlobalFilter(String(value))}
-              placeholder='Search bookings...'
-              className='w-full max-w-md'
-            />
-          </div>
+    <Card>
+      <CardContent className='p-0'>
+        <Box sx={{ px: 5, pt: 3 }}>
+          <Tabs
+            value={activeTab}
+            onChange={(e, newValue) => {
+              setActiveTab(newValue)
+              setPage(0)
+              setGlobalFilter('')
+            }}
+            variant="scrollable"
+            scrollButtons="auto"
+            sx={{ mb: 2 }}
+          >
+            {Object.keys(flightDataByCountry).map(country => (
+              <Tab key={country} label={`${country}`} value={country} />
+            ))}
+          </Tabs>
 
-          <div className='overflow-x-auto p-5'>
-            <table className={tableStyles.table}>
-              <thead>
-                {table.getHeaderGroups().map(headerGroup => (
-                  <tr key={headerGroup.id}>
-                    {headerGroup.headers.map(header => (
-                      <th key={header.id} className='text-left p-3 border-b'>
-                        {header.isPlaceholder ? null : (
-                          <div
-                            className={classNames({
-                              'flex items-center': header.column.getIsSorted(),
-                              'cursor-pointer select-none': header.column.getCanSort()
-                            })}
-                            onClick={header.column.getToggleSortingHandler()}
-                          >
-                            {flexRender(header.column.columnDef.header, header.getContext())}
-                            {{
-                              asc: <i className='ri-arrow-up-s-line text-xl' />,
-                              desc: <i className='ri-arrow-down-s-line text-xl' />
-                            }[header.column.getIsSorted()] ?? null}
-                          </div>
-                        )}
-                      </th>
-                    ))}
-                  </tr>
-                ))}
-              </thead>
-              <tbody>
-                {table.getRowModel().rows.map(row => (
-                  <tr key={row.id} className='hover:bg-gray-50'>
-                    {row.getVisibleCells().map(cell => (
-                      <td key={cell.id} className='p-3 border-b'>
-                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                      </td>
-                    ))}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-
-          <TablePagination
-            rowsPerPageOptions={[10, 25, 50, 100]}
-            component='div'
-            count={totalCount}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onPageChange={handlePageChange}
-            onRowsPerPageChange={handleRowsPerPageChange}
+          <DebouncedInput
+            value={globalFilter}
+            onChange={setGlobalFilter}
+            placeholder='Search flights...'
+            className='w-full max-w-md mb-4'
           />
-        </CardContent>
-      </Card>
-    </>
+        </Box>
+
+        <div className='overflow-x-auto px-5'>
+          <table className='w-full border-collapse'>
+            <thead>
+              {table.getHeaderGroups().map(headerGroup => (
+                <tr key={headerGroup.id} className='border-b bg-gray-100'>
+                  {headerGroup.headers.map(header => (
+                    <th key={header.id} className='text-left p-3'>
+                      {flexRender(header.column.columnDef.header, header.getContext())}
+                    </th>
+                  ))}
+                </tr>
+              ))}
+            </thead>
+            <tbody>
+              {Object.entries(groupedData).map(([route, rows]) => (
+                <>
+                  <tr key={`header-${route}`}>
+                    <td colSpan={columns.length} className='p-5 text-center border-b'>
+                      <Typography variant='subtitle2' fontWeight='bold'>
+                        {route}
+                      </Typography>
+                    </td>
+                  </tr>
+                  {rows.map(row => (
+                    <tr key={row.id} className='hover:bg-gray-50 border-b'>
+                      {row.getVisibleCells().map(cell => (
+                        <td key={cell.id} className='p-3'>
+                          {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        <TablePagination
+          rowsPerPageOptions={[10, 25, 50, 100]}
+          component='div'
+          count={combinedData.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={(e, newPage) => setPage(newPage)}
+          onRowsPerPageChange={(e) => {
+            setRowsPerPage(parseInt(e.target.value, 10))
+            setPage(0)
+          }}
+        />
+      </CardContent>
+    </Card>
   )
 }
 
