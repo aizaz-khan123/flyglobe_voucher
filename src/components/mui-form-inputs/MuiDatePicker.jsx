@@ -17,7 +17,7 @@ const MuiDatePicker = ({
   size = 'medium',
   width,
   defaultDate,
-  dateFormat = 'YYYY-MM-DD',
+  dateFormat = 'YYYY-MM-DD'
 }) => {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>

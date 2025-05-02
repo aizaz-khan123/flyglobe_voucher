@@ -4,17 +4,7 @@ import { Fragment, useCallback, useEffect, useState } from 'react'
 
 import { useRouter } from 'next/navigation'
 
-import {
-  Button,
-  Card,
-  CardContent,
-  FormControl,
-  FormControlLabel,
-  FormLabel,
-  Radio,
-  RadioGroup,
-  Typography
-} from '@mui/material'
+import { Button, Card, CardContent, FormControl, FormControlLabel, Radio, RadioGroup, Typography } from '@mui/material'
 
 import dayjs from 'dayjs'
 
@@ -31,7 +21,7 @@ import CryptoJS from 'crypto-js'
 import MuiFlightSearchAutoComplete from '@/components/mui-form-inputs/MuiFlightSearchAutoComplete'
 import MuiDatePicker from '@/components/mui-form-inputs/MuiDatePicker'
 import MuiDateRangePicker from '@/components/mui-form-inputs/MuiDateRangePicker'
-import { airportsNames, cabin_class } from '@/data/dropdowns/DropdownValues'
+import { cabin_class } from '@/data/dropdowns/DropdownValues'
 import { useLazyLocationsLookupQuery } from '@/redux-store/services/api'
 
 import 'react-google-flight-datepicker/dist/main.css'
@@ -283,9 +273,11 @@ const FlightSearch = ({ initialValues, flightSearchOpen, flightSearchHandleClose
 
   const validateFlightData = (data, route_type) => {
     if (!route_type) return 'The route type field is required.'
+
     if (!data.cabin_class) {
       return 'The cabin class field is required.'
     }
+
     if (!data?.traveler_count?.adult_count) return 'The Adult count field must be at least 1.'
 
     if (route_type === 'MULTICITY') {
@@ -347,8 +339,10 @@ const FlightSearch = ({ initialValues, flightSearchOpen, flightSearchHandleClose
 
     if (error) {
       toast.error(error)
+
       return
     }
+
     const { traveler_count, legs, ...restPayload } = payload
     const serializedLegs = legs?.map(leg => `${leg.origin},${leg.destination},${leg.departure_date}`).join(',')
 
@@ -373,10 +367,10 @@ const FlightSearch = ({ initialValues, flightSearchOpen, flightSearchHandleClose
     ).toString()
 
     setPayloadValues(queryString)
-    router.push(`/en/flight/search/result/?${queryString}`)
+    router.push(`/flight/search/result/?${queryString}`)
 
     if (flightSearchHandleClose) {
-      flightSearchHandleClose();
+      flightSearchHandleClose()
     }
 
     const SECRET_KEY = 'my_random_secret_key_12345'
@@ -474,6 +468,7 @@ const FlightSearch = ({ initialValues, flightSearchOpen, flightSearchHandleClose
       if (destinationLabel) {
         // 🧠 Ensure it's in airportsNames for the next Autocomplete
         const alreadyExists = airportsNames.some(loc => loc.iata_code === value)
+
         if (!alreadyExists) {
           setAirportsNames(prev => [...prev, destinationLabel])
         }
@@ -494,14 +489,14 @@ const FlightSearch = ({ initialValues, flightSearchOpen, flightSearchHandleClose
       <Card className={`${flightSearchOpen ? 'border-0 shadow-none rounded-none mb-0' : 'rounded-lg shadow-md mb-5'}`}>
         <CardContent className='p-6'>
           <div className='grid grid-cols-12 gap-4'>
-            {route_type !== 'MULTICITY' &&
+            {route_type !== 'MULTICITY' && (
               <div className='col-span-4'>
                 <Typography variant='h4'>Book Flights</Typography>
                 <div className='flight-img mt-2'>
                   <img src={flightImage} alt='' className='w-full object-contain' />
                 </div>
               </div>
-            }
+            )}
             <div className={`${route_type === 'MULTICITY' ? 'col-span-12' : 'col-span-8'} `}>
               {/* <h2 className="text-xl font-semibold">Search Flights</h2> */}
               <form onSubmit={handleSubmit(onSubmit)}>
@@ -518,6 +513,7 @@ const FlightSearch = ({ initialValues, flightSearchOpen, flightSearchHandleClose
                           aria-labelledby='travel-type-group-label'
                           name='route-type'
                           value={field.value}
+
                           // onChange={(event) => field.onChange(event.target.value)}
                           onChange={event => {
                             field.onChange(event.target.value)
@@ -731,6 +727,7 @@ const FlightSearch = ({ initialValues, flightSearchOpen, flightSearchHandleClose
                           <div className='relative col-span-12 md:col-span-6 lg:col-span-3  pt-[5px]'>
                             <MuiFlightSearchAutoComplete
                               control={control}
+
                               // name={`origin`}
                               name={`legs[${index}].origin`}
                               label='From'
@@ -779,6 +776,7 @@ const FlightSearch = ({ initialValues, flightSearchOpen, flightSearchHandleClose
                             <MuiFlightSearchAutoComplete
                               control={control}
                               selectIcon={<FaPlaneArrival />}
+
                               // name={`destination`}
                               name={`legs[${index}].destination`}
                               label='To'
@@ -799,6 +797,7 @@ const FlightSearch = ({ initialValues, flightSearchOpen, flightSearchHandleClose
                                   focusAndOpenNext(index * 2 + 1)
                                 }, 100)
                               }}
+
                               // loading={loadingField === "legsDestination"}
                               loading={loadingFields[`legsDestination-${index}`] || false}
 

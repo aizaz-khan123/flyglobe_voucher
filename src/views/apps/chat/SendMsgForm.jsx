@@ -17,10 +17,9 @@ import Picker from '@emoji-mart/react'
 import data from '@emoji-mart/data'
 
 // Slice Imports
-import { sendMsg } from '@/redux-store/slices/chat'
-
-// Component Imports
 import CustomIconButton from '@core/components/mui/IconButton'
+
+import { sendMsg } from '@/redux-store/slices/chat'
 
 // Emoji Picker Component for selecting emojis
 const EmojiPicker = ({ onChange, isBelowSmScreen, openEmojiPicker, setOpenEmojiPicker, anchorRef }) => {

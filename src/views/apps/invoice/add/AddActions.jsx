@@ -5,7 +5,6 @@ import { useState } from 'react'
 
 // Next Imports
 import Link from 'next/link'
-import { useParams } from 'next/navigation'
 
 // MUI Imports
 import Card from '@mui/material/Card'
@@ -21,15 +20,11 @@ import Switch from '@mui/material/Switch'
 // Component Imports
 import SendInvoiceDrawer from '@views/apps/invoice/shared/SendInvoiceDrawer'
 
-// Util Imports
-import { getLocalizedUrl } from '@/utils/i18n'
-
 const AddActions = () => {
   // States
   const [sendDrawerOpen, setSendDrawerOpen] = useState(false)
 
   // Hooks
-  const { lang: locale } = useParams()
 
   return (
     <Grid container spacing={6}>
@@ -51,7 +46,7 @@ const AddActions = () => {
               color='secondary'
               variant='outlined'
               className='capitalize'
-              href={getLocalizedUrl('/apps/invoice/preview/4987', locale)}
+              href={'/apps/invoice/preview/4987'}
             >
               Preview
             </Button>

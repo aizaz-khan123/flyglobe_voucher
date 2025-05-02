@@ -9,12 +9,14 @@ import CardContent from '@mui/material/CardContent'
 
 // Component Imports
 import OptionMenu from '@core/components/option-menu'
+
+import CustomAvatar from '@core/components/mui/Avatar'
+
 import AvatarWithBadge from './AvatarWithBadge'
 import { statusObj } from './SidebarLeft'
 import ChatLog from './ChatLog'
 import SendMsgForm from './SendMsgForm'
 import UserProfileRight from './UserProfileRight'
-import CustomAvatar from '@core/components/mui/Avatar'
 
 // Renders the user avatar with badge and user information
 const UserAvatar = ({ activeUser, setUserProfileLeftOpen, setBackdropOpen }) => (

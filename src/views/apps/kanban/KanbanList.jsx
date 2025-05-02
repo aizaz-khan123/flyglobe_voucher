@@ -12,10 +12,11 @@ import { animations } from '@formkit/drag-and-drop'
 import classnames from 'classnames'
 
 // Slice Imports
+import OptionMenu from '@core/components/option-menu'
+
 import { addTask, editColumn, deleteColumn, updateColumnTaskIds } from '@/redux-store/slices/kanban'
 
 // Component Imports
-import OptionMenu from '@core/components/option-menu'
 import TaskCard from './TaskCard'
 import NewTask from './NewTask'
 

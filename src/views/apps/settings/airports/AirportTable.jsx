@@ -37,9 +37,10 @@ import { toast } from 'react-toastify'
 
 import { FaPencil, FaTrash } from 'react-icons/fa6'
 
-import { useDeleteAirportMutation, useGetAirportsQuery } from '@/redux-store/services/api'
 import tableStyles from '@core/styles/table.module.css'
 import classNames from 'classnames'
+
+import { useDeleteAirportMutation, useGetAirportsQuery } from '@/redux-store/services/api'
 import { CreateEditAirport } from './CreateEditAirport'
 
 const fuzzyFilter = (row, columnId, value, addMeta) => {
@@ -57,11 +58,16 @@ const AirportTable = () => {
   const [rowsPerPage, setRowsPerPage] = useState(10)
   const [pageUrl, setPageUrl] = useState('')
 
-  const { data: detail_data, isFetching, refetch } = useGetAirportsQuery({
+  const {
+    data: detail_data,
+    isFetching,
+    refetch
+  } = useGetAirportsQuery({
     page: page + 1,
     pageSize: rowsPerPage,
     searchText: globalFilter
   })
+
   const airports = detail_data?.data
   const links = detail_data?.links
   const totalCount = detail_data?.total || 0
@@ -165,6 +171,7 @@ const AirportTable = () => {
     ],
     []
   )
+
   const table = useReactTable({
     data: airports,
     columns,
@@ -194,7 +201,6 @@ const AirportTable = () => {
     setIsCreateModalOpen(true)
     setIsEdit(false)
     setSelectedAirportId(null)
-
   }
 
   const handleClose = () => {
@@ -205,7 +211,6 @@ const AirportTable = () => {
     setSelectedAirportId(id)
     setIsCreateModalOpen(true)
     setIsEdit(true)
-
   }
 
   const DebouncedInput = ({ value: initialValue, onChange, debounce = 500, ...props }) => {
@@ -225,7 +230,6 @@ const AirportTable = () => {
 
     return <TextField {...props} value={value} onChange={e => setValue(e.target.value)} size='small' />
   }
-
 
   return (
     <>
@@ -332,10 +336,15 @@ const AirportTable = () => {
       </Dialog>
 
       {/* Create and Edit dialogs would go here */}
-      <CreateEditAirport open={isCreateModalOpen} onClose={handleClose} airportId={selectedAirportId} isEdit={isEdit} refetch={refetch} />
+      <CreateEditAirport
+        open={isCreateModalOpen}
+        onClose={handleClose}
+        airportId={selectedAirportId}
+        isEdit={isEdit}
+        refetch={refetch}
+      />
     </>
   )
 }
 
 export { AirportTable }
-

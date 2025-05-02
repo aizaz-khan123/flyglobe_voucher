@@ -5,7 +5,6 @@ import { useEffect, useMemo, useState } from 'react'
 
 // Next Imports
 import Link from 'next/link'
-import { useParams } from 'next/navigation'
 
 // MUI Imports
 import Card from '@mui/material/Card'
@@ -37,15 +36,13 @@ import {
 } from '@tanstack/react-table'
 
 // Component Imports
-import TableFilters from './TableFilters'
 import CustomAvatar from '@core/components/mui/Avatar'
 import OptionMenu from '@core/components/option-menu'
 
-// Util Imports
-import { getLocalizedUrl } from '@/utils/i18n'
-
 // Style Imports
 import tableStyles from '@core/styles/table.module.css'
+
+import TableFilters from './TableFilters'
 
 const fuzzyFilter = (row, columnId, value, addMeta) => {
   // Rank the item
@@ -106,7 +103,6 @@ const ProductListTable = ({ productData }) => {
   const [globalFilter, setGlobalFilter] = useState('')
 
   // Hooks
-  const { lang: locale } = useParams()
 
   const columns = useMemo(
     () => [
@@ -271,7 +267,7 @@ const ProductListTable = ({ productData }) => {
             <Button
               variant='contained'
               component={Link}
-              href={getLocalizedUrl('/ecommerce/products/add', locale)}
+              href={'/ecommerce/products/add'}
               startIcon={<i className='ri-add-line' />}
               className='max-sm:is-full is-auto'
             >

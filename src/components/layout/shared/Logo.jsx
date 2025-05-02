@@ -9,9 +9,6 @@ import Image from 'next/image'
 // Third-party Imports
 import styled from '@emotion/styled'
 
-// Config Imports
-import themeConfig from '@configs/themeConfig'
-
 // Hook Imports
 import useVerticalNav from '@menu/hooks/useVerticalNav'
 import { useSettings } from '@core/hooks/useSettings'
@@ -34,7 +31,7 @@ const LogoText = styled.span`
 
 const Logo = ({ color }) => {
   // Refs
-  const logoTextRef = useRef < HTMLSpanElement > (null)
+  const logoTextRef = useRef < HTMLSpanElement > null
 
   // Hooks
   const { isHovered, transitionDuration, isBreakpointReached } = useVerticalNav()
@@ -61,9 +58,9 @@ const Logo = ({ color }) => {
   return (
     <div className='flex items-center min-bs-[24px]'>
       <Image
-        src="/images/project_logo.png"
-        alt="Project Logo"
-        width={150}  // You can adjust the width
+        src='/images/project_logo.png'
+        alt='Project Logo'
+        width={150} // You can adjust the width
         height={120} // You can adjust the height
         priority
       />

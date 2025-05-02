@@ -1,6 +1,9 @@
 'use client'
 
 import { useEffect, useMemo, useState } from 'react'
+
+import { useRouter } from 'next/navigation'
+
 import { rankItem } from '@tanstack/match-sorter-utils'
 import {
   createColumnHelper,
@@ -13,37 +16,64 @@ import {
   getSortedRowModel,
   useReactTable
 } from '@tanstack/react-table'
-import {
-  Button,
-  Card,
-  CardContent,
-  TablePagination,
-  TextField,
-  Typography,
-  Tabs,
-  Tab,
-  Box
-} from '@mui/material'
-import { FaDownload } from 'react-icons/fa'
-import { useRouter } from 'next/navigation'
+import { Button, Card, CardContent, TablePagination, TextField, Typography, Tabs, Tab, Box } from '@mui/material'
 
 const flightDataByCountry = {
   All_Types: {
-    "ISB-BAH": [
-      { date: "06 May 2025", flightNumber: "997A4", time: "19:35-21:15", baggage: "20-07 KG", meal: "No", currency: "PKR", price: "98,000" },
-      { date: "08 May 2025", flightNumber: "997A4", time: "19:35-21:15", baggage: "20-07 KG", meal: "No", currency: "PKR", price: "98,000" },
+    'ISB-BAH': [
+      {
+        date: '06 May 2025',
+        flightNumber: '997A4',
+        time: '19:35-21:15',
+        baggage: '20-07 KG',
+        meal: 'No',
+        currency: 'PKR',
+        price: '98,000'
+      },
+      {
+        date: '08 May 2025',
+        flightNumber: '997A4',
+        time: '19:35-21:15',
+        baggage: '20-07 KG',
+        meal: 'No',
+        currency: 'PKR',
+        price: '98,000'
+      }
     ],
-    "SKT-SHJ": [
-      { date: "06 May 2025", flightNumber: "09553", time: "03:30-05:55", baggage: "20-07 KG", meal: "No", currency: "PKR", price: "96,000" },
+    'SKT-SHJ': [
+      {
+        date: '06 May 2025',
+        flightNumber: '09553',
+        time: '03:30-05:55',
+        baggage: '20-07 KG',
+        meal: 'No',
+        currency: 'PKR',
+        price: '96,000'
+      }
     ]
   },
   Behrain: {
-    "ISB-BAH": [
-      { date: "06 May 2025", flightNumber: "997A4", time: "19:35-21:15", baggage: "20-07 KG", meal: "No", currency: "PKR", price: "98,000" },
-      { date: "08 May 2025", flightNumber: "997A4", time: "19:35-21:15", baggage: "20-07 KG", meal: "No", currency: "PKR", price: "98,000" },
-    ],
-
-  },
+    'ISB-BAH': [
+      {
+        date: '06 May 2025',
+        flightNumber: '997A4',
+        time: '19:35-21:15',
+        baggage: '20-07 KG',
+        meal: 'No',
+        currency: 'PKR',
+        price: '98,000'
+      },
+      {
+        date: '08 May 2025',
+        flightNumber: '997A4',
+        time: '19:35-21:15',
+        baggage: '20-07 KG',
+        meal: 'No',
+        currency: 'PKR',
+        price: '98,000'
+      }
+    ]
+  }
 }
 
 const GroupFlights = () => {
@@ -55,62 +85,52 @@ const GroupFlights = () => {
   const [rowSelection, setRowSelection] = useState({})
   const currentFlights = flightDataByCountry[activeTab] || {}
   const routes = Object.keys(currentFlights)
-  const combinedData = routes.flatMap(route =>
-    currentFlights[route].map(flight => ({ ...flight, route }))
-  )
+
+  const combinedData = routes.flatMap(route => currentFlights[route].map(flight => ({ ...flight, route })))
+
   const columnHelper = createColumnHelper()
+
   const columns = useMemo(
     () => [
       columnHelper.accessor('date', {
         header: 'Date',
-        cell: ({ row }) => (
-          <div className='font-medium'>{row.original.date}</div>
-        )
+        cell: ({ row }) => <div className='font-medium'>{row.original.date}</div>
       }),
       columnHelper.accessor('flightNumber', {
         header: 'Flight Number',
-        cell: ({ row }) => (
-          <div className='font-medium'>{row.original.flightNumber}</div>
-        )
+        cell: ({ row }) => <div className='font-medium'>{row.original.flightNumber}</div>
       }),
       columnHelper.accessor('route', {
         header: 'Route',
-        cell: ({ row }) => (
-          <div className='font-medium'>{row.original.route}</div>
-        )
+        cell: ({ row }) => <div className='font-medium'>{row.original.route}</div>
       }),
       columnHelper.accessor('time', {
         header: 'Time',
-        cell: ({ row }) => (
-          <div className='font-medium'>{row.original.time}</div>
-        )
+        cell: ({ row }) => <div className='font-medium'>{row.original.time}</div>
       }),
       columnHelper.accessor('baggage', {
         header: 'Baggage',
-        cell: ({ row }) => (
-          <div className='font-medium'>{row.original.baggage}</div>
-        )
+        cell: ({ row }) => <div className='font-medium'>{row.original.baggage}</div>
       }),
       columnHelper.accessor('meal', {
         header: 'Meal',
-        cell: ({ row }) => (
-          <div className='font-medium'>{row.original.meal}</div>
-        )
+        cell: ({ row }) => <div className='font-medium'>{row.original.meal}</div>
       }),
       columnHelper.accessor('price', {
         header: 'Price',
         cell: ({ row }) => (
-          <div className='font-medium'>{row.original.currency} {row.original.price}</div>
+          <div className='font-medium'>
+            {row.original.currency} {row.original.price}
+          </div>
         )
       }),
       {
         id: 'actions',
         header: 'Action',
         cell: () => (
-
-             <Button variant='contained' size='small' onClick={()=>router.push(`/group-flights/booking`)} >
-                    Book Now
-                    </Button>
+          <Button variant='contained' size='small' onClick={() => router.push(`/group-flights/booking`)}>
+            Book Now
+          </Button>
         )
       }
     ],
@@ -119,7 +139,9 @@ const GroupFlights = () => {
 
   const fuzzyFilter = (row, columnId, value, addMeta) => {
     const itemRank = rankItem(row.getValue(columnId), value)
+
     addMeta({ itemRank })
+
     return itemRank.passed
   }
 
@@ -139,16 +161,19 @@ const GroupFlights = () => {
     getFacetedUniqueValues: getFacetedUniqueValues(),
     getFacetedMinMaxValues: getFacetedMinMaxValues(),
     manualPagination: true,
-    pageCount: Math.ceil(combinedData.length / rowsPerPage),
+    pageCount: Math.ceil(combinedData.length / rowsPerPage)
   })
 
   const groupedData = useMemo(() => {
     const groups = {}
+
     table.getRowModel().rows.forEach(row => {
       const route = row.original.route
+
       if (!groups[route]) groups[route] = []
       groups[route].push(row)
     })
+
     return groups
   }, [table.getRowModel().rows])
 
@@ -159,17 +184,11 @@ const GroupFlights = () => {
       const timeout = setTimeout(() => {
         onChange(inputValue)
       }, 500)
+
       return () => clearTimeout(timeout)
     }, [inputValue, onChange])
 
-    return (
-      <TextField
-        {...props}
-        value={inputValue}
-        onChange={(e) => setInputValue(e.target.value)}
-        size='small'
-      />
-    )
+    return <TextField {...props} value={inputValue} onChange={e => setInputValue(e.target.value)} size='small' />
   }
 
   return (
@@ -183,8 +202,8 @@ const GroupFlights = () => {
               setPage(0)
               setGlobalFilter('')
             }}
-            variant="scrollable"
-            scrollButtons="auto"
+            variant='scrollable'
+            scrollButtons='auto'
             sx={{ mb: 2 }}
           >
             {Object.keys(flightDataByCountry).map(country => (
@@ -245,7 +264,7 @@ const GroupFlights = () => {
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={(e, newPage) => setPage(newPage)}
-          onRowsPerPageChange={(e) => {
+          onRowsPerPageChange={e => {
             setRowsPerPage(parseInt(e.target.value, 10))
             setPage(0)
           }}

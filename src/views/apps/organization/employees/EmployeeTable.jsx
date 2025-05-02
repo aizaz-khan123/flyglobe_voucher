@@ -42,6 +42,10 @@ import { z } from 'zod'
 // Component Imports
 import { LoadingButton } from '@mui/lab'
 
+import tableStyles from '@core/styles/table.module.css'
+
+import classNames from 'classnames'
+
 import MuiTextField from '@/components/mui-form-inputs/MuiTextField'
 import PhoneNumberInput from '@/components/reactPhoneInput/PhoneNumberInput'
 import {
@@ -53,8 +57,7 @@ import {
   usePermissionUpdateMutation,
   useUpdateEmployeeMutation
 } from '@/redux-store/services/api'
-import tableStyles from '@core/styles/table.module.css'
-import classNames from 'classnames'
+
 import PermissionModal from '../PermissionModal'
 
 const fuzzyFilter = (row, columnId, value, addMeta) => {
@@ -188,21 +191,23 @@ const EmployeeTable = () => {
         cell: ({ row }) => (
           <div className='flex items-center w-fit gap-2'>
             <Tooltip title='Delete Employee' placement='top'>
-              <IconButton size='small'
+              <IconButton
+                size='small'
                 onClick={event => {
                   showDeleteEmployeeConfirmation(row.original.uuid)
-                }}>
-                <FaTrash
-                  className=' text-red-600 text-base' />
+                }}
+              >
+                <FaTrash className=' text-red-600 text-base' />
               </IconButton>
             </Tooltip>
             <Tooltip title='Update Employee' placement='top'>
-              <IconButton size='small'
+              <IconButton
+                size='small'
                 onClick={event => {
                   showUpdateEmployeeConfirmation(row.original)
-                }}>
-                <FaPencil
-                  className='cursor-pointer text-primary text-base' />
+                }}
+              >
+                <FaPencil className='cursor-pointer text-primary text-base' />
               </IconButton>
             </Tooltip>
           </div>
@@ -441,14 +446,14 @@ const EmployeeTable = () => {
                     {table.rows?.length > 0
                       ? 'No Record Found'
                       : table.getRowModel().rows.map(row => (
-                        <tr key={row.id} className='hover:bg-gray-50'>
-                          {row.getVisibleCells().map(cell => (
-                            <td key={cell.id} className='p-3 border-b'>
-                              {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                            </td>
-                          ))}
-                        </tr>
-                      ))}
+                          <tr key={row.id} className='hover:bg-gray-50'>
+                            {row.getVisibleCells().map(cell => (
+                              <td key={cell.id} className='p-3 border-b'>
+                                {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                              </td>
+                            ))}
+                          </tr>
+                        ))}
                   </>
                 ) : (
                   <td colSpan={table.getAllColumns().length}>
@@ -552,4 +557,3 @@ const EmployeeTable = () => {
 }
 
 export { EmployeeTable }
-

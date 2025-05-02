@@ -2,13 +2,22 @@
 
 import { useState } from 'react'
 
-import { Button, Card, CardContent, Dialog, DialogActions, DialogContent, DialogTitle, FormLabel, IconButton, Select, Typography } from '@mui/material'
+import {
+  Button,
+  Card,
+  CardContent,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  IconButton,
+  Typography
+} from '@mui/material'
 import { IoMdClose } from 'react-icons/io'
 import { toast } from 'react-toastify'
 
 import { useBranchDropDownQuery, useDropDownByTypeQuery, useTicketOtpEmailMutation } from '@/redux-store/services/api'
 import BookingOTP from './BookingOTP'
-import MuiDropdown from '@/components/mui-form-inputs/MuiDropdown'
 
 const TicketIssuanceModal = ({ isModalOpen, handleIssueTicketModal, bookingPnr, refectBooking }) => {
   const [issueFor, setIssueFor] = useState('') // track the user's choice (self or others)
@@ -59,10 +68,10 @@ const TicketIssuanceModal = ({ isModalOpen, handleIssueTicketModal, bookingPnr, 
   }
 
   return (
-    <Dialog open={isModalOpen} fullWidth maxWidth="md">
-      <DialogTitle className="flex justify-between items-center">
-        <Typography variant="h5">Ticket Issuance Confirmation</Typography>
-        <IconButton onClick={handleIssueTicketModal} size="small">
+    <Dialog open={isModalOpen} fullWidth maxWidth='md'>
+      <DialogTitle className='flex justify-between items-center'>
+        <Typography variant='h5'>Ticket Issuance Confirmation</Typography>
+        <IconButton onClick={handleIssueTicketModal} size='small'>
           <IoMdClose />
         </IconButton>
       </DialogTitle>
@@ -71,9 +80,7 @@ const TicketIssuanceModal = ({ isModalOpen, handleIssueTicketModal, bookingPnr, 
           <CardContent className='gap-0'>
             {step === 1 && (
               <div className='flex flex-col gap-5 items-center'>
-                <h3 className='mb-5 text-lg font-medium'>
-                  Are you issuing a ticket for yourself or for others?
-                </h3>
+                <h3 className='mb-5 text-lg font-medium'>Are you issuing a ticket for yourself or for others?</h3>
                 <ul className='grid w-full gap-6 md:grid-cols-2'>
                   <li>
                     <input
@@ -155,13 +162,13 @@ const TicketIssuanceModal = ({ isModalOpen, handleIssueTicketModal, bookingPnr, 
               <div>
                 <select
                   value={branch}
-                  onChange={(e) => {
-                    handleBranchChange(e);
-                    setStep(1);
+                  onChange={e => {
+                    handleBranchChange(e)
+                    setStep(1)
                   }}
-                  className="w-full  bg-slate-200 p-4 text-black mt-5"
+                  className='w-full  bg-slate-200 p-4 text-black mt-5'
                 >
-                  <option value="" disabled>
+                  <option value='' disabled>
                     Select Branch
                   </option>
                   {branchesDropDown.map((value, index) => (
@@ -266,20 +273,21 @@ const TicketIssuanceModal = ({ isModalOpen, handleIssueTicketModal, bookingPnr, 
                   <div>
                     <select
                       value={selectedAgency}
-                      onChange={(e) => {
-                        setSelectedAgency(e.target.value);
-                        setStep(1);
+                      onChange={e => {
+                        setSelectedAgency(e.target.value)
+                        setStep(1)
                       }}
-                      className="w-full form-select bg-slate-200 p-4 text-black mt-5"
+                      className='w-full form-select bg-slate-200 p-4 text-black mt-5'
                     >
-                      <option value="" disabled>Select Agency</option>
+                      <option value='' disabled>
+                        Select Agency
+                      </option>
                       {typeDropDown.data.length > 0 &&
                         typeDropDown.data.map((value, index) => (
                           <option key={index} value={value?.id}>
                             {value?.name}
                           </option>
-                        ))
-                      }
+                        ))}
                     </select>
                   </div>
                 )}
@@ -288,20 +296,21 @@ const TicketIssuanceModal = ({ isModalOpen, handleIssueTicketModal, bookingPnr, 
                   <div>
                     <select
                       value={selectedEmployee}
-                      onChange={(e) => {
-                        setSelectedEmployee(e.target.value);
-                        setStep(1);
+                      onChange={e => {
+                        setSelectedEmployee(e.target.value)
+                        setStep(1)
                       }}
-                      className="w-full bg-slate-200 p-4 text-black mt-5"
+                      className='w-full bg-slate-200 p-4 text-black mt-5'
                     >
-                      <option value="" disabled>Select Employee</option>
+                      <option value='' disabled>
+                        Select Employee
+                      </option>
                       {typeDropDown.data.length > 0 &&
                         typeDropDown.data.map((value, index) => (
                           <option key={index} value={value?.id}>
                             {value?.name}
                           </option>
-                        ))
-                      }
+                        ))}
                     </select>
                   </div>
                 )}

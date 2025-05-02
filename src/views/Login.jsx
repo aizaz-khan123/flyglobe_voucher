@@ -5,7 +5,7 @@ import { useState } from 'react'
 
 // Next Imports
 import Link from 'next/link'
-import { useParams, useRouter, useSearchParams } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 
 // MUI Imports
 import Card from '@mui/material/Card'
@@ -35,7 +35,6 @@ import themeConfig from '@configs/themeConfig'
 
 // Hook Imports
 import { useImageVariant } from '@core/hooks/useImageVariant'
-import { getLocalizedUrl } from '@/utils/i18n'
 
 import { useLoginMutation } from '@/redux-store/services/api'
 
@@ -56,7 +55,6 @@ const Login = ({ mode }) => {
   // Hooks
   const searchParams = useSearchParams()
   const router = useRouter()
-  const { lang: locale } = useParams()
 
   const authBackground = useImageVariant(
     mode,
@@ -108,7 +106,9 @@ const Login = ({ mode }) => {
 
     if (response.data.code === 200) {
       toast.success(response?.data?.message)
-      router.push(`/${locale}/verification/${encodeURIComponent(response?.data?.data)}?q=${searchParams.get('redirectTo') || ''}`)
+      router.push(
+        `/verification/${encodeURIComponent(response?.data?.data)}?q=${searchParams.get('redirectTo') || ''}`
+      )
     }
   }
 
@@ -116,7 +116,7 @@ const Login = ({ mode }) => {
     <div className='flex flex-col justify-center items-center min-bs-[100dvh] relative p-6'>
       <Card className='flex flex-col sm:is-[450px]'>
         <CardContent className='p-6 sm:!p-12'>
-          <Link href={getLocalizedUrl('/', locale)} className='flex justify-center items-center mbe-6'>
+          <Link href={'/'} className='flex justify-center items-center mbe-6'>
             <Logo />
           </Link>
           <div className='flex flex-col gap-5'>
@@ -152,12 +152,7 @@ const Login = ({ mode }) => {
               />
               <div className='flex justify-between items-center gap-x-3 gap-y-1 flex-wrap'>
                 <FormControlLabel control={<Checkbox />} label='Remember me' />
-                <Typography
-                  className='text-end'
-                  color='primary.main'
-                  component={Link}
-                  href={getLocalizedUrl('/en/forgot-password', locale)}
-                >
+                <Typography className='text-end' color='primary.main' component={Link} href={'/forgot-password'}>
                   Forgot password?
                 </Typography>
               </div>

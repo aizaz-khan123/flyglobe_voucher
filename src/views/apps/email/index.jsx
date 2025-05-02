@@ -12,17 +12,15 @@ import classnames from 'classnames'
 import { useDispatch, useSelector } from 'react-redux'
 
 // Slice Imports
+import { useSettings } from '@core/hooks/useSettings'
+
+import { commonLayoutClasses } from '@layouts/utils/layoutClasses'
+
 import { filterEmails } from '@/redux-store/slices/email'
 
 // Component Imports
 import SidebarLeft from './SidebarLeft'
 import MailContent from './MailContent'
-
-// Hook Imports
-import { useSettings } from '@core/hooks/useSettings'
-
-// Util Imports
-import { commonLayoutClasses } from '@layouts/utils/layoutClasses'
 
 const EmailWrapper = ({ folder, label }) => {
   // States

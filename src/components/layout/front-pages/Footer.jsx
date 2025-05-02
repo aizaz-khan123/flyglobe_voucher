@@ -17,8 +17,9 @@ import Logo from '@components/layout/shared/Logo'
 import { frontLayoutClasses } from '@layouts/utils/layoutClasses'
 
 // Styles Imports
-import styles from './styles.module.css'
 import frontCommonStyles from '@views/front-pages/styles.module.css'
+
+import styles from './styles.module.css'
 
 const Footer = () => {
   return (

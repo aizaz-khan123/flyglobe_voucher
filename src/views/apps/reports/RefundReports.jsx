@@ -1,11 +1,5 @@
-
 const RefundReports = () => {
-  return (
-    <div>
-      RefundReports
-    </div>
-  )
+  return <div>RefundReports</div>
 }
 
 export default RefundReports
-

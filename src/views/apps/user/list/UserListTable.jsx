@@ -5,7 +5,6 @@ import { useEffect, useState, useMemo } from 'react'
 
 // Next Imports
 import Link from 'next/link'
-import { useParams } from 'next/navigation'
 
 // MUI Imports
 import Card from '@mui/material/Card'
@@ -37,17 +36,17 @@ import {
 } from '@tanstack/react-table'
 
 // Component Imports
+import OptionMenu from '@core/components/option-menu'
+
+import CustomAvatar from '@core/components/mui/Avatar'
+
+import tableStyles from '@core/styles/table.module.css'
+
 import TableFilters from './TableFilters'
 import AddUserDrawer from './AddUserDrawer'
-import OptionMenu from '@core/components/option-menu'
-import CustomAvatar from '@core/components/mui/Avatar'
 
 // Util Imports
 import { getInitials } from '@/utils/getInitials'
-import { getLocalizedUrl } from '@/utils/i18n'
-
-// Style Imports
-import tableStyles from '@core/styles/table.module.css'
 
 // Styled Components
 const Icon = styled('i')({})
@@ -111,7 +110,6 @@ const UserListTable = ({ tableData }) => {
   const [globalFilter, setGlobalFilter] = useState('')
 
   // Hooks
-  const { lang: locale } = useParams()
 
   const columns = useMemo(
     () => [
@@ -199,7 +197,7 @@ const UserListTable = ({ tableData }) => {
               <i className='ri-delete-bin-7-line text-textSecondary' />
             </IconButton>
             <IconButton>
-              <Link href={getLocalizedUrl('/user/view', locale)} className='flex'>
+              <Link href={'/user/view'} className='flex'>
                 <i className='ri-eye-line text-textSecondary' />
               </Link>
             </IconButton>

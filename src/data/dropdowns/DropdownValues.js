@@ -192,7 +192,7 @@ export const groupTypeStatus = [
 ]
 export const yesNoDropdown = [
   { value: 0, label: 'No' },
-  { value: 1, label: 'Yes' },
+  { value: 1, label: 'Yes' }
 ]
 export const groupsStatus = [
   { value: 'publish', label: 'Publish' },

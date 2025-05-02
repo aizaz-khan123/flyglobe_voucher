@@ -1,12 +1,7 @@
 import React from 'react'
 
 const TrialBalance = () => {
-  return (
-    <div>
-      TrialBalance
-    </div>
-  )
+  return <div>TrialBalance</div>
 }
 
 export default TrialBalance
-

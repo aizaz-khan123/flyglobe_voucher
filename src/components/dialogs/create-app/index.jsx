@@ -18,14 +18,13 @@ import Avatar from '@mui/material/Avatar'
 import classnames from 'classnames'
 
 // Component Imports
+import StepperWrapper from '@core/styles/stepper'
+
 import Details from './Details'
 import FrameWork from './FrameWork'
 import Database from './Database'
 import Billing from './Billing'
 import Submit from './Submit'
-
-// Styled Component Imports
-import StepperWrapper from '@core/styles/stepper'
 
 const steps = [
   {

@@ -3,7 +3,6 @@ import { useState } from 'react'
 
 // Next Imports
 import Link from 'next/link'
-import { useParams } from 'next/navigation'
 
 // MUI Imports
 import Card from '@mui/material/Card'
@@ -14,16 +13,12 @@ import Button from '@mui/material/Button'
 import AddPaymentDrawer from '@views/apps/invoice/shared/AddPaymentDrawer'
 import SendInvoiceDrawer from '@views/apps/invoice/shared/SendInvoiceDrawer'
 
-// Util Imports
-import { getLocalizedUrl } from '@/utils/i18n'
-
 const PreviewActions = ({ id, onButtonClick }) => {
   // States
   const [paymentDrawerOpen, setPaymentDrawerOpen] = useState(false)
   const [sendDrawerOpen, setSendDrawerOpen] = useState(false)
 
   // Hooks
-  const { lang: locale } = useParams()
 
   return (
     <>
@@ -51,7 +46,7 @@ const PreviewActions = ({ id, onButtonClick }) => {
               color='secondary'
               variant='outlined'
               className='capitalize'
-              href={getLocalizedUrl(`/invoice/edit/${id}`, locale)}
+              href={`/invoice/edit/${id}`}
             >
               Edit
             </Button>

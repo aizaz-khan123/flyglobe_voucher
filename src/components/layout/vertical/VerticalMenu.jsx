@@ -1,8 +1,4 @@
-// Next Imports
-import { useParams } from 'next/navigation'
-
 // MUI Imports
-import Chip from '@mui/material/Chip'
 import { useTheme } from '@mui/material/styles'
 
 // Third-party Imports
@@ -25,39 +21,37 @@ import { MdGroup } from 'react-icons/md'
 import { RiHotelLine } from 'react-icons/ri'
 import { FaChartBar, FaRegPenToSquare } from 'react-icons/fa6'
 import { LuNotebookPen } from 'react-icons/lu'
-import { FaMoneyCheckAlt } from "react-icons/fa";
+import { FaMoneyCheckAlt } from 'react-icons/fa'
 import { PiHandDeposit } from 'react-icons/pi'
+
 const RenderExpandIcon = ({ open, transitionDuration }) => (
   <StyledVerticalNavExpandIcon open={open} transitionDuration={transitionDuration}>
     <i className='ri-arrow-right-s-line' />
   </StyledVerticalNavExpandIcon>
 )
 
-const VerticalMenu = ({ dictionary, scrollMenu }) => {
+const VerticalMenu = ({ scrollMenu }) => {
   // Hooks
   const theme = useTheme()
   const verticalNavOptions = useVerticalNav()
-  const params = useParams()
 
   // Vars
   const { isBreakpointReached, transitionDuration } = verticalNavOptions
-  const { lang: locale } = params
+
   const ScrollWrapper = isBreakpointReached ? 'div' : PerfectScrollbar
 
   return (
-
     <ScrollWrapper
       {...(isBreakpointReached
         ? {
-          className: 'bs-full overflow-y-auto overflow-x-hidden',
-          onScroll: container => scrollMenu(container, false)
-        }
+            className: 'bs-full overflow-y-auto overflow-x-hidden',
+            onScroll: container => scrollMenu(container, false)
+          }
         : {
-          options: { wheelPropagation: false, suppressScrollX: true },
-          onScrollY: container => scrollMenu(container, true)
-        })}
+            options: { wheelPropagation: false, suppressScrollX: true },
+            onScrollY: container => scrollMenu(container, true)
+          })}
     >
-
       <Menu
         popoutMenuOffset={{ mainAxis: 10 }}
         menuItemStyles={menuItemStyles(verticalNavOptions, theme)}
@@ -66,123 +60,117 @@ const VerticalMenu = ({ dictionary, scrollMenu }) => {
         menuSectionStyles={menuSectionStyles(verticalNavOptions, theme)}
       >
         <MenuItem
-          href={`/${locale}/dashboard`}
+          href='/dashboard'
           exactMatch={false}
           activeUrl='/dashboard'
           icon={<i className='ri-home-smile-line' />}
         >
-          {dictionary['navigation'].dashboard}
+          dashboard
         </MenuItem>
 
-        <MenuSection label={dictionary['navigation'].sales}>
-
-          <SubMenu label={dictionary['navigation'].Sell} icon={<i className='ri-organization-chart'></i>}>
-            <MenuItem href={`/${locale}/book-flights`} icon={<i className='ri-plane-fill'></i>}>{dictionary['navigation'].flight}</MenuItem>
-            <MenuItem href={`/${locale}/group-flights`} icon={<MdGroup />}>{dictionary['navigation'].groupFlight}</MenuItem>
-            <MenuItem href={`/${locale}/umrah-hotels`} icon={<RiHotelLine />}>{dictionary['navigation'].umrahHotels}</MenuItem>
-            <MenuItem href={`/${locale}/umrah-visa`}>{dictionary['navigation'].umrahVisa}</MenuItem>
-            <MenuItem href={`/${locale}/bookings`}>{dictionary['navigation'].bookings}</MenuItem>
+        <MenuSection label='sales'>
+          <SubMenu label='Sell' icon={<i className='ri-organization-chart'></i>}>
+            <MenuItem href='/book-flights' icon={<i className='ri-plane-fill'></i>}>
+              flight
+            </MenuItem>
+            <MenuItem href='/group-flights' icon={<MdGroup />}>
+              groupFlight
+            </MenuItem>
+            <MenuItem href='/umrah-hotels' icon={<RiHotelLine />}>
+              umrahHotels
+            </MenuItem>
+            <MenuItem href='/umrah-visa'>umrahVisa</MenuItem>
+            <MenuItem href='/bookings'>bookings</MenuItem>
           </SubMenu>
 
-          <SubMenu label={dictionary['navigation'].Requests} icon={<i className='ri-organization-chart'></i>}>
+          <SubMenu label='Requests' icon={<i className='ri-organization-chart'></i>}>
             <MenuItem
-              href={`/${locale}/refund-request`}
+              href='/refund-request'
               exactMatch={false}
               activeUrl='/refund-request'
               icon={<i className='ri-calendar-line'></i>}
             >
-              {dictionary['navigation'].refundRequest}
+              refundRequest
             </MenuItem>
           </SubMenu>
           {/* For Agencies */}
           {/* <MenuItem
-            href={`/${locale}/my-refund-request`}
+            href='/my-refund-request'
             exactMatch={false}
             activeUrl='/my-refund-request'
             icon={<i className='ri-calendar-line'></i>}
           >
-            {dictionary['navigation'].myRefundRequest}
+            myRefundRequest
           </MenuItem> */}
 
-
-
-
-          <SubMenu label={dictionary['navigation'].organization} icon={<i className="ri-group-line"></i>}>
-            <MenuItem href={`/${locale}/organization/branches`} icon={<i className='ri-organization-chart'></i>}>{dictionary['navigation'].branches}</MenuItem>
-            <MenuItem href={`/${locale}/organization/agencies`}>{dictionary['navigation'].agencies}</MenuItem>
-            <MenuItem href={`/${locale}/organization/employees`} icon={<MdGroup />}>{dictionary['navigation'].employees}</MenuItem>
+          <SubMenu label='organization' icon={<i className='ri-group-line'></i>}>
+            <MenuItem href='/organization/branches' icon={<i className='ri-organization-chart'></i>}>
+              branches
+            </MenuItem>
+            <MenuItem href='/organization/agencies'>agencies</MenuItem>
+            <MenuItem href='/organization/employees' icon={<MdGroup />}>
+              employees
+            </MenuItem>
           </SubMenu>
 
-          <SubMenu label={dictionary['navigation'].accounts} icon={<i className='ri-calculator-line'></i>}>
-            <MenuItem href={`/${locale}/accounts/chart-of-account`} icon={<FaChartBar />}>
-              {dictionary['navigation'].chartOfAccount}
+          <SubMenu label='accounts' icon={<i className='ri-calculator-line'></i>}>
+            <MenuItem href='/accounts/chart-of-account' icon={<FaChartBar />}>
+              chartOfAccount
             </MenuItem>
-            <MenuItem href={`/${locale}/accounts/general-legder`} icon={<LuNotebookPen />}>
-              {dictionary['navigation'].generalLegder}
+            <MenuItem href='/accounts/general-legder' icon={<LuNotebookPen />}>
+              generalLegder
             </MenuItem>
-            <MenuItem href={`/${locale}/accounts/journal-entries`} icon={<FaRegPenToSquare />}>
-              {dictionary['navigation'].journalEntries}
+            <MenuItem href='/accounts/journal-entries' icon={<FaRegPenToSquare />}>
+              journalEntries
             </MenuItem>
-            <MenuItem href={`/${locale}/accounts/account-statement`}>
-              {dictionary['navigation'].accountStatement}
+            <MenuItem href='/accounts/account-statement'>accountStatement</MenuItem>
+            <MenuItem href='/accounts/trail-balance' icon={<FaMoneyCheckAlt />}>
+              trailBalance
             </MenuItem>
-            <MenuItem href={`/${locale}/accounts/trail-balance`} icon={<FaMoneyCheckAlt />}>{dictionary['navigation'].trailBalance}</MenuItem>
           </SubMenu>
 
-          <SubMenu label={dictionary['navigation'].deposites} icon={<i className='ri-luggage-deposit-line'></i>}>
-            <MenuItem href={`/${locale}/deposites/agency-deposite`} icon={<PiHandDeposit />}>
-              {dictionary['navigation'].agencyDeposite}
+          <SubMenu label='deposites' icon={<i className='ri-luggage-deposit-line'></i>}>
+            <MenuItem href='/deposites/agency-deposite' icon={<PiHandDeposit />}>
+              agencyDeposite
             </MenuItem>
-            {/* <MenuItem href={`/${locale}/deposites/branch-deposite`} icon={<PiHandDeposit />}>
-              {dictionary['navigation'].branchDeposite}
+            {/* <MenuItem href='/deposites/branch-deposite' icon={<PiHandDeposit />}>
+              branchDeposite
             </MenuItem> */}
-            <MenuItem href={`/${locale}/deposites/my-deposite`}>
-              {dictionary['navigation'].myDeposite}
-            </MenuItem>
-            <MenuItem href={`/${locale}/deposites/bank-accounts`}>
-              {dictionary['navigation'].bankDeposite}
-            </MenuItem>
+            <MenuItem href='/deposites/my-deposite'>myDeposite</MenuItem>
+            <MenuItem href='/deposites/bank-accounts'>bankDeposite</MenuItem>
           </SubMenu>
 
-          <SubMenu label={dictionary['navigation'].reports} icon={<i className="ri-file-chart-fill"></i>}>
-            <MenuItem href={`/${locale}/reports/sales-reports`}>{dictionary['navigation'].salesReports}</MenuItem>
-            <MenuItem href={`/${locale}/reports/refund-reports`}>
-              {dictionary['navigation'].refundReports}
-            </MenuItem>
-            <MenuItem href={`/${locale}/reports/supplier-reports`}>
-              {dictionary['navigation'].supplierReports}
-            </MenuItem>
-            {/* <MenuItem href={`/${locale}/reports/un-used-tickets`}>
-              {dictionary['navigation'].unUsedTickets}
+          <SubMenu label='reports' icon={<i className='ri-file-chart-fill'></i>}>
+            <MenuItem href='/reports/sales-reports'>salesReports</MenuItem>
+            <MenuItem href='/reports/refund-reports'>refundReports</MenuItem>
+            <MenuItem href='/reports/supplier-reports'>supplierReports</MenuItem>
+            {/* <MenuItem href='/reports/un-used-tickets'>
+              unUsedTickets
             </MenuItem> */}
           </SubMenu>
 
-          <SubMenu label={dictionary['navigation'].settings} icon={<i className="ri-settings-2-line"></i>}>
-            <MenuItem href={`/${locale}/settings/bank-accounts`}>{dictionary['navigation'].bankAccounts}</MenuItem>
-            <MenuItem href={`/${locale}/settings/airline-margins`}>
-              {dictionary['navigation'].airlineMargins}
-            </MenuItem>
-            <MenuItem href={`/${locale}/settings/connectors`}>{dictionary['navigation'].connectors}</MenuItem>
-            <MenuItem href={`/${locale}/settings/suppliers`}>{dictionary['navigation'].suppliers}</MenuItem>
+          <SubMenu label='settings' icon={<i className='ri-settings-2-line'></i>}>
+            <MenuItem href='/settings/bank-accounts'>bankAccounts</MenuItem>
+            <MenuItem href='/settings/airline-margins'>airlineMargins</MenuItem>
+            <MenuItem href='/settings/connectors'>connectors</MenuItem>
+            <MenuItem href='/settings/suppliers'>suppliers</MenuItem>
 
-            <MenuItem href={`/${locale}/settings/airlines`}>{dictionary['navigation'].airlines}</MenuItem>
-            <MenuItem href={`/${locale}/settings/airpots`}>{dictionary['navigation'].airpots}</MenuItem>
-            <MenuItem href={`/${locale}/settings/countries`}>{dictionary['navigation'].countries}</MenuItem>
-            <MenuItem href={`/${locale}/settings/news-alerts`}>{dictionary['navigation'].newsAlerts}</MenuItem>
+            <MenuItem href='/settings/airlines'>airlines</MenuItem>
+            <MenuItem href='/settings/airpots'>airpots</MenuItem>
+            <MenuItem href='/settings/countries'>countries</MenuItem>
+            <MenuItem href='/settings/news-alerts'>newsAlerts</MenuItem>
           </SubMenu>
-          <SubMenu label={dictionary['navigation'].management} icon={<i className='ri-luggage-deposit-line'></i>}>
-            <MenuItem href={`/${locale}/management/groups`}>
-              {dictionary['navigation'].groups}
-            </MenuItem>
+          <SubMenu label='management' icon={<i className='ri-luggage-deposit-line'></i>}>
+            <MenuItem href='/management/groups'>groups</MenuItem>
           </SubMenu>
 
           <MenuItem
-            href={`/${locale}/notifications`}
+            href='/notifications'
             exactMatch={false}
             activeUrl='/notifications'
             icon={<i className='ri-calendar-line'></i>}
           >
-            {dictionary['navigation'].notifications}
+            notifications
           </MenuItem>
         </MenuSection>
       </Menu>

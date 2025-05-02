@@ -16,8 +16,9 @@ import classnames from 'classnames'
 import { useImageVariant } from '@core/hooks/useImageVariant'
 
 // Styles Imports
-import styles from './styles.module.css'
 import frontCommonStyles from '@views/front-pages/styles.module.css'
+
+import styles from './styles.module.css'
 
 const HeroSection = ({ mode }) => {
   // States

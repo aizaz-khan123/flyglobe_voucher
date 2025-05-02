@@ -1,26 +1,27 @@
-import { useRef } from 'react';
+import { useRef } from 'react'
 
 export const useSelectChain = () => {
-  const selectRefs = useRef([]);
+  const selectRefs = useRef([])
 
-  const attachRef = (index) => (ref) => {
-    if (ref) selectRefs.current[index] = ref;
-  };
+  const attachRef = index => ref => {
+    if (ref) selectRefs.current[index] = ref
+  }
 
-  const focusAndOpenNext = (index) => {
-    const next = selectRefs.current[index + 1];
+  const focusAndOpenNext = index => {
+    const next = selectRefs.current[index + 1]
+
     if (next) {
-      next.focus();
+      next.focus()
 
       const event = new MouseEvent('mousedown', {
         bubbles: true,
         cancelable: true,
-        view: window,
-      });
+        view: window
+      })
 
-      next.dispatchEvent(event);
+      next.dispatchEvent(event)
     }
-  };
+  }
 
-  return { attachRef, focusAndOpenNext };
-};
+  return { attachRef, focusAndOpenNext }
+}

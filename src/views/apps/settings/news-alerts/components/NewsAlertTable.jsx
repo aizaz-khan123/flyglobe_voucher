@@ -43,11 +43,11 @@ import {
   useReactTable
 } from '@tanstack/react-table'
 
-import { useDeleteNewsMutation, useGetNewsQuery } from '@/redux-store/services/api'
-
 // Components
 import tableStyles from '@core/styles/table.module.css'
 import classNames from 'classnames'
+
+import { useDeleteNewsMutation, useGetNewsQuery } from '@/redux-store/services/api'
 import NewsForm from './NewsForm'
 
 const fuzzyFilter = (row, columnId, value, addMeta) => {
@@ -69,13 +69,7 @@ const NewsAlertTable = () => {
   const [selectedNewsId, setSelectedNewsId] = useState(null)
 
   // RTK Query
-  const {
-    data: newsData,
-    isFetching,
-    refetch
-  } = useGetNewsQuery({
-
-  })
+  const { data: newsData, isFetching, refetch } = useGetNewsQuery({})
 
   const news = newsData?.data || []
   const totalCount = newsData?.meta?.total || 0
@@ -117,7 +111,7 @@ const NewsAlertTable = () => {
     setIsFormOpen(true)
   }
 
-  const handleEdit = (id) => {
+  const handleEdit = id => {
     setSelectedNewsId(id)
     setIsFormOpen(true)
   }
@@ -188,7 +182,7 @@ const NewsAlertTable = () => {
             <Tooltip title='Delete News'>
               <IconButton
                 size='small'
-                onClick={(e) => {
+                onClick={e => {
                   e.stopPropagation()
                   setNewsToDelete(row.original)
                 }}
@@ -255,11 +249,7 @@ const NewsAlertTable = () => {
               placeholder='Search news...'
               className='w-full max-w-md'
             />
-            <Button
-              variant='contained'
-              onClick={handleAddNew}
-              className='hidden md:flex'
-            >
+            <Button variant='contained' onClick={handleAddNew} className='hidden md:flex'>
               <FaPlus fontSize={16} />
               <span className='ml-2'>New News</span>
             </Button>
@@ -351,27 +341,16 @@ const NewsAlertTable = () => {
           <Button color='error' onClick={() => setNewsToDelete(null)}>
             Cancel
           </Button>
-          <Button
-            variant='contained'
-            onClick={handleDelete}
-            disabled={isDeleting}
-          >
+          <Button variant='contained' onClick={handleDelete} disabled={isDeleting}>
             {isDeleting ? <CircularProgress size={24} /> : 'Delete'}
           </Button>
         </DialogActions>
       </Dialog>
 
       {/* News Form */}
-      <NewsForm
-        open={isFormOpen}
-        onClose={handleCloseForm}
-        newsId={selectedNewsId}
-        refetch={refetch}
-      />
+      <NewsForm open={isFormOpen} onClose={handleCloseForm} newsId={selectedNewsId} refetch={refetch} />
     </>
   )
 }
 
-
 export { NewsAlertTable }
-

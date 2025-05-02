@@ -22,30 +22,22 @@ import {
 } from '@mui/material'
 
 import MuiTextField from '@/components/mui-form-inputs/MuiTextField'
-import {
-  useCreateSupplierMutation,
-  useUpdateSupplierMutation,
-  useShowSupplierQuery
-} from '@/redux-store/services/api'
+import { useCreateSupplierMutation, useUpdateSupplierMutation, useShowSupplierQuery } from '@/redux-store/services/api'
 
 const supplierSchema = z.object({
-  name: z.string({ required_error: "Supplier name is required" })
+  name: z
+    .string({ required_error: 'Supplier name is required' })
     .trim()
-    .min(3, { message: "Supplier name must be at least 3 characters" }),
+    .min(3, { message: 'Supplier name must be at least 3 characters' }),
   description: z.string().max(500).optional(),
   status: z.boolean().default(false)
 })
 
-const SupplierForm = ({ 
-  open, 
-  onClose, 
-  refetch, 
-  supplierId 
-}) => {
-  const { 
-    control, 
-    handleSubmit, 
-    setError, 
+const SupplierForm = ({ open, onClose, refetch, supplierId }) => {
+  const {
+    control,
+    handleSubmit,
+    setError,
     reset,
     formState: { errors }
   } = useForm({
@@ -53,8 +45,8 @@ const SupplierForm = ({
   })
 
   // Fetch supplier details if in edit mode
-  const { 
-    data: supplierDetails, 
+  const {
+    data: supplierDetails,
     isLoading: isDetailsLoading,
     isFetching
   } = useShowSupplierQuery(supplierId, {
@@ -73,7 +65,7 @@ const SupplierForm = ({
         description: '',
         status: false
       })
-      
+
       // Populate if in edit mode and data is available
       if (supplierId && supplierDetails) {
         reset({
@@ -98,17 +90,17 @@ const SupplierForm = ({
         _method: 'put',
         ...data
       }
-  
-      await updateSupplier({ 
-        supplierId, 
-        updated_data 
+
+      await updateSupplier({
+        supplierId,
+        updated_data
       }).then(response => {
         if ('error' in response) {
           setErrors(response?.error?.data?.errors)
-          
-return
+
+          return
         }
-  
+
         toast.success(response?.data?.message || 'Supplier updated successfully')
         refetch()
         onClose()
@@ -119,10 +111,10 @@ return
       await createSupplier(data).then(response => {
         if ('error' in response) {
           setErrors(response?.error?.data?.errors)
-          
-return
+
+          return
         }
-  
+
         toast.success(response?.data?.message || 'Supplier created successfully')
         refetch()
         onClose()
@@ -131,7 +123,6 @@ return
     }
   })
 
-  
   const handleClose = () => {
     reset()
     onClose()
@@ -141,12 +132,14 @@ return
     return (
       <Dialog open={open} onClose={handleClose}>
         <DialogContent>
-          <Box sx={{ 
-            display: 'flex', 
-            justifyContent: 'center', 
-            alignItems: 'center', 
-            p: 4 
-          }}>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              p: 4
+            }}
+          >
             <CircularProgress />
             <Typography sx={{ ml: 2 }}>Loading supplier details...</Typography>
           </Box>
@@ -156,66 +149,56 @@ return
   }
 
   return (
-    <Dialog open={open} onClose={handleClose} fullWidth maxWidth="md">
-      <DialogTitle className="font-bold flex items-center justify-between">
+    <Dialog open={open} onClose={handleClose} fullWidth maxWidth='md'>
+      <DialogTitle className='font-bold flex items-center justify-between'>
         {supplierId ? 'Edit Supplier' : 'Add New Supplier'}
-        <IoMdClose 
-          className="cursor-pointer" 
-          onClick={handleClose} 
-          style={{ fontSize: '1.5rem' }} 
-        />
+        <IoMdClose className='cursor-pointer' onClick={handleClose} style={{ fontSize: '1.5rem' }} />
       </DialogTitle>
-      
-      <DialogContent>
-        <Box component="form" noValidate sx={{ mt: 2 }}>
-          <div className="grid grid-cols-1 gap-5 gap-y-3 md:grid-cols-2">
-<div className='flex items-end gap-4'>
-<MuiTextField
-              control={control}
-              label="Supplier Name"
-              id="name"
-              name="name"
-              placeholder="Enter Supplier Name"
-              error={!!errors.name}
-              helperText={errors.name?.message}
-              size="small"
-              fullWidth
-            />
 
-<FormControlLabel
-              control={
-                <Controller
-                  name="status"
-                  control={control}
-                  render={({ field }) => (
-                    <Switch
-                      {...field}
-                      checked={field.value}
-                      color="primary"
-                    />
-                  )}
-                />
-              }
-              label="Status"
-              labelPlacement="start"
-              sx={{ 
-                justifyContent: 'flex-start', 
-                ml: 0, 
-                mt: 2 
-              }}
-            />
-</div>
+      <DialogContent>
+        <Box component='form' noValidate sx={{ mt: 2 }}>
+          <div className='grid grid-cols-1 gap-5 gap-y-3 md:grid-cols-2'>
+            <div className='flex items-end gap-4'>
+              <MuiTextField
+                control={control}
+                label='Supplier Name'
+                id='name'
+                name='name'
+                placeholder='Enter Supplier Name'
+                error={!!errors.name}
+                helperText={errors.name?.message}
+                size='small'
+                fullWidth
+              />
+
+              <FormControlLabel
+                control={
+                  <Controller
+                    name='status'
+                    control={control}
+                    render={({ field }) => <Switch {...field} checked={field.value} color='primary' />}
+                  />
+                }
+                label='Status'
+                labelPlacement='start'
+                sx={{
+                  justifyContent: 'flex-start',
+                  ml: 0,
+                  mt: 2
+                }}
+              />
+            </div>
 
             <MuiTextField
               control={control}
-              label="Description"
-              id="description"
-              name="description"
-              placeholder="Description"
+              label='Description'
+              id='description'
+              name='description'
+              placeholder='Description'
               error={!!errors.description}
               helperText={errors.description?.message}
-              className="col-span-1 md:col-span-2"
-              size="small"
+              className='col-span-1 md:col-span-2'
+              size='small'
               multiline
               rows={4}
               fullWidth
@@ -225,25 +208,11 @@ return
       </DialogContent>
 
       <DialogActions>
-        <Button 
-          variant="outlined" 
-          onClick={handleClose} 
-          disabled={isCreating || isUpdating}
-        >
+        <Button variant='outlined' onClick={handleClose} disabled={isCreating || isUpdating}>
           Cancel
         </Button>
-        <Button 
-          variant="contained" 
-          onClick={onSubmit} 
-          disabled={isCreating || isUpdating}
-        >
-          {isCreating || isUpdating ? (
-            <CircularProgress size={24} />
-          ) : supplierId ? (
-            'Update'
-          ) : (
-            'Save'
-          )}
+        <Button variant='contained' onClick={onSubmit} disabled={isCreating || isUpdating}>
+          {isCreating || isUpdating ? <CircularProgress size={24} /> : supplierId ? 'Update' : 'Save'}
         </Button>
       </DialogActions>
     </Dialog>

@@ -11,10 +11,9 @@ import classnames from 'classnames'
 import PerfectScrollbar from 'react-perfect-scrollbar'
 
 // Slice Imports
-import { getCurrentEmail, moveEmailsToFolder } from '@/redux-store/slices/email'
-
-// Component Imports
 import CustomAvatar from '@core/components/mui/Avatar'
+
+import { getCurrentEmail, moveEmailsToFolder } from '@/redux-store/slices/email'
 
 // Styles Imports
 import styles from './styles.module.css'

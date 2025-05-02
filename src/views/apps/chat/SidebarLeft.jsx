@@ -16,10 +16,11 @@ import classnames from 'classnames'
 import PerfectScrollbar from 'react-perfect-scrollbar'
 
 // Slice Imports
+import CustomAvatar from '@core/components/mui/Avatar'
+
 import { addNewChat } from '@/redux-store/slices/chat'
 
 // Component Imports
-import CustomAvatar from '@core/components/mui/Avatar'
 import UserProfileLeft from './UserProfileLeft'
 import AvatarWithBadge from './AvatarWithBadge'
 

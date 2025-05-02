@@ -2,7 +2,6 @@
 
 import React, { useEffect } from 'react'
 
-import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 
 import { toast } from 'react-toastify'
@@ -57,8 +56,8 @@ const EditAirport = ({ airportId, open, onClose }) => {
     await updateAirport({ airportId, updated_data }).then(response => {
       if ('error' in response) {
         setErrors(response?.error.data?.errors)
-        
-return
+
+        return
       }
 
       if (response.data?.code == 200) {

@@ -5,9 +5,7 @@ export const metadata = {
 }
 
 const MarginPage = async () => {
-  return (
-    <MarginTable />
-  )
+  return <MarginTable />
 }
 
 export default MarginPage

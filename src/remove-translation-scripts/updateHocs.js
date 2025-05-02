@@ -5,32 +5,44 @@ import { consola } from 'consola'
 export const updateAuthGuard = async () => {
   consola.start('Updating AuthGard file...')
 
-  // Using fs.promises API for reading and writing files asynchronously
-  let AuthGuardFileContent = await fs.promises.readFile('src/hocs/AuthGuard.jsx', 'utf8')
+  const authGuardPath = 'src/hocs/AuthGuard.jsx'
+  const exists = await fs.pathExists(authGuardPath)
 
-  // Modify the file content as needed
+  if (!exists) {
+    consola.warn(`Skipped: ${authGuardPath} not found.`)
+
+    return
+  }
+
+  let AuthGuardFileContent = await fs.promises.readFile(authGuardPath, 'utf8')
+
   AuthGuardFileContent = AuthGuardFileContent.replace(/(ChildrenType) & { locale: Locale }/, '$1')
     .replace(/\{ children, locale \}/, '{ children }')
     .replace(/lang={locale}/, '')
 
-  // Write the modified content back to the file
-  await fs.promises.writeFile('src/hocs/AuthGuard.jsx', AuthGuardFileContent)
+  await fs.promises.writeFile(authGuardPath, AuthGuardFileContent)
   consola.success('Auth Guard file updated successfully\n')
 }
 
 // Update the guest only route file
 export const updateGuestOnlyRoutes = async () => {
-  consola.start('Updating AuthGard file...')
+  consola.start('Updating GuestOnlyRoute file...')
 
-  // Using fs.promises API for reading and writing files asynchronously
-  let GuestOnlyRouteFileContent = await fs.promises.readFile('src/hocs/GuestOnlyRoute.jsx', 'utf8')
+  const guestRoutePath = 'src/hocs/GuestOnlyRoute.jsx'
+  const exists = await fs.pathExists(guestRoutePath)
 
-  // Modify the file content as needed
+  if (!exists) {
+    consola.warn(`Skipped: ${guestRoutePath} not found.`)
+
+    return
+  }
+
+  let GuestOnlyRouteFileContent = await fs.promises.readFile(guestRoutePath, 'utf8')
+
   GuestOnlyRouteFileContent = GuestOnlyRouteFileContent.replace(/(ChildrenType) & { lang: Locale }/, '$1')
     .replace(/\{ children, lang \}/, '{ children }')
     .replace(/lang={locale}/, '')
 
-  // Write the modified content back to the file
-  await fs.promises.writeFile('src/hocs/GuestOnlyRoute.jsx', GuestOnlyRouteFileContent)
+  await fs.promises.writeFile(guestRoutePath, GuestOnlyRouteFileContent)
   consola.success('Guest Guard file updated successfully\n')
 }

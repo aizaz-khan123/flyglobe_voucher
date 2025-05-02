@@ -12,17 +12,15 @@ import classNames from 'classnames'
 import { useDispatch, useSelector } from 'react-redux'
 
 // Slice Imports
+import { useSettings } from '@core/hooks/useSettings'
+
+import { commonLayoutClasses } from '@layouts/utils/layoutClasses'
+
 import { getActiveUserData } from '@/redux-store/slices/chat'
 
 // Component Imports
 import SidebarLeft from './SidebarLeft'
 import ChatContent from './ChatContent'
-
-// Hook Imports
-import { useSettings } from '@core/hooks/useSettings'
-
-// Util Imports
-import { commonLayoutClasses } from '@layouts/utils/layoutClasses'
 
 const ChatWrapper = () => {
   // States

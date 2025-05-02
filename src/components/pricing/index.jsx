@@ -13,8 +13,9 @@ import { useTheme } from '@mui/material/styles'
 import classnames from 'classnames'
 
 // Component Imports
-import PlanDetails from './PlanDetails'
 import DirectionalIcon from '@components/DirectionalIcon'
+
+import PlanDetails from './PlanDetails'
 
 const Pricing = ({ data }) => {
   // States

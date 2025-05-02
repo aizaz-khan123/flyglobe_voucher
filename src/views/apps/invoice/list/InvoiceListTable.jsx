@@ -5,7 +5,6 @@ import { useState, useEffect, useMemo } from 'react'
 
 // Next Imports
 import Link from 'next/link'
-import { useParams } from 'next/navigation'
 
 // MUI Imports
 import Card from '@mui/material/Card'
@@ -44,11 +43,9 @@ import OptionMenu from '@core/components/option-menu'
 import CustomAvatar from '@core/components/mui/Avatar'
 
 // Util Imports
-import { getInitials } from '@/utils/getInitials'
-import { getLocalizedUrl } from '@/utils/i18n'
-
-// Style Imports
 import tableStyles from '@core/styles/table.module.css'
+
+import { getInitials } from '@/utils/getInitials'
 
 const fuzzyFilter = (row, columnId, value, addMeta) => {
   // Rank the item
@@ -104,7 +101,6 @@ const InvoiceListTable = ({ invoiceData }) => {
   const [globalFilter, setGlobalFilter] = useState('')
 
   // Hooks
-  const { lang: locale } = useParams()
 
   const columns = useMemo(
     () => [
@@ -135,7 +131,7 @@ const InvoiceListTable = ({ invoiceData }) => {
         cell: ({ row }) => (
           <Typography
             component={Link}
-            href={getLocalizedUrl(`/invoice/preview/${row.original.id}`, locale)}
+            href={`/invoice/preview/${row.original.id}`}
             color='primary.main'
           >{`#${row.original.id}`}</Typography>
         )
@@ -208,7 +204,7 @@ const InvoiceListTable = ({ invoiceData }) => {
               <i className='ri-delete-bin-7-line text-textSecondary' />
             </IconButton>
             <IconButton>
-              <Link href={getLocalizedUrl(`/invoice/preview/${row.original.id}`, locale)} className='flex'>
+              <Link href={`/invoice/preview/${row.original.id}`} className='flex'>
                 <i className='ri-eye-line text-textSecondary' />
               </Link>
             </IconButton>
@@ -224,7 +220,7 @@ const InvoiceListTable = ({ invoiceData }) => {
                 {
                   text: 'Edit',
                   icon: 'ri-pencil-line',
-                  href: getLocalizedUrl(`/invoice/edit/${row.original.id}`, locale),
+                  href: `/invoice/edit/${row.original.id}`,
                   linkProps: {
                     className: 'flex items-center is-full plb-2 pli-4 gap-2 text-textSecondary'
                   }
@@ -305,7 +301,7 @@ const InvoiceListTable = ({ invoiceData }) => {
           variant='contained'
           component={Link}
           startIcon={<i className='ri-add-line' />}
-          href={getLocalizedUrl('invoice/add', locale)}
+          href={'invoice/add'}
           className='max-sm:is-full'
         >
           Create Invoice

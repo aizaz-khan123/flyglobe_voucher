@@ -24,6 +24,7 @@ import frontCommonStyles from '@views/front-pages/styles.module.css'
 import Lines from '@assets/svg/front-pages/landing-page/Lines'
 import Curve from '@assets/svg/front-pages/landing-page/Curve'
 import Arrow from '@assets/svg/front-pages/landing-page/Arrow'
+
 import ElementTwo from '@/assets/svg/front-pages/landing-page/ElementTwo'
 
 const pricingPlans = [

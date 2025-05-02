@@ -8,23 +8,13 @@ import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
-  Box,
   Button,
   Card,
-  CardContent,
   CircularProgress,
-  ClickAwayListener,
   Dialog,
   DialogContent,
   DialogTitle,
-  Divider,
-  Drawer,
-  Fade,
-  IconButton,
-  Menu,
-  Paper,
-  Popper,
-  Typography
+  Drawer
 } from '@mui/material'
 import dayjs from 'dayjs'
 
@@ -36,13 +26,14 @@ import { LuMenu } from 'react-icons/lu'
 
 import { useSelector } from 'react-redux'
 
-import InfoIcon from '@mui/icons-material/Info'
+import { GoClock } from 'react-icons/go'
 
-import { GoClock, GoTypography } from 'react-icons/go'
+import { FaAngleDown, FaAngleUp, FaPlane } from 'react-icons/fa6'
 
-import { FaAngleDown, FaAngleUp, FaArrowDownAZ, FaPersonWalkingDashedLineArrowRight, FaPlane } from 'react-icons/fa6'
+import { IoMdClose } from 'react-icons/io'
 
-import AddCommission from './AddCommission'
+import { FaPlaneDeparture } from 'react-icons/fa'
+
 import FlightFilter from './FlightFilter'
 import FlightRouteDisplay from './FlightRouteDisplay'
 import { useFlightSearchMutation, useInitiatingMutation } from '@/redux-store/services/api'
@@ -56,10 +47,9 @@ import FlightDetailModal from './FlightDetailModal'
 import DateSelector from './DateSelector'
 import BookingFareModal from './BookingFareModal'
 import FlightSearch from '../FlightComponent/FlightSearch'
-import { IoIosArrowDown, IoMdClose } from 'react-icons/io'
+
 import FareOptionCard from './FareOptionCard'
 import FlightAccordianFilters from './FlightAccordianFilters'
-import { FaPlaneDeparture } from 'react-icons/fa'
 
 const stopsOptions = ['Non Stop', '1 Stop', '1+ Stops']
 
@@ -250,105 +240,109 @@ const FlightFound = () => {
   const [openComission, setOpenComission] = useState(false)
   const searchResultExpireModalHandleOpen = () => setsearchResultExpireModal(true)
   const [bookingFareModal, setBookingFareModal] = useState(false)
-  const [selectedFares, setSelectedFares] = useState({});
-  const [selectedAirlinesBySector, setSelectedAirlinesBySector] = useState({});
-  const [activeSectorIndex, setActiveSectorIndex] = useState(1);
-  const [legsLength, setLegsLength] = useState([]);
+  const [selectedFares, setSelectedFares] = useState({})
+  const [selectedAirlinesBySector, setSelectedAirlinesBySector] = useState({})
+  const [activeSectorIndex, setActiveSectorIndex] = useState(1)
+  const [legsLength, setLegsLength] = useState([])
 
   const handleCloseBookingFareModal = () => setBookingFareModal(false)
 
   const handleClearSelectedFares = () => {
-    setSelectedFares({});
-    setSelectedAirlinesBySector({});
-    setActiveSectorIndex(1);
-  };
+    setSelectedFares({})
+    setSelectedAirlinesBySector({})
+    setActiveSectorIndex(1)
+  }
 
-  const initiateBookFareHandler = async (bookingIds) => {
+  const initiateBookFareHandler = async bookingIds => {
     try {
       const response = await initiateBookFareTrigger({
         booking_id: bookingIds
-      }).unwrap();
+      }).unwrap()
 
-      setBookingFareModal(true);
+      setBookingFareModal(true)
+
       if (response?.status === true) {
-        router.push(`/en/flight/new-booking/${response?.data}`);
+        router.push(`/flight/new-booking/${response?.data}`)
       }
     } catch (error) {
-      console.error('Mutation failed:', error);
+      console.error('Mutation failed:', error)
+
       // Handle error
     }
-  };
+  }
 
-  const hasSubmittedRef = useRef(false);
+  const hasSubmittedRef = useRef(false)
 
   const handleFareSelect = (legIndex, fareData, flightData, allLegs) => {
-    const sectorKey = fareData.sector;
-    const airline = fareData.airline.name;
-    const sectorKeys = Object.keys(allLegs || {});
-    const totalSectors = sectorKeys.length;
+    const sectorKey = fareData.sector
+    const airline = fareData.airline.name
+    const sectorKeys = Object.keys(allLegs || {})
+    const totalSectors = sectorKeys.length
 
     setSelectedFares(prev => {
       const newFares = {
         ...prev,
         [sectorKey]: { ...fareData, airline }
-      };
-
-      if (Object.keys(newFares).length === totalSectors && !hasSubmittedRef.current) {
-        hasSubmittedRef.current = true;
-        handleCombinedBooking(newFares, totalSectors);
       }
 
-      return newFares;
-    });
+      if (Object.keys(newFares).length === totalSectors && !hasSubmittedRef.current) {
+        hasSubmittedRef.current = true
+        handleCombinedBooking(newFares, totalSectors)
+      }
+
+      return newFares
+    })
 
     setSelectedAirlinesBySector(prev => ({
       ...prev,
       [sectorKey]: airline
-    }));
+    }))
 
-    setActiveSectorIndex(prev => Math.min(prev + 1, totalSectors));
-  };
+    setActiveSectorIndex(prev => Math.min(prev + 1, totalSectors))
+  }
+
   useEffect(() => {
     return () => {
-      hasSubmittedRef.current = false;
-    };
-  }, []);
+      hasSubmittedRef.current = false
+    }
+  }, [])
 
   const handleCombinedBooking = async (fares, totalSectors) => {
     try {
-      const bookingIds = [];
-      const sectorsProcessed = new Set();
+      const bookingIds = []
+      const sectorsProcessed = new Set()
 
       Object.values(fares).forEach(fare => {
-        if (!fare?.sector) return;
-        const sectorKey = fare.sector;
+        if (!fare?.sector) return
+        const sectorKey = fare.sector
+
         if (!sectorsProcessed.has(sectorKey)) {
-          sectorsProcessed.add(sectorKey);
-          bookingIds.push(fare.booking_id);
+          sectorsProcessed.add(sectorKey)
+          bookingIds.push(fare.booking_id)
         }
-      });
+      })
 
       // Validate against actual sector count from current flight
       if (bookingIds.length !== totalSectors) {
-        alert(`Missing ${totalSectors - bookingIds.length} sector selections`);
-        return;
+        alert(`Missing ${totalSectors - bookingIds.length} sector selections`)
+
+        return
       }
 
       const response = await initiateBookFareTrigger({
         booking_id: bookingIds
-      }).unwrap();
+      }).unwrap()
 
-      setBookingFareModal(true);
+      setBookingFareModal(true)
+
       if (response?.status === true) {
-        router.push(`/en/flight/new-booking/${response?.data}`);
+        router.push(`/flight/new-booking/${response?.data}`)
       }
     } catch (error) {
-      console.error("Booking failed:", error);
-      alert(error?.data?.message || "Failed to process booking");
+      console.error('Booking failed:', error)
+      alert(error?.data?.message || 'Failed to process booking')
     }
-  };
-
-
+  }
 
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
@@ -375,6 +369,7 @@ const FlightFound = () => {
   const airlines = useMemo(() => {
     if (!mergeFlightResponse) return []
     const uniqueAirlines = new Set(mergeFlightResponse.map(flight => flight?.airline?.name))
+
     return Array.from(uniqueAirlines)
   }, [mergeFlightResponse])
 
@@ -383,6 +378,7 @@ const FlightFound = () => {
   const [selectAllStops, setSelectAllStops] = useState(false)
   const [selectedDepartureTimes, setSelectedDepartureTimes] = useState([])
   const [selectAllDepartureTimes, setSelectAllDepartureTimes] = useState(false)
+
   // const [priceRange, setPriceRange] = useState({ min: 0, max: 5000000 })
   const [fareMaxPrice, setFareMaxPrice] = useState(0)
   const [fareMinPrice, setFareMinPrice] = useState(0)
@@ -472,6 +468,7 @@ const FlightFound = () => {
 
     return flightTime >= start && flightTime <= end
   }
+
   useEffect(() => {
     if (mergeFlightResponse) {
       const allPrices = mergeFlightResponse
@@ -488,8 +485,10 @@ const FlightFound = () => {
             // Define the fare processor
             const processFare = fare => {
               const amount = fare?.price?.gross_amount
+
               if (amount) {
                 const parsed = parseFloat(amount.replace(/,/g, '') || 0)
+
                 if (!isNaN(parsed)) prices.push(parsed)
               }
             }
@@ -513,6 +512,7 @@ const FlightFound = () => {
       if (allPrices.length > 0) {
         const minPrice = Math.min(...allPrices)
         const maxPrice = Math.max(...allPrices)
+
         setFareMaxPrice(maxPrice)
         setFareMinPrice(minPrice)
         setPriceRange({
@@ -548,6 +548,7 @@ const FlightFound = () => {
         const checkFare = fare => {
           const priceStr = fare?.price?.gross_amount || '0'
           const price = parseFloat(priceStr.replace(/,/g, ''))
+
           return price >= priceRange.value[0] && price <= priceRange.value[1]
         }
 
@@ -562,27 +563,29 @@ const FlightFound = () => {
           if (flight.legs) {
             return Object.values(flight.legs).some(legGroup => legGroup.some(leg => leg.fare_option?.some(checkFare)))
           }
+
           return false
         }
 
         return false
       })()
 
-
       const matchesStops = selectedStops.length === 0 || selectedStops.includes(stops)
       const matchesAirlines = selectedAirlines.length === 0 || selectedAirlines.includes(flight?.airline?.name)
+
       // Check against sector-specific airline selections
       // Check against sector-specific airline selections
       const matchesSelectedSectors = Object.entries(selectedAirlinesBySector).every(([sectorKey, selectedAirline]) => {
         // Check if the flight has a leg in this sector with the selected airline
         const hasMatchingSector = normalizedLegs.some(leg => {
           // Ensure leg.sector is an array before joining
-          const legSector = Array.isArray(leg.sector) ? leg.sector.join('-') : leg.sector;
-          return legSector === sectorKey && flight.airline.name === selectedAirline;
-        });
+          const legSector = Array.isArray(leg.sector) ? leg.sector.join('-') : leg.sector
 
-        return hasMatchingSector;
-      });
+          return legSector === sectorKey && flight.airline.name === selectedAirline
+        })
+
+        return hasMatchingSector
+      })
 
       const matchesDepartureTime =
         selectedDepartureTimes.length === 0 ||
@@ -612,11 +615,13 @@ const FlightFound = () => {
       setFilteredFlights(mergeFlightResponse)
     }
   }
+
   const handleInputChange = (e, index) => {
     const value = Math.max(priceRange.min, Math.min(parseFloat(e.target.value) || 0, priceRange.max))
 
     setPriceRange(prev => {
       const newValue = [...prev.value]
+
       newValue[index] = value
 
       // Ensure min <= currentMin <= currentMax <= max
@@ -638,6 +643,7 @@ const FlightFound = () => {
     if (flight.provider === 'PIA_HITIT' || flight.provider === 'SABRE') {
       const fares =
         flight.fare_option?.map(fare => parseFloat(fare?.price?.gross_amount?.replace(/,/g, '') || Infinity)) || []
+
       return fares.length ? Math.min(...fares) : Infinity
     }
 
@@ -661,6 +667,7 @@ const FlightFound = () => {
 
     return Infinity
   }
+
   useEffect(() => {
     if (mergeFlightResponse) {
       const allPrices = mergeFlightResponse
@@ -686,6 +693,7 @@ const FlightFound = () => {
       if (allPrices.length > 0) {
         const minPrice = Math.min(...allPrices)
         const maxPrice = Math.max(...allPrices)
+
         setPriceRange({
           min: minPrice,
           max: maxPrice,
@@ -698,6 +706,7 @@ const FlightFound = () => {
   const sortedFlights = [...filteredFlights].sort((a, b) => {
     const aFare = getMinFare(a)
     const bFare = getMinFare(b)
+
     return aFare - bFare
   })
 
@@ -711,14 +720,16 @@ const FlightFound = () => {
   const handleCloseFlightInfo = () => {
     setAnchorEl(null)
   }
+
   // Add this helper function at the top of your component
   const getFirstLeg = legs => {
     if (!legs || legs.length === 0) return null
     const firstLeg = legs[0]
+
     return Array.isArray(firstLeg) ? firstLeg[0] : firstLeg
   }
 
-  const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [isFilterOpen, setIsFilterOpen] = useState(false)
 
   return (
     <div className='min-h-screen'>
@@ -741,7 +752,6 @@ const FlightFound = () => {
           </>
         )}
       </h3>
-
 
       <div className='grid grid-cols-12 gap-6 justify-center'>
         {/* Filters Section */}
@@ -773,7 +783,7 @@ const FlightFound = () => {
         </div> */}
 
         {/* Flight Results */}
-        <div className="col-span-2"></div>
+        <div className='col-span-2'></div>
         <div className='col-span-12 md:col-span-12 lg:col-span-8'>
           <Card className='flex justify-between items-center rounded shadow-md p-2'>
             <div className='text-xl pl-4 font-bold'>
@@ -821,13 +831,13 @@ const FlightFound = () => {
             <div>
               <div
                 onClick={() => setIsFilterOpen(!isFilterOpen)}
-                className="text-sm text-primary bg-transparent transition-all cursor-pointer flex items-center gap-2 justify-end"
+                className='text-sm text-primary bg-transparent transition-all cursor-pointer flex items-center gap-2 justify-end'
               >
-                {isFilterOpen ? "Close" : "Open"} Filters {isFilterOpen ? <FaAngleUp /> : <FaAngleDown />}
+                {isFilterOpen ? 'Close' : 'Open'} Filters {isFilterOpen ? <FaAngleUp /> : <FaAngleDown />}
               </div>
 
               <div
-                className={`transition-all duration-1000 ease-in-out mb-[15px] overflow-hidden bg-white ${isFilterOpen ? "max-h-[1000px]" : "max-h-0"}`}
+                className={`transition-all duration-1000 ease-in-out mb-[15px] overflow-hidden bg-white ${isFilterOpen ? 'max-h-[1000px]' : 'max-h-0'}`}
               >
                 <FlightAccordianFilters
                   time={time}
@@ -855,8 +865,6 @@ const FlightFound = () => {
                 />
               </div>
             </div>
-
-
           </div>
           {flightSreachIsloading ? (
             <div className='flex justify-center items-center h-[50%]'>
@@ -867,27 +875,24 @@ const FlightFound = () => {
               <div>
                 <div>
                   {sortedFlights.map((data, index) => {
+                    const allLegs = data?.legs || {}
 
-                    const allLegs = data?.legs || {};
+                    const keys = Object.keys(allLegs)
+                    const filteredKeys = keys.filter(key => Number(key) === activeSectorIndex)
 
-                    const keys = Object.keys(allLegs);
-                    const filteredKeys = keys.filter(key => Number(key) === activeSectorIndex);
-                    const normalizedLegs = filteredKeys
-                      .map(key => allLegs[key])
-                      .flat();
+                    const normalizedLegs = filteredKeys.map(key => allLegs[key]).flat()
+
                     // const normalizedLegs = data?.legs
                     //   ? Object.values(data.legs).flat() // Convert object to array of arrays and flatten
                     //   : []
 
-
-
                     // Normalize legs to handle both PIA and Airblue structures
-                    const normalizedLegsData = Array.isArray(data?.legs) && data?.legs.length > 0
-                      ? Array.isArray(data?.legs[0])
-                        ? data?.legs.flat() // Airblue: Flatten the nested arrays
-                        : data?.legs // PIA: Use as-is
-                      : []; // Fallback to an empty array if legs is undefined or empty
-
+                    const normalizedLegsData =
+                      Array.isArray(data?.legs) && data?.legs.length > 0
+                        ? Array.isArray(data?.legs[0])
+                          ? data?.legs.flat() // Airblue: Flatten the nested arrays
+                          : data?.legs // PIA: Use as-is
+                        : [] // Fallback to an empty array if legs is undefined or empty
 
                     // Combine fare options from both the root and legs
                     const combinedFareOptions = [
@@ -898,15 +903,22 @@ const FlightFound = () => {
                     ]
 
                     return (
-
-
-                      <Accordion className='mb-2' sx={{
-                        marginBottom: '2rem', border: 'none', borderRadius: '10px', backgroundColor: 'white', '&::before': {
-                          display: 'none',
-                        },
-                      }}>
+                      <Accordion
+                        className='mb-2'
+                        sx={{
+                          marginBottom: '2rem',
+                          border: 'none',
+                          borderRadius: '10px',
+                          backgroundColor: 'white',
+                          '&::before': {
+                            display: 'none'
+                          }
+                        }}
+                        key={index}
+                      >
                         <AccordionSummary
                           expandIcon={''}
+
                           // aria-controls={`panel${legIndex}-content`}
                           // id={`panel${legIndex}-header`}
                           className='rounded-lg'
@@ -914,32 +926,33 @@ const FlightFound = () => {
                           <div className='w-full'>
                             <div className='flex flex-col lg:flex-row gap-4 lg:gap-0 justify-between items-center'>
                               <div className='flex items-center gap-2 mb-2'>
-                                {data?.airline?.thumbnail && Object.keys(data.airline.thumbnail).length === 0 ?
+                                {data?.airline?.thumbnail && Object.keys(data.airline.thumbnail).length === 0 ? (
                                   <img
                                     src={data?.airline?.thumbnail || ''}
                                     alt='img'
                                     className='h-14 w-14 object-contain'
                                   />
-                                  : <FaPlaneDeparture fontSize={30} className='text primary' />
-                                }
+                                ) : (
+                                  <FaPlaneDeparture fontSize={30} className='text primary' />
+                                )}
                                 <div>
                                   <h3 className='font-semibold text-base mb-1'>{data?.airline?.name}</h3>
                                   <p className='text-gray-500 text-xs'>
-                                    {data.provider === 'AIRBLUE_API' ?
-                                      (normalizedLegs
+                                    {data.provider === 'AIRBLUE_API'
+                                      ? normalizedLegs
                                         ?.map(leg =>
                                           Array.isArray(leg?.flight_number)
                                             ? leg?.flight_number.join(', ')
                                             : leg?.flight_number
                                         )
-                                        .join(' -> ') || 'No Flight Numbers')
-                                      : (normalizedLegsData
+                                        .join(' -> ') || 'No Flight Numbers'
+                                      : normalizedLegsData
                                         ?.map(leg =>
                                           Array.isArray(leg?.flight_number)
                                             ? leg?.flight_number.join(', ')
                                             : leg?.flight_number
                                         )
-                                        .join(' -> ') || 'No Flight Numbers')}
+                                        .join(' -> ') || 'No Flight Numbers'}
                                     • {dayjs(flightSearchData?.journey_legs?.departure_date).format('ddd, MMM D, YYYY')}
                                   </p>
                                 </div>
@@ -947,22 +960,23 @@ const FlightFound = () => {
                               <div className='flex items-center gap-2'>
                                 <div className='text-center'>
                                   <h3 className='font-semibold text-base mb-0 h-4'>
-                                    {
-                                      data.provider === 'AIRBLUE_API' ?
-                                        normalizedLegs?.[0]?.segments[0]?.origin?.iata_code || 'N/A'
-                                        : normalizedLegsData?.[0]?.segments[0]?.origin?.iata_code || 'N/A'}
+                                    {data.provider === 'AIRBLUE_API'
+                                      ? normalizedLegs?.[0]?.segments[0]?.origin?.iata_code || 'N/A'
+                                      : normalizedLegsData?.[0]?.segments[0]?.origin?.iata_code || 'N/A'}
                                   </h3>
                                   <span className='text-gray-500 text-xs'>
-                                    {dayjs(normalizedLegsData?.[0]?.segments?.[0]?.departure_datetime).format('hh:mm A')}
+                                    {dayjs(normalizedLegsData?.[0]?.segments?.[0]?.departure_datetime).format(
+                                      'hh:mm A'
+                                    )}
                                   </span>
                                 </div>
                                 <div className='text-center'>
                                   <h3 className='text-gray text-xs mb-0'>
-                                    {data.provider === 'AIRBLUE_API' ?
-                                      normalizedLegs?.[0]?.journey_duration
+                                    {data.provider === 'AIRBLUE_API'
+                                      ? normalizedLegs?.[0]?.journey_duration
                                         ? formatDuration(normalizedLegs?.[0]?.journey_duration)
-                                        : 'N/A' :
-                                      normalizedLegsData?.[0]?.journey_duration
+                                        : 'N/A'
+                                      : normalizedLegsData?.[0]?.journey_duration
                                         ? formatDuration(normalizedLegsData?.[0]?.journey_duration)
                                         : 'N/A'}
                                   </h3>
@@ -977,16 +991,15 @@ const FlightFound = () => {
                                   </div>
                                   {/* </span> */}
                                   <h3 className='text-gray text-xs mb-0'>
-                                    {data.provider === 'AIRBLUE_API' ?
-                                      normalizedLegs?.[0]?.segments?.length === 1
+                                    {data.provider === 'AIRBLUE_API'
+                                      ? normalizedLegs?.[0]?.segments?.length === 1
                                         ? 'Non-Stop'
                                         : normalizedLegs?.[0]?.segments?.length === 2
                                           ? `1 Stop (${normalizedLegs?.[0]?.segments[1]?.origin?.iata_code})`
                                           : `1+ Stops (${normalizedLegs?.[0]?.segments
                                             ?.map(segment => segment?.origin?.iata_code)
-                                            .join('-')})` :
-
-                                      normalizedLegsData?.[0]?.segments?.length === 1
+                                            .join('-')})`
+                                      : normalizedLegsData?.[0]?.segments?.length === 1
                                         ? 'Non-Stop'
                                         : normalizedLegsData?.[0]?.segments?.length === 2
                                           ? `1 Stop (${normalizedLegsData?.[0]?.segments[1]?.origin?.iata_code})`
@@ -997,20 +1010,20 @@ const FlightFound = () => {
                                 </div>
                                 <div className='text-center'>
                                   <h3 className='font-semibold text-base mb-0 h-4'>
-
-                                    {data.provider === 'AIRBLUE_API' ?
-                                      normalizedLegs?.[0]?.segments[normalizedLegs?.[0]?.segments.length - 1]?.destination
-                                        ?.iata_code || 'N/A' :
-                                      normalizedLegsData?.[0]?.segments[normalizedLegsData?.[0]?.segments.length - 1]?.destination
-                                        ?.iata_code || 'N/A'}
+                                    {data.provider === 'AIRBLUE_API'
+                                      ? normalizedLegs?.[0]?.segments[normalizedLegs?.[0]?.segments.length - 1]
+                                        ?.destination?.iata_code || 'N/A'
+                                      : normalizedLegsData?.[0]?.segments[normalizedLegsData?.[0]?.segments.length - 1]
+                                        ?.destination?.iata_code || 'N/A'}
                                   </h3>
                                   <span className='text-gray-500 text-xs'>
                                     {dayjs(
-                                      data.provider === 'AIRBLUE_API' ?
-                                        normalizedLegs?.[0]?.segments[normalizedLegs?.[0]?.segments.length - 1]
-                                          ?.arrival_datetime :
-                                        normalizedLegsData?.[0]?.segments[normalizedLegsData?.[0]?.segments.length - 1]
+                                      data.provider === 'AIRBLUE_API'
+                                        ? normalizedLegs?.[0]?.segments[normalizedLegs?.[0]?.segments.length - 1]
                                           ?.arrival_datetime
+                                        : normalizedLegsData?.[0]?.segments[
+                                          normalizedLegsData?.[0]?.segments.length - 1
+                                        ]?.arrival_datetime
                                     ).format('hh:mm A')}
                                   </span>
                                 </div>
@@ -1019,16 +1032,14 @@ const FlightFound = () => {
                             <div>
                               <div>
                                 <div className='flex items-center justify-between gap-2'>
-                                  <Button className='bg-primary text-white w-fit rounded-md'>
-                                    {data?.provider}
-                                  </Button>
+                                  <Button className='bg-primary text-white w-fit rounded-md'>{data?.provider}</Button>
                                   <Button
                                     variant='contained'
                                     className='border-2 font-semibold text-sm bg-transparent text-gray-400 py-3'
                                     size='small'
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      handleOpenViewFlightDetail(data);
+                                    onClick={e => {
+                                      e.stopPropagation()
+                                      handleOpenViewFlightDetail(data)
                                     }}
                                   >
                                     {/* <img
@@ -1043,12 +1054,10 @@ const FlightFound = () => {
                                     className='border-2 font-semibold text-sm bg-transparent text-gray-400 py-3'
                                     size='small'
                                     onClick={() => {
-                                      toggleVisible(1);
-                                      setFlightFearOptionsData(data);
-
+                                      toggleVisible(1)
+                                      setFlightFearOptionsData(data)
                                     }}
                                   >
-
                                     <img src='/media/icons/view-detail-icon.svg' alt='' />
                                     View Detail
                                   </Button>
@@ -1056,44 +1065,45 @@ const FlightFound = () => {
                               </div>
                             </div>
                           </div>
-
                         </AccordionSummary>
 
-
                         <AccordionDetails>
-                          {normalizedLegs[0]?.sector.length > 0 &&
+                          {normalizedLegs[0]?.sector.length > 0 && (
                             <div className='border rounded-lg bg-[#F5F6FF] p-2 mb-3 text-center'>
                               {normalizedLegs[0]?.sector?.join(' → ')}
                             </div>
-                          }
+                          )}
                           <div className='grid grid-cols-12 gap-4'>
-                            {([...(Array.isArray(data?.fare_option) ? data.fare_option : [])]).map((faresGroupData, faresGroupIndex) => (
-                              <FareOptionCard
-                                key={faresGroupIndex}
-                                faresGroupData={faresGroupData}
-                                data={data}
-                                initiateBookFareHandler={initiateBookFareHandler}
-                                handleClick={handleClick}
-                                anchorRef={anchorRef}
-                                openFlightInfo={openFlightInfo}
-                                anchorEl={anchorEl}
-                                allLegs={allLegs}
-                                handleCloseFlightInfo={handleCloseFlightInfo}
-                              />
-                            ))}
+                            {[...(Array.isArray(data?.fare_option) ? data.fare_option : [])].map(
+                              (faresGroupData, faresGroupIndex) => (
+                                <FareOptionCard
+                                  key={faresGroupIndex}
+                                  faresGroupData={faresGroupData}
+                                  data={data}
+                                  initiateBookFareHandler={initiateBookFareHandler}
+                                  handleClick={handleClick}
+                                  anchorRef={anchorRef}
+                                  openFlightInfo={openFlightInfo}
+                                  anchorEl={anchorEl}
+                                  allLegs={allLegs}
+                                  handleCloseFlightInfo={handleCloseFlightInfo}
+                                />
+                              )
+                            )}
                           </div>
                           {normalizedLegs.map((leg, legIndex) => {
-                            const sectorKey = leg.sector.join('-');
+                            const sectorKey = leg.sector.join('-')
 
                             return (
                               <div key={legIndex} className='grid grid-cols-12 gap-4'>
                                 {/* <div className="col-span-12">
                                   {leg?.sector?.join(' → ') || 'Sector information not available'}
                                 </div> */}
-                                {([
-                                  ...(Array.isArray(leg?.fare_option) ? leg.fare_option : []),
+                                {[
+                                  ...(Array.isArray(leg?.fare_option) ? leg.fare_option : [])
+
                                   // ...(Array.isArray(data?.fare_option) ? data.fare_option : [])
-                                ]).map((faresGroupData, faresGroupIndex) => (
+                                ].map((faresGroupData, faresGroupIndex) => (
                                   <FareOptionCard
                                     key={faresGroupIndex}
                                     faresGroupData={faresGroupData}
@@ -1148,16 +1158,9 @@ const FlightFound = () => {
                                 </Accordion> */}
                               </div>
                             )
-                          }
-                          )}
-
+                          })}
                         </AccordionDetails>
-
-
                       </Accordion>
-
-
-
                     )
                   })}
                 </div>
@@ -1368,9 +1371,7 @@ const FlightFound = () => {
                 </div> */}
               </div>
               {!flightSreachIsloading && !isFetching.current && filteredFlights?.length === 0 ? (
-                <p className="text-gray-500 text-center">
-                  No flight options found.
-                </p>
+                <p className='text-gray-500 text-center'>No flight options found.</p>
               ) : null}
             </>
           )}
@@ -1393,6 +1394,7 @@ const FlightFound = () => {
 
       <Drawer
         open={filterVisible == 2}
+
         // onClickOverlay={() => toggleFilterVisible(2)}
         // sideClassName="z-[50]"
         onClose={() => setFilterVisible(null)}
@@ -1452,6 +1454,7 @@ const FlightFound = () => {
       </Dialog>
       <Dialog
         open={searchResultExpireModal}
+
         // onClose={handleCloseSearchResultExpireModal}
         onClose={handleCloseSearchResultExpireModal}
         maxWidth='md'
@@ -1472,6 +1475,7 @@ const FlightFound = () => {
       </Dialog>
       <Dialog
         open={bookingFareModal}
+
         // onClose={handleCloseBookingFareModal}
         onClose={(event, reason) => {
           if (reason !== 'backdropClick') {

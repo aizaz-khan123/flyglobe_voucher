@@ -3,7 +3,6 @@ import { useState } from 'react'
 
 // Next Imports
 import Link from 'next/link'
-import { useParams } from 'next/navigation'
 
 // MUI Imports
 import Drawer from '@mui/material/Drawer'
@@ -18,9 +17,6 @@ import PerfectScrollbar from 'react-perfect-scrollbar'
 
 // Components Imports
 import ComposeMail from './ComposeMail'
-
-// Util Imports
-import { getLocalizedUrl } from '@/utils/i18n'
 
 // Styles Imports
 import styles from './styles.module.css'
@@ -68,7 +64,6 @@ const SidebarLeft = props => {
   const [openCompose, setOpenCompose] = useState(false)
 
   // Hooks
-  const { lang: locale } = useParams()
 
   const folderCounts = store.emails.reduce((counts, email) => {
     if (!email.isRead && email.folder !== 'trash') {
@@ -109,7 +104,7 @@ const SidebarLeft = props => {
             {Object.entries(icons).map(([key, value]) => (
               <Link
                 key={key}
-                href={getLocalizedUrl(`/email/${key}`, locale)}
+                href={`/email/${key}`}
                 prefetch
                 className={classnames(
                   'flex items-center justify-between plb-1 pli-5 gap-2.5 min-bs-8 bs-[32px] cursor-pointer',
@@ -145,7 +140,7 @@ const SidebarLeft = props => {
               {uniqueLabels.map(labelName => (
                 <Link
                   key={labelName}
-                  href={getLocalizedUrl(`/email/label/${labelName}`, locale)}
+                  href={`/email/label/${labelName}`}
                   prefetch
                   className={classnames('flex items-center gap-x-2 pli-5 cursor-pointer', {
                     [styles.activeSidebarListItem]: labelName === label

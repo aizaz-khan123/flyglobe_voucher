@@ -23,10 +23,11 @@ import { valibotResolver } from '@hookform/resolvers/valibot'
 import { minLength, nonEmpty, object, pipe, string } from 'valibot'
 
 // Slice Imports
+import CustomAvatar from '@core/components/mui/Avatar'
+
 import { editTask, deleteTask } from '@/redux-store/slices/kanban'
 
 // Component Imports
-import CustomAvatar from '@core/components/mui/Avatar'
 import AppReactDatepicker from '@/libs/styles/AppReactDatepicker'
 
 // Data Imports

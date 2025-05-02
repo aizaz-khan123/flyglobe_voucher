@@ -1,10 +1,10 @@
-import { useRef } from "react"
+import { useRef } from 'react'
 
-import { Box, Button, Typography } from "@mui/material"
+import { Box, Button, Typography } from '@mui/material'
 import UploadFileIcon from '@mui/icons-material/UploadFile'
-import { IoClose } from "react-icons/io5"
+import { IoClose } from 'react-icons/io5'
 
-export const MUIFileUploader = ({ onFileChange, preview,handleRemoveImage }) => {
+export const MUIFileUploader = ({ onFileChange, preview, handleRemoveImage }) => {
   const fileInputRef = useRef(null)
 
   const handleButtonClick = () => {
@@ -36,19 +36,15 @@ export const MUIFileUploader = ({ onFileChange, preview,handleRemoveImage }) => 
     >
       {preview ? (
         <>
-        <Box position='relative'>
-          <img
-            src={preview}
-            alt='Preview'
-            style={{ maxWidth: '100%', maxHeight: '160px', objectFit: 'contain' }}
-          />
-        </Box>
-         <Box position='absolute' top={8} right={8}>
-         <Button size='small' variant='contained' color='error' onClick={handleRemoveImage} >
-           <IoClose/>
-         </Button>
-       </Box>
-       </>
+          <Box position='relative'>
+            <img src={preview} alt='Preview' style={{ maxWidth: '100%', maxHeight: '160px', objectFit: 'contain' }} />
+          </Box>
+          <Box position='absolute' top={8} right={8}>
+            <Button size='small' variant='contained' color='error' onClick={handleRemoveImage}>
+              <IoClose />
+            </Button>
+          </Box>
+        </>
       ) : (
         <>
           <Typography variant='body1' mb={2}>
@@ -59,14 +55,8 @@ export const MUIFileUploader = ({ onFileChange, preview,handleRemoveImage }) => 
           </Button>
         </>
       )}
-     
-      <input
-        type='file'
-        hidden
-        ref={fileInputRef}
-        onChange={handleFileChange}
-        accept='image/*'
-      />
+
+      <input type='file' hidden ref={fileInputRef} onChange={handleFileChange} accept='image/*' />
     </Box>
   )
 }

@@ -8,16 +8,10 @@ import {
   Accordion,
   AccordionSummary,
   AccordionDetails,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  TextField,
   Button,
   Card,
   CardContent,
   Typography,
-  Divider,
   Input
 } from '@mui/material'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
@@ -37,11 +31,14 @@ import PhoneInput from 'react-phone-input-2'
 import 'react-phone-input-2/lib/style.css'
 import { toast } from 'react-toastify'
 
-import { useBookingAvailabilityConfirmationQuery, useBookingConfirmMutation, usePassportInfoMutation } from '@/redux-store/services/api'
+import {
+  useBookingAvailabilityConfirmationQuery,
+  useBookingConfirmMutation,
+  usePassportInfoMutation
+} from '@/redux-store/services/api'
 import MuiTextField from '@/components/mui-form-inputs/MuiTextField'
 import MuiDatePicker from '@/components/mui-form-inputs/MuiDatePicker'
 import MuiDropdown from '@/components/mui-form-inputs/MuiDropdown'
-import MuiAutocomplete from '@/components/mui-form-inputs/MuiFlightSearchAutoComplete'
 import { formattedDate, formatDate } from '@/utils/formatDate'
 import { nationalities } from '@/data/dropdowns/nationalities'
 import { gender, genderTitle } from '@/data/dropdowns/DropdownValues'
@@ -75,8 +72,8 @@ const NewBooking = () => {
   const [expandedIndex, setExpandedIndex] = useState([])
   const [bookingConfirmTrigger, { isLoading: bookingConfirmationLoading }] = useBookingConfirmMutation()
   const router = useRouter()
-  const [passportInfoTrigger, { isLoading: passInfoIsLoading }] = usePassportInfoMutation();
-  const [passportFiles, setPassportFiles] = useState({});
+  const [passportInfoTrigger, { isLoading: passInfoIsLoading }] = usePassportInfoMutation()
+  const [passportFiles, setPassportFiles] = useState({})
 
   const {
     data: bookingAvailabilityConfirmationData,
@@ -146,19 +143,24 @@ const NewBooking = () => {
   const handleAccordionChange = index => {
     setExpandedIndex(prev => (prev.includes(index) ? prev.filter(i => i !== index) : [...prev, index]))
   }
-  const handlePassportScan = async (index) => {
-    const file = passportFiles[index];
+
+  const handlePassportScan = async index => {
+    const file = passportFiles[index]
+
     if (!file) {
-      toaster.error('Please upload a passport image first');
-      return;
+      toaster.error('Please upload a passport image first')
+
+      return
     }
 
-    const formData = new FormData();
-    formData.append('passport_image', file);
+    const formData = new FormData()
+
+    formData.append('passport_image', file)
 
     try {
-      const response = await passportInfoTrigger(formData).unwrap();
-      console.log('response', response);
+      const response = await passportInfoTrigger(formData).unwrap()
+
+      console.log('response', response)
 
       const updatedFields = {
         [`passengers.${index}.first_name`]: response.data.first_name,
@@ -167,19 +169,18 @@ const NewBooking = () => {
         [`passengers.${index}.gender`]: response.data.sex,
         [`passengers.${index}.d_number`]: response.data.passport_number,
         [`passengers.${index}.nationality`]: response.data.nationality,
-        [`passengers.${index}.d_expiry`]: response.data.expiry_date,
-
-      };
-
-      for (const key in updatedFields) {
-        setValue(key, updatedFields[key]);
+        [`passengers.${index}.d_expiry`]: response.data.expiry_date
       }
 
-      toaster.success('Passport scanned successfully');
+      for (const key in updatedFields) {
+        setValue(key, updatedFields[key])
+      }
+
+      toaster.success('Passport scanned successfully')
     } catch (err) {
-      toaster.error('Failed to scan passport');
+      toaster.error('Failed to scan passport')
     }
-  };
+  }
 
   const onSubmit = async data => {
     await bookingConfirmTrigger(data).then(response => {
@@ -191,7 +192,7 @@ const NewBooking = () => {
 
       toast.success('Booking has been Created Successfully.')
       setTimeout(() => {
-        router.push(`/en/bookings/${response?.data?.data?.booking_id || ''}`)
+        router.push(`/bookings/${response?.data?.data?.booking_id || ''}`)
       }, 500)
     })
   }
@@ -224,7 +225,10 @@ const NewBooking = () => {
                     <div className='flex justify-between items-cente'>
                       <div>
                         <div className=' mb-2 ml-1'>
-                          <FlightRouteDisplay queryParams={bookingAvailabilityConfirmationData?.request} legs={bookingAvailabilityConfirmationData?.request?.legs} />
+                          <FlightRouteDisplay
+                            queryParams={bookingAvailabilityConfirmationData?.request}
+                            legs={bookingAvailabilityConfirmationData?.request?.legs}
+                          />
                         </div>
                         <div className='flex gap-3'>
                           <div className='flex gap-2'>
@@ -276,7 +280,6 @@ const NewBooking = () => {
 
                   <Accordion
                     className='mt-0  pl-6 pr-6 shadow-none'
-
                     disableGutters
                     sx={{ boxShadow: 'none', '&:before': { display: 'none' } }}
                     defaultExpanded
@@ -358,10 +361,11 @@ const NewBooking = () => {
                                 <Input
                                   className='absolute inset-0 w-full h-full opacity-0 cursor-pointer'
                                   type='file'
-                                  onChange={(e) => {
-                                    const file = e.target.files?.[0];
+                                  onChange={e => {
+                                    const file = e.target.files?.[0]
+
                                     if (file) {
-                                      setPassportFiles(prev => ({ ...prev, [index]: file }));
+                                      setPassportFiles(prev => ({ ...prev, [index]: file }))
                                     }
                                   }}
                                 />
@@ -370,8 +374,12 @@ const NewBooking = () => {
                               </div>
                             </div>
 
-                            <Button className='text-md font-normal px-5 mt-8' variant='contained' onClick={() => handlePassportScan(index)}>
-                              {passInfoIsLoading ? "Scaning..." : "Scan Passport"}
+                            <Button
+                              className='text-md font-normal px-5 mt-8'
+                              variant='contained'
+                              onClick={() => handlePassportScan(index)}
+                            >
+                              {passInfoIsLoading ? 'Scaning...' : 'Scan Passport'}
                             </Button>
                           </div>
                           {/* <div className='col-span-12 mb-5'>
@@ -494,11 +502,11 @@ const NewBooking = () => {
                   </CardContent>
                 </Card>
                 <div>
-
-
                   {API === 'AIRBLUE_API' ? (
                     <>
-                      <AirbluePricingSummary bookingAvailabilityConfirmationData={bookingAvailabilityConfirmationData} />
+                      <AirbluePricingSummary
+                        bookingAvailabilityConfirmationData={bookingAvailabilityConfirmationData}
+                      />
                     </>
                   ) : (
                     <>
@@ -510,8 +518,9 @@ const NewBooking = () => {
                             </Typography>
 
                             {bookingAvailabilityConfirmationData?.fareInfoList[0]?.price?.fare_break_down &&
-                              Object.entries(bookingAvailabilityConfirmationData?.fareInfoList[0]?.price?.fare_break_down)
-                                .length > 0 && (
+                              Object.entries(
+                                bookingAvailabilityConfirmationData?.fareInfoList[0]?.price?.fare_break_down
+                              ).length > 0 && (
                                 <div>
                                   {Object.entries(
                                     bookingAvailabilityConfirmationData?.fareInfoList[0]?.price?.fare_break_down
@@ -542,7 +551,8 @@ const NewBooking = () => {
                                 </div>
                               )}
 
-                            <Accordion className="p-0"
+                            <Accordion
+                              className='p-0'
                               disableGutters
                               elevation={0}
                               square
@@ -551,8 +561,8 @@ const NewBooking = () => {
                                 '&:before': { display: 'none' },
                                 '&.Mui-expanded': {
                                   margin: 0,
-                                  boxShadow: 'none',
-                                },
+                                  boxShadow: 'none'
+                                }
                               }}
                             >
                               <AccordionSummary
@@ -573,7 +583,13 @@ const NewBooking = () => {
                                       bookingAvailabilityConfirmationData?.fareInfoList[0]?.price?.fare_break_down
                                     ).map(([key, data], index) => {
                                       const passengerType =
-                                        key === 'ADT' ? 'Adult' : key === 'CHILD' ? 'Child' : key === 'INF' ? 'Infant' : key
+                                        key === 'ADT'
+                                          ? 'Adult'
+                                          : key === 'CHILD'
+                                            ? 'Child'
+                                            : key === 'INF'
+                                              ? 'Infant'
+                                              : key
 
                                       return (
                                         <div key={index} className=''>
@@ -629,6 +645,7 @@ const NewBooking = () => {
                             ).map(([key, data], index) => {
                               const passengerType =
                                 key === 'ADT' ? 'Adult' : key === 'CNN' ? 'Child' : key === 'INF' ? 'Infant' : key
+
                               return (
                                 <div key={index} className='flex justify-between border-b pb-2'>
                                   <p className='font-semibold'>
@@ -673,6 +690,7 @@ const NewBooking = () => {
                                 ).map(([key, data], index) => {
                                   const passengerType =
                                     key === 'ADT' ? 'Adult' : key === 'CHILD' ? 'Child' : key === 'INF' ? 'Infant' : key
+
                                   return (
                                     <div key={index} className='border p-2 rounded-md'>
                                       <Typography className='px-0'>
@@ -719,11 +737,17 @@ const NewBooking = () => {
                 </div>
                 <div>
                   {segmentData.map((sector, sectorIndex) => {
+                    const firstSegment = API !== 'AIRBLUE_API' ? sector.segments[0] : sector[0]
 
-                    const firstSegment = API !== 'AIRBLUE_API' ? sector.segments[0] : sector[0];
-                    const lastSegment = API !== 'AIRBLUE_API' ? sector.segments[sector.segments.length - 1] : sector[sector.length - 1];
+                    const lastSegment =
+                      API !== 'AIRBLUE_API' ? sector.segments[sector.segments.length - 1] : sector[sector.length - 1]
+
                     const totalStops = sector.length - 1
-                    const layoverAirports = API !== 'AIRBLUE_API' ? sector.segments.slice(0, -1).map(seg => seg.destination.iata_code) : sector.slice(0, -1).map(seg => seg.destination.iata_code)
+
+                    const layoverAirports =
+                      API !== 'AIRBLUE_API'
+                        ? sector.segments.slice(0, -1).map(seg => seg.destination.iata_code)
+                        : sector.slice(0, -1).map(seg => seg.destination.iata_code)
 
                     return (
                       <Card key={sectorIndex} className='bg-base-100 mb-5'>
@@ -746,12 +770,12 @@ const NewBooking = () => {
                             <div className='flex items-center justify-between mt-5'>
                               <div className='border-b pb-2'>
                                 <p className='font-semibold'>Departure</p>
-                                <p className="text-gray-400">{formattedDate(firstSegment.departure_datetime)}</p>
+                                <p className='text-gray-400'>{formattedDate(firstSegment.departure_datetime)}</p>
                               </div>
 
                               <div className=''>
                                 <p className='font-semibold'>Arrival</p>
-                                <p className="text-gray-400">{formattedDate(lastSegment.arrival_datetime)}</p>
+                                <p className='text-gray-400'>{formattedDate(lastSegment.arrival_datetime)}</p>
                               </div>
                             </div>
 

@@ -1,8 +1,5 @@
 'use client'
 
-// Next Imports
-import { useParams } from 'next/navigation'
-
 // MUI Imports
 import Typography from '@mui/material/Typography'
 import Button from '@mui/material/Button'
@@ -19,9 +16,6 @@ import Illustrations from '@components/Illustrations'
 import { useImageVariant } from '@core/hooks/useImageVariant'
 import { useSettings } from '@core/hooks/useSettings'
 
-// Util Imports
-import { getLocalizedUrl } from '@/utils/i18n'
-
 const VerifyEmailV2 = ({ mode }) => {
   // Vars
   const darkImg = '/images/pages/auth-v2-mask-dark.png'
@@ -32,7 +26,7 @@ const VerifyEmailV2 = ({ mode }) => {
   const borderedLightIllustration = '/images/illustrations/auth/v2-verify-email-light-border.png'
 
   // Hooks
-  const { lang: locale } = useParams()
+
   const { settings } = useSettings()
   const authBackground = useImageVariant(mode, lightImg, darkImg)
 
@@ -68,10 +62,7 @@ const VerifyEmailV2 = ({ mode }) => {
         />
       </div>
       <div className='flex justify-center items-center bs-full bg-backgroundPaper !min-is-full p-6 md:!min-is-[unset] md:p-12 md:is-[480px]'>
-        <Link
-          href={getLocalizedUrl('/', locale)}
-          className='absolute block-start-5 sm:block-start-[38px] inline-start-6 sm:inline-start-[38px]'
-        >
+        <Link href={'/'} className='absolute block-start-5 sm:block-start-[38px] inline-start-6 sm:inline-start-[38px]'>
           <Logo />
         </Link>
 

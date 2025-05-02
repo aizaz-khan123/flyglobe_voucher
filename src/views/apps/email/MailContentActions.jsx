@@ -7,10 +7,9 @@ import IconButton from '@mui/material/IconButton'
 import classnames from 'classnames'
 
 // Slice Imports
-import { deleteTrashEmails, moveEmailsToFolder, toggleLabel, toggleReadEmails } from '@/redux-store/slices/email'
-
-// Component Imports
 import OptionMenu from '@core/components/option-menu'
+
+import { deleteTrashEmails, moveEmailsToFolder, toggleLabel, toggleReadEmails } from '@/redux-store/slices/email'
 
 // Data Imports
 import { labelColors } from './SidebarLeft'

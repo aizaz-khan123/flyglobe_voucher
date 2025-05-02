@@ -12,20 +12,40 @@ export const updatePackages = async () => {
   // Detect package manager
   const packageManager = fs.existsSync('yarn.lock') ? 'yarn' : fs.existsSync('pnpm-lock.yaml') ? 'pnpm' : 'npm'
 
-  // Remove packages
-  let command =
-    packageManager === 'yarn'
-      ? `${packageManager} remove @formatjs/intl-localematcher  negotiator`
-      : `${packageManager} uninstall @formatjs/intl-localematcher  negotiator`
+  // Read package.json
+  const pkgJson = await fs.readJSON('package.json')
 
-  await exec(command)
-  consola.success('Removed packages related to i18n successfully\n')
+  const allDeps = {
+    ...pkgJson.dependencies,
+    ...pkgJson.devDependencies,
+    ...pkgJson.peerDependencies
+  }
+
+  const packagesToRemove = ['@formatjs/intl-localematcher', 'negotiator']
+  const foundPackages = packagesToRemove.filter(pkg => pkg in allDeps)
+
+  if (foundPackages.length > 0) {
+    let uninstallCmd =
+      packageManager === 'yarn'
+        ? `${packageManager} remove ${foundPackages.join(' ')}`
+        : `${packageManager} uninstall ${foundPackages.join(' ')}`
+
+    try {
+      await exec(uninstallCmd)
+      consola.success(`Removed: ${foundPackages.join(', ')}\n`)
+    } catch (err) {
+      consola.error('Failed to uninstall packages:', err)
+    }
+  } else {
+    consola.info('No matching i18n packages found to uninstall.\n')
+  }
 
   // Add new package
-  command =
+  const addCmd =
     packageManager === 'npm'
       ? `${packageManager} install --save-dev eslint-plugin-unused-imports`
       : `${packageManager} add -D eslint-plugin-unused-imports`
-  await exec(command)
+
+  await exec(addCmd)
   consola.success('eslint-plugin-unused-imports installed successfully\n')
 }

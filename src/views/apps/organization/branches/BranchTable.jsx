@@ -42,7 +42,9 @@ import { z } from 'zod'
 // Component Imports
 import { IoMdClose } from 'react-icons/io'
 
-import MuiDropdown from '@/components/mui-form-inputs/MuiDropdown'
+import tableStyles from '@core/styles/table.module.css'
+
+import classNames from 'classnames'
 
 import OptionMenu from '@/@core/components/option-menu'
 import MuiTextField from '@/components/mui-form-inputs/MuiTextField'
@@ -57,8 +59,7 @@ import {
   useStatusUpdateMutation,
   useUpdateBranchMutation
 } from '@/redux-store/services/api'
-import tableStyles from '@core/styles/table.module.css'
-import classNames from 'classnames'
+
 import PermissionModal from '../PermissionModal'
 import AssignedMarginModal from './settings/AssignedMarginModal'
 import ChangePasswordModal from './settings/ChangePasswordModal'
@@ -89,7 +90,7 @@ const BranchTable = () => {
   const [showBranchToBeDelete, setShowBranchToBeDelete] = useState(false)
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(10)
-  const [isAssignMarginModal, setIsAssignMarginModal] = useState(false);
+  const [isAssignMarginModal, setIsAssignMarginModal] = useState(false)
 
   // RTK Query
   const {
@@ -114,10 +115,10 @@ const BranchTable = () => {
     setPage(0)
   }
 
-  const showAssignAirlineMarginConfirmation = (uuid) => {
-    setIsAssignMarginModal(true);
+  const showAssignAirlineMarginConfirmation = uuid => {
+    setIsAssignMarginModal(true)
     setBranchId(uuid)
-  };
+  }
 
   // Mutations
   const [createBranch, { isLoading: createLoading }] = useCreateBranchMutation()
@@ -225,17 +226,16 @@ const BranchTable = () => {
           <div className='flex items-center w-fit gap-2'>
             <Tooltip title='Delete Branch' placement='top'>
               <IconButton size='small' onClick={() => showDeleteBranchConfirmation(row.original.uuid)}>
-                <FaTrash
-                  className='cursor-pointer text-base text-red-600' />
+                <FaTrash className='cursor-pointer text-base text-red-600' />
               </IconButton>
             </Tooltip>
             <Tooltip title='Update Branch' placement='top'>
               <IconButton
                 onClick={event => {
                   showUpdateBranchConfirmation(row.original)
-                }}>
-                <FaPencil
-                  className='cursor-pointer text-base text-primary' />
+                }}
+              >
+                <FaPencil className='cursor-pointer text-base text-primary' />
               </IconButton>
             </Tooltip>
             <Tooltip title='Settings' placement='top'>
@@ -258,7 +258,7 @@ const BranchTable = () => {
                         showAssignAirlineMarginConfirmation(row.original.id)
                       }
                     }
-                  },
+                  }
                 ]}
               />
             </Tooltip>
@@ -300,7 +300,7 @@ const BranchTable = () => {
   }
 
   const showDeleteBranchConfirmation = uuid => {
-    setShowBranchToBeDelete(true);
+    setShowBranchToBeDelete(true)
     setBranchToBeDelete(branches.find(b => uuid === b.uuid))
   }
 
@@ -309,7 +309,7 @@ const BranchTable = () => {
       deleteBranch(BranchToBeDelete.uuid).then(response => {
         if (response?.data.code == 200) {
           toast.success(response?.data.message)
-          setShowBranchToBeDelete(false);
+          setShowBranchToBeDelete(false)
         } else {
           toast.error(response?.data.message)
         }
@@ -513,14 +513,14 @@ const BranchTable = () => {
                     {table.rows?.length > 0
                       ? 'No Record Found'
                       : table.getRowModel().rows.map(row => (
-                        <tr key={row.id} className='hover:bg-gray-50'>
-                          {row.getVisibleCells().map(cell => (
-                            <td key={cell.id} className='p-3 border-b'>
-                              {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                            </td>
-                          ))}
-                        </tr>
-                      ))}
+                          <tr key={row.id} className='hover:bg-gray-50'>
+                            {row.getVisibleCells().map(cell => (
+                              <td key={cell.id} className='p-3 border-b'>
+                                {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                              </td>
+                            ))}
+                          </tr>
+                        ))}
                   </>
                 ) : (
                   <td colSpan={table.getAllColumns().length}>
@@ -669,7 +669,7 @@ const BranchTable = () => {
         />
       )}
 
-      {isAssignMarginModal &&
+      {isAssignMarginModal && (
         <AssignedMarginModal
           isOpen={isAssignMarginModal}
           refetch={refetch}
@@ -678,11 +678,9 @@ const BranchTable = () => {
           }}
           branchId={branchId}
         />
-      }
-
+      )}
     </>
   )
 }
 
 export { BranchTable }
-

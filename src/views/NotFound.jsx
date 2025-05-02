@@ -2,7 +2,6 @@
 
 // Next Imports
 import Link from 'next/link'
-import { useParams } from 'next/navigation'
 
 // MUI Imports
 import Button from '@mui/material/Button'
@@ -14,16 +13,13 @@ import Illustrations from '@components/Illustrations'
 // Hook Imports
 import { useImageVariant } from '@core/hooks/useImageVariant'
 
-// Util Imports
-import { getLocalizedUrl } from '@/utils/i18n'
-
 const NotFound = ({ mode }) => {
   // Vars
   const darkImg = '/images/pages/misc-mask-dark.png'
   const lightImg = '/images/pages/misc-mask-light.png'
 
   // Hooks
-  const { lang: locale } = useParams()
+
   const miscBackground = useImageVariant(mode, lightImg, darkImg)
 
   return (
@@ -41,7 +37,7 @@ const NotFound = ({ mode }) => {
           src='/images/illustrations/characters/5.png'
           className='object-cover bs-[400px] md:bs-[450px] lg:bs-[500px]'
         />
-        <Button href={getLocalizedUrl('/', locale)} component={Link} variant='contained'>
+        <Button href={'/'} component={Link} variant='contained'>
           Back to Home
         </Button>
       </div>

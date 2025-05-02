@@ -73,7 +73,6 @@ const DateSelector = ({ departure_date, return_date, route_type }) => {
 
   const fetchData = async date => {
     // console.log('Fetching API for departure date:', date)
-
     // Call your API here
   }
 
@@ -86,12 +85,13 @@ const DateSelector = ({ departure_date, return_date, route_type }) => {
             <div
               key={index}
               className={`px-6 py-3 rounded-md text-center text-xs font-medium text-black
-                                ${date.isBefore(dayjs(), 'day')
-                  ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                  : date.isSame(departureDate, 'day')
-                    ? 'bg-blue-200 text-black font-semibold cursor-pointer'
-                    : 'bg-white cursor-pointer'
-                }`}
+                                ${
+                                  date.isBefore(dayjs(), 'day')
+                                    ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                                    : date.isSame(departureDate, 'day')
+                                      ? 'bg-blue-200 text-black font-semibold cursor-pointer'
+                                      : 'bg-white cursor-pointer'
+                                }`}
               onClick={() => !date.isBefore(dayjs(), 'day') && handleDateSelection(date)} // Prevent click on past dates
             >
               <p className='text-xs'>{date.format('ddd DD MMM')}</p>
@@ -107,12 +107,13 @@ const DateSelector = ({ departure_date, return_date, route_type }) => {
             <div
               key={index}
               className={`px-5 py-3 rounded-md text-center text-xs font-medium h-max text-black
-                                ${pair.dep.isBefore(dayjs(), 'day')
-                  ? 'bg-gray-300 text-gray-500 cursor-not-allowed' // Disable past dates
-                  : pair.dep.isSame(departureDate, 'day') && pair.ret.isSame(returnDate, 'day')
-                    ? 'bg-blue-200 text-black font-semibold cursor-pointer'
-                    : 'bg-white cursor-pointer'
-                }`}
+                                ${
+                                  pair.dep.isBefore(dayjs(), 'day')
+                                    ? 'bg-gray-300 text-gray-500 cursor-not-allowed' // Disable past dates
+                                    : pair.dep.isSame(departureDate, 'day') && pair.ret.isSame(returnDate, 'day')
+                                      ? 'bg-blue-200 text-black font-semibold cursor-pointer'
+                                      : 'bg-white cursor-pointer'
+                                }`}
               onClick={() => !pair.dep.isBefore(dayjs(), 'day') && handleDateSelection(pair.dep, pair.ret)} // Prevent clicks on past dates
             >
               <div className='flex flex-col items-center'>

@@ -23,11 +23,12 @@ import Button from '@mui/material/Button'
 import PerfectScrollbar from 'react-perfect-scrollbar'
 
 // Slice Imports
+import { statusObj } from '@views/apps/chat/SidebarLeft'
+
 import { setUserStatus } from '@/redux-store/slices/chat'
 
 // Component Imports
 import AvatarWithBadge from './AvatarWithBadge'
-import { statusObj } from '@views/apps/chat/SidebarLeft'
 
 const ScrollWrapper = ({ children, isBelowLgScreen }) => {
   if (isBelowLgScreen) {

@@ -17,7 +17,7 @@
  */
 const themeConfig = {
   templateName: 'FlyGlobe',
-  homePageUrl: '/dashboards/crm',
+  homePageUrl: '/',
   settingsCookieName: 'materio-mui-next-demo-1',
   mode: 'light', // 'system', 'light', 'dark'
   skin: 'bordered', // 'default', 'bordered'

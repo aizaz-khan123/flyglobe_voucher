@@ -2,13 +2,14 @@
 import { Children, isValidElement } from 'react'
 
 // Component Imports
+import { GenerateVerticalMenu } from '@components/GenerateMenu'
+
 import {
   SubMenu as HorizontalSubMenu,
   MenuItem as HorizontalMenuItem,
   Menu as HorizontalMenu
 } from '../horizontal-menu'
 import { SubMenu as VerticalSubMenu, MenuItem as VerticalMenuItem, Menu as VerticalMenu } from '../vertical-menu'
-import { GenerateVerticalMenu } from '@components/GenerateMenu'
 
 // Util Imports
 import { menuClasses } from './menuClasses'

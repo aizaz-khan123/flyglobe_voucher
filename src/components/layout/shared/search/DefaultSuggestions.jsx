@@ -1,12 +1,8 @@
 // Next Imports
 import Link from 'next/link'
-import { useParams } from 'next/navigation'
 
 // Third-party Imports
 import classnames from 'classnames'
-
-// Util Imports
-import { getLocalizedUrl } from '@/utils/i18n'
 
 const defaultSuggestions = [
   {
@@ -113,7 +109,6 @@ const defaultSuggestions = [
 
 const DefaultSuggestions = ({ setOpen }) => {
   // Hooks
-  const { lang: locale } = useParams()
 
   return (
     <div className='flex grow flex-wrap gap-x-[48px] gap-y-8 plb-14 pli-16 overflow-y-auto overflow-x-hidden bs-full'>
@@ -129,7 +124,7 @@ const DefaultSuggestions = ({ setOpen }) => {
             {section.items.map((item, i) => (
               <li key={i} className='flex'>
                 <Link
-                  href={getLocalizedUrl(item.href, locale)}
+                  href={item.href}
                   className='flex items-center overflow-x-hidden cursor-pointer gap-2 hover:text-primary focus-visible:text-primary focus-visible:outline-0'
                   onClick={() => setOpen(false)}
                 >

@@ -5,12 +5,11 @@ import CardContent from '@mui/material/CardContent'
 import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
 
-// Third-party Imports
-import ReactPlayer from '@/libs/ReactPlayer'
-
 // Components Imports
 import CustomAvatar from '@core/components/mui/Avatar'
 import CustomIconButton from '@core/components/mui/IconButton'
+
+import ReactPlayer from '@/libs/ReactPlayer'
 
 const FreeCourses = () => {
   return (

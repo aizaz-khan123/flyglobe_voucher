@@ -16,10 +16,9 @@ import MenuItem from '@mui/material/MenuItem'
 import classnames from 'classnames'
 
 // Slice Imports
-import { getCurrentTask, deleteTask } from '@/redux-store/slices/kanban'
-
-// Component Imports
 import CustomAvatar from '@core/components/mui/Avatar'
+
+import { getCurrentTask, deleteTask } from '@/redux-store/slices/kanban'
 
 // Styles Imports
 import styles from './styles.module.css'

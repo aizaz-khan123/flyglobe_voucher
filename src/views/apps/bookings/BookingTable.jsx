@@ -1,7 +1,8 @@
 'use client'
 
-import { useParams } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
+
+import { useParams } from 'next/navigation'
 
 import Image from 'next/image'
 
@@ -37,13 +38,14 @@ import { MdExpandMore } from 'react-icons/md'
 // Component Imports
 import PopupState, { bindPopover, bindTrigger } from 'material-ui-popup-state'
 
+import tableStyles from '@core/styles/table.module.css'
+
 import DateTimeComp from '@/components/date/DateTimeComp'
 import Link from '@/components/Link'
 import MuiDatePicker from '@/components/mui-form-inputs/MuiDatePicker'
 import MuiFlightSearchAutoComplete from '@/components/mui-form-inputs/MuiFlightSearchAutoComplete'
 import MuiTextField from '@/components/mui-form-inputs/MuiTextField'
 import { useBookingListQuery } from '@/redux-store/services/api'
-import tableStyles from '@core/styles/table.module.css'
 import StatusWidget from './StatusWidget'
 
 const BookingTable = ({ hidePagination }) => {
@@ -117,7 +119,7 @@ const BookingTable = ({ hidePagination }) => {
       columnHelper.accessor('booking_id', {
         header: 'Booking ID',
         cell: ({ row }) => (
-          <Link href={`/${locale}/bookings/${row.original.booking_id}`} className='font-medium text-primary'>
+          <Link href={`/bookings/${row.original.booking_id}`} className='font-medium text-primary'>
             {row.original.booking_id}
           </Link>
         )
@@ -321,7 +323,7 @@ const BookingTable = ({ hidePagination }) => {
                     setInputValue={setStatus}
                   />
                   <MuiDatePicker control={control} name='from' label='Booking From' />
-                  <MuiDatePicker control={control} name='to' label='Booking to'  />
+                  <MuiDatePicker control={control} name='to' label='Booking to' />
                   <div className='flex gap-1 items-center'>
                     <Button variant='contained' onClick={handleSubmit(applyFilters)}>
                       Search
@@ -370,15 +372,17 @@ const BookingTable = ({ hidePagination }) => {
               ))}
             </thead>
             <tbody>
-              {table.getRowModel().rows.length > 0 ? (table.getRowModel().rows.map(row => (
-                <tr key={row.id} className='hover:bg-gray-50'>
-                  {row.getVisibleCells().map(cell => (
-                    <td key={cell.id} className='p-3 border-b'>
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                    </td>
-                  ))}
-                </tr>
-              ))) : (
+              {table.getRowModel().rows.length > 0 ? (
+                table.getRowModel().rows.map(row => (
+                  <tr key={row.id} className='hover:bg-gray-50'>
+                    {row.getVisibleCells().map(cell => (
+                      <td key={cell.id} className='p-3 border-b'>
+                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      </td>
+                    ))}
+                  </tr>
+                ))
+              ) : (
                 <tr>
                   <td colSpan={columns.length} className='p-5 text-center text-gray-500'>
                     No record found

@@ -13,9 +13,6 @@ import CssBaseline from '@mui/material/CssBaseline'
 import { useMedia } from 'react-use'
 import stylisRTLPlugin from 'stylis-plugin-rtl'
 
-// Component Imports
-import ModeChanger from './ModeChanger'
-
 // Config Imports
 import themeConfig from '@configs/themeConfig'
 
@@ -24,6 +21,8 @@ import { useSettings } from '@core/hooks/useSettings'
 
 // Core Theme Imports
 import defaultCoreTheme from '@core/theme'
+
+import ModeChanger from './ModeChanger'
 
 const CustomThemeProvider = props => {
   // Props

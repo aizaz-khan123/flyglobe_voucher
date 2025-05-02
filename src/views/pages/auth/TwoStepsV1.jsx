@@ -1,7 +1,7 @@
 'use client'
 
 // React Imports
-import { useState, useRef, ChangeEvent, KeyboardEvent, ClipboardEvent } from 'react'
+import { useState, useRef } from 'react'
 
 // Next Imports
 import { useParams, useRouter } from 'next/navigation'
@@ -14,7 +14,7 @@ import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
 
 // Component Imports
-import { toast, useToast } from 'react-toastify'
+import { toast } from 'react-toastify'
 
 import { useDispatch } from 'react-redux'
 
@@ -24,6 +24,7 @@ import Logo from '@components/layout/shared/Logo'
 
 // Hook Imports
 import { useImageVariant } from '@core/hooks/useImageVariant'
+
 import { useVerifyMutation, useResendMutation } from '@/redux-store/services/api'
 
 import { connectors, loggedIn } from '@/redux-store/Features/authslice'

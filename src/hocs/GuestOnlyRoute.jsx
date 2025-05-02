@@ -8,13 +8,12 @@ import { getServerSession } from 'next-auth'
 import themeConfig from '@configs/themeConfig'
 
 // Util Imports
-import { getLocalizedUrl } from '@/utils/i18n'
 
-const GuestOnlyRoute = async ({ children, lang }) => {
+const GuestOnlyRoute = async ({ children }) => {
   const session = await getServerSession()
 
   if (session) {
-    redirect(getLocalizedUrl(themeConfig.homePageUrl, lang))
+    redirect(themeConfig.homePageUrl)
   }
 
   return <>{children}</>

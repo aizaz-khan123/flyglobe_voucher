@@ -2,8 +2,6 @@
 
 import React, { useState, useEffect } from 'react'
 
-import { useRouter } from 'next/navigation'
-
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -16,7 +14,6 @@ import {
   DialogTitle,
   IconButton,
   TextField,
-  TextareaAutosize,
   FormControlLabel,
   Switch,
   CircularProgress

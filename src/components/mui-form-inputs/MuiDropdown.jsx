@@ -1,5 +1,5 @@
 import { InputAdornment, ListItemIcon, ListItemText, MenuItem, TextField } from '@mui/material'
-import { Controller, useForm, useFormContext } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 import './mui.css'
 
 const MuiDropdown = ({ control, name, label, options = [], onChange, className, selectIcon, placeholder }) => {
@@ -34,7 +34,7 @@ const MuiDropdown = ({ control, name, label, options = [], onChange, className, 
                   )
                 }
 
-                return (options ?? []).find((option) => option.value === selected)?.label || ''
+                return (options ?? []).find(option => option.value === selected)?.label || ''
               }
             }}
             InputProps={{
