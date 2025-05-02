@@ -1,12 +1,8 @@
 // Next Imports
 import Link from 'next/link'
-import { useParams } from 'next/navigation'
 
 // Third-party Imports
 import classnames from 'classnames'
-
-// Util Imports
-import { getLocalizedUrl } from '@/utils/i18n'
 
 const noResultData = [
   {
@@ -28,7 +24,6 @@ const noResultData = [
 
 const NoResult = ({ searchValue, setOpen }) => {
   // Hooks
-  const { lang: locale } = useParams()
 
   return (
     <div className='flex items-center justify-center grow flex-wrap plb-14 pli-16 overflow-y-auto overflow-x-hidden bs-full'>
@@ -40,7 +35,7 @@ const NoResult = ({ searchValue, setOpen }) => {
           {noResultData.map((item, index) => (
             <li key={index} className='flex items-center'>
               <Link
-                href={getLocalizedUrl(item.href, locale)}
+                href={item.href}
                 className='flex items-center gap-2 hover:text-primary focus-visible:text-primary focus-visible:outline-0'
                 onClick={() => setOpen(false)}
               >

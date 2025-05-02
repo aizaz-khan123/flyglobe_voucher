@@ -10,8 +10,9 @@ import TabContext from '@mui/lab/TabContext'
 import TabPanel from '@mui/lab/TabPanel'
 
 // Component Imports
-import UserProfileHeader from './UserProfileHeader'
 import CustomTabList from '@core/components/mui/TabList'
+
+import UserProfileHeader from './UserProfileHeader'
 
 const UserProfile = ({ tabContentList, data }) => {
   // States

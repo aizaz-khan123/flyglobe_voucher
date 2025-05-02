@@ -2,9 +2,6 @@
 import styled from '@emotion/styled'
 import classnames from 'classnames'
 
-// Component Imports
-import HorizontalMenu from './HorizontalMenu'
-
 // Config Imports
 import themeConfig from '@configs/themeConfig'
 
@@ -14,6 +11,8 @@ import useHorizontalNav from '@menu/hooks/useHorizontalNav'
 
 // Util Imports
 import { horizontalLayoutClasses } from '@layouts/utils/layoutClasses'
+
+import HorizontalMenu from './HorizontalMenu'
 
 const StyledDiv = styled.div`
   ${({ isContentCompact, isBreakpointReached }) =>
@@ -31,7 +30,7 @@ const StyledDiv = styled.div`
   `}
 `
 
-const Navigation = ({ dictionary }) => {
+const Navigation = ({}) => {
   // Hooks
   const { settings } = useSettings()
   const { isBreakpointReached } = useHorizontalNav()
@@ -52,7 +51,7 @@ const Navigation = ({ dictionary }) => {
           className: classnames(horizontalLayoutClasses.navigationContentWrapper, 'flex items-center is-full plb-2.5')
         })}
       >
-        <HorizontalMenu dictionary={dictionary} />
+        <HorizontalMenu />
       </StyledDiv>
     </div>
   )

@@ -4,6 +4,8 @@
 import { useEffect } from 'react'
 
 // Component Imports
+import { useSettings } from '@core/hooks/useSettings'
+
 import HeroSection from './HeroSection'
 import UsefulFeature from './UsefulFeature'
 import CustomerReviews from './CustomerReviews'
@@ -13,7 +15,6 @@ import ProductStat from './ProductStat'
 import Faqs from './Faqs'
 import GetStarted from './GetStarted'
 import ContactUs from './ContactUs'
-import { useSettings } from '@core/hooks/useSettings'
 
 const LandingPageWrapper = ({ mode }) => {
   // Hooks

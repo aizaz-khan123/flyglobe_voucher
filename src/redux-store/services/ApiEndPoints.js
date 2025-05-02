@@ -152,24 +152,18 @@ export const API_END_POINTS = {
 
   myRefundRequest: BASE_URL_V1 + '/refund-request/my-refund-request',
 
-
   //// Group Type List ////
   groupTypeList: BASE_URL_V1 + '/group/type/index',
   groupTypeStore: BASE_URL_V1 + '/group/type/store',
   groupTypeUpdate: BASE_URL_V1 + '/group/type/update',
   groupTypeDelete: BASE_URL_V1 + '/group/type/delete',
   groupTypeDropdown: BASE_URL_V1 + '/group/type/drop-down',
+
   ///// groups /////
   managementGroupStore: BASE_URL_V1 + '/group/flight/store',
   managementGroupList: BASE_URL_V1 + '/group/flight/index',
   managementGroupUpdate: BASE_URL_V1 + '/group/flight/update',
   managementGroupDelete: BASE_URL_V1 + '/group/flight/delete',
 
-  passportInfo: BASE_URL_V1 + '/passport-info',
-
-
-
-
-
-
+  passportInfo: BASE_URL_V1 + '/passport-info'
 }

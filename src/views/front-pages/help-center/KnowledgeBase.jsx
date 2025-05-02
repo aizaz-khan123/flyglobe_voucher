@@ -11,11 +11,12 @@ import Grid from '@mui/material/Grid2'
 import classnames from 'classnames'
 
 // Component Imports
-import CustomAvatar from '@/@core/components/mui/Avatar'
 import DirectionalIcon from '@components/DirectionalIcon'
 
 // Styles Imports
 import frontCommonStyles from '@views/front-pages/styles.module.css'
+
+import CustomAvatar from '@/@core/components/mui/Avatar'
 
 // Data
 const allArticles = [

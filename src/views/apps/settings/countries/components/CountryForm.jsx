@@ -20,33 +20,27 @@ import {
 } from '@mui/material'
 
 import MuiTextField from '@/components/mui-form-inputs/MuiTextField'
-import {
-  useCreateCountryMutation,
-  useUpdateCountryMutation,
-  useShowCountryQuery
-} from '@/redux-store/services/api'
+import { useCreateCountryMutation, useUpdateCountryMutation, useShowCountryQuery } from '@/redux-store/services/api'
 
 const countrySchema = z.object({
-  name: z.string({ required_error: "Country name is required" })
+  name: z
+    .string({ required_error: 'Country name is required' })
     .trim()
-    .min(2, { message: "Country name must be at least 2 characters" }),
+    .min(2, { message: 'Country name must be at least 2 characters' }),
   nice_name: z.string().optional(),
-  iso: z.string({ required_error: "ISO code is required" })
-    .length(2, { message: "ISO code must be exactly 2 characters" }),
-  iso3: z.string({ required_error: "ISO3 code is required" })
-    .length(3, { message: "ISO3 code must be exactly 3 characters" })
+  iso: z
+    .string({ required_error: 'ISO code is required' })
+    .length(2, { message: 'ISO code must be exactly 2 characters' }),
+  iso3: z
+    .string({ required_error: 'ISO3 code is required' })
+    .length(3, { message: 'ISO3 code must be exactly 3 characters' })
 })
 
-const CountryForm = ({ 
-  open, 
-  onClose, 
-  refetch, 
-  countryId 
-}) => {
-  const { 
-    control, 
-    handleSubmit, 
-    setError, 
+const CountryForm = ({ open, onClose, refetch, countryId }) => {
+  const {
+    control,
+    handleSubmit,
+    setError,
     reset,
     formState: { errors }
   } = useForm({
@@ -54,8 +48,8 @@ const CountryForm = ({
   })
 
   // Fetch country details if in edit mode
-  const { 
-    data: countryDetails, 
+  const {
+    data: countryDetails,
     isLoading: isDetailsLoading,
     isFetching
   } = useShowCountryQuery(countryId, {
@@ -75,7 +69,7 @@ const CountryForm = ({
         iso: '',
         iso3: ''
       })
-      
+
       // Populate if in edit mode and data is available
       if (countryId && countryDetails) {
         reset({
@@ -101,17 +95,17 @@ const CountryForm = ({
         _method: 'put',
         ...data
       }
-  
-      await updateCountry({ 
-        countryId, 
-        updated_data 
+
+      await updateCountry({
+        countryId,
+        updated_data
       }).then(response => {
         if ('error' in response) {
           setErrors(response?.error?.data?.errors)
-          
-return
+
+          return
         }
-  
+
         toast.success(response?.data?.message || 'Country updated successfully')
         refetch()
         onClose()
@@ -122,10 +116,10 @@ return
       await createCountry(data).then(response => {
         if ('error' in response) {
           setErrors(response?.error?.data?.errors)
-          
-return
+
+          return
         }
-  
+
         toast.success(response?.data?.message || 'Country created successfully')
         refetch()
         onClose()
@@ -143,12 +137,14 @@ return
     return (
       <Dialog open={open} onClose={handleClose}>
         <DialogContent>
-          <Box sx={{ 
-            display: 'flex', 
-            justifyContent: 'center', 
-            alignItems: 'center', 
-            p: 4 
-          }}>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              p: 4
+            }}
+          >
             <CircularProgress />
             <Box sx={{ ml: 2 }}>Loading country details...</Box>
           </Box>
@@ -158,62 +154,62 @@ return
   }
 
   return (
-    <Dialog open={open} onClose={handleClose} fullWidth maxWidth="md">
-      <DialogTitle className="font-bold flex items-center justify-between">
+    <Dialog open={open} onClose={handleClose} fullWidth maxWidth='md'>
+      <DialogTitle className='font-bold flex items-center justify-between'>
         {countryId ? 'Edit Country' : 'Add New Country'}
         <IconButton onClick={handleClose}>
           <IoMdClose style={{ fontSize: '1.5rem' }} />
         </IconButton>
       </DialogTitle>
-      
+
       <DialogContent>
-        <Box component="form" noValidate sx={{ mt: 2 }}>
-          <div className="grid grid-cols-1 gap-5 gap-y-3 md:grid-cols-2">
+        <Box component='form' noValidate sx={{ mt: 2 }}>
+          <div className='grid grid-cols-1 gap-5 gap-y-3 md:grid-cols-2'>
             <MuiTextField
               control={control}
-              label="Country Name"
-              id="name"
-              name="name"
-              placeholder="Enter Country Name"
+              label='Country Name'
+              id='name'
+              name='name'
+              placeholder='Enter Country Name'
               error={!!errors.name}
               helperText={errors.name?.message}
-              size="small"
+              size='small'
               fullWidth
             />
 
             <MuiTextField
               control={control}
-              label="Nice Name"
-              id="nice_name"
-              name="nice_name"
-              placeholder="Enter Nice Name"
+              label='Nice Name'
+              id='nice_name'
+              name='nice_name'
+              placeholder='Enter Nice Name'
               error={!!errors.nice_name}
               helperText={errors.nice_name?.message}
-              size="small"
+              size='small'
               fullWidth
             />
 
             <MuiTextField
               control={control}
-              label="ISO Code"
-              id="iso"
-              name="iso"
-              placeholder="Enter 2-letter ISO code"
+              label='ISO Code'
+              id='iso'
+              name='iso'
+              placeholder='Enter 2-letter ISO code'
               error={!!errors.iso}
               helperText={errors.iso?.message}
-              size="small"
+              size='small'
               fullWidth
             />
 
             <MuiTextField
               control={control}
-              label="ISO3 Code"
-              id="iso3"
-              name="iso3"
-              placeholder="Enter 3-letter ISO3 code"
+              label='ISO3 Code'
+              id='iso3'
+              name='iso3'
+              placeholder='Enter 3-letter ISO3 code'
               error={!!errors.iso3}
               helperText={errors.iso3?.message}
-              size="small"
+              size='small'
               fullWidth
             />
           </div>
@@ -221,25 +217,11 @@ return
       </DialogContent>
 
       <DialogActions>
-        <Button 
-          variant="outlined" 
-          onClick={handleClose} 
-          disabled={isCreating || isUpdating}
-        >
+        <Button variant='outlined' onClick={handleClose} disabled={isCreating || isUpdating}>
           Cancel
         </Button>
-        <Button 
-          variant="contained" 
-          onClick={onSubmit} 
-          disabled={isCreating || isUpdating}
-        >
-          {isCreating || isUpdating ? (
-            <CircularProgress size={24} />
-          ) : countryId ? (
-            'Update'
-          ) : (
-            'Save'
-          )}
+        <Button variant='contained' onClick={onSubmit} disabled={isCreating || isUpdating}>
+          {isCreating || isUpdating ? <CircularProgress size={24} /> : countryId ? 'Update' : 'Save'}
         </Button>
       </DialogActions>
     </Dialog>

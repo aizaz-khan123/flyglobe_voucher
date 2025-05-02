@@ -23,8 +23,9 @@ import useMediaQuery from '@mui/material/useMediaQuery'
 import classnames from 'classnames'
 
 // Component Imports
-import AddCustomerDrawer, { initialFormData } from './AddCustomerDrawer'
 import Logo from '@components/layout/shared/Logo'
+
+import AddCustomerDrawer, { initialFormData } from './AddCustomerDrawer'
 
 // Styled Component Imports
 import AppReactDatepicker from '@/libs/styles/AppReactDatepicker'

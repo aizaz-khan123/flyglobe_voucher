@@ -87,7 +87,7 @@ export const RecentSearch = () => {
     ).toString()
 
     setPayloadValues(queryString)
-    router.push(`/en/flight/search/result?${queryString}`)
+    router.push(`/flight/search/result?${queryString}`)
   }
 
   return (
@@ -158,9 +158,7 @@ export const RecentSearch = () => {
                       ) : (
                         <>
                           <span>{formatDate(search.departure_date)}</span>{' '}
-                          {search.route_type !== "ONEWAY" && (
-                            <span> - {formatDate(search.return_date)}</span>
-                          )}
+                          {search.route_type !== 'ONEWAY' && <span> - {formatDate(search.return_date)}</span>}
                         </>
                       )}
                     </div>

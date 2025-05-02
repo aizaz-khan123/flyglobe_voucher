@@ -5,9 +5,7 @@ export const metadata = {
 }
 
 const BankAccounts = () => {
-  return (
-    <BankAccountTable />
-  )
+  return <BankAccountTable />
 }
 
 export default BankAccounts

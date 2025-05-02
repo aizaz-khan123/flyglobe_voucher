@@ -1,7 +1,9 @@
 import { promisify } from 'util'
-import { exec as execCallback, execSync } from 'child_process'
+import { exec as execCallback } from 'child_process'
 
 import { consola } from 'consola'
+
+import fs from 'fs-extra'
 
 import { updatePackages } from './updatePackages'
 import { findAndReplaceInFiles } from './findAndReplaceInFiles'
@@ -25,9 +27,17 @@ const exec = promisify(execCallback)
 async function main() {
   await updatePackages()
   consola.start('Moving files from src/app/[lang] to src/app...')
-  execSync('cp -r src/app/\\[lang\\]/* src/app')
-  execSync('rm -rf src/app/\\[lang\\]')
-  consola.success('Moved files from src/app/[lang] to src/app')
+  const srcLangPath = 'src/app/[lang]'
+  const destAppPath = 'src/app'
+
+  if (await fs.pathExists(srcLangPath)) {
+    await fs.copy(srcLangPath, destAppPath, { overwrite: true })
+    await fs.remove(srcLangPath)
+    consola.success('Moved files from src/app/[lang] to src/app')
+  } else {
+    consola.warn('src/app/[lang] does not exist. Skipping file move.')
+  }
+
   await removeFilesAndFolders()
   await updateAuthGuard()
   await updateGuestOnlyRoutes()

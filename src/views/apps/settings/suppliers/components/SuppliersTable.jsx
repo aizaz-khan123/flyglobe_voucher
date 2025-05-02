@@ -38,11 +38,11 @@ import { toast } from 'react-toastify'
 
 import { IoMdClose } from 'react-icons/io'
 
-import { useDeleteSupplierMutation, useGetSuppliersQuery } from '@/redux-store/services/api'
 import tableStyles from '@core/styles/table.module.css'
 import classNames from 'classnames'
-import SupplierForm from './SupplierForm'
 
+import { useDeleteSupplierMutation, useGetSuppliersQuery } from '@/redux-store/services/api'
+import SupplierForm from './SupplierForm'
 
 const fuzzyFilter = (row, columnId, value, addMeta) => {
   const itemRank = rankItem(row.getValue(columnId), value)
@@ -71,7 +71,7 @@ const SupplierTable = () => {
     page: page + 1,
 
     //  pageSize: rowsPerPage,
-    searchText: globalFilter,
+    searchText: globalFilter
   })
 
   const suppliers = supplierData?.data || []
@@ -89,8 +89,6 @@ const SupplierTable = () => {
     setRowsPerPage(parseInt(event.target.value, 10))
     setPage(0)
   }
-
-
 
   const handleDelete = async () => {
     if (supplierToDelete) {
@@ -116,7 +114,7 @@ const SupplierTable = () => {
     setIsFormOpen(true)
   }
 
-  const handleEdit = (id) => {
+  const handleEdit = id => {
     setSelectedSupplierId(id)
     setIsFormOpen(true)
   }
@@ -180,7 +178,7 @@ const SupplierTable = () => {
             <Tooltip title='Delete Supplier'>
               <IconButton
                 size='small'
-                onClick={(e) => {
+                onClick={e => {
                   e.stopPropagation()
                   setSupplierToDelete(row.original)
                 }}
@@ -246,11 +244,7 @@ const SupplierTable = () => {
               placeholder='Search suppliers...'
               className='w-full max-w-md'
             />
-            <Button
-              variant='contained'
-              onClick={handleAddNew}
-              className='hidden md:flex'
-            >
+            <Button variant='contained' onClick={handleAddNew} className='hidden md:flex'>
               <FaPlus fontSize={16} />
               <span className='ml-2'>New Supplier</span>
             </Button>
@@ -342,26 +336,16 @@ const SupplierTable = () => {
           <Button color='error' onClick={() => setSupplierToDelete(null)}>
             Cancel
           </Button>
-          <Button
-            variant='contained'
-            onClick={handleDelete}
-            disabled={isDeleting}
-          >
+          <Button variant='contained' onClick={handleDelete} disabled={isDeleting}>
             {isDeleting ? <CircularProgress size={24} /> : 'Delete'}
           </Button>
         </DialogActions>
       </Dialog>
 
       {/* Supplier Form */}
-      <SupplierForm
-        open={isFormOpen}
-        onClose={handleCloseForm}
-        supplierId={selectedSupplierId}
-        refetch={refetch}
-      />
+      <SupplierForm open={isFormOpen} onClose={handleCloseForm} supplierId={selectedSupplierId} refetch={refetch} />
     </>
   )
 }
 
 export { SupplierTable }
-

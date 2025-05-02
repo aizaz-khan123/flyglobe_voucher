@@ -14,15 +14,15 @@ import Typography from '@mui/material/Typography'
 import { styled } from '@mui/material/styles'
 
 // Component Imports
+import StepperWrapper from '@core/styles/stepper'
+
+import StepperCustomDot from '@components/stepper-dot'
+
 import StepPersonalDetails from './StepPersonalDetails'
 import StepPropertyDetails from './StepPropertyDetails'
 import StepPropertyFeatures from './StepPropertyFeatures'
 import StepPropertyArea from './StepPropertyArea'
 import StepPriceDetails from './StepPriceDetails'
-
-// Styled Component Imports
-import StepperWrapper from '@core/styles/stepper'
-import StepperCustomDot from '@components/stepper-dot'
 
 // Vars
 const steps = [

@@ -47,19 +47,21 @@ const Navbar = props => {
     <StyledHeader
       theme={theme}
       overrideStyles={overrideStyles}
-      className={classnames(verticalLayoutClasses.header, {
-        [verticalLayoutClasses.headerFixed]: headerFixed,
-        [verticalLayoutClasses.headerStatic]: headerStatic,
-        [verticalLayoutClasses.headerFloating]: headerFloating,
-        [verticalLayoutClasses.headerDetached]: !headerFloating && headerDetached,
-        [verticalLayoutClasses.headerAttached]: !headerFloating && headerAttached,
-        [verticalLayoutClasses.headerBlur]: headerBlur,
-        [verticalLayoutClasses.headerContentCompact]: headerContentCompact,
-        [verticalLayoutClasses.headerContentWide]: headerContentWide,
-        scrolled: trigger
-
-
-      },'bg-white')}
+      className={classnames(
+        verticalLayoutClasses.header,
+        {
+          [verticalLayoutClasses.headerFixed]: headerFixed,
+          [verticalLayoutClasses.headerStatic]: headerStatic,
+          [verticalLayoutClasses.headerFloating]: headerFloating,
+          [verticalLayoutClasses.headerDetached]: !headerFloating && headerDetached,
+          [verticalLayoutClasses.headerAttached]: !headerFloating && headerAttached,
+          [verticalLayoutClasses.headerBlur]: headerBlur,
+          [verticalLayoutClasses.headerContentCompact]: headerContentCompact,
+          [verticalLayoutClasses.headerContentWide]: headerContentWide,
+          scrolled: trigger
+        },
+        'bg-white'
+      )}
     >
       <div className={classnames(verticalLayoutClasses.navbar, 'flex bs-full')}>{children}</div>
     </StyledHeader>

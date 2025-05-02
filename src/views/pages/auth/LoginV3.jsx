@@ -5,7 +5,7 @@ import { useState } from 'react'
 
 // Next Imports
 import Link from 'next/link'
-import { useParams, useRouter, useSearchParams } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 
 // MUI Imports
 import Typography from '@mui/material/Typography'
@@ -38,9 +38,6 @@ import themeConfig from '@configs/themeConfig'
 import { useImageVariant } from '@core/hooks/useImageVariant'
 import { useSettings } from '@core/hooks/useSettings'
 
-// Util Imports
-import { getLocalizedUrl } from '@/utils/i18n'
-
 const schema = object({
   email: pipe(string(), minLength(1, 'This field is required'), email('Please enter a valid email address')),
   password: pipe(
@@ -66,7 +63,7 @@ const LoginV3 = ({ mode }) => {
   // Hooks
   const router = useRouter()
   const searchParams = useSearchParams()
-  const { lang: locale } = useParams()
+
   const { settings } = useSettings()
 
   const {
@@ -102,7 +99,7 @@ const LoginV3 = ({ mode }) => {
     // if (res && res.ok && res.error === null) {
     //   // Vars
     //   const redirectURL = searchParams.get('redirectTo') ?? '/'
-    //   router.replace(getLocalizedUrl(redirectURL, locale))
+    //   router.replace(redirectURL)
     // } else {
     //   if (res?.error) {
     //     const error = JSON.parse(res.error)

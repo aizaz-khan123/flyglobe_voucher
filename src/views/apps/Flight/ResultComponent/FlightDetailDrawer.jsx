@@ -24,11 +24,13 @@ const FlightDetailDrawer = ({ flightFearOptionsData, formatDuration }) => {
     setFlightDrawerTabs(newValue)
   }
 
-  const legs = flightFearOptionsData.legs ? Object.values(flightFearOptionsData.legs).flat() : [];
+  const legs = flightFearOptionsData.legs ? Object.values(flightFearOptionsData.legs).flat() : []
+
   const combinedFareOptions = [
     ...(Array.isArray(flightFearOptionsData?.fare_option) ? flightFearOptionsData.fare_option : []),
-    ...(Array.isArray(legs) ? legs.flatMap((leg) => Array.isArray(leg?.fare_option) ? leg.fare_option : []) : []),
-  ];
+    ...(Array.isArray(legs) ? legs.flatMap(leg => (Array.isArray(leg?.fare_option) ? leg.fare_option : [])) : [])
+  ]
+
   return (
     <Box className='min-h-full  p-5 shadow-lg rounded-lg border overflow-y-auto'>
       <Typography variant='h6' gutterBottom>

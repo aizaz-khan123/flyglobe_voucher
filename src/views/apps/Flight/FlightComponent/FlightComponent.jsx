@@ -1,10 +1,7 @@
-import { Typography } from '@mui/material'
-
 import FlightSearch from './FlightSearch'
 import { RecentSearch } from './RecentSearch'
 
 const FlightComponent = () => {
-
   return (
     <div className=''>
       <div className='mt-2'>

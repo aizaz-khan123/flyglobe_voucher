@@ -20,10 +20,9 @@ import { createColumnHelper, flexRender, getCoreRowModel, useReactTable } from '
 import CustomAvatar from '@core/components/mui/Avatar'
 
 // Util Imports
-import { getInitials } from '@/utils/getInitials'
-
-// Style Imports
 import tableStyles from '@core/styles/table.module.css'
+
+import { getInitials } from '@/utils/getInitials'
 
 // Column Definitions
 const columnHelper = createColumnHelper()

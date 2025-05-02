@@ -5,10 +5,12 @@ import { useEffect } from 'react'
 
 // Component Imports
 import PricingSection from '@views/front-pages/pricing/PricingSection'
+
+import { useSettings } from '@core/hooks/useSettings'
+
 import FreeTrial from './FreeTrial'
 import Plans from './Plans'
 import Faqs from './Faqs'
-import { useSettings } from '@core/hooks/useSettings'
 
 const PricingWrapper = ({ data }) => {
   // Hooks

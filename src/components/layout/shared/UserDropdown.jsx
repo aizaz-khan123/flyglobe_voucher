@@ -4,7 +4,7 @@
 import { useRef, useState } from 'react'
 
 // Next Imports
-import { useParams, useRouter } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 
 // MUI Imports
 import Avatar from '@mui/material/Avatar'
@@ -20,8 +20,6 @@ import Popper from '@mui/material/Popper'
 import { styled } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
 
-// Third-party Imports
-
 // Hook Imports
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -33,7 +31,6 @@ import { useSettings } from '@core/hooks/useSettings'
 import { updateAuthCookie } from '@/libs/cookie/auth'
 import { userLogout } from '@/redux-store/Features/authslice'
 import { useLogoutMutation } from '@/redux-store/services/api'
-import { getLocalizedUrl } from '@/utils/i18n'
 
 // Styled component for badge content
 const BadgeContentSpan = styled('span')({
@@ -55,17 +52,18 @@ const UserDropdown = () => {
   // Hooks
   const router = useRouter()
   const { settings } = useSettings()
-  const { lang: locale } = useParams()
+
   const user = useSelector(user => user?.auth?.userDetail)
   const email = user?.email
   const name = user?.name
+
   const handleDropdownOpen = () => {
     !open ? setOpen(true) : setOpen(false)
   }
 
   const handleDropdownClose = (event, url) => {
     if (url) {
-      router.push(getLocalizedUrl(url, locale))
+      router.push(url)
     }
 
     if (anchorRef.current && anchorRef.current.contains(event?.target)) {
@@ -75,28 +73,21 @@ const UserDropdown = () => {
     setOpen(false)
   }
 
-  const dispatch = useDispatch();
-  const [logout] = useLogoutMutation();
+  const dispatch = useDispatch()
+  const [logout] = useLogoutMutation()
 
   const onLogout = async () => {
     try {
-      await logout({}).unwrap();
-      toast.success("Logout successfully...");
-      await Promise.allSettled([
-        updateAuthCookie({ user: undefined }),
-        dispatch(userLogout()),
-      ]);
-      window.location.href = "/login";
+      await logout({}).unwrap()
+      toast.success('Logout successfully...')
+      await Promise.allSettled([updateAuthCookie({ user: undefined }), dispatch(userLogout())])
+      window.location.href = '/login'
     } catch (error) {
-      toast.success("Logout successfully...");
-      dispatch(userLogout());
-      await Promise.allSettled([
-        updateAuthCookie({ user: undefined }),
-        dispatch(userLogout()),
-      ]);
-
+      toast.success('Logout successfully...')
+      dispatch(userLogout())
+      await Promise.allSettled([updateAuthCookie({ user: undefined }), dispatch(userLogout())])
     }
-  };
+  }
 
   return (
     <>

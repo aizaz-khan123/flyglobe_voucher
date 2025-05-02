@@ -7,8 +7,6 @@ import { Controller, useForm } from 'react-hook-form'
 
 import {
   Button,
-  Card,
-  CardContent,
   Dialog,
   DialogActions,
   DialogContent,
@@ -34,7 +32,6 @@ import MuiTextField from '@/components/mui-form-inputs/MuiTextField'
 import MuiDropdown from '@/components/mui-form-inputs/MuiDropdown'
 import MuiDatePicker from '@/components/mui-form-inputs/MuiDatePicker'
 import MuiAutocomplete from '@/components/mui-form-inputs/MuiAutoComplete'
-
 
 const regionOptions = [
   { label: 'ALL-SECTORS', value: 'ALL-SECTORS' },
@@ -62,7 +59,7 @@ const CreateEditAirlineMargin = ({ open, isEdit, onClose, airlineMarginId, refet
     data: airline_margin,
     isSuccess: isAirlineMarginSuccess,
     error,
-    isLoading: isShowLoading,
+    isLoading: isShowLoading
   } = useShowAirlineMarginQuery(airlineMarginId, {
     refetchOnMountOrArgChange: true,
     skip: !airlineMarginId
@@ -90,8 +87,7 @@ const CreateEditAirlineMargin = ({ open, isEdit, onClose, airlineMarginId, refet
           setErrors(response?.data?.errors)
         }
       })
-    }
-    else {
+    } else {
       const updated_data = {
         _method: 'put',
         ...data
@@ -132,26 +128,24 @@ const CreateEditAirlineMargin = ({ open, isEdit, onClose, airlineMarginId, refet
         status: airline_margin.status,
         remarks: airline_margin.remarks
       })
-    }
-    else {
+    } else {
       reset({
         sales_channel: '',
         airline_id: '',
         region: '',
         margin: '',
-        margin_type: "",
-        sale_start_continue: "",
-        sale_end_continue: "",
-        travel_start_continue: "",
-        travel_end_continue: "",
-        rbds: "",
-        remarks: "",
+        margin_type: '',
+        sale_start_continue: '',
+        sale_end_continue: '',
+        travel_start_continue: '',
+        travel_end_continue: '',
+        rbds: '',
+        remarks: '',
         is_apply_on_gross: false,
         status: false
       })
     }
   }, [airline_margin, isAirlineMarginSuccess, reset, isEdit, open])
-
 
   return (
     <div>
@@ -308,34 +302,22 @@ const CreateEditAirlineMargin = ({ open, isEdit, onClose, airlineMarginId, refet
 
               <div>
                 <Controller
-                  name="is_apply_on_gross"
+                  name='is_apply_on_gross'
                   control={control}
                   render={({ field }) => (
                     <FormControlLabel
-                      control={
-                        <Switch
-                          {...field}
-                          checked={field.value}
-                          color="primary"
-                        />
-                      }
-                      label="is_apply_on_gross"
+                      control={<Switch {...field} checked={field.value} color='primary' />}
+                      label='is_apply_on_gross'
                     />
                   )}
                 />
                 <Controller
-                  name="status"
+                  name='status'
                   control={control}
                   render={({ field }) => (
                     <FormControlLabel
-                      control={
-                        <Switch
-                          {...field}
-                          checked={field.value}
-                          color="primary"
-                        />
-                      }
-                      label="status"
+                      control={<Switch {...field} checked={field.value} color='primary' />}
+                      label='status'
                     />
                   )}
                 />

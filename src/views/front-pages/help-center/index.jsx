@@ -4,12 +4,13 @@
 import { useState, useEffect } from 'react'
 
 // Component Imports
+import { useSettings } from '@core/hooks/useSettings'
+
 import HelpCenterHeader from './HelpCenterHeader'
 import Articles from './Articles'
 import KnowledgeBase from './KnowledgeBase'
 import KeepLearning from './KeepLearning'
 import NeedHelp from './NeedHelp'
-import { useSettings } from '@core/hooks/useSettings'
 
 const HelpCenterWrapper = () => {
   // States

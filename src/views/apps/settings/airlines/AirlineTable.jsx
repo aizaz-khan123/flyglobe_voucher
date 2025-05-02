@@ -36,13 +36,12 @@ import {
 
 import { toast } from 'react-toastify'
 
-import { useDeleteAirlineMutation, useGetAirlinesQuery } from '@/redux-store/services/api'
-
 // import product1Img from "@/assets/images/apps/ecommerce/products/1.jpg"
 import tableStyles from '@core/styles/table.module.css'
 import classNames from 'classnames'
-import { CreateEditAirline } from './CreateEditAirline'
 
+import { useDeleteAirlineMutation, useGetAirlinesQuery } from '@/redux-store/services/api'
+import { CreateEditAirline } from './CreateEditAirline'
 
 const AirlineTable = () => {
   //   const toaster = useToast()
@@ -60,11 +59,16 @@ const AirlineTable = () => {
     return itemRank.passed
   }
 
-  const { data: detail_data, isFetching, refetch } = useGetAirlinesQuery({
+  const {
+    data: detail_data,
+    isFetching,
+    refetch
+  } = useGetAirlinesQuery({
     page: page + 1,
     pageSize: rowsPerPage,
     searchText: globalFilter
   })
+
   const airlines = detail_data?.data
   const links = detail_data?.links
   const totalCount = detail_data?.total || 0
@@ -181,6 +185,7 @@ const AirlineTable = () => {
     ],
     []
   )
+
   const table = useReactTable({
     data: airlines,
     columns,
@@ -222,6 +227,7 @@ const AirlineTable = () => {
     setSelectedAirlineId(id)
     setIsEdit(true)
   }
+
   const DebouncedInput = ({ value: initialValue, onChange, debounce = 500, ...props }) => {
     const [value, setValue] = useState(initialValue)
 
@@ -239,7 +245,6 @@ const AirlineTable = () => {
 
     return <TextField {...props} value={value} onChange={e => setValue(e.target.value)} size='small' />
   }
-
 
   return (
     <>
@@ -353,10 +358,15 @@ const AirlineTable = () => {
 
       {/* create airline dialog */}
 
-      <CreateEditAirline open={isCreateModalOpen} onClose={handleClose} airlineId={selectedAirlineId} isEdit={isEdit} refetch={refetch} />
+      <CreateEditAirline
+        open={isCreateModalOpen}
+        onClose={handleClose}
+        airlineId={selectedAirlineId}
+        isEdit={isEdit}
+        refetch={refetch}
+      />
     </>
   )
 }
 
 export { AirlineTable }
-

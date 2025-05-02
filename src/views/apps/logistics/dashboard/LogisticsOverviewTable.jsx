@@ -5,7 +5,6 @@ import { useState, useMemo } from 'react'
 
 // Next Imports
 import Link from 'next/link'
-import { useParams } from 'next/navigation'
 
 // MUI Imports
 import Card from '@mui/material/Card'
@@ -34,9 +33,6 @@ import {
 // Components Imports
 import CustomAvatar from '@core/components/mui/Avatar'
 import OptionMenu from '@core/components/option-menu'
-
-// Util Imports
-import { getLocalizedUrl } from '@/utils/i18n'
 
 // Style Imports
 import tableStyles from '@core/styles/table.module.css'
@@ -72,7 +68,6 @@ const LogisticsOverviewTable = ({ vehicleData }) => {
   const [data, setData] = useState(...[vehicleData])
 
   // Hooks
-  const { lang: locale } = useParams()
 
   const columns = useMemo(
     () => [
@@ -107,7 +102,7 @@ const LogisticsOverviewTable = ({ vehicleData }) => {
             </CustomAvatar>
             <Typography
               component={Link}
-              href={getLocalizedUrl('/logistics/fleet', locale)}
+              href={'/logistics/fleet'}
               className='font-medium hover:text-primary'
               color='text.primary'
             >

@@ -3,8 +3,7 @@ import React, { useState } from 'react'
 import { Controller } from 'react-hook-form'
 import { Button, IconButton, Popover, Typography, Box } from '@mui/material'
 import { IoPeople } from 'react-icons/io5'
-import { IoMdAdd, IoMdCloseCircleOutline } from 'react-icons/io'
-import { FaMinus } from 'react-icons/fa6'
+import { IoMdAdd } from 'react-icons/io'
 import { AiOutlineMinus } from 'react-icons/ai'
 
 const TravelersDropdown = ({ control, name }) => {

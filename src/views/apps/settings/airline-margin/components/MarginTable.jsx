@@ -38,6 +38,11 @@ import {
 import { IoMdClose } from 'react-icons/io'
 
 import { toast } from 'react-toastify'
+
+import tableStyles from '@core/styles/table.module.css'
+
+import classNames from 'classnames'
+
 import { CreateEditAirlineMargin } from './CreateEditAirlineMargin'
 
 import MuiDropdown from '@/components/mui-form-inputs/MuiDropdown'
@@ -47,10 +52,8 @@ import {
   useDeleteAirlineMarginMutation,
   useGetAirlineMarginsQuery
 } from '@/redux-store/services/api'
-import tableStyles from '@core/styles/table.module.css'
-import classNames from 'classnames'
-import AssignMarginModal from './AssignMarginModal'
 
+import AssignMarginModal from './AssignMarginModal'
 
 const MarginTable = () => {
   // States
@@ -62,9 +65,8 @@ const MarginTable = () => {
   const [pageUrl, setPageUrl] = useState('')
   const [marginModal, setMarginModal] = useState('')
   const [marginTypeModal, setMarginTypeModal] = useState('')
-  const [isAssignMarginModal, setIsAssignMarginModal] = useState(false);
-  const [marginUUid, setMarginUUid] = useState();
-
+  const [isAssignMarginModal, setIsAssignMarginModal] = useState(false)
+  const [marginUUid, setMarginUUid] = useState()
 
   const fuzzyFilter = (row, columnId, value, addMeta) => {
     const itemRank = rankItem(row.getValue(columnId), value)
@@ -150,11 +152,12 @@ const MarginTable = () => {
     setAirlineMarginToBeDelete(airline_margins?.find(b => uuid === b.uuid))
   }
 
-  const showAssignAirlineMarginConfirmation = (uuid) => {
-    setIsAssignMarginModal(true);
+  const showAssignAirlineMarginConfirmation = uuid => {
+    setIsAssignMarginModal(true)
     setMarginUUid(uuid)
-    AirlineMarginAssignConfirmationRef.current?.showModal();
-  };
+    AirlineMarginAssignConfirmationRef.current?.showModal()
+  }
+
   const handleDeleteAirlineMargin = async () => {
     if (AirlineMarginToBeDelete) {
       deleteAirlineMargin(AirlineMarginToBeDelete.uuid).then(response => {
@@ -205,7 +208,6 @@ const MarginTable = () => {
         cell: ({ row }) => {
           const { margin, margin_type } = row.original
           const color = Number(margin) > 0 ? 'warning' : 'success'
-
 
           return (
             <Badge color={color}>
@@ -275,8 +277,7 @@ const MarginTable = () => {
                   className='cursor-pointer text-base text-blue-600'
                   onClick={e => {
                     e.stopPropagation()
-                    showAssignAirlineMarginConfirmation(row.original.uuid);
-
+                    showAssignAirlineMarginConfirmation(row.original.uuid)
                   }}
                 />
               </IconButton>
@@ -325,11 +326,12 @@ const MarginTable = () => {
     // setIsEditMode(false)
   }
 
-  const handleShowEdit = (id) => {
+  const handleShowEdit = id => {
     setSelectedAirlineMarginId(id)
     setIsCreateModalOpen(true)
     setIsEdit(true)
   }
+
   const DebouncedInput = ({ value: initialValue, onChange, debounce = 500, ...props }) => {
     const [value, setValue] = useState(initialValue)
 
@@ -537,8 +539,14 @@ const MarginTable = () => {
         </DialogActions>
       </Dialog>
       {/* ---------------------- Create Airline Margin ------------------ */}
-      <CreateEditAirlineMargin open={isCreateModalOpen} onClose={handleClose} airlineMarginId={selectedAirlineMarginId} isEdit={isEdit} refetch={refetch} />
-      {isAssignMarginModal &&
+      <CreateEditAirlineMargin
+        open={isCreateModalOpen}
+        onClose={handleClose}
+        airlineMarginId={selectedAirlineMarginId}
+        isEdit={isEdit}
+        refetch={refetch}
+      />
+      {isAssignMarginModal && (
         <AssignMarginModal
           isOpen={isAssignMarginModal}
           refetch={refetch}
@@ -547,10 +555,9 @@ const MarginTable = () => {
           }}
           marginUUid={marginUUid}
         />
-      }
+      )}
     </>
   )
 }
 
 export { MarginTable }
-

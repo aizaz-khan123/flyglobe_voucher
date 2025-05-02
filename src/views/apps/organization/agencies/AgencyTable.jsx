@@ -42,6 +42,10 @@ import { z } from 'zod'
 // Component Imports
 import { LoadingButton } from '@mui/lab'
 
+import tableStyles from '@core/styles/table.module.css'
+
+import classNames from 'classnames'
+
 import OptionMenu from '@/@core/components/option-menu'
 import MuiDropdown from '@/components/mui-form-inputs/MuiDropdown'
 import MuiTextField from '@/components/mui-form-inputs/MuiTextField'
@@ -57,8 +61,7 @@ import {
   usePermissionUpdateMutation,
   useUpdateAgencyMutation
 } from '@/redux-store/services/api'
-import tableStyles from '@core/styles/table.module.css'
-import classNames from 'classnames'
+
 import PermissionModal from '../PermissionModal'
 import ChangePasswordModal from '../branches/settings/ChangePasswordModal'
 import AssignedAgencyMarginModal from './components/AssignedAgencyMarginModal'
@@ -94,7 +97,7 @@ const AgencyTable = () => {
   const [orgUUid, setOrgUUid] = useState()
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(10)
-  const [isAssignMarginModal, setIsAssignMarginModal] = useState(false);
+  const [isAssignMarginModal, setIsAssignMarginModal] = useState(false)
 
   // RTK Query
   const {
@@ -116,10 +119,11 @@ const AgencyTable = () => {
     setPage(0)
   }
 
-  const showAssignAirlineMarginConfirmation = (uuid) => {
-    setIsAssignMarginModal(true);
+  const showAssignAirlineMarginConfirmation = uuid => {
+    setIsAssignMarginModal(true)
     setOrgUUid(uuid)
-  };
+  }
+
   const { data: branchesDropDown } = useBranchDropDownQuery()
   const agencies = detail_data?.data || []
   const totalCount = detail_data?.total || 0
@@ -230,21 +234,23 @@ const AgencyTable = () => {
         cell: ({ row }) => (
           <div className='flex items-center w-fit gap-2'>
             <Tooltip title='Delete Agency' placement='top'>
-              <IconButton size='small'
+              <IconButton
+                size='small'
                 onClick={event => {
                   showDeleteAgencyConfirmation(row.original.uuid)
-                }}>
-                <FaTrash
-                  className=' text-red-600 text-base' />
+                }}
+              >
+                <FaTrash className=' text-red-600 text-base' />
               </IconButton>
             </Tooltip>
             <Tooltip title='Update Agency' placement='top'>
-              <IconButton size='small'
+              <IconButton
+                size='small'
                 onClick={event => {
                   showUpdateAgencyConfirmation(row.original)
-                }}>
-                <FaPencil
-                  className='cursor-pointer text-primary text-base' />
+                }}
+              >
+                <FaPencil className='cursor-pointer text-primary text-base' />
               </IconButton>
             </Tooltip>
             <Tooltip title='Settings' placement='top'>
@@ -337,7 +343,7 @@ const AgencyTable = () => {
       deleteAgency(AgencyToBeDelete.uuid).then(response => {
         if (response?.data.code == 200) {
           toast.success(response?.data.message)
-          setAgencyToBeDelete(null);
+          setAgencyToBeDelete(null)
         } else {
           toast.error(response?.data.message)
         }
@@ -548,14 +554,14 @@ const AgencyTable = () => {
                     {table.rows?.length > 0
                       ? 'No Record Found'
                       : table.getRowModel().rows.map(row => (
-                        <tr key={row.id} className='hover:bg-gray-50'>
-                          {row.getVisibleCells().map(cell => (
-                            <td key={cell.id} className='p-3 border-b'>
-                              {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                            </td>
-                          ))}
-                        </tr>
-                      ))}
+                          <tr key={row.id} className='hover:bg-gray-50'>
+                            {row.getVisibleCells().map(cell => (
+                              <td key={cell.id} className='p-3 border-b'>
+                                {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                              </td>
+                            ))}
+                          </tr>
+                        ))}
                   </>
                 ) : (
                   <td colSpan={table.getAllColumns().length}>
@@ -739,7 +745,7 @@ const AgencyTable = () => {
         />
       )}
 
-      {isAssignMarginModal &&
+      {isAssignMarginModal && (
         <AssignedAgencyMarginModal
           isOpen={isAssignMarginModal}
           refetch={refetch}
@@ -748,10 +754,9 @@ const AgencyTable = () => {
           }}
           orgUUid={orgUUid}
         />
-      }
+      )}
     </>
   )
 }
 
 export { AgencyTable }
-

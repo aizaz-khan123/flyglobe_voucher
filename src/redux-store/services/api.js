@@ -683,97 +683,96 @@ export const api = emptySplitApi.injectEndpoints({
     }),
 
     branchMargins: builder.query({
-      query: (params) => ({
+      query: params => ({
         url: API_END_POINTS.branchMargins,
-        method: "GET",
+        method: 'GET',
         params
       }),
-      transformResponse: (response) => response.data,
+      transformResponse: response => response.data
     }),
 
     assignToBranchByAirline: builder.mutation({
-      query: (body) => ({
+      query: body => ({
         url: API_END_POINTS.assignToBranchByAirline,
-        method: "POST",
+        method: 'POST',
         body
-      }),
+      })
     }),
 
     agenciesMargins: builder.query({
-      query: (orgUUid) => ({
+      query: orgUUid => ({
         url: `${API_END_POINTS.agenciesMargins}/${orgUUid}`,
-        method: "GET",
+        method: 'GET'
       }),
-      transformResponse: (response) => response.data,
+      transformResponse: response => response.data
     }),
 
     agencyMarginAssign: builder.mutation({
       query: ({ orgUUid, data }) => ({
         url: `${API_END_POINTS.agencyMarginAssign}/${orgUUid}`,
-        method: "POST",
-        body: data,
-      }),
+        method: 'POST',
+        body: data
+      })
     }),
 
-
     branchMargin: builder.query({
-      query: (params) => ({
+      query: params => ({
         url: API_END_POINTS.branchMargin,
-        method: "GET",
+        method: 'GET',
         params
       }),
-      transformResponse: (response) => response.data,
+      transformResponse: response => response.data
     }),
 
     assignMarginBranch: builder.mutation({
-      query: (body) => ({
+      query: body => ({
         url: API_END_POINTS.assignMarginBranch,
-        method: "POST",
+        method: 'POST',
         body
-      }),
+      })
     }),
 
     bankDropdown: builder.query({
       query: () => ({
         url: API_END_POINTS.bankDropdown,
-        method: 'GET',
+        method: 'GET'
       }),
-      transformResponse: (response) => response.data,
+      transformResponse: response => response.data
     }),
 
     depositsRequest: builder.mutation({
-      query: (formData) => ({
+      query: formData => ({
         url: `${API_END_POINTS.depositsRequest}`,
-        method: "POST",
-        body: formData,
-      }),
+        method: 'POST',
+        body: formData
+      })
     }),
     depositsOrgList: builder.query({
       query: () => ({
         url: `${API_END_POINTS.depositsOrgList}`,
-        method: "GET",
+        method: 'GET'
       }),
-      transformResponse: (response) => response.data,
+      transformResponse: response => response.data
     }),
     depositsAgencyList: builder.query({
       query: () => ({
         url: `${API_END_POINTS.depositsAgencyList}`,
-        method: "GET",
+        method: 'GET'
       }),
-      transformResponse: (response) => response.data,
+      transformResponse: response => response.data
     }),
 
     depositsReject: builder.mutation({
-      query: (uuid) => ({
+      query: uuid => ({
         url: `${API_END_POINTS.depositsReject}/${uuid}`,
-        method: "POST",
-      }),
+        method: 'POST'
+      })
     }),
     depositsAccept: builder.mutation({
-      query: (uuid) => ({
+      query: uuid => ({
         url: `${API_END_POINTS.depositsAccept}/${uuid}`,
-        method: "POST",
-      }),
+        method: 'POST'
+      })
     }),
 
     //refund-request
@@ -781,33 +780,34 @@ export const api = emptySplitApi.injectEndpoints({
     refundRequest: builder.query({
       query: () => ({
         url: `${API_END_POINTS.refundRequest}`,
-        method: "GET",
+        method: 'GET'
       }),
-      transformResponse: (response) => response.data,
+      transformResponse: response => response.data
     }),
 
     makeRefund: builder.mutation({
       query: ({ booking_id, data }) => ({
         url: `${API_END_POINTS.makeRefund}/${booking_id}`,
-        method: "POST",
-        body: data,
-      }),
+        method: 'POST',
+        body: data
+      })
     }),
 
     rejectReFund: builder.mutation({
       query: ({ booking_id, data }) => ({
         url: `${API_END_POINTS.rejectReFund}/${booking_id}`,
-        method: "GET",
-        body: data,
-      }),
+        method: 'GET',
+        body: data
+      })
     }),
     refundRequestShowFareRule: builder.query({
-      query: (booking_id) => ({
+      query: booking_id => ({
         url: `${API_END_POINTS.refundRequestShowFareRule}/${booking_id}`,
-        method: "GET",
+        method: 'GET'
       }),
-      transformResponse: (response) => response.data,
+      transformResponse: response => response.data
     }),
+
     // Settings //
     temporaryLimit: builder.mutation({
       query: body => ({
@@ -820,9 +820,9 @@ export const api = emptySplitApi.injectEndpoints({
     myRefundRequest: builder.query({
       query: () => ({
         url: `${API_END_POINTS.myRefundRequest}`,
-        method: "GET",
+        method: 'GET'
       }),
-      transformResponse: (response) => response.data,
+      transformResponse: response => response.data
     }),
 
     generalSetting: builder.mutation({
@@ -837,9 +837,9 @@ export const api = emptySplitApi.injectEndpoints({
     groupTypeList: builder.query({
       query: () => ({
         url: `${API_END_POINTS.groupTypeList}`,
-        method: "GET",
+        method: 'GET'
       }),
-      transformResponse: (response) => response.data,
+      transformResponse: response => response.data
     }),
     groupTypeStore: builder.mutation({
       query: body => ({
@@ -856,17 +856,17 @@ export const api = emptySplitApi.injectEndpoints({
       })
     }),
     groupTypeDelete: builder.query({
-      query: (uuid) => ({
+      query: uuid => ({
         url: `${API_END_POINTS.groupTypeDelete}/${uuid}`,
-        method: "GET",
-      }),
+        method: 'GET'
+      })
     }),
     groupTypeDropdown: builder.query({
       query: () => ({
         url: `${API_END_POINTS.groupTypeDropdown}`,
-        method: "GET",
+        method: 'GET'
       }),
-      transformResponse: (response) => response.data,
+      transformResponse: response => response.data
     }),
 
     // groups
@@ -896,10 +896,10 @@ export const api = emptySplitApi.injectEndpoints({
       transformResponse: response => response.data
     }),
     managementGroupDelete: builder.query({
-      query: (uuid) => ({
+      query: uuid => ({
         url: `${API_END_POINTS.managementGroupDelete}/${uuid}`,
-        method: "GET",
-      }),
+        method: 'GET'
+      })
     }),
 
     passportInfo: builder.mutation({
@@ -908,8 +908,7 @@ export const api = emptySplitApi.injectEndpoints({
         method: 'POST',
         body
       })
-    }),
-
+    })
   }),
   overrideExisting: false
 })
@@ -976,6 +975,7 @@ export const {
   useDropDownByTypeQuery,
   useBranchMarginQuery,
   useAssignMarginBranchMutation,
+
   //////////////////////
   useGetAgenciesQuery,
   useCreateAgencyMutation,
@@ -986,6 +986,7 @@ export const {
   useBranchMarginsQuery,
   useAgenciesMarginsQuery,
   useAgencyMarginAssignMutation,
+
   // ///////////////////////
   useCreateEmployeeMutation,
   useDeleteEmployeeMutation,
@@ -1024,18 +1025,19 @@ export const {
   useDashboardSaleStaticsQuery,
   useLazyDashboardStatsQuery,
   useMyRefundRequestQuery,
+
   //refund-request
   useRefundRequestQuery,
   useMakeRefundMutation,
   useRejectReFundMutation,
   useLazyRefundRequestShowFareRuleQuery,
 
-
   useDepositsOrgListQuery,
   useDepositsAgencyListQuery,
   useDepositsRequestMutation,
   useDepositsRejectMutation,
   useDepositsAcceptMutation,
+
   /// group type ////
   useGroupTypeListQuery,
   useGroupTypeStoreMutation,
@@ -1050,5 +1052,4 @@ export const {
   useLazyManagementGroupDeleteQuery,
 
   usePassportInfoMutation
-
 } = api

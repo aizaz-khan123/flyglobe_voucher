@@ -11,7 +11,7 @@ const FlightDetailModal = ({ viewFlightDetailModal, handleCloseViewFlightDetail,
   }
 
   // const { legs } = data
-  const legs = data.legs ? Object.values(data.legs).flat() : [];
+  const legs = data.legs ? Object.values(data.legs).flat() : []
 
   return (
     <Dialog
@@ -35,7 +35,7 @@ const FlightDetailModal = ({ viewFlightDetailModal, handleCloseViewFlightDetail,
                 <div className='flex items-center justify-between pb-2'>
                   <div className='flex items-center gap-2'>
                     <h2 className='text-md md:text-lg lg:text-2xl font-bold '>
-                      {queryParams?.route_type === "RETURN" ? "Returning from " : ""}
+                      {queryParams?.route_type === 'RETURN' ? 'Returning from ' : ''}
                       {segments[0].origin.municipality} ({segments[0].origin.iata_code}) to{' '}
                       {segments[segments.length - 1].destination.municipality} (
                       {segments[segments.length - 1].destination.iata_code})
@@ -44,11 +44,11 @@ const FlightDetailModal = ({ viewFlightDetailModal, handleCloseViewFlightDetail,
                       Total duration: {totalHours}h {totalMinutes}m
                     </p>
                   </div>
-                  {legIndex === 0 &&
+                  {legIndex === 0 && (
                     <div>
                       <IoMdClose className='text-2xl cursor-pointer' onClick={handleCloseViewFlightDetail} />
                     </div>
-                  }
+                  )}
                 </div>
 
                 {segments.map((segment, segmentIndex) => (

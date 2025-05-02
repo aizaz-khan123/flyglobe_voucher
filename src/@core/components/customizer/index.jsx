@@ -313,8 +313,8 @@ const Customizer = ({ breakpoint = 'lg', dir = 'ltr', disableDirection = false }
                 </div>
               </div>
               {settings.mode === 'dark' ||
-              (settings.mode === 'system' && isSystemDark) ||
-              settings.layout === 'horizontal' ? null : (
+                (settings.mode === 'system' && isSystemDark) ||
+                settings.layout === 'horizontal' ? null : (
                 <div className='flex items-center justify-between'>
                   <label className='font-medium cursor-pointer' htmlFor='customizer-semi-dark'>
                     Semi Dark
@@ -423,7 +423,7 @@ const Customizer = ({ breakpoint = 'lg', dir = 'ltr', disableDirection = false }
                 <div className='flex flex-col gap-2.5'>
                   <p className='font-medium'>Direction</p>
                   <div className='flex items-center gap-4'>
-                    <Link href={getLocalePath(pathName, 'en')}>
+                    <Link href={getLocalePath(pathName, '')}>
                       <div className='flex flex-col items-start gap-0.5'>
                         <div
                           className={classnames(styles.itemWrapper, {

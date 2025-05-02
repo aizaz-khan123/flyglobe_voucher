@@ -6,49 +6,49 @@ import { Controller } from 'react-hook-form'
 import './mui.css'
 
 const MuiTimePicker = ({
-    control,
-    name,
-    label,
-    onChange,
-    className,
-    disabled = false,
-    size = 'medium',
-    width,
-    defaultTime
+  control,
+  name,
+  label,
+  onChange,
+  className,
+  disabled = false,
+  size = 'medium',
+  width,
+  defaultTime
 }) => {
-    return (
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <Controller
-                control={control}
-                name={name}
-                defaultValue={defaultTime || ''}
-                render={({ field, fieldState }) => (
-                    <TimePicker
-                        {...field}
-                        label={label}
-                        className={`${className} mui-custom-time-picker`}
-                        value={field.value ? dayjs(field.value, 'HH:mm:ss') : null}
-                        onChange={(newValue) => {
-                            const formattedTime = newValue ? newValue.format('HH:mm:ss') : null;
+  return (
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <Controller
+        control={control}
+        name={name}
+        defaultValue={defaultTime || ''}
+        render={({ field, fieldState }) => (
+          <TimePicker
+            {...field}
+            label={label}
+            className={`${className} mui-custom-time-picker`}
+            value={field.value ? dayjs(field.value, 'HH:mm:ss') : null}
+            onChange={newValue => {
+              const formattedTime = newValue ? newValue.format('HH:mm:ss') : null
 
-                            field.onChange(formattedTime);
-                            onChange?.(formattedTime);
-                        }}
-                        disabled={disabled}
-                        slotProps={{
-                            textField: {
-                                size,
-                                fullWidth: !width,
-                                sx: width ? { width } : undefined,
-                                error: !!fieldState.error,
-                                helperText: fieldState.error?.message
-                            }
-                        }}
-                    />
-                )}
-            />
-        </LocalizationProvider>
-    )
+              field.onChange(formattedTime)
+              onChange?.(formattedTime)
+            }}
+            disabled={disabled}
+            slotProps={{
+              textField: {
+                size,
+                fullWidth: !width,
+                sx: width ? { width } : undefined,
+                error: !!fieldState.error,
+                helperText: fieldState.error?.message
+              }
+            }}
+          />
+        )}
+      />
+    </LocalizationProvider>
+  )
 }
 
 export default MuiTimePicker

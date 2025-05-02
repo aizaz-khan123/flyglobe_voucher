@@ -5,7 +5,6 @@ import { useState, useMemo } from 'react'
 
 // Next Imports
 import Link from 'next/link'
-import { useParams } from 'next/navigation'
 
 // MUI Imports
 import Card from '@mui/material/Card'
@@ -37,9 +36,6 @@ import {
 // Component Imports
 import OptionMenu from '@core/components/option-menu'
 import CustomAvatar from '@core/components/mui/Avatar'
-
-// Util Imports
-import { getLocalizedUrl } from '@/utils/i18n'
 
 // Style Imports
 import tableStyles from '@core/styles/table.module.css'
@@ -81,7 +77,6 @@ const InvoiceListTable = ({ invoiceData }) => {
   const open = Boolean(anchorEl)
 
   // Hooks
-  const { lang: locale } = useParams()
 
   const columns = useMemo(
     () => [
@@ -90,7 +85,7 @@ const InvoiceListTable = ({ invoiceData }) => {
         cell: ({ row }) => (
           <Typography
             component={Link}
-            href={getLocalizedUrl(`/invoice/preview/${row.original.id}`, locale)}
+            href={`/invoice/preview/${row.original.id}`}
             color='primary.main'
           >{`#${row.original.id}`}</Typography>
         )
@@ -139,7 +134,7 @@ const InvoiceListTable = ({ invoiceData }) => {
               <i className='ri-delete-bin-7-line text-textSecondary' />
             </IconButton>
             <IconButton>
-              <Link href={getLocalizedUrl(`/invoice/preview/${row.original.id}`, locale)} className='flex'>
+              <Link href={`/invoice/preview/${row.original.id}`} className='flex'>
                 <i className='ri-eye-line text-textSecondary' />
               </Link>
             </IconButton>
@@ -155,7 +150,7 @@ const InvoiceListTable = ({ invoiceData }) => {
                 {
                   text: 'Edit',
                   icon: 'ri-pencil-line',
-                  href: getLocalizedUrl(`/invoice/edit/${row.original.id}`, locale),
+                  href: `/invoice/edit/${row.original.id}`,
                   linkProps: {
                     className: classnames('flex items-center bs-[40px] plb-2 pli-4 is-full gap-2 text-textSecondary')
                   }

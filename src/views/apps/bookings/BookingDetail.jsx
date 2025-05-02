@@ -16,8 +16,7 @@ import {
   DialogTitle,
   Table,
   TableBody,
-  TableHead,
-  TableRow
+  TableHead
 } from '@mui/material'
 import dayjs from 'dayjs'
 
@@ -170,9 +169,7 @@ const BookingDetail = ({ bookingId }) => {
     })
   }
 
-  const handleRefundTicket = () => {
-
-  }
+  const handleRefundTicket = () => {}
 
   const handleEmailTicketModal = () => {
     setEmailType('send_ticket_email')
@@ -334,8 +331,10 @@ const BookingDetail = ({ bookingId }) => {
               <h2 className='font-semibold text-lg'>Pricing Summary</h2>
               {Object.entries(fare_break_down || {}).map(([key, data], index) => {
                 const passengerType = key === 'ADT' ? 'Adult' : key === 'CNN' ? 'Child' : key === 'INF' ? 'Infant' : key
+
                 // Safe access whether prices are nested or at root
-                const prices = data?.prices || data;
+                const prices = data?.prices || data
+
                 return (
                   <div key={index} className='flex justify-between border-b pb-2'>
                     <p className='font-semibold'>
@@ -356,7 +355,8 @@ const BookingDetail = ({ bookingId }) => {
               <Accordion
                 className='p-0 shadow-none before:hidden border-0'
                 disableGutters
-              // sx={{ boxShadow: "none", "&:before": { display: "none" } }}
+
+                // sx={{ boxShadow: "none", "&:before": { display: "none" } }}
               >
                 <AccordionSummary
                   expandIcon={
@@ -374,7 +374,9 @@ const BookingDetail = ({ bookingId }) => {
                     {Object.entries(fare_break_down || {}).map(([key, data], index) => {
                       const passengerType =
                         key === 'ADT' ? 'Adult' : key === 'CNN' ? 'Child' : key === 'INF' ? 'Infant' : key
-                      const prices = data?.prices || data;
+
+                      const prices = data?.prices || data
+
                       return (
                         <div key={index} className='border p-2 rounded-md'>
                           <h2 className='font-semibold text-lg py-3'>{passengerType}</h2>
@@ -418,7 +420,6 @@ const BookingDetail = ({ bookingId }) => {
               {status == 'expired' && <h3 className='font-bold text-2xl text-primary'> Booking Expired</h3>}
               {isConfirmed && (
                 <div className='flex justify-center flex-col space-y-4 mt-4'>
-
                   {console.log(isPNRValid, role)}
                   {isPNRValid && (
                     <>
@@ -428,16 +429,16 @@ const BookingDetail = ({ bookingId }) => {
                         role === 'branch-employee' ||
                         ((role === 'agency' || role === 'a-employee' || role === 'sub-agent') &&
                           setting?.can_issue_ticket)) && (
-                          <Button
-                            variant='contained'
-                            startIcon={<FaTicket />}
-                            onClick={handleIssueTicketModal}
-                            disabled={ticketOtpLoading}
-                            loading={ticketOtpLoading}
-                          >
-                            {'Issue Ticket'}
-                          </Button>
-                        )}
+                        <Button
+                          variant='contained'
+                          startIcon={<FaTicket />}
+                          onClick={handleIssueTicketModal}
+                          disabled={ticketOtpLoading}
+                          loading={ticketOtpLoading}
+                        >
+                          {'Issue Ticket'}
+                        </Button>
+                      )}
 
                       <Button
                         variant='contained'
@@ -479,7 +480,7 @@ const BookingDetail = ({ bookingId }) => {
                   >
                     Download Ticket
                   </Button>
-                  {(provider_name != 'AIRBLUE_API') && isWithin24Hours ? (
+                  {provider_name != 'AIRBLUE_API' && isWithin24Hours ? (
                     <Button
                       variant='contained'
                       startIcon={<FaTicket />}
@@ -516,7 +517,13 @@ const BookingDetail = ({ bookingId }) => {
             </DialogContent>
             <DialogActions>
               <form method='dialog'>
-                <Button color='error' disabled={isBookingCancelLoading} size='sm' variant='contained' onClick={handleSetModalOpen}>
+                <Button
+                  color='error'
+                  disabled={isBookingCancelLoading}
+                  size='sm'
+                  variant='contained'
+                  onClick={handleSetModalOpen}
+                >
                   No
                 </Button>
               </form>

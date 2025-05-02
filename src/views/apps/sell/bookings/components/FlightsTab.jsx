@@ -1,9 +1,7 @@
 import React from 'react'
 
 const FlightsTab = () => {
-  return (
-    <div>FlightsTab</div>
-  )
+  return <div>FlightsTab</div>
 }
 
 export default FlightsTab

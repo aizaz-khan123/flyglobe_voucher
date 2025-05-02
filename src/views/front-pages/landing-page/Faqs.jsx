@@ -12,14 +12,14 @@ import Grid from '@mui/material/Grid2'
 import classnames from 'classnames'
 
 // Hook Imports
+import Lines from '@assets/svg/front-pages/landing-page/Lines'
+
+import frontCommonStyles from '@views/front-pages/styles.module.css'
+
 import { useIntersection } from '@/hooks/useIntersection'
 
 // SVG Imports
 import ElementOne from '@/assets/svg/front-pages/landing-page/ElementOne'
-import Lines from '@assets/svg/front-pages/landing-page/Lines'
-
-// Styles Imports
-import frontCommonStyles from '@views/front-pages/styles.module.css'
 
 const FaqsData = [
   {

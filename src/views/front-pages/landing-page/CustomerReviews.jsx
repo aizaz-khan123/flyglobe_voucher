@@ -10,9 +10,6 @@ import Rating from '@mui/material/Rating'
 import { useKeenSlider } from 'keen-slider/react'
 import classnames from 'classnames'
 
-// Styled Component Imports
-import AppKeenSlider from '@/libs/styles/AppKeenSlider'
-
 // SVG Imports
 import Lines from '@assets/svg/front-pages/landing-page/Lines'
 import Levis from '@assets/svg/front-pages/landing-page/Levis'
@@ -23,6 +20,8 @@ import Airbnb from '@assets/svg/front-pages/landing-page/Airbnb'
 
 // Styles Imports
 import frontCommonStyles from '@views/front-pages/styles.module.css'
+
+import AppKeenSlider from '@/libs/styles/AppKeenSlider'
 
 // Data
 const data = [

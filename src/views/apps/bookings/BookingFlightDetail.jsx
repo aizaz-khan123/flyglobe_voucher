@@ -1,15 +1,6 @@
 import React from 'react'
 
-import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
-  Card,
-  CardContent,
-  Typography,
-  Box,
-  Avatar
-} from '@mui/material'
+import { Accordion, AccordionDetails, AccordionSummary, Card, CardContent, Typography, Box } from '@mui/material'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import {
   Timeline,

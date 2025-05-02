@@ -5,7 +5,6 @@ import { useState } from 'react'
 
 // Next Imports
 import Link from 'next/link'
-import { useParams } from 'next/navigation'
 
 // MUI Imports
 import Card from '@mui/material/Card'
@@ -26,9 +25,6 @@ import Logo from '@components/layout/shared/Logo'
 // Hook Imports
 import { useImageVariant } from '@core/hooks/useImageVariant'
 
-// Util Imports
-import { getLocalizedUrl } from '@/utils/i18n'
-
 const Register = ({ mode }) => {
   // States
   const [isPasswordShown, setIsPasswordShown] = useState(false)
@@ -38,7 +34,7 @@ const Register = ({ mode }) => {
   const lightImg = '/images/pages/auth-v1-mask-light.png'
 
   // Hooks
-  const { lang: locale } = useParams()
+
   const authBackground = useImageVariant(mode, lightImg, darkImg)
   const handleClickShowPassword = () => setIsPasswordShown(show => !show)
 
@@ -46,7 +42,7 @@ const Register = ({ mode }) => {
     <div className='flex flex-col justify-center items-center min-bs-[100dvh] relative p-6'>
       <Card className='flex flex-col sm:is-[450px]'>
         <CardContent className='p-6 sm:!p-12'>
-          <Link href={getLocalizedUrl('/', locale)} className='flex justify-center items-start mbe-6'>
+          <Link href={'/'} className='flex justify-center items-start mbe-6'>
             <Logo />
           </Link>
           <Typography variant='h4'>Adventure starts here 🚀</Typography>
@@ -92,7 +88,7 @@ const Register = ({ mode }) => {
               </Button>
               <div className='flex justify-center items-center flex-wrap gap-2'>
                 <Typography>Already have an account?</Typography>
-                <Typography component={Link} href={getLocalizedUrl('/login', locale)} color='primary.main'>
+                <Typography component={Link} href={'/login'} color='primary.main'>
                   Sign in instead
                 </Typography>
               </div>

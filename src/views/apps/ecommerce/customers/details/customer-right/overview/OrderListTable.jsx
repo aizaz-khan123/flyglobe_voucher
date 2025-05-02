@@ -5,7 +5,6 @@ import { useState, useEffect, useMemo } from 'react'
 
 // Next Imports
 import Link from 'next/link'
-import { useParams } from 'next/navigation'
 
 // MUI Imports
 import Card from '@mui/material/Card'
@@ -33,9 +32,6 @@ import {
 
 // Component Imports
 import OptionMenu from '@core/components/option-menu'
-
-// Util Imports
-import { getLocalizedUrl } from '@/utils/i18n'
 
 // Style Imports
 import tableStyles from '@core/styles/table.module.css'
@@ -95,7 +91,6 @@ const OrderListTable = ({ orderData }) => {
   const [globalFilter, setGlobalFilter] = useState('')
 
   // Hooks
-  const { lang: locale } = useParams()
 
   const columns = useMemo(
     () => [
@@ -104,7 +99,7 @@ const OrderListTable = ({ orderData }) => {
         cell: ({ row }) => (
           <Typography
             component={Link}
-            href={getLocalizedUrl(`/ecommerce/orders/details/${row.original.order}`, locale)}
+            href={`/ecommerce/orders/details/${row.original.order}`}
             color='primary.main'
           >{`#${row.original.order}`}</Typography>
         )
@@ -139,7 +134,7 @@ const OrderListTable = ({ orderData }) => {
                 {
                   text: 'View',
                   icon: 'ri-eye-line',
-                  href: getLocalizedUrl(`/ecommerce/orders/details/${row.original.order}`, locale),
+                  href: `/ecommerce/orders/details/${row.original.order}`,
                   linkProps: { className: 'flex items-center gap-2 is-full plb-1.5 pli-4' }
                 },
                 {

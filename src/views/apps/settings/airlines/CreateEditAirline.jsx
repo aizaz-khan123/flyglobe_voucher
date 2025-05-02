@@ -2,25 +2,19 @@
 
 import { useEffect, useState } from 'react'
 
-import {
-  Button,
-  Card,
-  CardContent,
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  FormControlLabel,
-  FormLabel,
-  Switch,
-  Typography
-} from '@mui/material'
+import { Button, Dialog, DialogContent, DialogTitle, FormControlLabel, FormLabel, Switch } from '@mui/material'
 import { Controller, useForm } from 'react-hook-form'
 
 import { toast } from 'react-toastify'
 
 import { IoMdClose } from 'react-icons/io'
 
-import { useCreateAirlineMutation, useGetCountryListQuery, useShowAirlineQuery, useUpdateAirlineMutation } from '@/redux-store/services/api'
+import {
+  useCreateAirlineMutation,
+  useGetCountryListQuery,
+  useShowAirlineQuery,
+  useUpdateAirlineMutation
+} from '@/redux-store/services/api'
 import MuiTextField from '@/components/mui-form-inputs/MuiTextField'
 import MuiDropdown from '@/components/mui-form-inputs/MuiDropdown'
 
@@ -48,7 +42,7 @@ const CreateEditAirline = ({ open, onClose, airlineId, isEdit, refetch }) => {
     data: airline,
     isSuccess: isAirlineSuccess,
     error,
-    isLoading: isShowLoading,
+    isLoading: isShowLoading
   } = useShowAirlineQuery(airlineId, {
     refetchOnMountOrArgChange: true,
     skip: !airlineId
@@ -77,35 +71,37 @@ const CreateEditAirline = ({ open, onClose, airlineId, isEdit, refetch }) => {
     Object.entries(errors).forEach(([key, value]) => setError(key, { message: value }))
   }
 
-  const onSubmit = handleSubmit(async (data) => {
-    const formData = new FormData();
+  const onSubmit = handleSubmit(async data => {
+    const formData = new FormData()
+
     Object.entries(data).forEach(([key, value]) => {
       if (key === 'thumbnail' && value instanceof File) {
-        formData.append(key, value);
+        formData.append(key, value)
       } else {
-        formData.append(key, value);
+        formData.append(key, value)
       }
-    });
+    })
 
     try {
       if (!airlineId) {
-        const response = await createAirline(formData).unwrap();
-        toast.success(`${response.data.name} has been created successfully`);
-        onClose();
-        refetch();
+        const response = await createAirline(formData).unwrap()
+
+        toast.success(`${response.data.name} has been created successfully`)
+        onClose()
+        refetch()
       } else {
-        formData.append('_method', 'put');
-        const response = await updateAirline({ airlineId, formData }).unwrap();
-        toast.success(response.message);
-        refetch();
-        onClose();
+        formData.append('_method', 'put')
+        const response = await updateAirline({ airlineId, formData }).unwrap()
+
+        toast.success(response.message)
+        refetch()
+        onClose()
       }
     } catch (error) {
-      console.error("Caught error:", error);
-      setErrors(error?.data?.errors || {});
+      console.error('Caught error:', error)
+      setErrors(error?.data?.errors || {})
     }
-  });
-
+  })
 
   useEffect(() => {
     if (isAirlineSuccess && airline && isEdit === true) {
@@ -122,8 +118,7 @@ const CreateEditAirline = ({ open, onClose, airlineId, isEdit, refetch }) => {
       if (airline.thumbnail) {
         setAirlineImage([{ source: airline.thumbnail, options: { type: 'local' } }])
       }
-    }
-    else {
+    } else {
       reset({
         name: '',
         iata_code: '',
@@ -146,7 +141,7 @@ const CreateEditAirline = ({ open, onClose, airlineId, isEdit, refetch }) => {
     <div>
       <Dialog open={open} onClose={onClose} fullWidth maxWidth='md'>
         <DialogTitle className='font-bold flex items-center justify-between'>
-          {isEdit === true ? 'Edit' : "Create"} Airline
+          {isEdit === true ? 'Edit' : 'Create'} Airline
           <IoMdClose className='cursor-pointer' onClick={onClose} />
         </DialogTitle>
         <DialogContent>
@@ -230,18 +225,12 @@ const CreateEditAirline = ({ open, onClose, airlineId, isEdit, refetch }) => {
                 </div>
                 <div>
                   <Controller
-                    name="status"
+                    name='status'
                     control={control}
                     render={({ field }) => (
                       <FormControlLabel
-                        control={
-                          <Switch
-                            {...field}
-                            checked={field.value}
-                            color="primary"
-                          />
-                        }
-                        label="Status"
+                        control={<Switch {...field} checked={field.value} color='primary' />}
+                        label='Status'
                       />
                     )}
                   />

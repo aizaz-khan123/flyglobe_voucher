@@ -38,9 +38,10 @@ import {
 } from '@tanstack/react-table'
 
 // Redux & Components
-import { useDeleteCountryMutation, useGetCountriesQuery } from '@/redux-store/services/api'
 import tableStyles from '@core/styles/table.module.css'
 import classNames from 'classnames'
+
+import { useDeleteCountryMutation, useGetCountriesQuery } from '@/redux-store/services/api'
 import CountryForm from './CountryForm'
 
 const fuzzyFilter = (row, columnId, value, addMeta) => {
@@ -62,8 +63,6 @@ const CountryTable = () => {
   const [isEditFormOpen, setIsEditFormOpen] = useState(false)
   const [selectedCountryId, setSelectedCountryId] = useState(null)
 
-
-
   // RTK Query
   const {
     data: countryData,
@@ -72,7 +71,7 @@ const CountryTable = () => {
   } = useGetCountriesQuery({
     page: page + 1,
     pageSize: rowsPerPage,
-    searchText: globalFilter,
+    searchText: globalFilter
   })
 
   const countries = countryData?.data || []
@@ -115,7 +114,7 @@ const CountryTable = () => {
     setIsFormOpen(true)
   }
 
-  const handleEdit = (id) => {
+  const handleEdit = id => {
     setSelectedCountryId(id)
     setIsFormOpen(true)
   }
@@ -173,7 +172,7 @@ const CountryTable = () => {
             <Tooltip title='Delete Country' placement='top'>
               <IconButton
                 size='small'
-                onClick={(e) => {
+                onClick={e => {
                   e.stopPropagation()
                   setCountryToDelete(row.original)
                 }}
@@ -208,6 +207,7 @@ const CountryTable = () => {
     getFacetedMinMaxValues: getFacetedMinMaxValues(),
     getPaginationRowModel: getPaginationRowModel()
   })
+
   // Debounced search input
   const DebouncedInput = ({ value: initialValue, onChange, debounce = 500, ...props }) => {
     const [value, setValue] = useState(initialValue)
@@ -239,11 +239,7 @@ const CountryTable = () => {
               placeholder='Search countries...'
               className='w-full max-w-md'
             />
-            <Button
-              variant='contained'
-              onClick={handleAddNew}
-              className='hidden md:flex'
-            >
+            <Button variant='contained' onClick={handleAddNew} className='hidden md:flex'>
               <FaPlus fontSize={16} />
               <span className='ml-2'>New Country</span>
             </Button>
@@ -335,11 +331,7 @@ const CountryTable = () => {
           <Button color='error' onClick={() => setCountryToDelete(null)}>
             Cancel
           </Button>
-          <Button
-            variant='contained'
-            onClick={handleDelete}
-            disabled={isDeleting}
-          >
+          <Button variant='contained' onClick={handleDelete} disabled={isDeleting}>
             {isDeleting ? <CircularProgress size={24} /> : 'Delete'}
           </Button>
         </DialogActions>
@@ -351,10 +343,8 @@ const CountryTable = () => {
         refetch={refetch}
         countryId={selectedCountryId} // null for create, ID for edit
       />
-
     </>
   )
 }
 
 export { CountryTable }
-

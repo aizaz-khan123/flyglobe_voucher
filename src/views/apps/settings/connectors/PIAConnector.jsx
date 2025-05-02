@@ -58,7 +58,7 @@ const PIAConnector = () => {
 
     await updateConnector(updated_data).then(response => {
       if (response.data?.code == 200) {
-        toast.success('HITIT Api Credentials Updated!');
+        toast.success('HITIT Api Credentials Updated!')
       }
     })
   })
@@ -126,18 +126,12 @@ const PIAConnector = () => {
               </div>
               <div>
                 <Controller
-                  name="is_enable"
+                  name='is_enable'
                   control={control}
                   render={({ field }) => (
                     <FormControlLabel
-                      control={
-                        <Switch
-                          {...field}
-                          checked={!!field.value}
-                          color="primary"
-                        />
-                      }
-                      label="Status"
+                      control={<Switch {...field} checked={!!field.value} color='primary' />}
+                      label='Status'
                     />
                   )}
                 />

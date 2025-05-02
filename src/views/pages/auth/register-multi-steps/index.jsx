@@ -5,7 +5,6 @@ import { useState } from 'react'
 
 // Next Imports
 import Link from 'next/link'
-import { useParams } from 'next/navigation'
 
 // MUI Imports
 import Stepper from '@mui/material/Stepper'
@@ -19,17 +18,16 @@ import classnames from 'classnames'
 
 // Component Imports
 import StepperWrapper from '@core/styles/stepper'
+
+import StepperCustomDot from '@components/stepper-dot'
+
+import Logo from '@components/layout/shared/Logo'
+
+import { useSettings } from '@core/hooks/useSettings'
+
 import StepAccountDetails from './StepAccountDetails'
 import StepPersonalInfo from './StepPersonalInfo'
 import StepBillingDetails from './StepBillingDetails'
-import StepperCustomDot from '@components/stepper-dot'
-import Logo from '@components/layout/shared/Logo'
-
-// Hook Imports
-import { useSettings } from '@core/hooks/useSettings'
-
-// Util Imports
-import { getLocalizedUrl } from '@/utils/i18n'
 
 // Vars
 const steps = [
@@ -67,7 +65,6 @@ const RegisterMultiSteps = () => {
   // Hooks
   const { settings } = useSettings()
   const theme = useTheme()
-  const { lang: locale } = useParams()
 
   // Handle Stepper
   const handleNext = () => {
@@ -96,10 +93,7 @@ const RegisterMultiSteps = () => {
         />
       </div>
       <div className='flex justify-center items-center bs-full is-full bg-backgroundPaper'>
-        <Link
-          href={getLocalizedUrl('/', locale)}
-          className='absolute block-start-5 sm:block-start-[25px] inline-start-6 sm:inline-start-[25px]'
-        >
+        <Link href={'/'} className='absolute block-start-5 sm:block-start-[25px] inline-start-6 sm:inline-start-[25px]'>
           <Logo />
         </Link>
         <StepperWrapper className='p-5 sm:p-8 is-[700px]'>

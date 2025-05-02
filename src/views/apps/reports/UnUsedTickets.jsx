@@ -1,12 +1,7 @@
 import React from 'react'
 
 const UnUsedTickets = () => {
-  return (
-    <div>
-      UnUsedTickets
-    </div>
-  )
+  return <div>UnUsedTickets</div>
 }
 
 export default UnUsedTickets
-

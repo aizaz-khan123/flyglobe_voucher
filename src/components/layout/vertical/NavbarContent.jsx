@@ -1,20 +1,17 @@
 'use client'
+
 // Third-party Imports
+import { usePathname } from 'next/navigation'
+
 import classnames from 'classnames'
 
-// Component Imports
-import NavToggle from './NavToggle'
-import NavSearch from '@components/layout/shared/search'
-import LanguageDropdown from '@components/layout/shared/LanguageDropdown'
-import ModeDropdown from '@components/layout/shared/ModeDropdown'
-import ShortcutsDropdown from '@components/layout/shared/ShortcutsDropdown'
-import NotificationsDropdown from '@components/layout/shared/NotificationsDropdown'
 import UserDropdown from '@components/layout/shared/UserDropdown'
 
 // Util Imports
 import { verticalLayoutClasses } from '@layouts/utils/layoutClasses'
-import { Breadcrumbs, Button, Link, TextField, Typography } from '@mui/material'
-import { usePathname } from 'next/navigation'
+import { Button, TextField, Typography } from '@mui/material'
+
+import NavToggle from './NavToggle'
 
 // Vars
 const shortcuts = [
@@ -105,27 +102,30 @@ const notifications = [
 
 const NavbarContent = () => {
   const pathname = usePathname()
+
   const getLastSegment = () => {
-    const pathSegments = pathname.split('/').filter((seg) => seg && seg !== 'en')
+    const pathSegments = pathname.split('/').filter(seg => seg && seg !== '')
     const lastSegment = pathSegments[pathSegments.length - 1] || ''
     const label = lastSegment.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())
+
     return label
   }
+
   return (
     <div className={classnames(verticalLayoutClasses.navbarContent, 'flex items-center justify-between gap-4 is-full')}>
       <div className='flex items-center gap-[7px]'>
         <NavToggle />
         {/* <NavSearch /> */}
-        <Typography variant="h5">
-          {getLastSegment()}
-        </Typography>
+        <Typography variant='h5'>{getLastSegment()}</Typography>
       </div>
       <div className='flex justify-center gap-2'>
         <TextField placeholder='PNR or Ticket Number' size='small' className='' />
-        <Button size='small' variant='contained' className='bg-primary'>Search</Button>
+        <Button size='small' variant='contained' className='bg-primary'>
+          Search
+        </Button>
       </div>
       <div className='flex items-center'>
-        {/* <LanguageDropdown /> */}
+        {/* */}
         {/* <ModeDropdown /> */}
         {/* <ShortcutsDropdown shortcuts={shortcuts} /> */}
         {/* <NotificationsDropdown notifications={notifications} /> */}

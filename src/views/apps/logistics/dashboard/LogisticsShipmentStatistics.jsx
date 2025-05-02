@@ -226,7 +226,11 @@ const LogisticsShipmentStatistics = () => {
 
   return (
     <Card>
-      <CardHeader title='Sales and Booking Statistics' subheader='Total number of bookings 500' action={<MonthButton />} />
+      <CardHeader
+        title='Sales and Booking Statistics'
+        subheader='Total number of bookings 500'
+        action={<MonthButton />}
+      />
       <CardContent>
         <AppReactApexCharts
           id='shipment-statistics'

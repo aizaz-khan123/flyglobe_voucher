@@ -2,11 +2,8 @@
 
 import { useEffect } from 'react'
 
-import CheckIcon from '@mui/icons-material/Check'
-import CloseIcon from '@mui/icons-material/Close'
-import { Button, Card, CardContent, Dialog, DialogContent, DialogTitle, FormLabel, Typography } from '@mui/material'
+import { Button, Dialog, DialogContent, DialogTitle, Typography } from '@mui/material'
 import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
 
 import { toast } from 'react-toastify'
 
@@ -28,7 +25,7 @@ const CreateEditAirport = ({ open, onClose, airportId, isEdit, refetch }) => {
     data: airport,
     isSuccess: isAirportSuccess,
     error,
-    isLoading: isShowLoading,
+    isLoading: isShowLoading
   } = useShowAirportQuery(airportId, {
     refetchOnMountOrArgChange: true,
     skip: !airportId
@@ -41,8 +38,8 @@ const CreateEditAirport = ({ open, onClose, airportId, isEdit, refetch }) => {
       await createAirport(data).then(response => {
         if ('error' in response) {
           setErrors(response?.error.data?.errors)
-          
-return
+
+          return
         }
 
         const { status, data: responseData } = response?.data
@@ -55,8 +52,7 @@ return
           setErrors(response?.data?.errors)
         }
       })
-    }
-    else {
+    } else {
       const updated_data = {
         _method: 'put',
         ...data
@@ -65,8 +61,8 @@ return
       await updateAirport({ airportId, updated_data }).then(response => {
         if ('error' in response) {
           setErrors(response?.error.data?.errors)
-          
-return
+
+          return
         }
 
         if (response.data?.code == 200) {
@@ -78,7 +74,6 @@ return
         }
       })
     }
-
   })
 
   useEffect(() => {
@@ -90,17 +85,16 @@ return
         iata_code: airport.iata_code,
         country: airport?.country
       })
-    }
-    else{
+    } else {
       reset({
         name: '',
-        municipality:'' ,
-        iso_country:'' ,
+        municipality: '',
+        iso_country: '',
         iata_code: '',
         country: ''
       })
     }
-  }, [airport, isAirportSuccess, reset,isEdit])
+  }, [airport, isAirportSuccess, reset, isEdit])
 
   const handleCancel = () => {
     onClose()
@@ -109,7 +103,7 @@ return
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth='md'>
       <DialogTitle className='font-bold flex items-center justify-between'>
-        {isEdit === true ? 'Edit' : "Create"} Airport
+        {isEdit === true ? 'Edit' : 'Create'} Airport
         <IoMdClose className='cursor-pointer' onClick={onClose} />
       </DialogTitle>
       <DialogContent>

@@ -2,7 +2,6 @@
 
 import { useEffect, useMemo, useState } from 'react'
 
-
 // MUI Imports
 import {
   Button,
@@ -38,13 +37,13 @@ import {
   getSortedRowModel,
   useReactTable
 } from '@tanstack/react-table'
-import {
-  useDeleteBankAccountMutation,
-  useGetBankAccountsQuery
-} from '@/redux-store/services/api'
+
 import tableStyles from '@core/styles/table.module.css'
-import BankAccountForm from './BankAccountForm'
+
 import classNames from 'classnames'
+
+import { useDeleteBankAccountMutation, useGetBankAccountsQuery } from '@/redux-store/services/api'
+import BankAccountForm from './BankAccountForm'
 
 const fuzzyFilter = (row, columnId, value, addMeta) => {
   const itemRank = rankItem(row.getValue(columnId), value)
@@ -362,4 +361,3 @@ const BankAccountTable = () => {
 }
 
 export { BankAccountTable }
-

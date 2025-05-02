@@ -5,7 +5,6 @@ import { useCallback, useRef, useState, useEffect } from 'react'
 
 // Next Imports
 import Link from 'next/link'
-import { useParams } from 'next/navigation'
 
 // MUI Imports
 import IconButton from '@mui/material/IconButton'
@@ -32,9 +31,6 @@ import themeConfig from '@configs/themeConfig'
 // Hook Imports
 import { useSettings } from '@core/hooks/useSettings'
 
-// Util Imports
-import { getLocalizedUrl } from '@/utils/i18n'
-
 const ScrollWrapper = ({ children, hidden }) => {
   if (hidden) {
     return <div className='overflow-x-hidden bs-full'>{children}</div>
@@ -59,7 +55,6 @@ const ShortcutsDropdown = ({ shortcuts }) => {
   const hidden = useMediaQuery(theme => theme.breakpoints.down('lg'))
   const isSmallScreen = useMediaQuery(theme => theme.breakpoints.down('sm'))
   const { settings } = useSettings()
-  const { lang: locale } = useParams()
 
   const handleClose = useCallback(() => {
     setOpen(false)
@@ -147,7 +142,7 @@ const ShortcutsDropdown = ({ shortcuts }) => {
                           className='[&:not(:last-of-type):not(:nth-last-of-type(2))]:border-be odd:border-ie'
                         >
                           <Link
-                            href={getLocalizedUrl(shortcut.url, locale)}
+                            href={shortcut.url}
                             className='flex items-center flex-col p-6 gap-3 bs-full hover:bg-actionHover'
                           >
                             <CustomAvatar size={50} className='bg-actionSelected text-textPrimary'>

@@ -1,12 +1,8 @@
 'use client'
 
-import { Button, Card, CardContent, FormControlLabel, FormLabel, Switch } from '@mui/material'
+import { Button, Card, CardContent, FormControlLabel, FormLabel, Switch, Slider } from '@mui/material'
 import 'react-google-flight-datepicker/dist/main.css'
-import { GoClock } from 'react-icons/go'
 
-import { formatTime } from '@/utils/formatTime'
-import DateSelector from './DateSelector'
-import { Slider } from "@mui/material";
 import { FaPencil } from 'react-icons/fa6'
 
 const FlightFilter = ({
@@ -32,13 +28,14 @@ const FlightFilter = ({
   handleClearSelectedFares,
   selectedFares
 }) => {
-  const queryParams = queryParamss;
-  const formatPrice = (price) => {
+  const queryParams = queryParamss
+
+  const formatPrice = price => {
     return price.toLocaleString('en-IN', {
       maximumFractionDigits: 2,
       minimumFractionDigits: 2
-    });
-  };
+    })
+  }
 
   const normalizeSelectedFares = Object.entries(selectedFares)
 
@@ -67,15 +64,12 @@ const FlightFilter = ({
             </div>
             <div>
               {normalizeSelectedFares.map(([sector, fare]) => (
-                <div
-                  key={sector}
-                  className='flex items-center justify-between border rounded p-2 gap-2'
-                >
+                <div key={sector} className='flex items-center justify-between border rounded p-2 gap-2'>
                   <div>
-                    <p className='font-medium'>{sector} - {fare.airline}</p>
-                    <p className='text-sm text-gray-500'>
-                      {`PKR ${fare.price.gross_amount}`}
+                    <p className='font-medium'>
+                      {sector} - {fare.airline}
                     </p>
+                    <p className='text-sm text-gray-500'>{`PKR ${fare.price.gross_amount}`}</p>
                     <p className='text-xs text-gray-400'>{fare.booking_res_code}</p>
                   </div>
                   <FaPencil
@@ -110,19 +104,19 @@ const FlightFilter = ({
 
         <CardContent className='p-3 border rounded-lg mb-3'>
           <FormLabel className='flex justify-start items-start p-0'>Price Range</FormLabel>
-          <div className="flex gap-2 mb-3">
+          <div className='flex gap-2 mb-3'>
             <input
-              type="text"
-              className="w-1/2 border p-1 rounded text-center"
+              type='text'
+              className='w-1/2 border p-1 rounded text-center'
               value={formatPrice(priceRange.value[0])}
-              onChange={(e) => handleInputChange(e, 0)}
+              onChange={e => handleInputChange(e, 0)}
             />
-            <span className="text-gray-500">-</span>
+            <span className='text-gray-500'>-</span>
             <input
-              type="text"
-              className="w-1/2 border p-1 rounded text-center"
+              type='text'
+              className='w-1/2 border p-1 rounded text-center'
               value={formatPrice(priceRange.value[1])}
-              onChange={(e) => handleInputChange(e, 1)}
+              onChange={e => handleInputChange(e, 1)}
             />
           </div>
           <Slider
@@ -130,27 +124,27 @@ const FlightFilter = ({
             onChange={handlePriceChange}
             min={priceRange.min}
             max={priceRange.max}
-            valueLabelDisplay="auto"
-            valueLabelFormat={(value) => value.toLocaleString("en-IN")}
-            getAriaLabel={() => "Price range"}
-            className="text-primary"
+            valueLabelDisplay='auto'
+            valueLabelFormat={value => value.toLocaleString('en-IN')}
+            getAriaLabel={() => 'Price range'}
+            className='text-primary'
             sx={{
-              "& .MuiSlider-thumb": {
-                color: "#8c57ff",
+              '& .MuiSlider-thumb': {
+                color: '#8c57ff'
               },
-              "& .MuiSlider-track": {
-                color: "#8c57ff",
+              '& .MuiSlider-track': {
+                color: '#8c57ff'
               },
-              "& .MuiSlider-rail": {
-                color: "#e5e7eb",
+              '& .MuiSlider-rail': {
+                color: '#e5e7eb'
               },
-              "& .MuiSlider-valueLabel": {
-                backgroundColor: "#8c57ff",
-                borderRadius: "4px",
-                "&:before": {
-                  display: "none",
-                },
-              },
+              '& .MuiSlider-valueLabel': {
+                backgroundColor: '#8c57ff',
+                borderRadius: '4px',
+                '&:before': {
+                  display: 'none'
+                }
+              }
             }}
           />
         </CardContent>
@@ -198,7 +192,6 @@ const FlightFilter = ({
                 </label>
               ))}
             </div>
-
           </CardContent>
         )}
         {/* <DateSelector
@@ -207,9 +200,6 @@ const FlightFilter = ({
           route_type={queryParams?.route_type}
         /> */}
       </Card>
-
-
-
     </div>
   )
 }

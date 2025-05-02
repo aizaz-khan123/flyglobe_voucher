@@ -5,9 +5,6 @@ import InitColorSchemeScript from '@mui/material/InitColorSchemeScript'
 // Third-party Imports
 import 'react-perfect-scrollbar/dist/css/styles.css'
 
-// Context Imports
-import { IntersectionProvider } from '@/contexts/intersectionContext'
-
 // Component Imports
 import Providers from '@components/Providers'
 import BlankLayout from '@layouts/BlankLayout'
@@ -17,6 +14,8 @@ import ScrollToTop from '@core/components/scroll-to-top'
 // Util Imports
 import { getSystemMode } from '@core/utils/serverHelpers'
 
+import { IntersectionProvider } from '@/contexts/intersectionContext'
+
 // Style Imports
 import '@/app/globals.css'
 
@@ -25,8 +24,7 @@ import '@assets/iconify-icons/generated-icons.css'
 
 export const metadata = {
   title: 'Fly Globle - Your Travel Partner For Growth',
-  description:
-    'Fly Globle - Your Travel Partner For Growth'
+  description: 'Fly Globle - Your Travel Partner For Growth'
 }
 
 const Layout = async ({ children }) => {

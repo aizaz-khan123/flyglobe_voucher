@@ -1,23 +1,22 @@
-import { promisify } from 'util'
-import { exec as execCallback } from 'child_process'
-
 import fs from 'fs-extra'
 
-const exec = promisify(execCallback)
+// No need for execCallback anymore, so we can remove that
+// const exec = promisify(execCallback);
 
 export const removeLangaugeDropdown = async () => {
   // Path to the LanguageDropdown.jsx file
   const fileToDelete = 'src/components/layout/shared/LanguageDropdown.jsx'
   const importPatternToDelete = new RegExp(`import .* from '.*LanguageDropdown';?`, 'g')
 
-  await exec(`rm -rf ${fileToDelete}`)
+  // Remove the file with fs.remove (cross-platform)
+  await fs.remove(fileToDelete)
 
   const filesToRemoveFrom = [
     'src/components/layout/vertical/NavbarContent.jsx',
     'src/components/layout/horizontal/NavbarContent.jsx'
   ]
 
-  filesToRemoveFrom.forEach(async file => {
+  for (const file of filesToRemoveFrom) {
     let content = await fs.readFile(file, 'utf8')
 
     // Replace patterns in the file content
@@ -31,5 +30,5 @@ export const removeLangaugeDropdown = async () => {
     // Write the modified content back to the file
     await fs.writeFile(file, content, 'utf8')
     console.log(`Updated file: ${file}`)
-  })
+  }
 }

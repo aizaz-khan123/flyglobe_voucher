@@ -29,11 +29,12 @@ import {
 } from '@tanstack/react-table'
 
 // Component Imports
-import AddCategoryDrawer from './AddCategoryDrawer'
 import OptionMenu from '@core/components/option-menu'
 
 // Style Imports
 import tableStyles from '@core/styles/table.module.css'
+
+import AddCategoryDrawer from './AddCategoryDrawer'
 
 const fuzzyFilter = (row, columnId, value, addMeta) => {
   // Rank the item

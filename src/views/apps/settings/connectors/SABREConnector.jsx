@@ -57,7 +57,7 @@ const SABREConnector = () => {
 
     await updateConnector(updated_data).then(response => {
       if (response.data?.code == 200) {
-        toast.success('SABRE Api Credentials Updated!');
+        toast.success('SABRE Api Credentials Updated!')
       }
     })
   })
@@ -147,18 +147,12 @@ const SABREConnector = () => {
               <div>
                 <div>
                   <Controller
-                    name="is_enable"
+                    name='is_enable'
                     control={control}
                     render={({ field }) => (
                       <FormControlLabel
-                        control={
-                          <Switch
-                            {...field}
-                            checked={!!field.value}
-                            color="primary"
-                          />
-                        }
-                        label="Status"
+                        control={<Switch {...field} checked={!!field.value} color='primary' />}
+                        label='Status'
                       />
                     )}
                   />

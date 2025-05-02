@@ -5,7 +5,6 @@ import { useState, useEffect, useMemo } from 'react'
 
 // Next Imports
 import Link from 'next/link'
-import { useParams } from 'next/navigation'
 
 // MUI Imports
 import Card from '@mui/material/Card'
@@ -33,15 +32,14 @@ import {
 } from '@tanstack/react-table'
 
 // Component Imports
-import AddCustomerDrawer from './AddCustomerDrawer'
 import CustomAvatar from '@core/components/mui/Avatar'
+
+import tableStyles from '@core/styles/table.module.css'
+
+import AddCustomerDrawer from './AddCustomerDrawer'
 
 // Util Imports
 import { getInitials } from '@/utils/getInitials'
-import { getLocalizedUrl } from '@/utils/i18n'
-
-// Style Imports
-import tableStyles from '@core/styles/table.module.css'
 
 export const paymentStatus = {
   1: { text: 'Paid', color: 'success' },
@@ -99,7 +97,6 @@ const CustomerListTable = ({ customerData }) => {
   const [globalFilter, setGlobalFilter] = useState('')
 
   // Hooks
-  const { lang: locale } = useParams()
 
   const columns = useMemo(
     () => [
@@ -134,7 +131,7 @@ const CustomerListTable = ({ customerData }) => {
               <Typography
                 component={Link}
                 color='text.primary'
-                href={getLocalizedUrl(`/ecommerce/customers/details/${row.original.customerId}`, locale)}
+                href={`/ecommerce/customers/details/${row.original.customerId}`}
                 className='font-medium hover:text-primary'
               >
                 {row.original.customer}

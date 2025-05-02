@@ -1,128 +1,134 @@
 'use client'
-import React from 'react';
+import React from 'react'
+
 import {
-    Dialog,
-    DialogTitle,
-    DialogContent,
-    DialogActions,
-    IconButton,
-    Button,
-    Typography,
-    Box,
-    FormLabel,
-    CircularProgress
-} from '@mui/material';
-import { useForm } from 'react-hook-form';
-import MuiTextField from '@/components/mui-form-inputs/MuiTextField';
-import { useMakeRefundMutation } from '@/redux-store/services/api';
-import { toast } from 'react-toastify';
-import { IoMdClose } from 'react-icons/io';
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  IconButton,
+  Button,
+  Typography,
+  Box,
+  FormLabel,
+  CircularProgress
+} from '@mui/material'
+import { useForm } from 'react-hook-form'
 
-export const formatCurrency = (amount) => {
-    return `PKR ${amount?.toLocaleString('en-PK', {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-    })}`;
-};
+import { toast } from 'react-toastify'
+
+import { IoMdClose } from 'react-icons/io'
+
+import MuiTextField from '@/components/mui-form-inputs/MuiTextField'
+import { useMakeRefundMutation } from '@/redux-store/services/api'
+
+export const formatCurrency = amount => {
+  return `PKR ${amount?.toLocaleString('en-PK', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  })}`
+}
+
 const AcceptRefundModal = ({ isOpen, RefundRequestRefetch, booking, handleAcceptRefundTicket }) => {
-    const [makeRefund, { isLoading }] = useMakeRefundMutation();
+  const [makeRefund, { isLoading }] = useMakeRefundMutation()
 
-    const { control, handleSubmit } = useForm({
-        defaultValues: {
-            refund_amount: '',
-        },
-    });
+  const { control, handleSubmit } = useForm({
+    defaultValues: {
+      refund_amount: ''
+    }
+  })
 
-    const onSubmit = async (data) => {
-        try {
-            const payload = {
-                booking_id: booking?.booking_id,
-                data: {
-                    refund_amount: data.refund_amount,
-                },
-            };
-
-            const response = await makeRefund(payload).unwrap();
-            if (response?.code === 200) {
-                toast.success(response?.message || 'Refund processed successfully.');
-                handleAcceptRefundTicket();
-                RefundRequestRefetch();
-            } else {
-                toast.error(response?.message || 'Failed to process refund.');
-            }
-        } catch (error) {
-            toast.error(error?.data?.message || 'Failed to process refund.');
+  const onSubmit = async data => {
+    try {
+      const payload = {
+        booking_id: booking?.booking_id,
+        data: {
+          refund_amount: data.refund_amount
         }
-    };
+      }
 
-    return (
-        <Dialog open={isOpen} onClose={handleAcceptRefundTicket} fullWidth maxWidth="sm">
-            <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Typography variant="h6">Accept Refund</Typography>
-                <IconButton size="small" onClick={handleAcceptRefundTicket}>
-                    <IoMdClose />
+      const response = await makeRefund(payload).unwrap()
 
-                </IconButton>
-            </DialogTitle>
+      if (response?.code === 200) {
+        toast.success(response?.message || 'Refund processed successfully.')
+        handleAcceptRefundTicket()
+        RefundRequestRefetch()
+      } else {
+        toast.error(response?.message || 'Failed to process refund.')
+      }
+    } catch (error) {
+      toast.error(error?.data?.message || 'Failed to process refund.')
+    }
+  }
 
-            <DialogContent dividers>
-                <Typography mb={2}>
-                    You are about to refund Booking: <strong style={{ color: '#3b82f6' }}>{booking?.booking_id}</strong>. Would you like to proceed further?
-                </Typography>
+  return (
+    <Dialog open={isOpen} onClose={handleAcceptRefundTicket} fullWidth maxWidth='sm'>
+      <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <Typography variant='h6'>Accept Refund</Typography>
+        <IconButton size='small' onClick={handleAcceptRefundTicket}>
+          <IoMdClose />
+        </IconButton>
+      </DialogTitle>
 
-                <form onSubmit={handleSubmit(onSubmit)}>
-                    <Box display="grid" gridTemplateColumns={{ xs: '1fr', sm: '1fr 1fr' }} gap={2}>
-                        <Box>
-                            <FormLabel htmlFor="total_amount">Total Amount</FormLabel>
-                            <Box
-                                sx={{
-                                    color: '#3b82f6',
-                                    fontWeight: 'bold',
-                                    fontSize: '0.875rem',
-                                    borderRadius: 1,
-                                    height: '50px',
-                                    px: 2,
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    backgroundColor: '#f1f5f9',
-                                    border: '1px solid #e2e8f0',
-                                }}
-                            >
-                                {formatCurrency(booking?.total_amount)}
-                            </Box>
-                        </Box>
-                        <Box>
-                            <FormLabel htmlFor="total_amount">Refund Amount</FormLabel>
+      <DialogContent dividers>
+        <Typography mb={2}>
+          You are about to refund Booking: <strong style={{ color: '#3b82f6' }}>{booking?.booking_id}</strong>. Would
+          you like to proceed further?
+        </Typography>
 
-                            <MuiTextField
-                                control={control}
-                                id="refund_amount"
-                                name="refund_amount"
-                                placeholder="Enter Refund Amount"
-                            />
-                        </Box>
-                    </Box>
-                </form>
-            </DialogContent>
-            <div className='mt-3'>
-                <DialogActions>
-                    <Button onClick={handleAcceptRefundTicket} variant='outlined' >
-                        No
-                    </Button>
-                    <form onSubmit={handleSubmit(onSubmit)}>
-                        <Button
-                            variant='contained'
-                            type="submit"
-                            disabled={isLoading}
-                            startIcon={isLoading && <CircularProgress color="inherit" size={16} />}
-                        >
-                            {isLoading ? 'Processing...' : 'Yes, proceed'}
-                        </Button>
-                    </form>
-                </DialogActions>
-            </div>
-        </Dialog>
-    );
-};
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <Box display='grid' gridTemplateColumns={{ xs: '1fr', sm: '1fr 1fr' }} gap={2}>
+            <Box>
+              <FormLabel htmlFor='total_amount'>Total Amount</FormLabel>
+              <Box
+                sx={{
+                  color: '#3b82f6',
+                  fontWeight: 'bold',
+                  fontSize: '0.875rem',
+                  borderRadius: 1,
+                  height: '50px',
+                  px: 2,
+                  display: 'flex',
+                  alignItems: 'center',
+                  backgroundColor: '#f1f5f9',
+                  border: '1px solid #e2e8f0'
+                }}
+              >
+                {formatCurrency(booking?.total_amount)}
+              </Box>
+            </Box>
+            <Box>
+              <FormLabel htmlFor='total_amount'>Refund Amount</FormLabel>
 
-export default AcceptRefundModal;
+              <MuiTextField
+                control={control}
+                id='refund_amount'
+                name='refund_amount'
+                placeholder='Enter Refund Amount'
+              />
+            </Box>
+          </Box>
+        </form>
+      </DialogContent>
+      <div className='mt-3'>
+        <DialogActions>
+          <Button onClick={handleAcceptRefundTicket} variant='outlined'>
+            No
+          </Button>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <Button
+              variant='contained'
+              type='submit'
+              disabled={isLoading}
+              startIcon={isLoading && <CircularProgress color='inherit' size={16} />}
+            >
+              {isLoading ? 'Processing...' : 'Yes, proceed'}
+            </Button>
+          </form>
+        </DialogActions>
+      </div>
+    </Dialog>
+  )
+}
+
+export default AcceptRefundModal
