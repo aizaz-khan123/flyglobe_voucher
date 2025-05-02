@@ -5,7 +5,7 @@ import dayjs from 'dayjs'
 import { IoMdClose } from 'react-icons/io'
 import { FaPlane } from 'react-icons/fa6'
 
-const FlightDetailModal = ({ viewFlightDetailModal, handleCloseViewFlightDetail, data }) => {
+const FlightDetailModal = ({ viewFlightDetailModal, handleCloseViewFlightDetail, data, queryParams }) => {
   if (!data || !data.legs || data.legs.length === 0) {
     return null
   }
@@ -35,6 +35,7 @@ const FlightDetailModal = ({ viewFlightDetailModal, handleCloseViewFlightDetail,
                 <div className='flex items-center justify-between pb-2'>
                   <div className='flex items-center gap-2'>
                     <h2 className='text-md md:text-lg lg:text-2xl font-bold '>
+                      {queryParams?.route_type === "RETURN" ? "Returning from " : ""}
                       {segments[0].origin.municipality} ({segments[0].origin.iata_code}) to{' '}
                       {segments[segments.length - 1].destination.municipality} (
                       {segments[segments.length - 1].destination.iata_code})
@@ -84,9 +85,9 @@ const FlightDetailModal = ({ viewFlightDetailModal, handleCloseViewFlightDetail,
                         </div>
                         <div className='flex text-center items-center justify-center'>
                           <hr className='w-[30px] md:w-[100px] xl:w-[200px] border-2' />
-                          <FaPlane fontSize={40} className='hidden lg:block' />
+                          <FaPlane fontSize={40} className='hidden lg:block text-primary' />
                           <hr className='w-[100px] xl:w-[200px] border-2 hidden lg:block' />
-                          <FaPlane fontSize={40} className='md:h-14' />
+                          <FaPlane fontSize={40} className='md:h-14 text-primary' />
                           <hr className='w-[30px] md:w-[100px] xl:w-[200px] border-2' />
                         </div>
                         <div className='text-center'>
