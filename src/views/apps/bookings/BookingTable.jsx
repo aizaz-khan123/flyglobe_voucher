@@ -309,7 +309,7 @@ const BookingTable = ({ hidePagination }) => {
                 <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 w-full'>
                   <MuiTextField control={control} name='booking_id' placeholder='Enter Booking ID' />
                   <MuiTextField control={control} name='pnr' placeholder='Enter PNR' />
-                  <MuiTextField control={control} name='email' placeholder='Enter Email' />
+                  {/* <MuiTextField control={control} name='email' placeholder='Enter Email' /> */}
                   <MuiFlightSearchAutoComplete
                     control={control}
                     name='status'

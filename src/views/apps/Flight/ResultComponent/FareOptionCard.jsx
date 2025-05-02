@@ -54,7 +54,7 @@ const FareOptionCard = ({
               <p
                 className={`text-xs px-2 rounded-full ${faresGroupData.is_refundable ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}
               >
-                {faresGroupData.is_refundable ? 'Refundable' : 'Non-Refundable'}
+                {faresGroupData.is_refundable ? 'Refundable' : 'Non-Refundable'}  
               </p>
             </div>
           </div>

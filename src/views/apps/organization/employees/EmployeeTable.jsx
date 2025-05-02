@@ -305,8 +305,9 @@ const EmployeeTable = () => {
   }
 
   const handleClose = () => {
-    setIsModalOpen(false)
+    
     setIsEditMode(false)
+    setIsModalOpen(false)
     reset({
       name: '',
       phone_number: '',

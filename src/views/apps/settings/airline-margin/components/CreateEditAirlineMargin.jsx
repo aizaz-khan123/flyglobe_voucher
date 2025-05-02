@@ -45,7 +45,7 @@ const regionOptions = [
 const CreateEditAirlineMargin = ({ open, isEdit, onClose, airlineMarginId, refetch }) => {
   // const toaster = useToast();
   const [createAirlineMargin, { isLoading }] = useCreateAirlineMarginMutation()
-
+console.log(isEdit, 'is edit')
   const { data: airlineDropDown } = useAirlineDropDownQuery()
   const { data: connectorDropDown } = useConnectorDropDownQuery()
 
@@ -59,12 +59,17 @@ const CreateEditAirlineMargin = ({ open, isEdit, onClose, airlineMarginId, refet
     data: airline_margin,
     isSuccess: isAirlineMarginSuccess,
     error,
-    isLoading: isShowLoading
+    isLoading: isShowLoading,
+    refetch:SingleAirlineMarginRefetch
   } = useShowAirlineMarginQuery(airlineMarginId, {
-    refetchOnMountOrArgChange: true,
-    skip: !airlineMarginId
-  })
-
+    skip: !isEdit
+  });
+  
+  useEffect(() => {
+    if (isEdit && open) {
+      SingleAirlineMarginRefetch();
+    }
+  }, [isEdit, open]);
   const [updateAirlineMargin, { error: errorAirlineMargin, isLoading: isLoadingAirlineMargin }] =
     useUpdateAirlineMarginMutation()
 
@@ -203,7 +208,7 @@ const CreateEditAirlineMargin = ({ open, isEdit, onClose, airlineMarginId, refet
                       {...field}
                       options={regionOptions}
                       isMulti
-                      className='w-full border-0 focus:outline-0 customMultiselect'
+                      className='w-full border-0 z-[9999] focus:outline-0 customMultiselect'
                       placeholder='Select Regions'
                       getOptionLabel={e => e.label}
                       getOptionValue={e => e.value}

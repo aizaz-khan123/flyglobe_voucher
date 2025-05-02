@@ -223,7 +223,7 @@ const BranchTable = () => {
         id: 'actions',
         header: 'Action',
         cell: ({ row }) => (
-          <div className='flex items-center w-fit gap-2'>
+          <div className='flex items-center w-fit gap-2  relative'>
             <Tooltip title='Delete Branch' placement='top'>
               <IconButton size='small' onClick={() => showDeleteBranchConfirmation(row.original.uuid)}>
                 <FaTrash className='cursor-pointer text-base text-red-600' />

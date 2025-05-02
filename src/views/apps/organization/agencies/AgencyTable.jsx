@@ -232,7 +232,7 @@ const AgencyTable = () => {
         id: 'actions',
         header: 'Action',
         cell: ({ row }) => (
-          <div className='flex items-center w-fit gap-2'>
+          <div className='flex items-center w-fit gap-2  relative'>
             <Tooltip title='Delete Agency' placement='top'>
               <IconButton
                 size='small'
@@ -683,6 +683,7 @@ const AgencyTable = () => {
                 id='per_credit_limit'
                 name='per_credit_limit'
                 placeholder='Enter Permanent Limit'
+                required_error
               />
             </div>
           </div>
