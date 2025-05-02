@@ -270,7 +270,6 @@ const FlightFound = () => {
       }).unwrap();
 
       setBookingFareModal(true);
-      console.log(response);
       if (response?.status === true) {
         router.push(`/en/flight/new-booking/${response?.data}`);
       }
@@ -867,8 +866,6 @@ const FlightFound = () => {
             <>
               <div>
                 <div>
-
-                  {console.log(sortedFlights)}
                   {sortedFlights.map((data, index) => {
 
                     const allLegs = data?.legs || {};
@@ -1492,6 +1489,7 @@ const FlightFound = () => {
       <FlightDetailModal
         viewFlightDetailModal={viewFlightDetailModal}
         handleCloseViewFlightDetail={handleCloseViewFlightDetail}
+        queryParams={queryParams}
         data={flightData}
       />
     </div>

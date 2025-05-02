@@ -494,13 +494,15 @@ const FlightSearch = ({ initialValues, flightSearchOpen, flightSearchHandleClose
       <Card className={`${flightSearchOpen ? 'border-0 shadow-none rounded-none mb-0' : 'rounded-lg shadow-md mb-5'}`}>
         <CardContent className='p-6'>
           <div className='grid grid-cols-12 gap-4'>
-            <div className='col-span-4'>
-              <Typography variant='h4'>Book Flights</Typography>
-              <div className='flight-img mt-2'>
-                <img src={flightImage} alt='' className='w-full object-contain' />
+            {route_type !== 'MULTICITY' &&
+              <div className='col-span-4'>
+                <Typography variant='h4'>Book Flights</Typography>
+                <div className='flight-img mt-2'>
+                  <img src={flightImage} alt='' className='w-full object-contain' />
+                </div>
               </div>
-            </div>
-            <div className='col-span-8'>
+            }
+            <div className={`${route_type === 'MULTICITY' ? 'col-span-12' : 'col-span-8'} `}>
               {/* <h2 className="text-xl font-semibold">Search Flights</h2> */}
               <form onSubmit={handleSubmit(onSubmit)}>
                 <div className='flex items-center gap-3 md:gap-4 mb-4'>
@@ -720,13 +722,13 @@ const FlightSearch = ({ initialValues, flightSearchOpen, flightSearchHandleClose
                   </div>
                 ) : (
                   <div>
-                    <div className='grid grid-cols-12 gap-4 md:gap-6 items-center'>
+                    <div className='grid grid-cols-12 gap-x-4 md:gap-x-6 items-center'>
                       {flights.map((flight, index) => (
                         <Fragment key={index}>
                           <div className='col-span-12 lg:col-span-12'>
-                            <p className='text-blue-500'>Flight {index + 1}</p>
+                            <p className='text-primary mt-3 mb-2'>Flight {index + 1}</p>
                           </div>
-                          <div className='relative col-span-12 md:col-span-6 lg:col-span-6  pt-[5px]'>
+                          <div className='relative col-span-12 md:col-span-6 lg:col-span-3  pt-[5px]'>
                             <MuiFlightSearchAutoComplete
                               control={control}
                               // name={`origin`}
@@ -773,7 +775,7 @@ const FlightSearch = ({ initialValues, flightSearchOpen, flightSearchHandleClose
                               </button>
                             </div>
                           </div>
-                          <div className='col-span-12 md:col-span-6 lg:col-span-6 '>
+                          <div className='col-span-12 md:col-span-6 lg:col-span-3 '>
                             <MuiFlightSearchAutoComplete
                               control={control}
                               selectIcon={<FaPlaneArrival />}
@@ -804,7 +806,7 @@ const FlightSearch = ({ initialValues, flightSearchOpen, flightSearchHandleClose
                             // selectLabelInsteadOfValue={true}
                             />
                           </div>
-                          <div className='col-span-12 md:col-span-6 lg:col-span-6'>
+                          <div className='col-span-12 md:col-span-6 lg:col-span-3'>
                             <MuiDatePicker
                               control={control}
                               name={`legs[${index}].departure_date`}
@@ -853,7 +855,7 @@ const FlightSearch = ({ initialValues, flightSearchOpen, flightSearchHandleClose
                     </div>
                     {flights.length < 5 && (
                       <div className='mt-4 mb-5'>
-                        <h4 onClick={addFlight} className='cursor-pointer text-blue-500 mt-2 underline'>
+                        <h4 onClick={addFlight} className='cursor-pointer text-primary mt-2 underline'>
                           + Add Another Flight
                         </h4>
                       </div>
