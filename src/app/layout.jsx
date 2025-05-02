@@ -29,7 +29,7 @@ const RootLayout = async props => {
   const direction = 'ltr'
 
   return (
-    <html id='__next' lang='' dir={direction} suppressHydrationWarning>
+    <html id='__next' dir={direction} suppressHydrationWarning>
       <body className='flex is-full min-bs-full flex-auto flex-col bg-[#f4f5fa]'>
         <NextTopLoader height={3} showSpinner={false} color={'#3e5eff'} />
         <InitColorSchemeScript attribute='data' defaultMode={systemMode} />

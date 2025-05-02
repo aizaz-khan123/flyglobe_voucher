@@ -56,8 +56,6 @@ const BookingTable = ({ hidePagination }) => {
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(10)
 
-  const { lang: locale } = useParams()
-
   // Filters state
   const [filters, setFilters] = useState({
     booking_id: '',
