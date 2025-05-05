@@ -1,7 +1,7 @@
 'use client'
 
 // Third-party Imports
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 
 import classnames from 'classnames'
 
@@ -12,6 +12,9 @@ import { verticalLayoutClasses } from '@layouts/utils/layoutClasses'
 import { Button, TextField, Typography } from '@mui/material'
 
 import NavToggle from './NavToggle'
+import { useState } from 'react'
+import { useSearchBookingMutation } from '@/redux-store/services/api'
+import { toast } from 'react-toastify'
 
 // Vars
 const shortcuts = [
@@ -110,7 +113,26 @@ const NavbarContent = () => {
 
     return label
   }
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchBooking, { isLoading }] = useSearchBookingMutation();
+  const router = useRouter();
 
+  const handleSearch = async () => {
+    if (!searchQuery.trim()) return;
+    await searchBooking({ search: encodeURIComponent(searchQuery) }).then((response) => {
+      if ('error' in response) {
+        toast.error('Booking Not found');
+        return;
+      }
+      router.push(`/bookings/${response?.data}`);
+    })
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      handleSearch();
+    }
+  };
   return (
     <div className={classnames(verticalLayoutClasses.navbarContent, 'flex items-center justify-between gap-4 is-full')}>
       <div className='flex items-center gap-[7px]'>
@@ -119,8 +141,14 @@ const NavbarContent = () => {
         <Typography variant='h5'>{getLastSegment()}</Typography>
       </div>
       <div className='flex justify-center gap-2'>
-        <TextField placeholder='PNR or Ticket Number' size='small' className='' />
-        <Button size='small' variant='contained' className='bg-primary'>
+        <TextField
+          placeholder='PNR or Ticket Number'
+          size='small'
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          onKeyDown={handleKeyDown} />
+        <Button size='small' variant='contained' className='bg-primary'
+          onClick={handleSearch} loading={isLoading} disabled={isLoading}>
           Search
         </Button>
       </div>

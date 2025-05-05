@@ -90,6 +90,7 @@ const AgencyTable = () => {
   const [userUUid, setuserUUid] = useState()
   const [permissionListByTypeLoading, setPermissionListByTypeLoading] = useState(null)
   const [AgencyToBeDelete, setAgencyToBeDelete] = useState()
+  const [showAgencyToBeDelete, setShowAgencyToBeDelete] = useState(false)
   const [isGeneralSettingModal, setIsGeneralSettingModal] = useState(false)
   const [generalSettingData, setGeneralSettingData] = useState()
   const [isTemporaryLimitModal, setIsTemporaryLimitModal] = useState(false)
@@ -236,9 +237,7 @@ const AgencyTable = () => {
             <Tooltip title='Delete Agency' placement='top'>
               <IconButton
                 size='small'
-                onClick={event => {
-                  showDeleteAgencyConfirmation(row.original.uuid)
-                }}
+                onClick={() => showDeleteAgencyConfirmation(row.original.uuid)}
               >
                 <FaTrash className=' text-red-600 text-base' />
               </IconButton>
@@ -246,9 +245,7 @@ const AgencyTable = () => {
             <Tooltip title='Update Agency' placement='top'>
               <IconButton
                 size='small'
-                onClick={event => {
-                  showUpdateAgencyConfirmation(row.original)
-                }}
+                onClick={() => { showUpdateAgencyConfirmation(row.original) }}
               >
                 <FaPencil className='cursor-pointer text-primary text-base' />
               </IconButton>
@@ -335,6 +332,7 @@ const AgencyTable = () => {
   }
 
   const showDeleteAgencyConfirmation = uuid => {
+    setShowAgencyToBeDelete(true)
     setAgencyToBeDelete(agencies.find(b => uuid === b.uuid))
   }
 
@@ -343,6 +341,7 @@ const AgencyTable = () => {
       deleteAgency(AgencyToBeDelete.uuid).then(response => {
         if (response?.data.code == 200) {
           toast.success(response?.data.message)
+          setShowAgencyToBeDelete(false)
           setAgencyToBeDelete(null)
         } else {
           toast.error(response?.data.message)
@@ -554,14 +553,14 @@ const AgencyTable = () => {
                     {table.rows?.length > 0
                       ? 'No Record Found'
                       : table.getRowModel().rows.map(row => (
-                          <tr key={row.id} className='hover:bg-gray-50'>
-                            {row.getVisibleCells().map(cell => (
-                              <td key={cell.id} className='p-3 border-b'>
-                                {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                              </td>
-                            ))}
-                          </tr>
-                        ))}
+                        <tr key={row.id} className='hover:bg-gray-50'>
+                          {row.getVisibleCells().map(cell => (
+                            <td key={cell.id} className='p-3 border-b'>
+                              {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                            </td>
+                          ))}
+                        </tr>
+                      ))}
                   </>
                 ) : (
                   <td colSpan={table.getAllColumns().length}>
@@ -586,16 +585,16 @@ const AgencyTable = () => {
         </CardContent>
       </Card>
 
-      <Dialog open={!!AgencyToBeDelete} onClose={() => setAgencyToBeDelete(null)}>
+      <Dialog open={showAgencyToBeDelete} onClose={() => setShowAgencyToBeDelete(false)}>
         <DialogTitle className='font-bold flex items-center justify-between'>
           Confirm Delete
-          <IoMdClose className='cursor-pointer' onClick={() => setAgencyToBeDelete(null)} />
+          <IoMdClose className='cursor-pointer' onClick={() => setShowAgencyToBeDelete(false)} />
         </DialogTitle>
         <DialogContent>
           You are about to delete <b>{AgencyToBeDelete?.name}</b>. Would you like to proceed further ?
         </DialogContent>
         <DialogActions>
-          <Button color='error' onClick={() => setAgencyToBeDelete(null)}>
+          <Button color='error' onClick={() => setShowAgencyToBeDelete(false)}>
             No
           </Button>
           <Button loading={deleteAgencyLoading} variant='contained' onClick={() => handleDeleteAgency()}>

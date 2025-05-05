@@ -44,13 +44,13 @@ const VerticalMenu = ({ scrollMenu }) => {
     <ScrollWrapper
       {...(isBreakpointReached
         ? {
-            className: 'bs-full overflow-y-auto overflow-x-hidden',
-            onScroll: container => scrollMenu(container, false)
-          }
+          className: 'bs-full overflow-y-auto overflow-x-hidden',
+          onScroll: container => scrollMenu(container, false)
+        }
         : {
-            options: { wheelPropagation: false, suppressScrollX: true },
-            onScrollY: container => scrollMenu(container, true)
-          })}
+          options: { wheelPropagation: false, suppressScrollX: true },
+          onScrollY: container => scrollMenu(container, true)
+        })}
     >
       <Menu
         popoutMenuOffset={{ mainAxis: 10 }}
@@ -68,19 +68,19 @@ const VerticalMenu = ({ scrollMenu }) => {
           dashboard
         </MenuItem>
 
-        <MenuSection label='sales'>
+        <MenuSection label='Sales'>
           <SubMenu label='Sell' icon={<i className='ri-organization-chart'></i>}>
             <MenuItem href='/book-flights' icon={<i className='ri-plane-fill'></i>}>
-              flight
+              Flight
             </MenuItem>
             <MenuItem href='/group-flights' icon={<MdGroup />}>
-              groupFlight
+              Group Flight
             </MenuItem>
             <MenuItem href='/umrah-hotels' icon={<RiHotelLine />}>
-              umrahHotels
+              Umrah Hotels
             </MenuItem>
-            <MenuItem href='/umrah-visa'>umrahVisa</MenuItem>
-            <MenuItem href='/bookings'>bookings</MenuItem>
+            <MenuItem href='/umrah-visa'>Umrah Visa</MenuItem>
+            <MenuItem href='/bookings'>Bookings</MenuItem>
           </SubMenu>
 
           <SubMenu label='Requests' icon={<i className='ri-organization-chart'></i>}>
@@ -90,7 +90,7 @@ const VerticalMenu = ({ scrollMenu }) => {
               activeUrl='/refund-request'
               icon={<i className='ri-calendar-line'></i>}
             >
-              refundRequest
+              Refund Request
             </MenuItem>
           </SubMenu>
           {/* For Agencies */}
@@ -103,65 +103,65 @@ const VerticalMenu = ({ scrollMenu }) => {
             myRefundRequest
           </MenuItem> */}
 
-          <SubMenu label='organization' icon={<i className='ri-group-line'></i>}>
+          <SubMenu label='Organization' icon={<i className='ri-group-line'></i>}>
             <MenuItem href='/organization/branches' icon={<i className='ri-organization-chart'></i>}>
-              branches
+              Branches
             </MenuItem>
-            <MenuItem href='/organization/agencies'>agencies</MenuItem>
+            <MenuItem href='/organization/agencies'>Agencies</MenuItem>
             <MenuItem href='/organization/employees' icon={<MdGroup />}>
-              employees
+              Employees
             </MenuItem>
           </SubMenu>
 
-          <SubMenu label='accounts' icon={<i className='ri-calculator-line'></i>}>
+          <SubMenu label='Accounts' icon={<i className='ri-calculator-line'></i>}>
             <MenuItem href='/accounts/chart-of-account' icon={<FaChartBar />}>
-              chartOfAccount
+              Chart of Account
             </MenuItem>
             <MenuItem href='/accounts/general-legder' icon={<LuNotebookPen />}>
-              generalLegder
+              General Legder
             </MenuItem>
             <MenuItem href='/accounts/journal-entries' icon={<FaRegPenToSquare />}>
-              journalEntries
+              Journal Entries
             </MenuItem>
-            <MenuItem href='/accounts/account-statement'>accountStatement</MenuItem>
+            <MenuItem href='/accounts/account-statement'>Account Statement</MenuItem>
             <MenuItem href='/accounts/trail-balance' icon={<FaMoneyCheckAlt />}>
-              trailBalance
+              Trail Balance
             </MenuItem>
           </SubMenu>
 
-          <SubMenu label='deposites' icon={<i className='ri-luggage-deposit-line'></i>}>
+          <SubMenu label='Deposites' icon={<i className='ri-luggage-deposit-line'></i>}>
             <MenuItem href='/deposites/agency-deposite' icon={<PiHandDeposit />}>
-              agencyDeposite
+              Agency Deposite
             </MenuItem>
             {/* <MenuItem href='/deposites/branch-deposite' icon={<PiHandDeposit />}>
               branchDeposite
             </MenuItem> */}
-            <MenuItem href='/deposites/my-deposite'>myDeposite</MenuItem>
-            <MenuItem href='/deposites/bank-accounts'>bankDeposite</MenuItem>
+            <MenuItem href='/deposites/my-deposite'>My Deposite</MenuItem>
+            <MenuItem href='/deposites/bank-accounts'>Bank Deposite</MenuItem>
           </SubMenu>
 
-          <SubMenu label='reports' icon={<i className='ri-file-chart-fill'></i>}>
-            <MenuItem href='/reports/sales-reports'>salesReports</MenuItem>
-            <MenuItem href='/reports/refund-reports'>refundReports</MenuItem>
-            <MenuItem href='/reports/supplier-reports'>supplierReports</MenuItem>
+          <SubMenu label='Reports' icon={<i className='ri-file-chart-fill'></i>}>
+            <MenuItem href='/reports/sales-reports'>Sales Reports</MenuItem>
+            <MenuItem href='/reports/refund-reports'>Refund Reports</MenuItem>
+            <MenuItem href='/reports/supplier-reports'>Supplier Reports</MenuItem>
             {/* <MenuItem href='/reports/un-used-tickets'>
               unUsedTickets
             </MenuItem> */}
           </SubMenu>
 
-          <SubMenu label='settings' icon={<i className='ri-settings-2-line'></i>}>
-            <MenuItem href='/settings/bank-accounts'>bankAccounts</MenuItem>
-            <MenuItem href='/settings/airline-margins'>airlineMargins</MenuItem>
-            <MenuItem href='/settings/connectors'>connectors</MenuItem>
-            <MenuItem href='/settings/suppliers'>suppliers</MenuItem>
+          <SubMenu label='Settings' icon={<i className='ri-settings-2-line'></i>}>
+            <MenuItem href='/settings/bank-accounts'>Bank Accounts</MenuItem>
+            <MenuItem href='/settings/airline-margins'>Airline Margins</MenuItem>
+            <MenuItem href='/settings/connectors'>Connectors</MenuItem>
+            <MenuItem href='/settings/suppliers'>Suppliers</MenuItem>
 
-            <MenuItem href='/settings/airlines'>airlines</MenuItem>
-            <MenuItem href='/settings/airpots'>airpots</MenuItem>
-            <MenuItem href='/settings/countries'>countries</MenuItem>
-            <MenuItem href='/settings/news-alerts'>newsAlerts</MenuItem>
+            <MenuItem href='/settings/airlines'>Airlines</MenuItem>
+            <MenuItem href='/settings/airpots'>Airpots</MenuItem>
+            <MenuItem href='/settings/countries'>Countries</MenuItem>
+            <MenuItem href='/settings/news-alerts'>News Alerts</MenuItem>
           </SubMenu>
-          <SubMenu label='management' icon={<i className='ri-luggage-deposit-line'></i>}>
-            <MenuItem href='/management/groups'>groups</MenuItem>
+          <SubMenu label='Management' icon={<i className='ri-luggage-deposit-line'></i>}>
+            <MenuItem href='/management/groups'>Groups</MenuItem>
           </SubMenu>
 
           <MenuItem
@@ -170,7 +170,7 @@ const VerticalMenu = ({ scrollMenu }) => {
             activeUrl='/notifications'
             icon={<i className='ri-calendar-line'></i>}
           >
-            notifications
+            Notifications
           </MenuItem>
         </MenuSection>
       </Menu>

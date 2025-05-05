@@ -53,11 +53,12 @@ export const api = emptySplitApi.injectEndpoints({
       })
     }),
     getBankAccounts: builder.query({
-      query: ({ pageUrl, searchText }) => ({
+      query: ({ pageUrl, searchText, ...params }) => ({
         url: pageUrl || API_END_POINTS.getBankAccounts,
         method: 'GET',
         params: {
-          q: searchText
+          q: searchText,
+          ...params
         }
       }),
       providesTags: ['BankAccounts'],
@@ -94,11 +95,12 @@ export const api = emptySplitApi.injectEndpoints({
       invalidatesTags: ['BankAccounts']
     }),
     getAirlines: builder.query({
-      query: ({ pageUrl, searchText }) => ({
+      query: ({ pageUrl, searchText, ...params }) => ({
         url: pageUrl || API_END_POINTS.getAirlines,
         method: 'GET',
         params: {
-          q: searchText
+          q: searchText,
+          ...params
         }
       }),
       providesTags: ['Airlines'],
@@ -149,11 +151,12 @@ export const api = emptySplitApi.injectEndpoints({
       transformResponse: response => response.data
     }),
     getAirports: builder.query({
-      query: ({ pageUrl, searchText }) => ({
+      query: ({ pageUrl, searchText, ...params }) => ({
         url: pageUrl || API_END_POINTS.getAirports,
         method: 'GET',
         params: {
-          q: searchText
+          q: searchText,
+          ...params
         }
       }),
       providesTags: ['Airports'],
@@ -190,11 +193,12 @@ export const api = emptySplitApi.injectEndpoints({
       invalidatesTags: ['Airports']
     }),
     getCountries: builder.query({
-      query: ({ pageUrl, searchText }) => ({
+      query: ({ pageUrl, searchText, ...params }) => ({
         url: pageUrl || API_END_POINTS.getCountries,
         method: 'GET',
         params: {
-          q: searchText
+          q: searchText,
+          ...params
         }
       }),
       providesTags: ['Countries'],
@@ -231,11 +235,12 @@ export const api = emptySplitApi.injectEndpoints({
       invalidatesTags: ['Countries']
     }),
     getNews: builder.query({
-      query: ({ pageUrl, searchText }) => ({
+      query: ({ pageUrl, searchText, ...params }) => ({
         url: pageUrl || API_END_POINTS.getNews,
         method: 'GET',
         params: {
-          q: searchText
+          q: searchText,
+          ...params
         }
       }),
       providesTags: ['News'],
@@ -272,11 +277,12 @@ export const api = emptySplitApi.injectEndpoints({
       invalidatesTags: ['News']
     }),
     getSuppliers: builder.query({
-      query: ({ pageUrl, searchText }) => ({
+      query: ({ pageUrl, searchText, ...params }) => ({
         url: pageUrl || API_END_POINTS.getSuppliers,
         method: 'GET',
         params: {
-          q: searchText
+          q: searchText,
+          ...params
         }
       }),
       providesTags: ['Suppliers'],
@@ -342,11 +348,12 @@ export const api = emptySplitApi.injectEndpoints({
       transformResponse: response => response.data
     }),
     getAirlineMargins: builder.query({
-      query: ({ pageUrl, searchText }) => ({
+      query: ({ pageUrl, searchText, ...params }) => ({
         url: pageUrl || API_END_POINTS.getAirlineMargins,
         method: 'GET',
         params: {
-          q: searchText
+          q: searchText,
+          ...params
         }
       }),
       providesTags: ['AirlineMargins'],
@@ -390,11 +397,12 @@ export const api = emptySplitApi.injectEndpoints({
       })
     }),
     getBranches: builder.query({
-      query: ({ pageUrl, searchText }) => ({
+      query: ({ pageUrl, searchText, ...params }) => ({
         url: pageUrl || API_END_POINTS.getBranches,
         method: 'GET',
         params: {
-          q: searchText
+          q: searchText,
+          ...params
         }
       }),
       providesTags: ['Branches'],
@@ -447,11 +455,12 @@ export const api = emptySplitApi.injectEndpoints({
       })
     }),
     getAgencies: builder.query({
-      query: ({ pageUrl, searchText }) => ({
+      query: ({ pageUrl, searchText, ...params }) => ({
         url: pageUrl || API_END_POINTS.getAgencies,
         method: 'GET',
         params: {
-          q: searchText
+          q: searchText,
+          ...params
         }
       }),
       providesTags: ['Agencies'],
@@ -489,11 +498,12 @@ export const api = emptySplitApi.injectEndpoints({
     }),
 
     getEmployees: builder.query({
-      query: ({ pageUrl, searchText }) => ({
+      query: ({ pageUrl, searchText, ...params }) => ({
         url: pageUrl || API_END_POINTS.getEmployees,
         method: 'GET',
         params: {
-          q: searchText
+          q: searchText,
+          ...params
         }
       }),
       providesTags: ['Agencies'],

@@ -62,9 +62,9 @@ import PermissionModal from '../PermissionModal'
 
 const fuzzyFilter = (row, columnId, value, addMeta) => {
   const itemRank = rankItem(row.getValue(columnId), value)
-
-  addMeta({ itemRank })
-
+  addMeta({
+    itemRank
+  })
   return itemRank.passed
 }
 
@@ -81,6 +81,7 @@ const EmployeeTable = () => {
   const [userUUid, setuserUUid] = useState()
   const [permissionListByTypeLoading, setPermissionListByTypeLoading] = useState(null)
   const [EmployeeToBeDelete, setEmployeeToBeDelete] = useState()
+  const [showEmployeeToBeDelete, setShowEmployeeToBeDelete] = useState(false)
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(10)
 
@@ -193,9 +194,7 @@ const EmployeeTable = () => {
             <Tooltip title='Delete Employee' placement='top'>
               <IconButton
                 size='small'
-                onClick={event => {
-                  showDeleteEmployeeConfirmation(row.original.uuid)
-                }}
+                onClick={() => showDeleteEmployeeConfirmation(row.original.uuid)}
               >
                 <FaTrash className=' text-red-600 text-base' />
               </IconButton>
@@ -203,9 +202,7 @@ const EmployeeTable = () => {
             <Tooltip title='Update Employee' placement='top'>
               <IconButton
                 size='small'
-                onClick={event => {
-                  showUpdateEmployeeConfirmation(row.original)
-                }}
+                onClick={() => showUpdateEmployeeConfirmation(row.original)}
               >
                 <FaPencil className='cursor-pointer text-primary text-base' />
               </IconButton>
@@ -233,10 +230,8 @@ const EmployeeTable = () => {
     getSortedRowModel: getSortedRowModel(),
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
-    getFacetedMinMaxValues: getFacetedMinMaxValues(),
-    getPaginationRowModel: getPaginationRowModel()
+    getFacetedMinMaxValues: getFacetedMinMaxValues()
   })
-
   const handleStatusChange = uuid => {
     const body = {
       _method: 'patch'
@@ -248,6 +243,7 @@ const EmployeeTable = () => {
   }
 
   const showDeleteEmployeeConfirmation = uuid => {
+    setShowEmployeeToBeDelete(true)
     setEmployeeToBeDelete(employees.find(b => uuid === b.uuid))
   }
 
@@ -256,6 +252,7 @@ const EmployeeTable = () => {
       deleteEmployee(EmployeeToBeDelete.uuid).then(response => {
         if (response?.data.code == 200) {
           toast.success(response?.data.message)
+          setShowEmployeeToBeDelete(false)
           setEmployeeToBeDelete(null)
         } else {
           toast.error(response?.data.message)
@@ -305,7 +302,7 @@ const EmployeeTable = () => {
   }
 
   const handleClose = () => {
-    
+
     setIsEditMode(false)
     setIsModalOpen(false)
     reset({
@@ -447,14 +444,14 @@ const EmployeeTable = () => {
                     {table.rows?.length > 0
                       ? 'No Record Found'
                       : table.getRowModel().rows.map(row => (
-                          <tr key={row.id} className='hover:bg-gray-50'>
-                            {row.getVisibleCells().map(cell => (
-                              <td key={cell.id} className='p-3 border-b'>
-                                {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                              </td>
-                            ))}
-                          </tr>
-                        ))}
+                        <tr key={row.id} className='hover:bg-gray-50'>
+                          {row.getVisibleCells().map(cell => (
+                            <td key={cell.id} className='p-3 border-b'>
+                              {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                            </td>
+                          ))}
+                        </tr>
+                      ))}
                   </>
                 ) : (
                   <td colSpan={table.getAllColumns().length}>
@@ -479,16 +476,16 @@ const EmployeeTable = () => {
         </CardContent>
       </Card>
 
-      <Dialog open={!!EmployeeToBeDelete} onClose={() => setEmployeeToBeDelete(null)}>
+      <Dialog open={showEmployeeToBeDelete} onClose={() => setShowEmployeeToBeDelete(false)}>
         <DialogTitle className='font-bold flex items-center justify-between'>
           Confirm Delete
-          <IoMdClose className='cursor-pointer' onClick={() => setEmployeeToBeDelete(null)} />
+          <IoMdClose className='cursor-pointer' onClick={() => setShowEmployeeToBeDelete(false)} />
         </DialogTitle>
         <DialogContent>
           You are about to delete <b>{EmployeeToBeDelete?.name}</b>. Would you like to proceed further ?
         </DialogContent>
         <DialogActions>
-          <Button color='error' onClick={() => setEmployeeToBeDelete(null)}>
+          <Button color='error' onClick={() => setShowEmployeeToBeDelete(false)}>
             No
           </Button>
           <Button loading={deleteEmployeeLoading} variant='contained' onClick={() => handleDeleteEmployee()}>

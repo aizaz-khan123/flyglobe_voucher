@@ -54,14 +54,14 @@ const FareOptionCard = ({
               <p
                 className={`text-xs px-2 rounded-full ${faresGroupData.is_refundable ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}
               >
-                {faresGroupData.is_refundable ? 'Refundable' : 'Non-Refundable'}  
+                {faresGroupData.is_refundable ? 'Refundable' : 'Non-Refundable'}
               </p>
             </div>
           </div>
         </div>
 
-        <div className='mt-4 flex flex-col items-end'>
-          <div className='flex items-center mb-2'>
+        <div className='mt-8 flex flex-col items-end'>
+          {/* <div className='flex items-center mb-2'>
             <div className='relative'>
               <IconButton
                 size='small'
@@ -157,7 +157,7 @@ const FareOptionCard = ({
                 )}
               </Popper>
             </div>
-          </div>
+          </div> */}
           {data.provider === 'AIRBLUE_API' ? (
             <Button
               variant='contained'
