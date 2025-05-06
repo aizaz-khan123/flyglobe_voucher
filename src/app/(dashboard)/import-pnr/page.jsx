@@ -1,5 +1,5 @@
-import ImportPnrform from '../../../../views/apps/import-pnr/components/ImportPnrform'
-import ImportPnrResult from '../../../../views/apps/import-pnr/components/ImportPnrResult'
+import ImportPnrform from "@/views/apps/import-pnr/components/ImportPnrform"
+import ImportPnrResult from "@/views/apps/import-pnr/components/ImportPnrResult"
 
 const page = () => {
   return (
