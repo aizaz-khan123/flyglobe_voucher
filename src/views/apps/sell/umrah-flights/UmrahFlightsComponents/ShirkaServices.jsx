@@ -7,12 +7,12 @@ const ShirkaServices = () => {
   const { control } = useForm();
 
   return (
-    <div className="space-y-6 ">
-      <h1 className="text-xl font-bold">Shirka and Service No</h1>
+    <div className="">
+      <h1 className="text-xl font-bold border-b pb-3">Shirka and Service No</h1>
       
  
       <div className="">
-        <h2 className="text-lg font-semibold mb-4">Shirka:</h2>
+        <h2 className="text-lg font-semibold py-2">Shirka:</h2>
         
         <div className="grid grid-cols-12 gap-4">
           <div className="col-span-12">
@@ -21,6 +21,7 @@ const ShirkaServices = () => {
               name="shirka"
               placeholder="Enter Shirka"
               fullWidth
+              size='small'
             />
           </div>
         </div>
@@ -28,7 +29,7 @@ const ShirkaServices = () => {
       
   
       <div>
-     <Button variant='contained' className='w-full'>Next</Button>
+     <Button variant='contained' className='w-full mt-3'>Next</Button>
     
       </div>
     </div>

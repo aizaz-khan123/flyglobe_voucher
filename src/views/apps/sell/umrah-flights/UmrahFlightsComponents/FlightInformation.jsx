@@ -10,211 +10,343 @@ const FlightInformation = () => {
   const { control } = useForm();
 
   // Static data for dropdown options
-  const sectorOptions = [
-    { value: 'ISB-JED', label: 'ISB - JED' },
-    { value: 'JED-ISB', label: 'JED - ISB' },
-    { value: 'LHE-DXB', label: 'LHE - DXB' },
+  const sectorDeparture = [
+    { value: 'ISB', label: 'ISB' },
+    { value: 'JED', label: 'JED' },
+    { value: 'LHE', label: 'LHE' },
   ];
 
-  const flightOptions = [
-    { value: 'SV', label: 'SV' },
-    { value: 'PK', label: 'PK' },
-    { value: 'EK', label: 'EK' },
+  const sectorDestination = [
+    { value: 'JED', label: 'ISB' },
+    { value: 'ISB', label: 'JED' },
+    { value: 'DXB', label: 'LHE' },
   ];
+  const flightDeparture = [
+    { value: 'ISB', label: 'ISB' },
+    { value: 'JED', label: 'JED' },
+    { value: 'LHE', label: 'LHE' },
+  ];
+
+  const flightDestination = [
+    { value: 'JED', label: 'ISB' },
+    { value: 'ISB', label: 'JED' },
+    { value: 'DXB', label: 'LHE' },
+  ];
+
+
 
   const timeOptions = Array.from({ length: 24 }, (_, i) => {
     const hour = i % 12 || 12;
     const ampm = i < 12 ? 'AM' : 'PM';
-    return { 
-      value: `${hour.toString().padStart(2, '0')}:00 ${ampm}`, 
-      label: `${hour.toString().padStart(2, '0')}:00 ${ampm}` 
+    return {
+      value: `${hour.toString().padStart(2, '0')}:00 ${ampm}`,
+      label: `${hour.toString().padStart(2, '0')}:00 ${ampm}`
     };
   });
 
+
+  const hourOptions = [...Array(12)].map((_, i) => ({ label: `${i + 1}`, value: `${i + 1}` }));
+  const minuteOptions = ['00', '15', '30', '45'].map(m => ({ label: m, value: m }));
+  const ampmOptions = ['AM', 'PM'].map(m => ({ label: m, value: m }));
+
+
+
+
   return (
-    <div className="space-y-6 p-4">
-      <h1 className="text-xl font-bold">Flight Information</h1>
-      
-      {/* Departure Flight Section */}
-      <div className="border-b pb-6">
+    <div className="">
+      <h1 className="text-xl font-bold border-b pb-3">Flight Information</h1>
+
+      <div className="border-b py-3">
         <h2 className="text-lg font-semibold mb-4">Departure Flight</h2>
-        
+
         <div className="grid grid-cols-12 gap-4 items-end">
+
           {/* Sector */}
           <div className="col-span-12 md:col-span-2">
-            <MuiDropdown
-              control={control}
-              name="departure_sector"
-              label="Sector"
-              options={sectorOptions}
-            />
+            <label className="mb-2 block font-medium text-black">Sector</label>
+            <div className="flex gap-4">
+              <MuiDropdown
+                size='small'
+
+                control={control}
+                name="departure_sector"
+                options={sectorDeparture}
+              />
+              <MuiDropdown
+                size='small'
+
+                control={control}
+                name="destination_sector"
+                options={sectorDestination}
+              />
+            </div>
           </div>
-          
+
+
+
           {/* Flight */}
           <div className="col-span-12 md:col-span-2">
-            <MuiDropdown
-              control={control}
-              name="departure_flight"
-              label="Flight"
-              options={flightOptions}
-            />
+            <label className="mb-2 block font-medium text-black">Flight</label>
+            <div className="flex gap-4">
+              <MuiDropdown
+                size='small'
+
+                control={control}
+                name="departure_flight"
+                options={flightDeparture}
+              />
+              <MuiDropdown
+                size='small'
+
+                control={control}
+                name="destination_flight"
+                options={flightDestination}
+              />
+            </div>
           </div>
-          
-          {/* Departure Date */}
-          <div className="col-span-12 md:col-span-2">
-            <MuiDatePicker
-              control={control}
-              name="departure_date"
-              label="Dept: Date"
-              format="DD-MM-YYYY"
-              className="w-full cursor-pointer"
-              minDate={dayjs()}
-            />
+
+          {/* Departure Date & Time */}
+          <div className="col-span-12 md:col-span-4">
+            <label className="mb-2 block font-medium text-black">Dept: Date & Time</label>
+            <div className="flex gap-4">
+              <MuiDatePicker
+                control={control}
+                name="departure_date"
+                format="DD-MM-YYYY"
+                className="w-full cursor-pointer"
+                minDate={dayjs()}
+                size='small'
+
+              />
+              <MuiDropdown
+                size='small'
+
+                control={control}
+                name="departure_hour"
+                options={hourOptions}
+              />
+              <MuiDropdown
+                size='small'
+
+                control={control}
+                name="departure_minute"
+                options={minuteOptions}
+              />
+              <MuiDropdown
+                size='small'
+
+                control={control}
+                name="departure_ampm"
+                options={ampmOptions}
+              />
+            </div>
           </div>
-          
-          {/* Departure Time */}
-          <div className="col-span-6 md:col-span-2">
-            <MuiDropdown
-              control={control}
-              name="departure_time"
-              label="Time"
-              options={timeOptions}
-            />
-          </div>
-          
-          {/* Arrival Date */}
-          <div className="col-span-12 md:col-span-2">
-            <MuiDatePicker
-              control={control}
-              name="arrival_date"
-              label="ARR: Date"
-              format="DD-MM-YYYY"
-              className="w-full cursor-pointer"
-              minDate={dayjs()}
-            />
-          </div>
-          
-          {/* Arrival Time */}
-          <div className="col-span-6 md:col-span-2">
-            <MuiDropdown
-              control={control}
-              name="arrival_time"
-              label="Time"
-              options={timeOptions}
-            />
+
+          {/* Arrival Date & Time */}
+          <div className="col-span-12 md:col-span-4">
+            <label className="mb-2 block font-medium text-black">ARR: Date & Time</label>
+            <div className="flex gap-4">
+              <MuiDatePicker
+                control={control}
+                name="arrival_date"
+                format="DD-MM-YYYY"
+                className="w-full cursor-pointer"
+                minDate={dayjs()}
+                size='small'
+              />
+              <MuiDropdown
+                size='small'
+                control={control}
+                name="arrival_hour"
+                options={hourOptions}
+              />
+              <MuiDropdown
+                size='small'
+
+                control={control}
+                name="arrival_minute"
+                options={minuteOptions}
+              />
+              <MuiDropdown
+                size='small'
+
+                control={control}
+                name="arrival_ampm"
+                options={ampmOptions}
+              />
+            </div>
           </div>
         </div>
-        
+
         {/* PNR */}
         <div className="mt-4 grid grid-cols-12 gap-4">
           <div className="col-span-12 md:col-span-2">
-            <h3 className="text-md font-semibold mb-2">PNR</h3>
+            <label className="mb-2 block font-medium text-black">PNR</label>
             <MuiTextField
               control={control}
               name="departure_pnr"
+              size='small'
+
               placeholder="Enter PNR"
             />
           </div>
         </div>
       </div>
-      
-      {/* Return Flight Section */}
-      <div className="border-b pb-6">
+
+      <div className="border-b py-3">
         <h2 className="text-lg font-semibold mb-4">Return Flight</h2>
-        
+
         <div className="grid grid-cols-12 gap-4 items-end">
-          {/* Sector */}
+
+       
           <div className="col-span-12 md:col-span-2">
-            <MuiDropdown
-              control={control}
-              name="return_sector"
-              label="Sector"
-              options={sectorOptions}
-            />
+            <label className="mb-2 block font-medium text-black">Sector</label>
+            <div className="flex gap-4">
+              <MuiDropdown
+                size='small'
+
+                control={control}
+                name="departure_sector"
+                options={sectorDeparture}
+              />
+              <MuiDropdown
+                size='small'
+
+                control={control}
+                name="destination_sector"
+                options={sectorDestination}
+              />
+            </div>
           </div>
-          
+
+
+
           {/* Flight */}
           <div className="col-span-12 md:col-span-2">
-            <MuiDropdown
-              control={control}
-              name="return_flight"
-              label="Flight"
-              options={flightOptions}
-            />
+            <label className="mb-2 block font-medium text-black">Flight</label>
+            <div className="flex gap-4">
+              <MuiDropdown
+                size='small'
+
+                control={control}
+                name="departure_flight"
+                options={flightDeparture}
+              />
+              <MuiDropdown
+                size='small'
+
+                control={control}
+                name="destination_flight"
+                options={flightDestination}
+              />
+            </div>
           </div>
-          
-          {/* Departure Date */}
-          <div className="col-span-12 md:col-span-2">
-            <MuiDatePicker
-              control={control}
-              name="return_departure_date"
-              label="Dept: Date"
-              format="DD-MM-YYYY"
-              className="w-full cursor-pointer"
-              minDate={dayjs()}
-            />
+
+          {/* Departure Date & Time */}
+          <div className="col-span-12 md:col-span-4">
+            <label className="mb-2 block font-medium text-black">Dept: Date & Time</label>
+            <div className="flex gap-4">
+              <MuiDatePicker
+                control={control}
+                name="departure_date"
+                format="DD-MM-YYYY"
+                className="w-full cursor-pointer"
+                minDate={dayjs()}
+                size='small'
+
+              />
+              <MuiDropdown
+                size='small'
+
+                control={control}
+                name="departure_hour"
+                options={hourOptions}
+              />
+              <MuiDropdown
+                size='small'
+
+                control={control}
+                name="departure_minute"
+                options={minuteOptions}
+              />
+              <MuiDropdown
+                size='small'
+
+                control={control}
+                name="departure_ampm"
+                options={ampmOptions}
+              />
+            </div>
           </div>
-          
-          {/* Departure Time */}
-          <div className="col-span-6 md:col-span-2">
-            <MuiDropdown
-              control={control}
-              name="return_departure_time"
-              label="Time"
-              options={timeOptions}
-            />
-          </div>
-          
-          {/* Arrival Date */}
-          <div className="col-span-12 md:col-span-2">
-            <MuiDatePicker
-              control={control}
-              name="return_arrival_date"
-              label="ARR: Date"
-              format="DD-MM-YYYY"
-              className="w-full cursor-pointer"
-              minDate={dayjs()}
-            />
-          </div>
-          
-          {/* Arrival Time */}
-          <div className="col-span-6 md:col-span-2">
-            <MuiDropdown
-              control={control}
-              name="return_arrival_time"
-              label="Time"
-              options={timeOptions}
-            />
+
+          {/* Arrival Date & Time */}
+          <div className="col-span-12 md:col-span-4">
+            <label className="mb-2 block font-medium text-black">ARR: Date & Time</label>
+            <div className="flex gap-4">
+              <MuiDatePicker
+                control={control}
+                name="arrival_date"
+                format="DD-MM-YYYY"
+                className="w-full cursor-pointer"
+                minDate={dayjs()}
+                size='small'
+              />
+              <MuiDropdown
+                size='small'
+                control={control}
+                name="arrival_hour"
+                options={hourOptions}
+              />
+              <MuiDropdown
+                size='small'
+
+                control={control}
+                name="arrival_minute"
+                options={minuteOptions}
+              />
+              <MuiDropdown
+                size='small'
+
+                control={control}
+                name="arrival_ampm"
+                options={ampmOptions}
+              />
+            </div>
           </div>
         </div>
-        
+
         {/* PNR */}
         <div className="mt-4 grid grid-cols-12 gap-4">
-        <div className="col-span-12 md:col-span-2">
-        <h3 className="text-md font-semibold mb-2">PNR</h3>
+          <div className="col-span-12 md:col-span-2">
+            <h3 className="text-md font-semibold mb-2">PNR</h3>
             <MuiTextField
+              size='small'
               control={control}
               name="return_pnr"
               placeholder="Enter PNR"
             />
           </div>
           <div className="col-span-12 md:col-span-2">
-          <h3 className="text-md font-semibold mb-2">Count Nights</h3>
-          <MuiTextField
-            control={control}
-            name="count_nights"
-            placeholder="Enter nights"
-          />
-        </div>
+            <h3 className="text-md font-semibold mb-2">Count Nights</h3>
+            <MuiTextField
+              control={control}
+              size='small'
+
+              name="count_nights"
+              placeholder="Enter nights"
+            />
+          </div>
 
         </div>
-     
       </div>
-      
-    <Button className='w-full' variant='contained'>
-      Next
-    </Button>
-     
+
+
+    
+
+      <Button className='w-full' variant='contained'>
+        Next
+      </Button>
+
     </div>
   );
 };

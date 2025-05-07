@@ -8,7 +8,7 @@ import {
 const Remarks = () => {
   return (
     <>
-      <h1 className="text-xl font-bold">Remarks</h1>
+      <h1 className="text-xl font-bold border-b pb-2 mb-3">Remarks</h1>
       
       <TextField
         multiline

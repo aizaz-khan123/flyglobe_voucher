@@ -13,6 +13,8 @@ import {
 } from '@mui/material';
 import dayjs from 'dayjs';
 import MuiDatePicker from '@/components/mui-form-inputs/MuiDatePicker';
+import MuiDropdown from '@/components/mui-form-inputs/MuiDropdown';
+import MuiTextField from '@/components/mui-form-inputs/MuiTextField';
 
 const MautamerInformation = () => {
   const { control } = useForm();
@@ -33,117 +35,99 @@ const MautamerInformation = () => {
     { value: 'full', label: 'FULL SERVICE' },
   ];
 
-  // Equal width for all columns (adjust percentage as needed)
   const columnStyle = { width: '20%' };
 
   return (
-    <Paper elevation={3} className="p-6 space-y-6">
-      <h1 className="text-xl font-bold">Mautamer's Information</h1>
+    <>
+      <h1 className="text-xl font-bold border-b pb-3">Mautamer's Information</h1>
 
       {/* Party Section */}
       <div className="space-y-4">
         <h2 className="text-lg font-semibold">Party:</h2>
-        <div className="flex gap-4 flex-wrap">
-          <TextField
-            select
-            label="Select Party"
-            variant="outlined"
-            className="min-w-[200px]"
-          >
-            {partyOptions.map((option) => (
-              <MenuItem key={option.value} value={option.value}>
-                {option.label}
-              </MenuItem>
-            ))}
-          </TextField>
+        <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
 
-          <TextField
-            label="Group Head/Phone No"
-            variant="outlined"
-            className="min-w-[250px]"
+
+          <MuiDropdown
+            size='small'
+
+            control={control}
+            name="party_options"
+            options={partyOptions}
+          />
+
+          <MuiTextField
+            control={control}
+            size='small'
+
+            name="phone_number"
+            placeholder="Enter Group Head/Phone No"
           />
         </div>
+
       </div>
 
-      {/* Table Section */}
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell style={columnStyle}>Name</TableCell>
-            <TableCell style={columnStyle}>PPNO</TableCell>
-            <TableCell style={columnStyle}>DOB</TableCell>
-            <TableCell style={columnStyle}>Gender</TableCell>
-            <TableCell style={columnStyle}>Shinka</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          <TableRow>
-            <TableCell style={columnStyle}>
-              <TextField
-                placeholder="Enter Name"
-                fullWidth
-                variant="outlined"
-                size="small"
-              />
-            </TableCell>
-            <TableCell style={columnStyle}>
-              <TextField
-                fullWidth
-                variant="outlined"
-                size="small"
-              />
-            </TableCell>
-            <TableCell style={columnStyle}>
-              <MuiDatePicker
-                control={control}
-                name="dob"
-                format="DD-MM-YYYY"
-                className="w-full"
-                maxDate={dayjs()}
-                slotProps={{
-                  textField: {
-                    variant: 'outlined',
-                    size: 'small',
-                    fullWidth: true
-                  }
-                }}
-              />
-            </TableCell>
-            <TableCell style={columnStyle}>
-              <TextField
-                select
-                defaultValue="male"
-                fullWidth
-                variant="outlined"
-                size="small"
-              >
-                {genderOptions.map((option) => (
-                  <MenuItem key={option.value} value={option.value}>
-                    {option.label}
-                  </MenuItem>
-                ))}
-              </TextField>
-            </TableCell>
-            <TableCell style={columnStyle}>
-              <TextField
-                select
-                defaultValue="accommodation"
-                fullWidth
-                variant="outlined"
-                size="small"
-              >
-                {shinkaOptions.map((option) => (
-                  <MenuItem key={option.value} value={option.value}>
-                    {option.label}
-                  </MenuItem>
-                ))}
-              </TextField>
-            </TableCell>
-          </TableRow>
-        </TableBody>
-      </Table>
+   
+   {/* Responsive Table Wrapper */}
+<div className="overflow-auto mt-4">
+  <Table className="min-w-[800px]">
+    <TableHead className="bg-[#8a9dc2] text-white">
+      <TableRow>
+        <TableCell style={columnStyle} className="text-white py-2">Name</TableCell>
+        <TableCell style={columnStyle} className="text-white py-2">PPNO</TableCell>
+        <TableCell style={columnStyle} className="text-white py-2">DOB</TableCell>
+        <TableCell style={columnStyle} className="text-white py-2">Gender</TableCell>
+        <TableCell style={columnStyle} className="text-white py-2">Shinka</TableCell>
+      </TableRow>
+    </TableHead>
+    <TableBody>
+      <TableRow>
+        <TableCell style={columnStyle}>
+          <TextField
+            placeholder="Enter Name"
+            fullWidth
+            variant="outlined"
+            size="small"
+          />
+        </TableCell>
+        <TableCell style={columnStyle}>
+          <TextField
+            fullWidth
+            variant="outlined"
+            size="small"
+          />
+        </TableCell>
+        <TableCell style={columnStyle}>
+          <MuiDatePicker
+            control={control}
+            name="dob"
+            format="DD-MM-YYYY"
+            className="w-full cursor-pointer"
+            minDate={dayjs()}
+            size="small"
+          />
+        </TableCell>
+        <TableCell style={columnStyle}>
+          <MuiDropdown
+            size="small"
+            control={control}
+            name="gender"
+            options={genderOptions}
+          />
+        </TableCell>
+        <TableCell style={columnStyle}>
+          <MuiDropdown
+            size="small"
+            control={control}
+            name="shinka"
+            options={shinkaOptions}
+          />
+        </TableCell>
+      </TableRow>
+    </TableBody>
+  </Table>
+</div>
 
-      {/* Next Button */}
+   
       <div className="flex justify-end mt-4">
         <Button
           variant="contained"
@@ -152,7 +136,7 @@ const MautamerInformation = () => {
           Next
         </Button>
       </div>
-    </Paper>
+    </>
   );
 };
 

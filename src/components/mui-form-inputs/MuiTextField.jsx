@@ -11,7 +11,8 @@ const MuiTextField = ({
   onChange,
   className,
   startIcon,
-  endIcon
+  endIcon,
+  size='medium'
 }) => {
   return (
     <Controller
@@ -22,6 +23,7 @@ const MuiTextField = ({
           {...field}
           type={type}
           fullWidth
+          size={size}
           label={label}
           placeholder={placeholder}
           className={className}

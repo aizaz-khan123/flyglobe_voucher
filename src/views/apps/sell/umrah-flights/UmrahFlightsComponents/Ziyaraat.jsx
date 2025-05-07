@@ -17,9 +17,9 @@ const Ziyaraat = () => {
 
   return (
     <>
-      <h1 className="text-xl font-bold">Ziyaraat</h1>
+      <h1 className="text-xl font-bold border-b pb-3">Ziyaraat</h1>
       
-      <FormControl component="fieldset">
+      <FormControl component="fieldset" className='pt-2'>
         <RadioGroup
         row
           value={selectedOption}

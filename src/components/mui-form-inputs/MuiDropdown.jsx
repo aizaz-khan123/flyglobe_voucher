@@ -2,7 +2,7 @@ import { InputAdornment, ListItemIcon, ListItemText, MenuItem, TextField } from 
 import { Controller, useForm } from 'react-hook-form'
 import './mui.css'
 
-const MuiDropdown = ({ control, name, label, options = [], onChange, className, selectIcon, placeholder }) => {
+const MuiDropdown = ({ control, name, label, options = [], onChange, className, selectIcon, placeholder, size='medium' }) => {
   const { control: defaultControl } = useForm()
 
   return (
@@ -20,6 +20,7 @@ const MuiDropdown = ({ control, name, label, options = [], onChange, className, 
             placeholder={placeholder}
             error={!!fieldState.error}
             helperText={fieldState.error?.message}
+            size={size}
             onChange={event => {
               field.onChange(event.target.value)
               onChange?.(event.target.value)
