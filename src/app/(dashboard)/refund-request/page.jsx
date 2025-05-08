@@ -11,7 +11,7 @@ const page = () => {
                 title={"Refund Requests"}
                 breadCrumbItems={[{ label: "Refund Requests", active: true }]}
             /> */}
-      Refund Requests
+      Refund Request
       <div className='mt-5'>
         <RefundRequestTable />
       </div>

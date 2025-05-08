@@ -95,7 +95,7 @@ const GroupTypeList = () => {
         header: 'Action',
         cell: ({ row }) => (
           <div className='flex items-center w-fit gap-2'>
-            <Tooltip title='Edit Airports' placement='top'>
+            <Tooltip title='Edit Group Type' placement='top'>
               <IconButton
                 size='small'
                 onClick={() => {
@@ -106,7 +106,7 @@ const GroupTypeList = () => {
                 <FaPencil className='cursor-pointer text-base text-primary' />
               </IconButton>
             </Tooltip>
-            <Tooltip title='Delete Airports' placement='top'>
+            <Tooltip title='Delete Group Type' placement='top'>
               <IconButton size='small'>
                 <FaTrash
                   className='cursor-pointer text-base text-red-600'

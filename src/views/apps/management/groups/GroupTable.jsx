@@ -243,7 +243,7 @@ const GroupTable = () => {
         header: 'Action',
         cell: ({ row }) => (
           <div className='flex items-center w-fit gap-2'>
-            <Tooltip title='Edit Airports' placement='top'>
+            <Tooltip title='Edit Group' placement='top'>
               <IconButton
                 size='small'
                 onClick={() => {
@@ -254,7 +254,7 @@ const GroupTable = () => {
                 <FaPencil className='cursor-pointer text-base text-primary' />
               </IconButton>
             </Tooltip>
-            <Tooltip title='Delete Airports' placement='top'>
+            <Tooltip title='Delete Group' placement='top'>
               <IconButton size='small'>
                 <FaTrash
                   className='cursor-pointer text-base text-red-600'
